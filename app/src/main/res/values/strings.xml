@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">KyAndroid</string>
+    <string name="app_name">维稳办</string>
+    <string name="evententry_basic">基本信息</string>
+    <string name="evententry_person">当事人</string>
+    <string name="evententry_attachment">附件</string>
+    <string name="reporting_leadership_text">上报领导</string>
+    <string name="add_draft_text">保存草稿</string>
 </resources>
