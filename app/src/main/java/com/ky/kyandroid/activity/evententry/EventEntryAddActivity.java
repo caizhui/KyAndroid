@@ -71,7 +71,7 @@ public class EventEntryAddActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_evententryadd);
-        ButterKnife.bind(EventEntryAddActivity.this);
+        ButterKnife.bind(this);
         initToolbar();
         initPageView();
         initViewData();
@@ -150,14 +150,8 @@ public class EventEntryAddActivity extends FragmentActivity {
         /** 右侧为文字时添加 **/
         TextView toolbar_right_tv = (TextView) findViewById(R.id.toolbar_right_tv);
 
-        /** 设置toolbar背景颜色 **/
-       // toolbar_layout.setBackgroundResource(color.toolbar_green);
         /** 设置toolbar标题 **/
         toolbar_title.setText("事件录入信息");
-
-        /** 添加点击事件 **/
-        //toolbar_back.setOnClickListener(this);
-        //toolbar_right_btn.setOnClickListener(this);
     }
 
     /**

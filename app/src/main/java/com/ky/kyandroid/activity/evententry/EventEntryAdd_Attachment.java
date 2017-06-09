@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 
 import com.ky.kyandroid.R;
 
+import butterknife.ButterKnife;
+
 /**
  * Created by Caizhui on 2017-6-9.
  */
@@ -18,6 +20,7 @@ public class EventEntryAdd_Attachment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view =inflater.inflate(R.layout.evententeradd_attachment_fragment,container,false);
+        ButterKnife.bind(EventEntryAdd_Attachment.this.getActivity());
         return view;
     }
 }

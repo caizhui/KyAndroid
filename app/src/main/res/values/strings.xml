@@ -5,4 +5,24 @@
     <string name="evententry_attachment">附件</string>
     <string name="reporting_leadership_text">上报领导</string>
     <string name="add_draft_text">保存草稿</string>
+
+    <!--事件录入start-->
+    <string name="thing_name">事件名称:</string>
+    <string name="happen_time">发生时间:</string>
+    <string name="happen_address">发生地点:</string>
+    <string name="petition_groups">上访群体:</string>
+    <string name="field_departmen">到场部门:</string>
+    <string name="pattern_manifestation">表现形式:</string>
+    <string name="scope_text">规模:</string>
+    <string name="fields_involved">涉及领域:</string>
+    <string name="foreign_related">是否涉外:</string>
+    <string name="involved_xinjiang">是否涉疆:</string>
+    <string name="involve_public_opinion">是否涉舆情:</string>
+    <string name="public_security_disposal">是否公安处置:</string>
+    <string name="belong_street">所属街道:</string>
+    <string name="belong_community">所属社区:</string>
+    <string name="main_appeals">主要诉求:</string>
+    <string name="event_summary">事件概要:</string>
+    <string name="leadership_instructions">领导批示:</string>
+    <!--时间录入end-->
 </resources>
