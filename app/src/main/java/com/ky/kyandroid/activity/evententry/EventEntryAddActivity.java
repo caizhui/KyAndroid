@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
@@ -37,25 +38,25 @@ public class EventEntryAddActivity extends FragmentActivity {
     private ViewPager fragment_viewpager;
 
     @BindView(R.id.radiogroup)
-    private RadioGroup radiogroup;
+    public RadioGroup radiogroup;
 
     /**
      * 基本信息按钮
      */
     @BindView(R.id.radiobtn_baseinfo)
-    private RadioButton radiobtn_baseinfo;
+    public RadioButton radiobtn_baseinfo;
 
     /**
      * 当事人按钮
      */
     @BindView(R.id.radiobtn_person)
-    private RadioButton  radiobtn_person;
+    public RadioButton  radiobtn_person;
 
     /**
      * 附件按钮
      */
     @BindView(R.id.radiobtn_attachment)
-    private RadioButton  radiobtn_attachment;
+    public RadioButton  radiobtn_attachment;
 
     /** 事件录入 - 基本信息 */
     private EventEntryAdd_Basic eventEntryAdd_basic;
@@ -70,6 +71,7 @@ public class EventEntryAddActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_evententryadd);
+        ButterKnife.bind(EventEntryAddActivity.this);
         initToolbar();
         initPageView();
         initViewData();
@@ -151,7 +153,7 @@ public class EventEntryAddActivity extends FragmentActivity {
         /** 设置toolbar背景颜色 **/
        // toolbar_layout.setBackgroundResource(color.toolbar_green);
         /** 设置toolbar标题 **/
-        toolbar_title.setText("租屋套信息");
+        toolbar_title.setText("事件录入信息");
 
         /** 添加点击事件 **/
         //toolbar_back.setOnClickListener(this);

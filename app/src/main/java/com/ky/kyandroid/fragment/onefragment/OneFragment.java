@@ -18,7 +18,7 @@ public class OneFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view =inflater.inflate(R.layout.one_fragment,container,false);
+        View view =inflater.inflate(R.layout.evententeradd_person_fragment,container,false);
         return view;
     }
 }

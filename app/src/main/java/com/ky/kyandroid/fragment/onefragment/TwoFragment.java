@@ -18,7 +18,7 @@ public class TwoFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view =inflater.inflate(R.layout.two_fragment,container,false);
+        View view =inflater.inflate(R.layout.evententeradd_attachment_fragment,container,false);
         return view;
     }
 }
