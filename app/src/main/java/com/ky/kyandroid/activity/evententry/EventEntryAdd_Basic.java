@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.ky.kyandroid.R;
 import com.ky.kyandroid.R2;
@@ -40,7 +39,6 @@ public class EventEntryAdd_Basic extends Fragment{
     }
 
     public void initView(View view) {
-        happenTime.setText("aaaaa");
     }
 
     @OnClick(R.id.happen_time)
@@ -48,7 +46,6 @@ public class EventEntryAdd_Basic extends Fragment{
         switch (v.getId()) {
             /** 点击发生时间控件 **/
             case R.id.happen_time:
-                Toast.makeText(EventEntryAdd_Basic.this.getActivity(), "aa", Toast.LENGTH_SHORT).show();
                 Calendar c = Calendar.getInstance();
                 new DatePickerDialog(EventEntryAdd_Basic.this.getActivity(), new DatePickerDialog.OnDateSetListener() {
                     @Override
