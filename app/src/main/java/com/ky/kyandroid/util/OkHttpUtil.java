@@ -3,20 +3,15 @@ package com.ky.kyandroid.util;
 import android.util.Log;
 
 import com.ky.kyandroid.Constants;
-import com.solidfire.gson.Gson;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.Hashtable;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
-import okhttp3.Headers;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -26,7 +21,14 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
- * 类名称：OkHttp工具类
+ * 类名称：OkHttp工具类 类描述：
+ * 
+ * 创建人： Cz 创建时间：2016年9月6日 下午3:07:37
+ * 
+ * @author Cz
+ * @date 2016年9月6日 下午3:07:37
+ * @updateRemark 修改备注：
+ * 
  */
 public class OkHttpUtil {
 	/** TAG */
@@ -52,7 +54,7 @@ public class OkHttpUtil {
 		if ("".equals(url) || null == url) {
 			return null;
 		}
-		return new Request.Builder().url(getCompleteUrl(url));
+		return new Builder().url(getCompleteUrl(url));
 	}
 
 	/**
@@ -130,7 +132,7 @@ public class OkHttpUtil {
 	 * @return
 	 */
 	private static Response executeResponse(String url,
-											Map<String, String> params) {
+			Map<String, String> params) {
 		// 初始builder
 		Builder requestBuilder = getRequestBuilder(url);
 		if (requestBuilder != null) {
@@ -242,14 +244,6 @@ public class OkHttpUtil {
 	}
 
 	/**
-	 *
-	 * @param url
-	 * @param params
-     */
-	public static Response sendRequest(String url, Map<String,String> params){
-		return executeResponse(url,params);
-	}
-	/**
 	 * 发送请求获取文本(带参数) - 异步
 	 * 
 	 * @param url
@@ -258,8 +252,8 @@ public class OkHttpUtil {
 	 *            参数列表
 	 * @return
 	 */
-	public static void sendRequest(String url, Map<String, String> params, Callback callBack) {
-		System.out.println("public static void sendRequest url="+url);
+	public static void sendRequest(String url, Map<String, String> params,
+			Callback callBack) {
 		enqueueResponse(url, params, callBack);
 	}
 
@@ -427,35 +421,10 @@ public class OkHttpUtil {
 		if (fileValue != null && fileValue.isFile()) {
 			String fileName = fileValue.getName();
 			RequestBody fileBody = RequestBody.create(MediaType.parse(OKMediaType.MEDIA_TYPE_STREAM), fileValue);
-			//TODO 根据文件名设置contentType
-			multipartBody.addPart(Headers.of("Content-Disposition",
-					"form-data; name=\"" + fileKey+ "\"; filename=\"" + fileName + "\""),
-					fileBody);
 			multipartBody.setType(MultipartBody.FORM);
 			multipartBody.addFormDataPart(fileKey, fileName, fileBody);
 			requestBuilder.post(multipartBody.build());
 		}
-	}
-
-	/**
-	 * 发送数据去后台
-	 */
-	public  static void sendValue(String url,Object obj){
-		Map<String,String> params = new Hashtable<String,String>();
-		Gson gson=new Gson();
-		String entityString = gson.toJson(obj);
-		params.put("json",entityString);
-		OkHttpUtil.sendRequest(url, params, new Callback() {
-			@Override
-			public void onFailure(Call call, IOException e) {
-
-			}
-
-			@Override
-			public void onResponse(Call call, Response response) throws IOException {
-
-			}
-		});
 	}
 
 }
