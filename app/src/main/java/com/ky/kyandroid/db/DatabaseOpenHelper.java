@@ -1,4 +1,4 @@
-package com.ky.kyandroid.db.base;
+package com.ky.kyandroid.db;
 
 import org.xutils.DbManager;
 import org.xutils.db.table.TableEntity;
