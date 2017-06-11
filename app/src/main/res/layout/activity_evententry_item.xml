@@ -23,7 +23,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="发生地点:"/>
+                    android:text="@string/happen_address"/>
 
                 <TextView
                     android:id="@+id/thing_address"
@@ -34,7 +34,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
-                    android:text="发生时间"/>
+                    android:text="@string/happen_time"/>
 
                 <TextView
                     android:id="@+id/thing_time"

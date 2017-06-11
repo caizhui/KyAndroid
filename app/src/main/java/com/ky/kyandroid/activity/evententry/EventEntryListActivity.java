@@ -21,6 +21,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnItemClick;
 
 /**
  * Created by Caizhui on 2017-6-9.
@@ -69,6 +70,7 @@ public class EventEntryListActivity extends AppCompatActivity {
 
     private EventEntryDao eventEntryDao;
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +79,8 @@ public class EventEntryListActivity extends AppCompatActivity {
         eventEntryDao = new EventEntryDao();
         initData();
     }
+
+
 
     @OnClick({R.id.left_btn,R.id.right_btn})
     public void onClick(View v) {
@@ -103,5 +107,21 @@ public class EventEntryListActivity extends AppCompatActivity {
             adapter = new EventEntryListAdapter(entryEntityList,EventEntryListActivity.this);
             searchEvententryList.setAdapter(adapter);
         }
+    }
+
+    /**
+     * 点击List列表Item
+     * @param position
+     */
+    @OnItemClick(R.id.search_evententry_list)
+    public  void OnItemClick(int position){
+       EventEntryEntity eventEntryEntity = (EventEntryEntity) adapter.getItem(position);
+        Intent intent =new Intent(this,EventEntryAddActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("eventEntryEntity",eventEntryEntity);
+        /**type 0：新增 1：修改**/
+        intent.putExtra("type","1");
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 }

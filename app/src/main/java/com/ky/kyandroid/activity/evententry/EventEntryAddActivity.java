@@ -1,5 +1,6 @@
 package com.ky.kyandroid.activity.evententry;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -97,12 +98,15 @@ public class EventEntryAddActivity extends FragmentActivity {
      */
     private EventEntryAdd_Attachment eventEntryAdd_attachment;
 
+    private Intent intent;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_evententryadd);
         ButterKnife.bind(this);
+        intent=getIntent();
         initToolbar();
         initPageView();
         initViewData();
@@ -113,7 +117,7 @@ public class EventEntryAddActivity extends FragmentActivity {
      */
     @SuppressWarnings("deprecation")
     private void initPageView() {
-        eventEntryAdd_basic = new EventEntryAdd_Basic();
+        eventEntryAdd_basic = new EventEntryAdd_Basic(intent);
         eventEntryAdd_person = new EventEntryAdd_Person();
         eventEntryAdd_attachment = new EventEntryAdd_Attachment();
         // 设置Fragment集合

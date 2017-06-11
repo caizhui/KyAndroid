@@ -1,5 +1,6 @@
 package com.ky.kyandroid.activity.evententry;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -32,9 +33,10 @@ import butterknife.OnClick;
 
 /**
  * Created by Caizhui on 2017-6-9.
- *  事件录入基本信息
+ * 事件录入基本信息
  */
 
+@SuppressLint("ValidFragment")
 public class EventEntryAdd_Basic extends Fragment {
 
 
@@ -129,10 +131,11 @@ public class EventEntryAdd_Basic extends Fragment {
     @BindView(R.id.reporting_leadership_btn)
     Button reportingLeadershipBtn;
     /**
-     *  保存按钮
+     * 保存按钮
      */
     @BindView(R.id.save_draft_btn)
     Button saveDraftBtn;
+
 
     /**
      * 设置Spinner控件的初始值
@@ -146,12 +149,25 @@ public class EventEntryAdd_Basic extends Fragment {
 
     public EventEntryDao eventEntryDao;
 
-    public EventEntryEntity eventEntryEntity;
 
     /**
      * 提示信息
      */
-    private String message="";
+    private String message = "";
+
+    private Intent intent;
+
+    /**
+     * type 0：新增 1：修改
+     */
+    public String type;
+
+    public EventEntryEntity eventEntryEntity;
+
+    @SuppressLint("ValidFragment")
+    public EventEntryAdd_Basic(Intent intent) {
+        this.intent = intent;
+    }
 
     @Nullable
     @Override
@@ -159,67 +175,84 @@ public class EventEntryAdd_Basic extends Fragment {
         View view = inflater.inflate(R.layout.evententeradd_basic_fragment, container, false);
         ButterKnife.bind(this, view);
         eventEntryDao = new EventEntryDao();
+        type = intent.getStringExtra("type");
+        eventEntryEntity = (EventEntryEntity) intent.getSerializableExtra("eventEntryEntity");
         initData();
         return view;
     }
 
     public void initData() {
+        if (eventEntryEntity != null) {
+            //当type等于1的时候，只能查看信息
+            if ("1".equals(type)) {
+                thingNameEdt.setText(eventEntryEntity.getThingName());
+                happenTimeEdt.setText(eventEntryEntity.getHappenTime());
+                happenAddressEdt.setText(eventEntryEntity.getHappenAddress());
+                petitionGroupsEdt.setText(eventEntryEntity.getPetitionGroups());
+                fieldDepartmenEdt.setText(eventEntryEntity.getFieldDepartmen());
+                fieldsInvolvedEdt.setText(eventEntryEntity.getFieldsInvolved());
+                belongStreetEdt.setText(eventEntryEntity.getBelongStreet());
+                mainAppealsEdt.setText(eventEntryEntity.getMainAppeals());
+                eventSummaryEdt.setText(eventEntryEntity.getEventSummary());
+                leadershipInstructionsEdt.setText(eventEntryEntity.getLeadershipInstructions());
+            }
+        }
         //设置Spinner控件的初始值
         spinnerList = new ArrayList<KeyValueEntity>();
-        spinnerList.add(new KeyValueEntity("0","否"));
-        spinnerList.add(new KeyValueEntity("1","是"));
+        spinnerList.add(new KeyValueEntity("0", "否"));
+        spinnerList.add(new KeyValueEntity("1", "是"));
 
         //将可选内容与ArrayAdapter连接起来
-        adapter = new ArrayAdapter<KeyValueEntity>(EventEntryAdd_Basic.this.getActivity(),android.R.layout.simple_spinner_item,spinnerList);
+        adapter = new ArrayAdapter<KeyValueEntity>(EventEntryAdd_Basic.this.getActivity(), android.R.layout.simple_spinner_item, spinnerList);
         //设置下拉列表的风格
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        foreignRelatedSpinner .setAdapter(adapter);//将adapter 添加到spinner中
+        foreignRelatedSpinner.setAdapter(adapter);//将adapter 添加到spinner中
         involvedXinjiangSpinner.setAdapter(adapter);//将adapter 添加到spinner中
         involvePublicOpinionSpinner.setAdapter(adapter);//将adapter 添加到spinner中
         publicSecurityDisposalSpinner.setAdapter(adapter);//将adapter 添加到spinner中
 
         spinnerList = new ArrayList<KeyValueEntity>();
-        spinnerList.add(new KeyValueEntity("","请选择"));
-        spinnerList.add(new KeyValueEntity("0","上访"));
-        spinnerList.add(new KeyValueEntity("1","自杀"));
-        spinnerList.add(new KeyValueEntity("2","闹事"));
-        spinnerList.add(new KeyValueEntity("3","聚众"));
-        spinnerList.add(new KeyValueEntity("4","纠纷"));
-        spinnerList.add(new KeyValueEntity("5","拉横幅"));
+        spinnerList.add(new KeyValueEntity("", "请选择"));
+        spinnerList.add(new KeyValueEntity("0", "上访"));
+        spinnerList.add(new KeyValueEntity("1", "自杀"));
+        spinnerList.add(new KeyValueEntity("2", "闹事"));
+        spinnerList.add(new KeyValueEntity("3", "聚众"));
+        spinnerList.add(new KeyValueEntity("4", "纠纷"));
+        spinnerList.add(new KeyValueEntity("5", "拉横幅"));
 
         //将可选内容与ArrayAdapter连接起来
-        adapter = new ArrayAdapter<KeyValueEntity>(EventEntryAdd_Basic.this.getActivity(),android.R.layout.simple_spinner_item,spinnerList);
+        adapter = new ArrayAdapter<KeyValueEntity>(EventEntryAdd_Basic.this.getActivity(), android.R.layout.simple_spinner_item, spinnerList);
         //设置下拉列表的风格
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        patternManifestationSpinner .setAdapter(adapter);//将adapter 添加到表现形式spinner中
+        patternManifestationSpinner.setAdapter(adapter);//将adapter 添加到表现形式spinner中
 
         spinnerList = new ArrayList<KeyValueEntity>();
-        spinnerList.add(new KeyValueEntity("0","1-5人"));
-        spinnerList.add(new KeyValueEntity("1","5-30人"));
-        spinnerList.add(new KeyValueEntity("2","30-300人"));
-        spinnerList.add(new KeyValueEntity("3","300-1000人"));
-        spinnerList.add(new KeyValueEntity("4","1000人以上"));
+        spinnerList.add(new KeyValueEntity("0", "1-5人"));
+        spinnerList.add(new KeyValueEntity("1", "5-30人"));
+        spinnerList.add(new KeyValueEntity("2", "30-300人"));
+        spinnerList.add(new KeyValueEntity("3", "300-1000人"));
+        spinnerList.add(new KeyValueEntity("4", "1000人以上"));
 
         //将可选内容与ArrayAdapter连接起来
-        adapter = new ArrayAdapter<KeyValueEntity>(EventEntryAdd_Basic.this.getActivity(),android.R.layout.simple_spinner_item,spinnerList);
+        adapter = new ArrayAdapter<KeyValueEntity>(EventEntryAdd_Basic.this.getActivity(), android.R.layout.simple_spinner_item, spinnerList);
         //设置下拉列表的风格
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        scopeTextSpinner .setAdapter(adapter);//将adapter 添加到规模spinner中
+        scopeTextSpinner.setAdapter(adapter);//将adapter 添加到规模spinner中
 
 
         spinnerList = new ArrayList<KeyValueEntity>();
-        spinnerList.add(new KeyValueEntity("0","社区1"));
-        spinnerList.add(new KeyValueEntity("1","社区2"));
+        spinnerList.add(new KeyValueEntity("0", "社区1"));
+        spinnerList.add(new KeyValueEntity("1", "社区2"));
 
 
         //将可选内容与ArrayAdapter连接起来
-        adapter = new ArrayAdapter<KeyValueEntity>(EventEntryAdd_Basic.this.getActivity(),android.R.layout.simple_spinner_item,spinnerList);
+        adapter = new ArrayAdapter<KeyValueEntity>(EventEntryAdd_Basic.this.getActivity(), android.R.layout.simple_spinner_item, spinnerList);
         //设置下拉列表的风格
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        belongCommunitySpinner .setAdapter(adapter);//将adapter 添加到所属社区spinner中
+        belongCommunitySpinner.setAdapter(adapter);//将adapter 添加到所属社区spinner中
     }
 
-    @OnClick({R.id.happen_time_edt,R.id.reporting_leadership_btn,R.id.save_draft_btn})
+    @OnClick({R.id.happen_time_edt, R.id.reporting_leadership_btn, R.id.save_draft_btn})
     public void onClick(View v) {
         switch (v.getId()) {
             /** 点击发生时间控件 **/
@@ -238,16 +271,16 @@ public class EventEntryAdd_Basic extends Fragment {
             /**保存草稿按钮*/
             case R.id.save_draft_btn:
                 PackageData();
-                if("".equals(message)){
-                   boolean flag=  eventEntryDao.saveEventEntryEntity(eventEntryEntity);
-                    if(flag){
+                if ("".equals(message)) {
+                    boolean flag = eventEntryDao.saveEventEntryEntity(eventEntryEntity);
+                    if (flag) {
                         Toast.makeText(EventEntryAdd_Basic.this.getActivity(), "保存成功", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(this.getActivity(), EventEntryListActivity.class);
                         startActivity(intent);
-                    }else{
+                    } else {
                         Toast.makeText(EventEntryAdd_Basic.this.getActivity(), "保存失败", Toast.LENGTH_SHORT).show();
                     }
-                }else{
+                } else {
                     Toast.makeText(EventEntryAdd_Basic.this.getActivity(), message, Toast.LENGTH_SHORT).show();
                 }
                 break;
@@ -257,61 +290,61 @@ public class EventEntryAdd_Basic extends Fragment {
     /**
      * 封装数据
      */
-    public void PackageData(){
+    public void PackageData() {
         //每次保存时先清空message
-        message="";
+        message = "";
         eventEntryEntity = new EventEntryEntity();
         String thingNameString = thingNameEdt.getText().toString();
         String happenTimeString = happenTimeEdt.getText().toString();
         String happenAddressString = happenAddressEdt.getText().toString();
         String petitionGroupsString = petitionGroupsEdt.getText().toString();
         String fieldDepartmenString = fieldDepartmenEdt.getText().toString();
-        String patternManifestationString =  patternManifestationSpinner.getSelectedItem().toString();
+        String patternManifestationString = patternManifestationSpinner.getSelectedItem().toString();
         String scopeTextString = scopeTextSpinner.getSelectedItem().toString();
-        String fieldsInvolved= fieldsInvolvedEdt.getText().toString();
+        String fieldsInvolved = fieldsInvolvedEdt.getText().toString();
         String foreignRelatedString = foreignRelatedSpinner.getSelectedItem().toString();
         String involvedXinjiangString = involvedXinjiangSpinner.getSelectedItem().toString();
-        String involvePublicOpinionString =involvePublicOpinionSpinner.getSelectedItem().toString();
+        String involvePublicOpinionString = involvePublicOpinionSpinner.getSelectedItem().toString();
         String publicSecurityDisposalString = publicSecurityDisposalSpinner.getSelectedItem().toString();
         String belongStreetString = belongStreetEdt.getText().toString();
         String belongCommunityString = belongCommunitySpinner.getSelectedItem().toString();
-        String  mainAppealsString =mainAppealsEdt.getText().toString();
+        String mainAppealsString = mainAppealsEdt.getText().toString();
         String eventSummaryString = eventSummaryEdt.getText().toString();
-        String leadershipInstructionsString =leadershipInstructionsEdt.getText().toString();
-        if(StringUtils.isBlank(thingNameString)){
-            message+="事件名称不能为空\n";
-        }else{
+        String leadershipInstructionsString = leadershipInstructionsEdt.getText().toString();
+        if (StringUtils.isBlank(thingNameString)) {
+            message += "事件名称不能为空\n";
+        } else {
             eventEntryEntity.setThingName(thingNameString);
         }
-        if(StringUtils.isBlank(happenTimeString)){
-            message+="发生时间不能为空\n";
-        }else{
+        if (StringUtils.isBlank(happenTimeString)) {
+            message += "发生时间不能为空\n";
+        } else {
             eventEntryEntity.setHappenTime(happenTimeString);
         }
-        if(StringUtils.isBlank(happenAddressString)){
-            message+="发生地点不能为空\n";
-        }else{
+        if (StringUtils.isBlank(happenAddressString)) {
+            message += "发生地点不能为空\n";
+        } else {
             eventEntryEntity.setHappenAddress(happenAddressString);
         }
         eventEntryEntity.setPetitionGroups(petitionGroupsString);
-        if(StringUtils.isBlank(fieldDepartmenString)){
-            message+="到场部门不能为空\n";
-        }else{
-            eventEntryEntity.setPetitionGroups(fieldDepartmenString);
+        if (StringUtils.isBlank(fieldDepartmenString)) {
+            message += "到场部门不能为空\n";
+        } else {
+            eventEntryEntity.setFieldDepartmen(fieldDepartmenString);
         }
-        if(StringUtils.isBlank(patternManifestationString)){
-            message+="表现形式不能为空\n";
-        }else{
+        if (StringUtils.isBlank(patternManifestationString)) {
+            message += "表现形式不能为空\n";
+        } else {
             eventEntryEntity.setPatternManifestation(patternManifestationString);
         }
-        if(StringUtils.isBlank(scopeTextString)){
-            message+="规模不能为空\n";
-        }else{
+        if (StringUtils.isBlank(scopeTextString)) {
+            message += "规模不能为空\n";
+        } else {
             eventEntryEntity.setScope(scopeTextString);
         }
-        if(StringUtils.isBlank(fieldsInvolved)){
-            message+="涉及领域不能为空\n";
-        }else{
+        if (StringUtils.isBlank(fieldsInvolved)) {
+            message += "涉及领域不能为空\n";
+        } else {
             eventEntryEntity.setFieldsInvolved(fieldsInvolved);
         }
         eventEntryEntity.setForeignRelated(foreignRelatedString);
@@ -320,17 +353,16 @@ public class EventEntryAdd_Basic extends Fragment {
         eventEntryEntity.setPublicSecurityDisposal(publicSecurityDisposalString);
         eventEntryEntity.setBelongStreet(belongStreetString);
         eventEntryEntity.setBelongCommunity(belongCommunityString);
-        if(StringUtils.isBlank(mainAppealsString)){
-            message+="主要诉求不能为空\n";
-        }else{
+        if (StringUtils.isBlank(mainAppealsString)) {
+            message += "主要诉求不能为空\n";
+        } else {
             eventEntryEntity.setMainAppeals(mainAppealsString);
         }
-        if(StringUtils.isBlank(eventSummaryString)){
-            message+="事件概要不能为空\n";
-        }else{
+        if (StringUtils.isBlank(eventSummaryString)) {
+            message += "事件概要不能为空\n";
+        } else {
             eventEntryEntity.setEventSummary(eventSummaryString);
         }
         eventEntryEntity.setLeadershipInstructions(leadershipInstructionsString);
     }
-
 }

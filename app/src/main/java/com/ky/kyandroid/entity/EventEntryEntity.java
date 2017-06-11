@@ -3,17 +3,24 @@ package com.ky.kyandroid.entity;
 import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
 
+import java.io.Serializable;
+
 /**
  * Created by Caizhui on 2017/6/10.
  * 事件录入实体
  */
 @Table(name = "t_evententer")
-public class EventEntryEntity {
+public class EventEntryEntity implements Serializable{
+
+    private static final long serialVersionUID = -7620435178023928252L;
 
     /**
      * 主键
      */
-    @Column(name = "uuid",autoGen = true,isId = true)
+    @Column(name = "id",isId = true,autoGen = true)
+    private int id;
+
+    @Column(name = "uuid")
     private String uuid;
     /**
      * 事件名称
@@ -250,7 +257,15 @@ public class EventEntryEntity {
         this.leadershipInstructions = leadershipInstructions;
     }
 
-    public EventEntryEntity( String thingName, String happenTime, String happenAddress, String petitionGroups, String fieldDepartmen, String patternManifestation) {
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public EventEntryEntity(String thingName, String happenTime, String happenAddress, String petitionGroups, String fieldDepartmen, String patternManifestation) {
         this.thingName = thingName;
         this.happenTime = happenTime;
         this.happenAddress = happenAddress;
