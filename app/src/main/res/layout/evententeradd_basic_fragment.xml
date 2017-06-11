@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -30,6 +29,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:background="@null"
+                    android:textSize="16sp"
                     android:layout_weight="1" />
 
                 <TextView
@@ -53,13 +53,13 @@
                     android:layout_height="wrap_content"
                     android:text="@string/happen_time" />
 
-                <EditText
+                <TextView
                     android:id="@+id/happen_time_edt"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@null"
-                    android:editable="false" />
+                    android:textSize="16sp"
+                    android:background="@null"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -87,6 +87,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:background="@null"
+                    android:textSize="16sp"
                     android:layout_weight="1" />
 
                 <TextView
@@ -114,6 +115,7 @@
                     android:id="@+id/petition_groups_edt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textSize="16sp"
                     android:background="@null"/>
             </LinearLayout>
 
@@ -136,6 +138,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:background="@null"
+                    android:textSize="16sp"
                     android:layout_weight="1" />
 
                 <TextView
@@ -163,6 +166,7 @@
                     android:id="@+id/pattern_manifestation_spinner"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:textSize="16sp"
                     android:layout_weight="1" />
 
                 <TextView
@@ -191,6 +195,7 @@
                     android:id="@+id/scope_text_spinner"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:textSize="16sp"
                     android:layout_weight="1" />
 
                 <TextView
@@ -219,6 +224,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:background="@null"
+                    android:textSize="16sp"
                     android:layout_weight="1" />
 
                 <TextView
@@ -245,7 +251,8 @@
                 <Spinner
                     android:id="@+id/foreign_related_spinner"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"/>
             </LinearLayout>
 
             <include layout="@layout/linearlayout_one" />
@@ -265,7 +272,8 @@
                 <Spinner
                     android:id="@+id/involved_xinjiang_spinner"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"/>
             </LinearLayout>
 
             <include layout="@layout/linearlayout_one" />
@@ -285,7 +293,8 @@
                 <Spinner
                     android:id="@+id/involve_public_opinion_spinner"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"/>
             </LinearLayout>
 
             <include layout="@layout/linearlayout_one" />
@@ -305,7 +314,8 @@
                 <Spinner
                     android:id="@+id/public_security_disposal_spinner"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"/>
             </LinearLayout>
 
             <include layout="@layout/linearlayout_one" />
@@ -327,6 +337,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@null"
+                    android:textSize="16sp"
                     android:text="华强北街道" />
             </LinearLayout>
 
@@ -347,7 +358,8 @@
                 <Spinner
                     android:id="@+id/belong_community_spinner"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"/>
             </LinearLayout>
 
             <include layout="@layout/linearlayout_one" />
@@ -369,6 +381,7 @@
                     android:layout_width="0dp"
                     android:layout_height="100dp"
                     android:background="@null"
+                    android:textSize="16sp"
                     android:layout_weight="1" />
 
                 <TextView
@@ -397,6 +410,7 @@
                     android:layout_width="0dp"
                     android:layout_height="100dp"
                     android:background="@null"
+                    android:textSize="16sp"
                     android:layout_weight="1" />
 
                 <TextView
@@ -424,6 +438,7 @@
                     android:id="@+id/leadership_instructions_edt"
                     android:layout_width="match_parent"
                     android:background="@null"
+                    android:textSize="16sp"
                     android:layout_height="100dp" />
             </LinearLayout>
 

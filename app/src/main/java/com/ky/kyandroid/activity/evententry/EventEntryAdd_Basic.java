@@ -1,6 +1,7 @@
 package com.ky.kyandroid.activity.evententry;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,9 +13,14 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ky.kyandroid.R;
+import com.ky.kyandroid.db.dao.EventEntryDao;
+import com.ky.kyandroid.entity.EventEntryEntity;
 import com.ky.kyandroid.entity.KeyValueEntity;
+import com.ky.kyandroid.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -41,7 +47,7 @@ public class EventEntryAdd_Basic extends Fragment {
      * 发生时间
      */
     @BindView(R.id.happen_time_edt)
-    EditText happenTimeEdt;
+    TextView happenTimeEdt;
     /**
      * 发生地点
      */
@@ -138,11 +144,21 @@ public class EventEntryAdd_Basic extends Fragment {
      */
     ArrayAdapter<KeyValueEntity> adapter;
 
+    public EventEntryDao eventEntryDao;
+
+    public EventEntryEntity eventEntryEntity;
+
+    /**
+     * 提示信息
+     */
+    private String message="";
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.evententeradd_basic_fragment, container, false);
         ButterKnife.bind(this, view);
+        eventEntryDao = new EventEntryDao();
         initData();
         return view;
     }
@@ -203,7 +219,7 @@ public class EventEntryAdd_Basic extends Fragment {
         belongCommunitySpinner .setAdapter(adapter);//将adapter 添加到所属社区spinner中
     }
 
-    @OnClick(R.id.happen_time_edt)
+    @OnClick({R.id.happen_time_edt,R.id.reporting_leadership_btn,R.id.save_draft_btn})
     public void onClick(View v) {
         switch (v.getId()) {
             /** 点击发生时间控件 **/
@@ -216,7 +232,105 @@ public class EventEntryAdd_Basic extends Fragment {
                     }
                 }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
                 break;
+            /** 上报领导按钮*/
+            case R.id.reporting_leadership_btn:
+                break;
+            /**保存草稿按钮*/
+            case R.id.save_draft_btn:
+                PackageData();
+                if("".equals(message)){
+                   boolean flag=  eventEntryDao.saveEventEntryEntity(eventEntryEntity);
+                    if(flag){
+                        Toast.makeText(EventEntryAdd_Basic.this.getActivity(), "保存成功", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(this.getActivity(), EventEntryListActivity.class);
+                        startActivity(intent);
+                    }else{
+                        Toast.makeText(EventEntryAdd_Basic.this.getActivity(), "保存失败", Toast.LENGTH_SHORT).show();
+                    }
+                }else{
+                    Toast.makeText(EventEntryAdd_Basic.this.getActivity(), message, Toast.LENGTH_SHORT).show();
+                }
+                break;
         }
+    }
+
+    /**
+     * 封装数据
+     */
+    public void PackageData(){
+        //每次保存时先清空message
+        message="";
+        eventEntryEntity = new EventEntryEntity();
+        String thingNameString = thingNameEdt.getText().toString();
+        String happenTimeString = happenTimeEdt.getText().toString();
+        String happenAddressString = happenAddressEdt.getText().toString();
+        String petitionGroupsString = petitionGroupsEdt.getText().toString();
+        String fieldDepartmenString = fieldDepartmenEdt.getText().toString();
+        String patternManifestationString =  patternManifestationSpinner.getSelectedItem().toString();
+        String scopeTextString = scopeTextSpinner.getSelectedItem().toString();
+        String fieldsInvolved= fieldsInvolvedEdt.getText().toString();
+        String foreignRelatedString = foreignRelatedSpinner.getSelectedItem().toString();
+        String involvedXinjiangString = involvedXinjiangSpinner.getSelectedItem().toString();
+        String involvePublicOpinionString =involvePublicOpinionSpinner.getSelectedItem().toString();
+        String publicSecurityDisposalString = publicSecurityDisposalSpinner.getSelectedItem().toString();
+        String belongStreetString = belongStreetEdt.getText().toString();
+        String belongCommunityString = belongCommunitySpinner.getSelectedItem().toString();
+        String  mainAppealsString =mainAppealsEdt.getText().toString();
+        String eventSummaryString = eventSummaryEdt.getText().toString();
+        String leadershipInstructionsString =leadershipInstructionsEdt.getText().toString();
+        if(StringUtils.isBlank(thingNameString)){
+            message+="事件名称不能为空\n";
+        }else{
+            eventEntryEntity.setThingName(thingNameString);
+        }
+        if(StringUtils.isBlank(happenTimeString)){
+            message+="发生时间不能为空\n";
+        }else{
+            eventEntryEntity.setHappenTime(happenTimeString);
+        }
+        if(StringUtils.isBlank(happenAddressString)){
+            message+="发生地点不能为空\n";
+        }else{
+            eventEntryEntity.setHappenAddress(happenAddressString);
+        }
+        eventEntryEntity.setPetitionGroups(petitionGroupsString);
+        if(StringUtils.isBlank(fieldDepartmenString)){
+            message+="到场部门不能为空\n";
+        }else{
+            eventEntryEntity.setPetitionGroups(fieldDepartmenString);
+        }
+        if(StringUtils.isBlank(patternManifestationString)){
+            message+="表现形式不能为空\n";
+        }else{
+            eventEntryEntity.setPatternManifestation(patternManifestationString);
+        }
+        if(StringUtils.isBlank(scopeTextString)){
+            message+="规模不能为空\n";
+        }else{
+            eventEntryEntity.setScope(scopeTextString);
+        }
+        if(StringUtils.isBlank(fieldsInvolved)){
+            message+="涉及领域不能为空\n";
+        }else{
+            eventEntryEntity.setFieldsInvolved(fieldsInvolved);
+        }
+        eventEntryEntity.setForeignRelated(foreignRelatedString);
+        eventEntryEntity.setInvolvedXinjiang(involvedXinjiangString);
+        eventEntryEntity.setInvolvePublicOpinion(involvePublicOpinionString);
+        eventEntryEntity.setPublicSecurityDisposal(publicSecurityDisposalString);
+        eventEntryEntity.setBelongStreet(belongStreetString);
+        eventEntryEntity.setBelongCommunity(belongCommunityString);
+        if(StringUtils.isBlank(mainAppealsString)){
+            message+="主要诉求不能为空\n";
+        }else{
+            eventEntryEntity.setMainAppeals(mainAppealsString);
+        }
+        if(StringUtils.isBlank(eventSummaryString)){
+            message+="事件概要不能为空\n";
+        }else{
+            eventEntryEntity.setEventSummary(eventSummaryString);
+        }
+        eventEntryEntity.setLeadershipInstructions(leadershipInstructionsString);
     }
 
 }

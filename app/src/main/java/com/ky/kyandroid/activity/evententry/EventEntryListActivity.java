@@ -12,9 +12,9 @@ import android.widget.TextView;
 
 import com.ky.kyandroid.R;
 import com.ky.kyandroid.adapter.EventEntryListAdapter;
+import com.ky.kyandroid.db.dao.EventEntryDao;
 import com.ky.kyandroid.entity.EventEntryEntity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -66,11 +66,14 @@ public class EventEntryListActivity extends AppCompatActivity {
 
     private EventEntryListAdapter adapter;
 
+    private EventEntryDao eventEntryDao;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_evententry_list);
         ButterKnife.bind(this);
+        eventEntryDao = new EventEntryDao();
         initData();
     }
 
@@ -88,11 +91,11 @@ public class EventEntryListActivity extends AppCompatActivity {
      * List列表设置初始化数据
      */
     public  void initData(){
-        entryEntityList = new ArrayList<EventEntryEntity>();
-        for (int i=0;i<10;i++){
-            entryEntityList.add(new EventEntryEntity("事件测试"+i,"广州天河","2017-06-11","2321","1212","121"));
+        //entryEntityList = new ArrayList<EventEntryEntity>();
+        entryEntityList = eventEntryDao.queryList();
+        if(entryEntityList!=null && entryEntityList.size()>0){
+            adapter = new EventEntryListAdapter(entryEntityList,EventEntryListActivity.this);
+            searchEvententryList.setAdapter(adapter);
         }
-        adapter = new EventEntryListAdapter(entryEntityList,EventEntryListActivity.this);
-        searchEvententryList.setAdapter(adapter);
     }
 }
