@@ -95,8 +95,6 @@ public class LoginActivity extends AppCompatActivity {
                 } else {
                     Intent intent = new Intent(this, EventEntryListActivity.class);
                     startActivity(intent);
-                    finish();
-
                 }
                 break;
         }

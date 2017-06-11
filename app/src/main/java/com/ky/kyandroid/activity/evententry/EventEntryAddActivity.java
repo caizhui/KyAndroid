@@ -214,7 +214,7 @@ public class EventEntryAddActivity extends FragmentActivity {
             /** 返回键 **/
             case R.id.left_btn:
                 //onBackPressed();
-                this.finish();
+                finish();
                 break;
         }
     }

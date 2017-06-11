@@ -11,8 +11,7 @@
         android:theme="@style/AppTheme">
 
         <activity android:name=".activity.LoginActivity"
-            android:windowSoftInputMode = "stateAlwaysHidden|adjustPan"
-            android:launchMode="singleTask">
+            android:windowSoftInputMode = "stateAlwaysHidden|adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -20,12 +19,11 @@
         </activity>
 
         <activity android:name=".activity.evententry.EventEntryAddActivity"
-            android:windowSoftInputMode = "stateAlwaysHidden|adjustPan"
-            android:launchMode="singleTask">
+            android:windowSoftInputMode = "stateAlwaysHidden|adjustPan">
         </activity>
 
         <activity android:name=".activity.evententry.EventEntryListActivity"
-            android:launchMode="singleTask"/>
+            android:screenOrientation="portrait"/>
 
     </application>
 

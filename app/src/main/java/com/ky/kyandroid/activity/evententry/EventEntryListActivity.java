@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -77,14 +78,19 @@ public class EventEntryListActivity extends AppCompatActivity {
         initData();
     }
 
-    /**
-     * 点击标题栏右边按钮
-     */
-    @OnClick(R.id.right_btn)
-    public void onClickRightBtn(){
-        Intent intent = new Intent(this, EventEntryAddActivity.class);
-        startActivity(intent);
-        finish();
+    @OnClick({R.id.left_btn,R.id.right_btn})
+    public void onClick(View v) {
+        switch (v.getId()) {
+            /** 返回键 **/
+            case R.id.left_btn:
+                //onBackPressed();
+                finish();
+                break;
+            case R.id.right_btn:
+                Intent intent = new Intent(this, EventEntryAddActivity.class);
+                startActivity(intent);
+                break;
+        }
     }
 
     /**
