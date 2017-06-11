@@ -249,4 +249,13 @@ public class EventEntryEntity {
     public void setLeadershipInstructions(String leadershipInstructions) {
         this.leadershipInstructions = leadershipInstructions;
     }
+
+    public EventEntryEntity( String thingName, String happenTime, String happenAddress, String petitionGroups, String fieldDepartmen, String patternManifestation) {
+        this.thingName = thingName;
+        this.happenTime = happenTime;
+        this.happenAddress = happenAddress;
+        this.petitionGroups = petitionGroups;
+        this.fieldDepartmen = fieldDepartmen;
+        this.patternManifestation = patternManifestation;
+    }
 }

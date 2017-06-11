@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -30,12 +31,35 @@ import butterknife.OnClick;
 public class EventEntryAddActivity extends FragmentActivity {
 
 
+    /**
+     * TAG
+     */
+    private static final String TAG = "EventEntryAddActivity";
 
-    /** TAG */
-    private static final String TAG = "RentingHouseAddActivity";
+    /**
+     * 标题栏左边按钮
+     */
+    @BindView(R.id.left_btn)
+    ImageView leftBtn;
 
-    /** 显示的fragment_viewpager */
-    private ViewPager fragment_viewpager;
+    /**
+     * 标题栏中间标题
+     */
+    @BindView(R.id.center_text)
+    TextView centerText;
+
+    /**
+     * 标题栏右边按钮
+     */
+    @BindView(R.id.right_btn)
+    Button rightBtn;
+
+    /**
+     * 显示的fragment_viewpager
+     */
+    @BindView(R.id.fragment_viewpager)
+    public ViewPager fragment_viewpager;
+
 
     @BindView(R.id.radiogroup)
     public RadioGroup radiogroup;
@@ -50,22 +74,29 @@ public class EventEntryAddActivity extends FragmentActivity {
      * 当事人按钮
      */
     @BindView(R.id.radiobtn_person)
-    public RadioButton  radiobtn_person;
+    public RadioButton radiobtn_person;
 
     /**
      * 附件按钮
      */
     @BindView(R.id.radiobtn_attachment)
-    public RadioButton  radiobtn_attachment;
+    public RadioButton radiobtn_attachment;
 
-    /** 事件录入 - 基本信息 */
+    /**
+     * 事件录入 - 基本信息
+     */
     private EventEntryAdd_Basic eventEntryAdd_basic;
 
-    /** 事件录入- 当事人 */
+    /**
+     * 事件录入- 当事人
+     */
     private EventEntryAdd_Person eventEntryAdd_person;
 
-    /** 事件录入 - 附件 */
+    /**
+     * 事件录入 - 附件
+     */
     private EventEntryAdd_Attachment eventEntryAdd_attachment;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,8 +112,7 @@ public class EventEntryAddActivity extends FragmentActivity {
      * 初始化PageView
      */
     @SuppressWarnings("deprecation")
-    private void initPageView(){
-        fragment_viewpager = (ViewPager) findViewById(R.id.fragment_viewpager);
+    private void initPageView() {
         eventEntryAdd_basic = new EventEntryAdd_Basic();
         eventEntryAdd_person = new EventEntryAdd_Person();
         eventEntryAdd_attachment = new EventEntryAdd_Attachment();
@@ -119,7 +149,7 @@ public class EventEntryAddActivity extends FragmentActivity {
     /**
      * @param index
      */
-    private void changeState2RadioButton(int index){
+    private void changeState2RadioButton(int index) {
         switch (index) {
             case 0:
                 radiobtn_baseinfo.setChecked(true);
@@ -137,21 +167,12 @@ public class EventEntryAddActivity extends FragmentActivity {
      * 初始化标题栏
      */
     private void initToolbar() {
-        /** toolbar控件容器 **/
-        View toolbar_layout = findViewById(R.id.toolbar_layout);
-        /** 返回键 **/
-        ImageView toolbar_back = (ImageView) findViewById(R.id.toolbar_back);
-        /** 标题 **/
-        TextView toolbar_title = (TextView) findViewById(R.id.toolbar_title);
-        /** 右侧按钮，根据需要设置是否需要点击事件 **/
-        View toolbar_right_btn = findViewById(R.id.toolbar_right_btn);
-        /** 右侧为图片时添加 **/
-        ImageView toolbar_right_img = (ImageView) findViewById(R.id.toolbar_right_img);
-        /** 右侧为文字时添加 **/
-        TextView toolbar_right_tv = (TextView) findViewById(R.id.toolbar_right_tv);
 
         /** 设置toolbar标题 **/
-        toolbar_title.setText("事件录入信息");
+        centerText.setText("事件录入信息");
+
+        /** 将右边按钮隐藏*/
+        rightBtn.setVisibility(View.GONE);
     }
 
     /**
@@ -187,16 +208,12 @@ public class EventEntryAddActivity extends FragmentActivity {
     }
 
 
-    @OnClick({R.id.toolbar_back,R.id.toolbar_right_btn})
+    @OnClick({R.id.left_btn})
     public void onClick(View v) {
         switch (v.getId()) {
             /** 返回键 **/
-            case R.id.toolbar_back:
+            case R.id.left_btn:
                 onBackPressed();
-                break;
-            /** Toolbar右侧按钮 **/
-            case R.id.toolbar_right_btn:
-                Log.i(TAG, "Toolbar右侧按钮");
                 break;
         }
     }

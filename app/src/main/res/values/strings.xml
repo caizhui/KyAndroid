@@ -7,6 +7,8 @@
     <string name="add_draft_text">保存草稿</string>
     <string name="login_hint_account">请输入用户名</string>
     <string name="login_hint_password">请输入密码</string>
+    <string name="evententry_query_text">事件列表</string>
+    <string name="evententry_add_text">新增</string>
 
     <!--事件录入start-->
     <string name="thing_name">事件名称:</string>

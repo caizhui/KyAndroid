@@ -11,7 +11,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.ky.kyandroid.R;
-import com.ky.kyandroid.activity.evententry.EventEntryAddActivity;
+import com.ky.kyandroid.activity.evententry.EventEntryListActivity;
 import com.ky.kyandroid.bean.NetWorkConnection;
 import com.ky.kyandroid.util.SpUtil;
 import com.ky.kyandroid.util.StringUtils;
@@ -93,7 +93,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (StringUtils.isBlank(account) || StringUtils.isBlank(password)) {
                     Toast.makeText(this,"用户名或密码不能为空",Toast.LENGTH_SHORT).show();
                 } else {
-                    Intent intent = new Intent(this, EventEntryAddActivity.class);
+                    Intent intent = new Intent(this, EventEntryListActivity.class);
                     startActivity(intent);
                     finish();
 

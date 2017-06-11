@@ -24,6 +24,8 @@
             android:windowSoftInputMode = "stateAlwaysHidden|adjustPan">
         </activity>
 
+        <activity android:name=".activity.evententry.EventEntryListActivity"/>
+
     </application>
 
 
