@@ -16,8 +16,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class EventEntryListAdapter extends BaseAdapter {
-    private List<EventEntryEntity> list;
-    private Context context;
+    public List<EventEntryEntity> list;
+    public Context context;
 
 
     public EventEntryListAdapter(Context context) {

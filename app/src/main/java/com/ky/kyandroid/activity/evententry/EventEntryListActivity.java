@@ -1,15 +1,18 @@
 package com.ky.kyandroid.activity.evententry;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ky.kyandroid.R;
 import com.ky.kyandroid.adapter.EventEntryListAdapter;
@@ -22,6 +25,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemClick;
+import butterknife.OnItemLongClick;
 
 /**
  * Created by Caizhui on 2017-6-9.
@@ -70,6 +74,27 @@ public class EventEntryListActivity extends AppCompatActivity {
 
     private EventEntryDao eventEntryDao;
 
+    /**
+     * 操作人员权限
+     */
+    private String[] listViewContent;
+
+
+    /**
+     * 事件实体
+     */
+    EventEntryEntity eventEntryEntity;
+
+    /**
+     * 提示信息
+     */
+    String message;
+
+    /**
+     * 操作是否成功标识
+     */
+    boolean flag;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,10 +102,14 @@ public class EventEntryListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_evententry_list);
         ButterKnife.bind(this);
         eventEntryDao = new EventEntryDao();
-        initData();
     }
 
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initData();
+    }
 
     @OnClick({R.id.left_btn,R.id.right_btn})
     public void onClick(View v) {
@@ -115,7 +144,7 @@ public class EventEntryListActivity extends AppCompatActivity {
      */
     @OnItemClick(R.id.search_evententry_list)
     public  void OnItemClick(int position){
-       EventEntryEntity eventEntryEntity = (EventEntryEntity) adapter.getItem(position);
+        eventEntryEntity = (EventEntryEntity) adapter.getItem(position);
         Intent intent =new Intent(this,EventEntryAddActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable("eventEntryEntity",eventEntryEntity);
@@ -123,5 +152,107 @@ public class EventEntryListActivity extends AppCompatActivity {
         intent.putExtra("type","1");
         intent.putExtras(bundle);
         startActivity(intent);
+    }
+
+    @OnItemLongClick(R.id.search_evententry_list)
+    public boolean OnItemLongClick(final int position){
+        eventEntryEntity = (EventEntryEntity) adapter.getItem(position);
+        //1表示事件提交，3表示街道核实 ，6为街道受理
+        if("1".equals(eventEntryEntity.getStatus())){
+            listViewContent = new String[]{"删除", "核实", "事件跟踪"};
+        }else  if("3".equals(eventEntryEntity.getStatus())){
+            listViewContent = new String[]{"退回", "不予立案", "受理","事件跟踪"};
+        }
+        else  if("6".equals(eventEntryEntity.getStatus())){
+            listViewContent = new String[]{"作废", "街道处理  ", "街道派遣","上报","事件跟踪"};
+        }
+        AlertDialog.Builder builder =new AlertDialog.Builder(this);
+        builder.setItems(listViewContent, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int pos) {
+                //事件刚刚录入
+                if("1".equals(eventEntryEntity.getStatus())){
+                    //删除
+                    if(pos==0) {
+                        message = "";
+                        flag = eventEntryDao.deleteEventEntry(eventEntryEntity.getId());
+                        if (flag) {
+                            Toast.makeText(EventEntryListActivity.this,  "删除成功", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(EventEntryListActivity.this,  "删除失败", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    //街道核实状态为3
+                    if(pos ==1) {
+                        //操作流程方法，因为所有的流程都是改变状态，所以写一个公共方法。
+                        OperatingProcess("3","街道核实");
+                    }
+                }
+                //街道已经核实，做下一步操作
+                if("3".equals(eventEntryEntity.getStatus())){
+                    if(pos ==0){
+                        //街道退回状态为4
+                        OperatingProcess("4","街道退回");
+                    } else if (pos == 1) {
+                        //街道退回状态为4
+                        OperatingProcess("5","街道不予立案");
+                    }else if (pos == 2) {
+                        //街道退回状态为4
+                        OperatingProcess("6","街道受理");
+                    }
+                }
+                //街道已经受理，做下一步操作
+                if("6".equals(eventEntryEntity.getStatus())){
+                    if(pos ==0){
+                        //街道事件作废状态为4
+                        OperatingProcess("7","街道事件作废");
+                    } else if (pos == 1) {
+                        //街道自行状态为4
+                        OperatingProcess("8","街道自行处理");
+                    }else if (pos == 2) {
+                        //街道派遣状态为4
+                        OperatingProcess("9","街道派遣");
+                    }else if (pos == 3) {
+                        //街道上报状态为16
+                        OperatingProcess("16","街道上报");
+                    }
+                }
+                //对页面数据进行刷新
+                initData();
+               // entryEntityList = eventEntryDao.queryList();
+               // adapter.notifyDataSetChanged(entryEntityList);
+            }
+        });
+        builder.create().show();
+        return true;
+    }
+
+
+    /**
+     * 操作流程
+     * @param stauts
+     */
+    public void OperatingProcess(final String stauts, final String message){
+        AlertDialog.Builder builder =new AlertDialog.Builder(EventEntryListActivity.this);
+        builder.setTitle("信息");
+        builder.setMessage("确定要执行次操作吗？");
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                eventEntryEntity.setStatus(stauts);
+                flag =eventEntryDao.updateEventEntry(eventEntryEntity);
+                if (flag) {
+                    Toast.makeText(EventEntryListActivity.this,  message+"成功", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(EventEntryListActivity.this,  message+"失败", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+            }
+        });
+        builder.create().show();
     }
 }

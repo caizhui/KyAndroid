@@ -92,12 +92,15 @@ public class EventEntryDao extends BaseDao {
         return null;
     }
 
-    public void deleteEventEntry(String id) {
+    public boolean deleteEventEntry(int id) {
+        boolean flag =false;
         try {
             db.delete(EventEntryEntity.class, WhereBuilder.b("id","=", id));
+            flag=true;
         } catch (DbException e) {
             e.printStackTrace();
         }
+        return flag;
     }
 
     /**
@@ -110,7 +113,7 @@ public class EventEntryDao extends BaseDao {
         try {
             db.update(entity, String.valueOf(WhereBuilder.b("id","=", entity.getId())),"uuid","thingname","happentime","happenaddress","petitiongroups",
                     "fielddepartmen","patternmanifestation","scope","fieldsinvolved","foreignrelated","involvedxinjiang","involvepublicopinion",
-                    "publicsecuritydisposal","belongstreet","belongcommunity","mainappeals","eventsummary","leadershipinstructions");
+                    "publicsecuritydisposal","belongstreet","belongcommunity","mainappeals","eventsummary","leadershipinstructions","status");
             flag = true;
         } catch (DbException e) {
             e.printStackTrace();

@@ -283,8 +283,8 @@ public class EventEntryAdd_Basic extends Fragment {
                             Toast.makeText(EventEntryAdd_Basic.this.getActivity(),   "修改失败", Toast.LENGTH_SHORT).show();
                         }
                     }else{
-                        //初始值为0
-                        eventEntryEntity.setStatus("0");
+                        //事件保存为1，事件提交为2
+                        eventEntryEntity.setStatus("1");
                         flag = eventEntryDao.saveEventEntryEntity(eventEntryEntity);
                         if (flag) {
                             Toast.makeText(EventEntryAdd_Basic.this.getActivity(), "保存成功", Toast.LENGTH_SHORT).show();
