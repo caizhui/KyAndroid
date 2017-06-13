@@ -5,6 +5,7 @@ import android.util.Log;
 import com.ky.kyandroid.db.BaseDao;
 import com.ky.kyandroid.entity.EventEntryEntity;
 
+import org.xutils.db.sqlite.WhereBuilder;
 import org.xutils.ex.DbException;
 
 import java.util.List;
@@ -89,5 +90,31 @@ public class EventEntryDao extends BaseDao {
             Log.i(TAG, "信息查询异常-queryListForCV >> " + e.getMessage());
         }
         return null;
+    }
+
+    public void deleteEventEntry(String id) {
+        try {
+            db.delete(EventEntryEntity.class, WhereBuilder.b("id","=", id));
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 修改
+     * @param entity
+     * @return
+     */
+    public boolean updateEventEntry(EventEntryEntity entity){
+        boolean flag =false;
+        try {
+            db.update(entity, String.valueOf(WhereBuilder.b("id","=", entity.getId())),"uuid","thingname","happentime","happenaddress","petitiongroups",
+                    "fielddepartmen","patternmanifestation","scope","fieldsinvolved","foreignrelated","involvedxinjiang","involvepublicopinion",
+                    "publicsecuritydisposal","belongstreet","belongcommunity","mainappeals","eventsummary","leadershipinstructions");
+            flag = true;
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+        return flag;
     }
 }

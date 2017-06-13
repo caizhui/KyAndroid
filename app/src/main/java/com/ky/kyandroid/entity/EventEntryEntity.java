@@ -109,6 +109,12 @@ public class EventEntryEntity implements Serializable{
     public String leadershipInstructions;
 
 
+    /**
+     * 状态
+     */
+    @Column(name = "status")
+    public  String status;
+
     public EventEntryEntity(){
 
     }
@@ -263,6 +269,14 @@ public class EventEntryEntity implements Serializable{
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public EventEntryEntity(String thingName, String happenTime, String happenAddress, String petitionGroups, String fieldDepartmen, String patternManifestation) {

@@ -272,13 +272,27 @@ public class EventEntryAdd_Basic extends Fragment {
             case R.id.save_draft_btn:
                 PackageData();
                 if ("".equals(message)) {
-                    boolean flag = eventEntryDao.saveEventEntryEntity(eventEntryEntity);
-                    if (flag) {
-                        Toast.makeText(EventEntryAdd_Basic.this.getActivity(), "保存成功", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(this.getActivity(), EventEntryListActivity.class);
-                        startActivity(intent);
-                    } else {
-                        Toast.makeText(EventEntryAdd_Basic.this.getActivity(), "保存失败", Toast.LENGTH_SHORT).show();
+                    boolean flag ;
+                    if("1".equals(type)){
+                        flag = eventEntryDao.updateEventEntry(eventEntryEntity);
+                        if (flag) {
+                            Toast.makeText(EventEntryAdd_Basic.this.getActivity(), "修改成功", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(this.getActivity(), EventEntryListActivity.class);
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(EventEntryAdd_Basic.this.getActivity(),   "修改失败", Toast.LENGTH_SHORT).show();
+                        }
+                    }else{
+                        //初始值为0
+                        eventEntryEntity.setStatus("0");
+                        flag = eventEntryDao.saveEventEntryEntity(eventEntryEntity);
+                        if (flag) {
+                            Toast.makeText(EventEntryAdd_Basic.this.getActivity(), "保存成功", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(this.getActivity(), EventEntryListActivity.class);
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(EventEntryAdd_Basic.this.getActivity(),   "保存失败", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 } else {
                     Toast.makeText(EventEntryAdd_Basic.this.getActivity(), message, Toast.LENGTH_SHORT).show();
@@ -293,7 +307,9 @@ public class EventEntryAdd_Basic extends Fragment {
     public void PackageData() {
         //每次保存时先清空message
         message = "";
-        eventEntryEntity = new EventEntryEntity();
+        if(eventEntryEntity == null){
+            eventEntryEntity = new EventEntryEntity();
+        }
         String thingNameString = thingNameEdt.getText().toString();
         String happenTimeString = happenTimeEdt.getText().toString();
         String happenAddressString = happenAddressEdt.getText().toString();
