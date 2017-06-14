@@ -176,7 +176,7 @@ public class EventEntryAddActivity extends FragmentActivity {
         centerText.setText("事件录入信息");
 
         /** 将右边按钮隐藏*/
-        rightBtn.setVisibility(View.GONE);
+        rightBtn.setVisibility(View.INVISIBLE);
     }
 
     /**
