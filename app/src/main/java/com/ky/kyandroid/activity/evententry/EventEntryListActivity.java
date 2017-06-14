@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,9 +29,10 @@ import butterknife.OnClick;
 import butterknife.OnItemClick;
 import butterknife.OnItemLongClick;
 
-import static com.ky.kyandroid.R.layout.diaog_dispatch_operation;
-import static com.ky.kyandroid.R.layout.diaog_manage_operation;
-import static com.ky.kyandroid.R.layout.diaog_return_operation;
+import static com.ky.kyandroid.R.layout.add_department;
+import static com.ky.kyandroid.R.layout.dialog_dispatch_operation;
+import static com.ky.kyandroid.R.layout.dialog_manage_operation;
+import static com.ky.kyandroid.R.layout.dialog_return_operation;
 
 /**
  * Created by Caizhui on 2017-6-9.
@@ -198,26 +200,26 @@ public class EventEntryListActivity extends AppCompatActivity {
                 if("3".equals(eventEntryEntity.getStatus())){
                     if(pos ==0){
                         //街道退回状态为4
-                        ReturnOperation(diaog_return_operation,"4","退回");
+                        ReturnOperation(dialog_return_operation,"4","退回");
                     } else if (pos == 1) {
                         //街道不予立案状态为5
-                        ReturnOperation(diaog_return_operation,"5","不予立案");
+                        ReturnOperation(dialog_return_operation,"5","不予立案");
                     }else if (pos == 2) {
                         //街道受理状态为6
                         OperatingProcess("6","街道受理");
                     }else if (pos == 3) {
                         //街道作废状态为7
-                        ReturnOperation(diaog_return_operation,"7","作废");
+                        ReturnOperation(dialog_return_operation,"7","作废");
                     }
                 }
                 //街道已经受理，做下一步操作
                 if("6".equals(eventEntryEntity.getStatus())){
                     if (pos == 0) {
                         //街道自行状态为8
-                        ReturnOperation(diaog_manage_operation,"8","街道自行处理");
+                        ReturnOperation(dialog_manage_operation,"8","街道自行处理");
                     }else if (pos == 1) {
                         //街道派遣状态为9
-                        ReturnOperation(diaog_dispatch_operation,"9","街道派遣");
+                        ReturnOperation(dialog_dispatch_operation,"9","街道派遣");
                     }else if (pos == 2) {
                         //街道上报状态为16
                         OperatingProcess("16","街道上报");
@@ -227,7 +229,7 @@ public class EventEntryListActivity extends AppCompatActivity {
                 if("8".equals(eventEntryEntity.getStatus())){
                     if (pos == 0) {
                         //街道自行处理退回为25
-                        ReturnOperation(diaog_return_operation,"25","自行处理退回");
+                        ReturnOperation(dialog_return_operation,"25","自行处理退回");
                     }else if (pos == 1) {
                         //自行处理反馈为
                         //ReturnOperation(diaog_dispatch_operation,"9","自行处理反馈");
@@ -279,7 +281,24 @@ public class EventEntryListActivity extends AppCompatActivity {
      * 退回,不予立案操作
      */
     public  void ReturnOperation(int layout,final String status, String title){
-        View mView = LayoutInflater.from(EventEntryListActivity.this).inflate(layout, null);
+        final View mView = LayoutInflater.from(EventEntryListActivity.this).inflate(layout, null);
+        //当点击为街道派遣时执行下面代码
+        if(layout == dialog_dispatch_operation){
+            //获取弹出框添加按钮
+            final View view1= mView.findViewById(R.id.add_diapatch);
+            //获取需要添加控件的L
+            final LinearLayout linearlayout_dispatch= (LinearLayout) mView.findViewById(R.id.linearlayout_dispatch);
+            view1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(EventEntryListActivity.this, "AAAA", Toast.LENGTH_SHORT).show();
+                    linearlayout_dispatch.setOrientation(LinearLayout.VERTICAL);
+                    //获取自定义文件
+                    View view2 = LayoutInflater.from(EventEntryListActivity.this).inflate(add_department, null);
+                    linearlayout_dispatch.addView(view2);
+                }
+            });
+        }
         AlertDialog.Builder builder =new AlertDialog.Builder(EventEntryListActivity.this);
         builder.setTitle(title+"原因");
         builder.setView(mView);
