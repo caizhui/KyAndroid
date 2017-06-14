@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -26,6 +27,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemClick;
 import butterknife.OnItemLongClick;
+
+import static com.ky.kyandroid.R.layout.diaog_dispatch_operation;
+import static com.ky.kyandroid.R.layout.diaog_manage_operation;
+import static com.ky.kyandroid.R.layout.diaog_return_operation;
 
 /**
  * Created by Caizhui on 2017-6-9.
@@ -157,14 +162,15 @@ public class EventEntryListActivity extends AppCompatActivity {
     @OnItemLongClick(R.id.search_evententry_list)
     public boolean OnItemLongClick(final int position){
         eventEntryEntity = (EventEntryEntity) adapter.getItem(position);
-        //1表示事件提交，3表示街道核实 ，6为街道受理
+        //1表示事件提交，3表示街道核实 ，6为街道受理，8为街道自行处理
         if("1".equals(eventEntryEntity.getStatus())){
             listViewContent = new String[]{"删除", "核实", "事件跟踪"};
         }else  if("3".equals(eventEntryEntity.getStatus())){
-            listViewContent = new String[]{"退回", "不予立案", "受理","事件跟踪"};
-        }
-        else  if("6".equals(eventEntryEntity.getStatus())){
-            listViewContent = new String[]{"作废", "街道处理  ", "街道派遣","上报","事件跟踪"};
+            listViewContent = new String[]{"退回", "不予立案", "受理","作废","事件跟踪"};
+        }else  if("6".equals(eventEntryEntity.getStatus())){
+            listViewContent = new String[]{"街道处理", "街道派遣","上报","事件跟踪"};
+        }else  if("8".equals(eventEntryEntity.getStatus())){
+            listViewContent = new String[]{"自行处理退回","自行处理反馈", "回访核查","事件跟踪"};
         }
         AlertDialog.Builder builder =new AlertDialog.Builder(this);
         builder.setItems(listViewContent, new DialogInterface.OnClickListener() {
@@ -192,29 +198,42 @@ public class EventEntryListActivity extends AppCompatActivity {
                 if("3".equals(eventEntryEntity.getStatus())){
                     if(pos ==0){
                         //街道退回状态为4
-                        OperatingProcess("4","街道退回");
+                        ReturnOperation(diaog_return_operation,"4","退回");
                     } else if (pos == 1) {
-                        //街道退回状态为4
-                        OperatingProcess("5","街道不予立案");
+                        //街道不予立案状态为5
+                        ReturnOperation(diaog_return_operation,"5","不予立案");
                     }else if (pos == 2) {
-                        //街道退回状态为4
+                        //街道受理状态为6
                         OperatingProcess("6","街道受理");
+                    }else if (pos == 3) {
+                        //街道作废状态为7
+                        ReturnOperation(diaog_return_operation,"7","作废");
                     }
                 }
                 //街道已经受理，做下一步操作
                 if("6".equals(eventEntryEntity.getStatus())){
-                    if(pos ==0){
-                        //街道事件作废状态为4
-                        OperatingProcess("7","街道事件作废");
-                    } else if (pos == 1) {
-                        //街道自行状态为4
-                        OperatingProcess("8","街道自行处理");
+                    if (pos == 0) {
+                        //街道自行状态为8
+                        ReturnOperation(diaog_manage_operation,"8","街道自行处理");
+                    }else if (pos == 1) {
+                        //街道派遣状态为9
+                        ReturnOperation(diaog_dispatch_operation,"9","街道派遣");
                     }else if (pos == 2) {
-                        //街道派遣状态为4
-                        OperatingProcess("9","街道派遣");
-                    }else if (pos == 3) {
                         //街道上报状态为16
                         OperatingProcess("16","街道上报");
+                    }
+                }
+                //街道已经自行受理，做下一步操作
+                if("8".equals(eventEntryEntity.getStatus())){
+                    if (pos == 0) {
+                        //街道自行处理退回为25
+                        ReturnOperation(diaog_return_operation,"25","自行处理退回");
+                    }else if (pos == 1) {
+                        //自行处理反馈为
+                        //ReturnOperation(diaog_dispatch_operation,"9","自行处理反馈");
+                    }else if (pos == 2) {
+                        //街道上报状态为12
+                        OperatingProcess("12","回访核查");
                     }
                 }
                 //对页面数据进行刷新
@@ -229,7 +248,7 @@ public class EventEntryListActivity extends AppCompatActivity {
 
 
     /**
-     * 操作流程
+     * 受理操作流程
      * @param stauts
      */
     public void OperatingProcess(final String stauts, final String message){
@@ -240,6 +259,34 @@ public class EventEntryListActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 eventEntryEntity.setStatus(stauts);
+                flag =eventEntryDao.updateEventEntry(eventEntryEntity);
+                if (flag) {
+                    Toast.makeText(EventEntryListActivity.this,  message+"成功", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(EventEntryListActivity.this,  message+"失败", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+            }
+        });
+        builder.create().show();
+    }
+
+    /**
+     * 退回,不予立案操作
+     */
+    public  void ReturnOperation(int layout,final String status, String title){
+        View mView = LayoutInflater.from(EventEntryListActivity.this).inflate(layout, null);
+        AlertDialog.Builder builder =new AlertDialog.Builder(EventEntryListActivity.this);
+        builder.setTitle(title+"原因");
+        builder.setView(mView);
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                eventEntryEntity.setStatus(status);
                 flag =eventEntryDao.updateEventEntry(eventEntryEntity);
                 if (flag) {
                     Toast.makeText(EventEntryListActivity.this,  message+"成功", Toast.LENGTH_SHORT).show();
