@@ -104,7 +104,7 @@ public class EventEntryAddActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_evententryadd);
+        setContentView(R.layout.activity_evententry_add);
         ButterKnife.bind(this);
         intent=getIntent();
         initToolbar();
@@ -217,8 +217,7 @@ public class EventEntryAddActivity extends FragmentActivity {
         switch (v.getId()) {
             /** 返回键 **/
             case R.id.left_btn:
-                //onBackPressed();
-                finish();
+                onBackPressed();
                 break;
         }
     }

@@ -29,4 +29,14 @@
     <string name="event_summary">事件概要:</string>
     <string name="leadership_instructions">领导批示:</string>
     <!--时间录入end-->
+
+
+    <!--督察督办start-->
+    <string name="supervisor_name">督办名称</string>
+    <string name="supervisor_type">督办类型</string>
+    <string name="be_supervisor_unit">被督办单位</string>
+    <string name="feedback_time">反馈时限</string>
+    <string name="supervisor_require">督办要求</string>
+    <string name="remark_text">备注</string>
+    <!--督察督办end-->
 </resources>

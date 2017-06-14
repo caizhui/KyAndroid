@@ -18,11 +18,18 @@
             </intent-filter>
         </activity>
 
+        <!--事件新增-->
         <activity android:name=".activity.evententry.EventEntryAddActivity"
             android:windowSoftInputMode = "stateAlwaysHidden|adjustPan">
         </activity>
 
+        <!--事件列表-->
         <activity android:name=".activity.evententry.EventEntryListActivity"
+            android:screenOrientation="portrait"/>
+
+        <!--都督查办新增-->
+        <activity android:name=".activity.supervision.SuperVisionAddActivity"
+            android:windowSoftInputMode = "stateAlwaysHidden|adjustPan"
             android:screenOrientation="portrait"/>
 
     </application>

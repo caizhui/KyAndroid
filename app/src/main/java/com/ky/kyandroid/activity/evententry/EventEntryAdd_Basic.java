@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ky.kyandroid.R;
+import com.ky.kyandroid.activity.supervision.SuperVisionAddActivity;
 import com.ky.kyandroid.db.dao.EventEntryDao;
 import com.ky.kyandroid.entity.EventEntryEntity;
 import com.ky.kyandroid.entity.KeyValueEntity;
@@ -267,6 +268,8 @@ public class EventEntryAdd_Basic extends Fragment {
                 break;
             /** 上报领导按钮*/
             case R.id.reporting_leadership_btn:
+                Intent intent1 = new Intent(this.getActivity(), SuperVisionAddActivity.class);
+                startActivity(intent1);
                 break;
             /**保存草稿按钮*/
             case R.id.save_draft_btn:
