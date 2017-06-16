@@ -7,7 +7,7 @@ public class Constants {
 	
 	/** 服务器连接基础Url */
 
-	public final  static String SERVICE_BASE_URL="http://192.168.1.103:8900/ft/";
+	public final  static String SERVICE_BASE_URL="http://192.168.1.103:8080/ft/";
 
 	/** 成功标识 */
 	public final static String SUCCEED = "SUCCEED";
@@ -17,5 +17,8 @@ public class Constants {
 
 	//登录接口
     public final static String SERVICE_LOGIN = "kyAndroid/login.action";
+
+	//查询事件接口
+	public final static String SERVICE_QUERY_EVENTENTRY= "kyAndroid/sjList.action";
 
 }

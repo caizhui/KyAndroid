@@ -3,6 +3,7 @@ package com.ky.kyandroid.activity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -32,6 +33,7 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -83,6 +85,9 @@ public class LoginActivity extends AppCompatActivity {
      */
     private NetWorkConnection netWorkConnection;
 
+
+    private SweetAlertDialog sweetAlertDialog;
+
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
         @Override
@@ -94,11 +99,13 @@ public class LoginActivity extends AppCompatActivity {
                 // 失败
                 case 0:
                     Log.i(TAG, "登录失败...");
+                    sweetAlertDialog.dismiss();
                     Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
                     break;
                 // 成功跳转
                 case 1:
                     Log.i(TAG, "登录成功...");
+                    sweetAlertDialog.dismiss();
                     handleTransation(message);
                     break;
             }
@@ -111,6 +118,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
+        sweetAlertDialog= new SweetAlertDialog(LoginActivity.this,SweetAlertDialog.PROGRESS_TYPE);
         initEvent();
     }
 
@@ -152,6 +160,10 @@ public class LoginActivity extends AppCompatActivity {
                     mHandler.sendMessage(msg);
                 } else {
                     if(netWorkConnection.isWIFIConnection()){
+                        sweetAlertDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+                        sweetAlertDialog.setTitleText("Loading");
+                        sweetAlertDialog.setCancelable(false);
+                        sweetAlertDialog.show();
                         // 参数列表 - 账号、密码（加密）
                         Map<String, String> paramsMap = new HashMap<String, String>();
                         paramsMap.put("userName", account);

@@ -1,7 +1,9 @@
 package com.ky.kyandroid.bean;
 
-import org.json.JSONObject;
 
+import com.solidfire.gson.JsonObject;
+
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -9,8 +11,12 @@ import java.util.List;
  * @author caizhui
  *
  */
-public class PageBean {
+public class PageBean implements Serializable {
 
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 1L;
 	// 开始
 	private int start;
 
@@ -33,7 +39,7 @@ public class PageBean {
 	private int totalCount;
 
 	// 数据
-	private List<JSONObject> dataList;
+	private List<JsonObject> dataList;
 
 	public int getStart() {
 		return start;
@@ -91,11 +97,11 @@ public class PageBean {
 		this.totalCount = totalCount;
 	}
 
-	public List<JSONObject> getDataList() {
+	public List<JsonObject> getDataList() {
 		return dataList;
 	}
 
-	public void setDataList(List<JSONObject> dataList) {
+	public void setDataList(List<JsonObject> dataList) {
 		this.dataList = dataList;
 	}
 }

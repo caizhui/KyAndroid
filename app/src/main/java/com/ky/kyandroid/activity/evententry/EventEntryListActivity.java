@@ -1,8 +1,12 @@
 package com.ky.kyandroid.activity.evententry;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -16,18 +20,35 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ky.kyandroid.Constants;
 import com.ky.kyandroid.R;
-import com.ky.kyandroid.adapter.EventEntryListAdapter;
+import com.ky.kyandroid.adapter.EventEntityListAdapter;
+import com.ky.kyandroid.bean.AckMessage;
+import com.ky.kyandroid.bean.NetWorkConnection;
+import com.ky.kyandroid.bean.PageBean;
 import com.ky.kyandroid.db.dao.EventEntryDao;
+import com.ky.kyandroid.entity.EventEntity;
 import com.ky.kyandroid.entity.EventEntryEntity;
+import com.ky.kyandroid.util.JsonUtil;
+import com.ky.kyandroid.util.OkHttpUtil;
+import com.ky.kyandroid.util.SpUtil;
+import com.ky.kyandroid.util.StringUtils;
+import com.solidfire.gson.JsonObject;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemClick;
 import butterknife.OnItemLongClick;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 import static com.ky.kyandroid.R.layout.add_department;
 import static com.ky.kyandroid.R.layout.dialog_dispatch_operation;
@@ -74,10 +95,15 @@ public class EventEntryListActivity extends AppCompatActivity {
     /**
      * 事件列表
      */
-    private List<EventEntryEntity> entryEntityList;
+    //private List<EventEntryEntity> entryEntityList;
+
+    /**
+     * 事件列表
+     */
+    private List<EventEntity> eventEntityList;
 
 
-    private EventEntryListAdapter adapter;
+    private EventEntityListAdapter adapter;
 
     private EventEntryDao eventEntryDao;
 
@@ -102,6 +128,39 @@ public class EventEntryListActivity extends AppCompatActivity {
      */
     boolean flag;
 
+    /**
+     * SharedPreferences
+     */
+    private SharedPreferences sp;
+    /**
+     * 网路工具类
+     */
+    private NetWorkConnection netWorkConnection;
+
+    /**
+     * 用户ID
+     */
+    public static final String USER_ID = "userId";
+
+    @SuppressLint("HandlerLeak")
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            // 提示信息
+            String message = String.valueOf(msg.obj == null ? "系统繁忙,请稍后再试"
+                    : msg.obj);
+            switch (msg.what) {
+                // 失败
+                case 0:
+                    Toast.makeText(EventEntryListActivity.this, message, Toast.LENGTH_SHORT).show();
+                    break;
+                // 成功跳转
+                case 1:
+                    handleTransation(message);
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -115,7 +174,17 @@ public class EventEntryListActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        initEvent();
         initData();
+    }
+
+    /**
+     * 初始化事件
+     */
+    private void initEvent() {
+        sp = SpUtil.getSharePerference(this);
+        // 初始化网络工具
+        netWorkConnection = new NetWorkConnection(this);
     }
 
     @OnClick({R.id.left_btn,R.id.right_btn})
@@ -138,10 +207,40 @@ public class EventEntryListActivity extends AppCompatActivity {
      */
     public  void initData(){
         //entryEntityList = new ArrayList<EventEntryEntity>();
-        entryEntityList = eventEntryDao.queryList();
+       /* entryEntityList = eventEntryDao.queryList();
         if(entryEntityList!=null && entryEntityList.size()>0){
             adapter = new EventEntryListAdapter(entryEntityList,EventEntryListActivity.this);
             searchEvententryList.setAdapter(adapter);
+            http://5.5.6.58:8080/ft/kyAndroid/sjList.action?userId=58e454465167622328e096f6
+        }*/
+        final Message msg = new Message();
+        msg.what = 0;
+        if(netWorkConnection.isWIFIConnection()){
+            // 参数列表 - 账号、密码（加密）
+            Map<String, String> paramsMap = new HashMap<String, String>();
+            String userId=sp.getString(USER_ID,"");
+            paramsMap.put("userId",userId);
+            // 发送请求
+            OkHttpUtil.sendRequest(Constants.SERVICE_QUERY_EVENTENTRY, paramsMap, new Callback(){
+
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    mHandler.sendEmptyMessage(0);
+                }
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    if (response.isSuccessful()) {
+                        msg.what = 1;
+                        msg.obj = response.body().string();
+                    } else {
+                        msg.obj = "网络异常,请确认网络情况";
+                    }
+                    mHandler.sendMessage(msg);
+                }
+            });
+        }else{
+            msg.obj = "WIFI网络不可用,请检查网络连接情况";
+            mHandler.sendMessage(msg);
         }
     }
 
@@ -320,5 +419,33 @@ public class EventEntryListActivity extends AppCompatActivity {
             }
         });
         builder.create().show();
+    }
+
+    public void handleTransation(String body) {
+        eventEntityList = new ArrayList<EventEntity>();
+        if (StringUtils.isBlank(body)) {
+        } else {
+            // 处理响应信息
+            AckMessage ackMsg = JsonUtil.fromJson(body, AckMessage.class);
+            if (ackMsg != null) {
+                if (AckMessage.SUCCESS.equals(ackMsg.getAckCode())) {
+                    PageBean pageBean =ackMsg.getPageBean();
+                    if(pageBean!=null){
+                        List<JsonObject> list =pageBean.getDataList();
+                        if(list != null && list.size()>0){
+                            for (int i = 0; i < list.size(); i++) {
+                                //先将获取的Object对象转成String
+                                String entityStr = JsonUtil.toJson(list.get(i));
+                                EventEntity eventEntity = JsonUtil.fromJson(entityStr, EventEntity.class);
+                                eventEntityList.add(eventEntity);
+                            }
+                            adapter = new EventEntityListAdapter( eventEntityList,EventEntryListActivity.this);
+                            searchEvententryList.setAdapter(adapter);
+                        }
+                    }
+                }
+            }
+
+        }
     }
 }
