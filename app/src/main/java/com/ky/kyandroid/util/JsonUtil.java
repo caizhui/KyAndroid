@@ -405,6 +405,7 @@ public class JsonUtil {
 		try {
 			return gson.fromJson(json, clazz);
 		} catch (Exception ex) {
+			String aa = json + " 无法转换为 " + clazz.getName() + " 对象!"+"aaaaaa"+ex.getMessage();
 			 Log.e(json + " 无法转换为 " + clazz.getName() + " 对象!",ex.getMessage());
 			return null;
 		}

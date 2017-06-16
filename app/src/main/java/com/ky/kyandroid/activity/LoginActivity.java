@@ -1,24 +1,41 @@
 package com.ky.kyandroid.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.ky.kyandroid.Constants;
 import com.ky.kyandroid.R;
 import com.ky.kyandroid.activity.evententry.EventEntryListActivity;
+import com.ky.kyandroid.bean.AckMessage;
 import com.ky.kyandroid.bean.NetWorkConnection;
+import com.ky.kyandroid.entity.UserEntity;
+import com.ky.kyandroid.util.JsonUtil;
+import com.ky.kyandroid.util.OkHttpUtil;
 import com.ky.kyandroid.util.SpUtil;
 import com.ky.kyandroid.util.StringUtils;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 /**
  * 类名称：登录界面Activity<br/>
@@ -63,6 +80,28 @@ public class LoginActivity extends AppCompatActivity {
      */
     private NetWorkConnection netWorkConnection;
 
+    @SuppressLint("HandlerLeak")
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            // 提示信息
+            String message = String.valueOf(msg.obj == null ? "系统繁忙,请稍后再试"
+                    : msg.obj);
+            switch (msg.what) {
+                // 失败
+                case 0:
+                    Log.i(TAG, "登录失败...");
+                    Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
+                    break;
+                // 成功跳转
+                case 1:
+                    Log.i(TAG, "登录成功...");
+                    handleTransation(message);
+                    break;
+            }
+        }
+    };
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,6 +116,10 @@ public class LoginActivity extends AppCompatActivity {
      */
     private void initEvent() {
         sp = SpUtil.getSharePerference(this);
+        Log.i(TAG, "createView开始...");
+        // 初始化网络工具
+        netWorkConnection = new NetWorkConnection(this);
+        Log.i(TAG, "createView结束...");
     }
 
     /**
@@ -87,7 +130,7 @@ public class LoginActivity extends AppCompatActivity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_login:
-                // 账号与密码
+               /* // 账号与密码
                 String account = String.valueOf(etAccount.getText());
                 String password = String.valueOf(etPassword.getText());
                 if (StringUtils.isBlank(account) || StringUtils.isBlank(password)) {
@@ -95,9 +138,95 @@ public class LoginActivity extends AppCompatActivity {
                 } else {
                     Intent intent = new Intent(this, EventEntryListActivity.class);
                     startActivity(intent);
+                }*/
+                // 账号与密码
+                String account = String.valueOf(etAccount.getText());
+                String password = String.valueOf(etPassword.getText());
+                final Message msg = new Message();
+                msg.what = 0;
+                if (StringUtils.isBlank(account) || StringUtils.isBlank(password)) {
+                    msg.obj = "登录名或密码不能为空";
+                    mHandler.sendMessage(msg);
+                } else {
+                    if(netWorkConnection.isWIFIConnection()){
+                        // 参数列表 - 账号、密码（加密）
+                        Map<String, String> paramsMap = new HashMap<String, String>();
+                        paramsMap.put("userName", account);
+                        paramsMap.put("password", password);
+                        // 发送请求
+                        OkHttpUtil.sendRequest(Constants.SERVICE_LOGIN, paramsMap, new Callback(){
+
+                            @Override
+                            public void onFailure(Call call, IOException e) {
+                                mHandler.sendEmptyMessage(0);
+                            }
+                            @Override
+                            public void onResponse(Call call, Response response) throws IOException {
+                                if (response.isSuccessful()) {
+                                    msg.what = 1;
+                                    msg.obj = response.body().string();
+                                } else {
+                                    msg.obj = "网络异常,请确认网络情况";
+                                }
+                                mHandler.sendMessage(msg);
+                            }
+                        });
+                    }else{
+                        msg.obj = "WIFI网络不可用,请检查网络连接情况";
+                        mHandler.sendMessage(msg);
+                    }
+
                 }
                 break;
         }
+    }
+
+    /**
+     * 处理后续流程
+     *
+     * @param
+     */
+    private void handleTransation(String body) {
+        if (StringUtils.isBlank(body)) {
+            Log.i(TAG, "解释响应body失败...");
+            Toast.makeText(this, "登录名或密码错误", Toast.LENGTH_SHORT).show();
+        } else {
+            // 处理响应信息
+            AckMessage ackMsg = JsonUtil.fromJson(body, AckMessage.class);
+            if (setUserMessage(ackMsg)) {
+                Log.i(TAG, "设置用户信息成功...");
+                Intent intent = new Intent(this,EventEntryListActivity.class);
+                startActivity(intent);
+                finish();
+            }else{
+                Log.i(TAG, "设置用户信息失败...");
+                Toast.makeText(this, "登录名或密码错误", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    /**
+     * 设置用户信息
+     *
+     * @param ackMsg
+     * @return
+     */
+    private boolean setUserMessage(AckMessage ackMsg){
+        if (ackMsg != null) {
+            if (AckMessage.SUCCESS.equals(ackMsg.getAckCode())) {
+                List<?> list = ackMsg.getData();
+                if (list != null && list.size() > 0) {
+                    String entityStr = JsonUtil.toJson(list.get(0));
+                    UserEntity user = JsonUtil.fromJson(entityStr,UserEntity.class);
+                    if (user != null) {
+                        SpUtil.setStringSharedPerference(sp, USER_ID, user.getUserId());
+                        SpUtil.setStringSharedPerference(sp, USER_NAME, user.getUserName());
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
 }
