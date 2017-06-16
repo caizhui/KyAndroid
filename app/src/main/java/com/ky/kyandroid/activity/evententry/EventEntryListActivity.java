@@ -192,8 +192,8 @@ public class EventEntryListActivity extends AppCompatActivity {
         switch (v.getId()) {
             /** 返回键 **/
             case R.id.left_btn:
-                //onBackPressed();
-                finish();
+                onBackPressed();
+                //finish();
                 break;
             case R.id.right_btn:
                 Intent intent = new Intent(this, EventEntryAddActivity.class);

@@ -105,7 +105,6 @@ public class LoginActivity extends AppCompatActivity {
                 // 成功跳转
                 case 1:
                     Log.i(TAG, "登录成功...");
-                    sweetAlertDialog.dismiss();
                     handleTransation(message);
                     break;
             }
@@ -210,6 +209,7 @@ public class LoginActivity extends AppCompatActivity {
             AckMessage ackMsg = JsonUtil.fromJson(body, AckMessage.class);
             if (setUserMessage(ackMsg)) {
                 Log.i(TAG, "设置用户信息成功...");
+                sweetAlertDialog.dismiss();
                 Intent intent = new Intent(this,EventEntryListActivity.class);
                 startActivity(intent);
                 finish();
