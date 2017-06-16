@@ -42,41 +42,6 @@ public class AckMessage implements Serializable {
 	private PageBean pageBean;
 
 
-	public void setErrorMessage(AckEnum ack){
-		this.ackCode = AckMessage.FAILURE;
-		this.errorCode = ack.name();
-		this.errorMsg = ack.getMsg();
-	}
-
-	public void setSuccessMessage(List<?> data){
-		this.ackCode = AckMessage.SUCCESS;
-		this.data = data;
-	}
-
-	public void setSuccessMessage(Object entity){
-		this.ackCode = AckMessage.SUCCESS;
-		this.entity = entity;
-	}
-
-	public void setSuccessMessage(List<?> data,PageBean pageBean){
-		this.ackCode = AckMessage.SUCCESS;
-		this.data = data;
-		this.pageBean = pageBean;
-	}
-
-	public void setSuccessMessage(Object entity,PageBean pageBean){
-		this.ackCode = AckMessage.SUCCESS;
-		this.entity = entity;
-		this.pageBean = pageBean;
-	}
-
-	public void setSuccessMessage(List<?> data,Object entity,PageBean pageBean){
-		this.ackCode = AckMessage.SUCCESS;
-		this.data = data;
-		this.entity = entity;
-		this.pageBean = pageBean;
-	}
-
 	public String getAckCode() {
 		return ackCode;
 	}

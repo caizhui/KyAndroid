@@ -27,7 +27,6 @@ import com.ky.kyandroid.util.StringUtils;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -52,6 +51,10 @@ public class LoginActivity extends AppCompatActivity {
      * 用户名称
      */
     public static final String USER_NAME = "userName";
+    /**
+     * 用户身份证号码
+     */
+    public static final String USER_SFZHM= "gmsfhm";
     /**
      * 标识
      */
@@ -211,22 +214,22 @@ public class LoginActivity extends AppCompatActivity {
      * @param ackMsg
      * @return
      */
-    private boolean setUserMessage(AckMessage ackMsg){
+    private boolean setUserMessage(AckMessage ackMsg) {
         if (ackMsg != null) {
             if (AckMessage.SUCCESS.equals(ackMsg.getAckCode())) {
-                List<?> list = ackMsg.getData();
-                if (list != null && list.size() > 0) {
-                    String entityStr = JsonUtil.toJson(list.get(0));
-                    UserEntity user = JsonUtil.fromJson(entityStr,UserEntity.class);
-                    if (user != null) {
-                        SpUtil.setStringSharedPerference(sp, USER_ID, user.getUserId());
-                        SpUtil.setStringSharedPerference(sp, USER_NAME, user.getUserName());
-                        return true;
-                    }
+                Object object = ackMsg.getEntity();
+                //先将获取的Object对象转成String
+                String entityStr = JsonUtil.toJson(object);
+                //先将获取的json象转成实体
+                UserEntity user = JsonUtil.fromJson(entityStr,UserEntity.class);
+                if (user != null) {
+                    SpUtil.setStringSharedPerference(sp, USER_ID, user.getId());
+                    SpUtil.setStringSharedPerference(sp, USER_NAME, user.getName());
+                    SpUtil.setStringSharedPerference(sp, USER_SFZHM, user.getGmsfhm());
+                    return true;
                 }
             }
         }
         return false;
     }
-
 }
