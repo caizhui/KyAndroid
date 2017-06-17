@@ -162,7 +162,7 @@ public class LoginActivity extends AppCompatActivity {
                         sweetAlertDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
                         sweetAlertDialog.setTitleText("Loading");
                         sweetAlertDialog.setCancelable(false);
-                        sweetAlertDialog.show();
+                       // sweetAlertDialog.show();
                         // 参数列表 - 账号、密码（加密）
                         Map<String, String> paramsMap = new HashMap<String, String>();
                         paramsMap.put("userName", account);

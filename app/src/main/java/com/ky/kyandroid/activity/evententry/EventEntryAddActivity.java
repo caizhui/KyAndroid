@@ -14,6 +14,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.ky.kyandroid.R;
+import com.ky.kyandroid.activity.supervision.SuperVisionAddActivity;
 import com.ky.kyandroid.adapter.FragmentAdapter;
 
 import java.util.ArrayList;
@@ -82,6 +83,17 @@ public class EventEntryAddActivity extends FragmentActivity {
      */
     @BindView(R.id.radiobtn_attachment)
     public RadioButton radiobtn_attachment;
+
+    /**
+     * 上报领导按钮
+     */
+    @BindView(R.id.reporting_leadership_btn)
+    Button reportingLeadershipBtn;
+    /**
+     * 保存按钮
+     */
+    @BindView(R.id.save_draft_btn)
+    Button saveDraftBtn;
 
     /**
      * 事件录入 - 基本信息
@@ -212,12 +224,47 @@ public class EventEntryAddActivity extends FragmentActivity {
     }
 
 
-    @OnClick({R.id.left_btn})
+    @OnClick({R.id.left_btn,R.id.reporting_leadership_btn,R.id.save_draft_btn})
     public void onClick(View v) {
         switch (v.getId()) {
             /** 返回键 **/
             case R.id.left_btn:
                 onBackPressed();
+                break;
+            /** 上报领导按钮*/
+            case R.id.reporting_leadership_btn:
+                Intent intent1 = new Intent(this, SuperVisionAddActivity.class);
+                startActivity(intent1);
+                break;
+            /**保存草稿按钮*/
+            case R.id.save_draft_btn:
+               /* PackageData();
+                if ("".equals(message)) {
+                    boolean flag ;
+                    if("1".equals(type)){
+                        flag = eventEntryDao.updateEventEntry(eventEntryEntity);
+                        if (flag) {
+                            Toast.makeText(EventEntryAdd_Basic.this.getActivity(), "修改成功", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(this.getActivity(), EventEntryListActivity.class);
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(EventEntryAdd_Basic.this.getActivity(),   "修改失败", Toast.LENGTH_SHORT).show();
+                        }
+                    }else{
+                        //事件保存为1，事件提交为2
+                        eventEntryEntity.setStatus("1");
+                        flag = eventEntryDao.saveEventEntryEntity(eventEntryEntity);
+                        if (flag) {
+                            Toast.makeText(EventEntryAdd_Basic.this.getActivity(), "保存成功", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(this.getActivity(), EventEntryListActivity.class);
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(EventEntryAdd_Basic.this.getActivity(),   "保存失败", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                } else {
+                    Toast.makeText(EventEntryAdd_Basic.this.getActivity(), message, Toast.LENGTH_SHORT).show();
+                }*/
                 break;
         }
     }

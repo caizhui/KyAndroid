@@ -4,13 +4,40 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="当事人信息"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/add_person"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="添加"/>
+
+        <Button
+            android:id="@+id/delete_person"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="删除"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ListView
+            android:id="@+id/person_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@null"
+            android:dividerHeight="0dp"/>
+
+    </LinearLayout>
+    </LinearLayout>
 
 </LinearLayout>

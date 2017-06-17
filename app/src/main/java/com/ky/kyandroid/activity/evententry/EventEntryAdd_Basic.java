@@ -10,15 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ky.kyandroid.R;
-import com.ky.kyandroid.activity.supervision.SuperVisionAddActivity;
 import com.ky.kyandroid.db.dao.EventEntryDao;
 import com.ky.kyandroid.entity.EventEntryEntity;
 import com.ky.kyandroid.entity.KeyValueEntity;
@@ -126,16 +123,6 @@ public class EventEntryAdd_Basic extends Fragment {
      */
     @BindView(R.id.leadership_instructions_edt)
     EditText leadershipInstructionsEdt;
-    /**
-     * 上报领导按钮
-     */
-    @BindView(R.id.reporting_leadership_btn)
-    Button reportingLeadershipBtn;
-    /**
-     * 保存按钮
-     */
-    @BindView(R.id.save_draft_btn)
-    Button saveDraftBtn;
 
 
     /**
@@ -253,7 +240,7 @@ public class EventEntryAdd_Basic extends Fragment {
         belongCommunitySpinner.setAdapter(adapter);//将adapter 添加到所属社区spinner中
     }
 
-    @OnClick({R.id.happen_time_edt, R.id.reporting_leadership_btn, R.id.save_draft_btn})
+    @OnClick({R.id.happen_time_edt})
     public void onClick(View v) {
         switch (v.getId()) {
             /** 点击发生时间控件 **/
@@ -265,41 +252,6 @@ public class EventEntryAdd_Basic extends Fragment {
                         happenTimeEdt.setText(year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
                     }
                 }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
-                break;
-            /** 上报领导按钮*/
-            case R.id.reporting_leadership_btn:
-                Intent intent1 = new Intent(this.getActivity(), SuperVisionAddActivity.class);
-                startActivity(intent1);
-                break;
-            /**保存草稿按钮*/
-            case R.id.save_draft_btn:
-                PackageData();
-                if ("".equals(message)) {
-                    boolean flag ;
-                    if("1".equals(type)){
-                        flag = eventEntryDao.updateEventEntry(eventEntryEntity);
-                        if (flag) {
-                            Toast.makeText(EventEntryAdd_Basic.this.getActivity(), "修改成功", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(this.getActivity(), EventEntryListActivity.class);
-                            startActivity(intent);
-                        } else {
-                            Toast.makeText(EventEntryAdd_Basic.this.getActivity(),   "修改失败", Toast.LENGTH_SHORT).show();
-                        }
-                    }else{
-                        //事件保存为1，事件提交为2
-                        eventEntryEntity.setStatus("1");
-                        flag = eventEntryDao.saveEventEntryEntity(eventEntryEntity);
-                        if (flag) {
-                            Toast.makeText(EventEntryAdd_Basic.this.getActivity(), "保存成功", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(this.getActivity(), EventEntryListActivity.class);
-                            startActivity(intent);
-                        } else {
-                            Toast.makeText(EventEntryAdd_Basic.this.getActivity(),   "保存失败", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                } else {
-                    Toast.makeText(EventEntryAdd_Basic.this.getActivity(), message, Toast.LENGTH_SHORT).show();
-                }
                 break;
         }
     }

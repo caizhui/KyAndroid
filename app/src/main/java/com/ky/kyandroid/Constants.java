@@ -7,7 +7,7 @@ public class Constants {
 	
 	/** 服务器连接基础Url */
 
-	public final  static String SERVICE_BASE_URL="http://192.168.1.103:8080/ft/";
+	public final  static String SERVICE_BASE_URL="http://192.168.1.107:8080/ft/";
 
 	/** 成功标识 */
 	public final static String SUCCEED = "SUCCEED";
