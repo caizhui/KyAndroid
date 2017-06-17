@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import com.ky.kyandroid.R;
 import com.ky.kyandroid.db.dao.EventEntryDao;
-import com.ky.kyandroid.entity.EventEntryEntity;
+import com.ky.kyandroid.entity.EventEntity;
 import com.ky.kyandroid.entity.KeyValueEntity;
 import com.ky.kyandroid.util.StringUtils;
 
@@ -150,7 +150,7 @@ public class EventEntryAdd_Basic extends Fragment {
      */
     public String type;
 
-    public EventEntryEntity eventEntryEntity;
+    public EventEntity eventEntity;
 
     @SuppressLint("ValidFragment")
     public EventEntryAdd_Basic(Intent intent) {
@@ -164,25 +164,25 @@ public class EventEntryAdd_Basic extends Fragment {
         ButterKnife.bind(this, view);
         eventEntryDao = new EventEntryDao();
         type = intent.getStringExtra("type");
-        eventEntryEntity = (EventEntryEntity) intent.getSerializableExtra("eventEntryEntity");
+        eventEntity = (EventEntity) intent.getSerializableExtra("eventEntity");
         initData();
         return view;
     }
 
     public void initData() {
-        if (eventEntryEntity != null) {
+        if (eventEntity != null) {
             //当type等于1的时候，只能查看信息
             if ("1".equals(type)) {
-                thingNameEdt.setText(eventEntryEntity.getThingName());
-                happenTimeEdt.setText(eventEntryEntity.getHappenTime());
-                happenAddressEdt.setText(eventEntryEntity.getHappenAddress());
-                petitionGroupsEdt.setText(eventEntryEntity.getPetitionGroups());
-                fieldDepartmenEdt.setText(eventEntryEntity.getFieldDepartmen());
-                fieldsInvolvedEdt.setText(eventEntryEntity.getFieldsInvolved());
-                belongStreetEdt.setText(eventEntryEntity.getBelongStreet());
-                mainAppealsEdt.setText(eventEntryEntity.getMainAppeals());
-                eventSummaryEdt.setText(eventEntryEntity.getEventSummary());
-                leadershipInstructionsEdt.setText(eventEntryEntity.getLeadershipInstructions());
+               /* thingNameEdt.setText(eventEntity.getThingName());
+                happenTimeEdt.setText(eventEntity.getHappenTime());
+                happenAddressEdt.setText(eventEntity.getHappenAddress());
+                petitionGroupsEdt.setText(eventEntity.getPetitionGroups());
+                fieldDepartmenEdt.setText(eventEntity.getFieldDepartmen());
+                fieldsInvolvedEdt.setText(eventEntity.getFieldsInvolved());
+                belongStreetEdt.setText(eventEntity.getBelongStreet());
+                mainAppealsEdt.setText(eventEntity.getMainAppeals());
+                eventSummaryEdt.setText(eventEntity.getEventSummary());
+                leadershipInstructionsEdt.setText(eventEntity.getLeadershipInstructions());*/
             }
         }
         //设置Spinner控件的初始值
@@ -259,11 +259,11 @@ public class EventEntryAdd_Basic extends Fragment {
     /**
      * 封装数据
      */
-    public void PackageData() {
+    public EventEntity PackageData() {
         //每次保存时先清空message
         message = "";
-        if(eventEntryEntity == null){
-            eventEntryEntity = new EventEntryEntity();
+        if(eventEntity == null){
+            eventEntity = new EventEntity();
         }
         String thingNameString = thingNameEdt.getText().toString();
         String happenTimeString = happenTimeEdt.getText().toString();
@@ -285,55 +285,64 @@ public class EventEntryAdd_Basic extends Fragment {
         if (StringUtils.isBlank(thingNameString)) {
             message += "事件名称不能为空\n";
         } else {
-            eventEntryEntity.setThingName(thingNameString);
+            eventEntity.setSjmc(thingNameString);
         }
         if (StringUtils.isBlank(happenTimeString)) {
             message += "发生时间不能为空\n";
         } else {
-            eventEntryEntity.setHappenTime(happenTimeString);
+            eventEntity.setFssj(happenTimeString);
         }
         if (StringUtils.isBlank(happenAddressString)) {
             message += "发生地点不能为空\n";
         } else {
-            eventEntryEntity.setHappenAddress(happenAddressString);
+            eventEntity.setFsdd(happenAddressString);
         }
-        eventEntryEntity.setPetitionGroups(petitionGroupsString);
+        eventEntity.setSfsqqt(petitionGroupsString);
         if (StringUtils.isBlank(fieldDepartmenString)) {
             message += "到场部门不能为空\n";
         } else {
-            eventEntryEntity.setFieldDepartmen(fieldDepartmenString);
+            eventEntity.setDcbm(fieldDepartmenString);
         }
         if (StringUtils.isBlank(patternManifestationString)) {
             message += "表现形式不能为空\n";
         } else {
-            eventEntryEntity.setPatternManifestation(patternManifestationString);
+            eventEntity.setBxxs(patternManifestationString);
         }
         if (StringUtils.isBlank(scopeTextString)) {
             message += "规模不能为空\n";
         } else {
-            eventEntryEntity.setScope(scopeTextString);
+            eventEntity.setGm(scopeTextString);
         }
         if (StringUtils.isBlank(fieldsInvolved)) {
             message += "涉及领域不能为空\n";
         } else {
-            eventEntryEntity.setFieldsInvolved(fieldsInvolved);
+            eventEntity.setSjly(fieldsInvolved);
         }
-        eventEntryEntity.setForeignRelated(foreignRelatedString);
-        eventEntryEntity.setInvolvedXinjiang(involvedXinjiangString);
-        eventEntryEntity.setInvolvePublicOpinion(involvePublicOpinionString);
-        eventEntryEntity.setPublicSecurityDisposal(publicSecurityDisposalString);
-        eventEntryEntity.setBelongStreet(belongStreetString);
-        eventEntryEntity.setBelongCommunity(belongCommunityString);
+        eventEntity.setSfsw(foreignRelatedString);
+        eventEntity.setSfsj(involvedXinjiangString);
+        eventEntity.setSfsyq(involvePublicOpinionString);
+        eventEntity.setSfgacz(publicSecurityDisposalString);
+        eventEntity.setSsjd(belongStreetString);
+        eventEntity.setSssq(belongCommunityString);
         if (StringUtils.isBlank(mainAppealsString)) {
             message += "主要诉求不能为空\n";
         } else {
-            eventEntryEntity.setMainAppeals(mainAppealsString);
+            eventEntity.setZysq(mainAppealsString);
         }
         if (StringUtils.isBlank(eventSummaryString)) {
             message += "事件概要不能为空\n";
         } else {
-            eventEntryEntity.setEventSummary(eventSummaryString);
+            eventEntity.setSjgyqk(eventSummaryString);
         }
-        eventEntryEntity.setLeadershipInstructions(leadershipInstructionsString);
+        eventEntity.setLdps(leadershipInstructionsString);
+        return eventEntity;
+    }
+
+    public EventEntity getEventEntity() {
+        return eventEntity;
+    }
+
+    public void setEventEntity(EventEntity eventEntity) {
+        this.eventEntity = eventEntity;
     }
 }

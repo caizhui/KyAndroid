@@ -172,5 +172,8 @@ public class EventEntryAdd_Person extends Fragment {
         builder.create().show();
     }
 
+    public List<TFtSjRyEntity>  tFtSjRyEntityList(){
+        return  tFtSjRyEntityList;
+    }
 
 }

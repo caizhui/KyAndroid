@@ -57,9 +57,9 @@ public class EventEntityListAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();// 取出ViewHolder对象
         }
-        holder.thingName.setText(list.get(position).getSJMC());
-        holder.thingAddress.setText(list.get(position).getFSDD());
-        holder.thingTime.setText(list.get(position).getFSSJ());
+        holder.thingName.setText(list.get(position).getSjmc());
+        holder.thingAddress.setText(list.get(position).getFsdd());
+        holder.thingTime.setText(list.get(position).getFssj());
         return convertView;
     }
 

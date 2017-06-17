@@ -1,11 +1,13 @@
 package com.ky.kyandroid.entity;
 
+import java.io.Serializable;
+
 /**
  * Created by Caizhui on 2017/6/16.
  * 事件实体
  */
 
-public class EventEntity {
+public class EventEntity  implements Serializable {
     /**
      * SSSQ : 99
      * SFSQQT : CMOS
@@ -37,266 +39,365 @@ public class EventEntity {
      * FSDD : 广东省深圳市福田区女人世界美食街76-a号港澳城
      * SJLY : 7
      */
+    private static final long serialVersionUID = -7620435178023928252L;
 
-    private String SSSQ;
-    private String SFSQQT;
-    private String ZYSQ;
-    private String FSSJ;
-    private Object SSJWH;
-    private String JWD;
-    private boolean isYj;
-    private String BXXS;
-    private String SFSJ;
-    private String SFSW;
-    private String ID;
-    private Object SCLSX;
-    private String LDPS;
-    private String SSJD;
-    private Object CLSX;
-    private String LRBM;
-    private String ZT;
-    private String DCBM;
-    private String SFGACZ;
-    private String SJGYQK;
-    private String LRR;
-    private String SFSYQ;
-    private Object XCTS;
-    private String LRSJ;
-    private String SJMC;
-    private boolean isDb;
-    private String GM;
-    private String FSDD;
-    private String SJLY;
 
-    public String getSSSQ() {
-        return SSSQ;
+    private String id;
+    /**
+     * 事件名称
+     */
+    private  String sjmc;
+
+    /**
+     * 发生时间
+     */
+    private  String fssj;
+
+    /**
+     * 发生地点
+     */
+    private  String fsdd;
+
+    /**
+     * 上访诉求群体
+     */
+    private  String sfsqqt;
+
+    /**
+     * 到场部门
+     */
+    private  String dcbm;
+
+    /**
+     * 涉及领域
+     */
+    private  String sjly;
+
+    /**
+     * 主要诉求
+     */
+    private  String zysq;
+
+    /**
+     * 事件概要情况
+     */
+    private  String sjgyqk;
+
+    /**
+     * 规模
+     */
+    private  String gm;
+
+    /**
+     * 表现形式
+     */
+    private  String bxxs;
+
+    /**
+     * 是否涉外
+     */
+    private  String sfsw;
+
+    /**
+     * 是否涉疆
+     */
+    private  String sfsj;
+
+    /**
+     * 是否涉舆情
+     */
+    private  String sfsyq;
+
+    /**
+     * 是否公安处置
+     */
+    private  String sfgacz;
+
+    /**
+     * 所属街道及社区
+     */
+    private String ssjd;
+
+    /**
+     * 领导批示
+     */
+    private String ldps;
+
+    /**
+     * 发生地经伟度
+     */
+    private String jwd;
+
+    /**
+     * 处理时限
+     */
+    private String clsx;
+
+    /**
+     * 录入人
+     */
+    private String lrr;
+
+    /**
+     * 录入部门
+     */
+    private String lrbm;
+
+    /**
+     * 录入时间
+     */
+    private String lrsj;
+
+    /**
+     * 事件状态
+     */
+    private String zt;
+    /**
+     *
+     */
+    private String sssq;//所属社区
+    private String ssjwh;//所属居委会
+
+    private String znbm;
+
+    private String bxxsfy;
+
+    private String clsjfy;
+
+    private String xcts;
+
+
+    public String getId() {
+        return id;
     }
 
-    public void setSSSQ(String SSSQ) {
-        this.SSSQ = SSSQ;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getSFSQQT() {
-        return SFSQQT;
+    public String getSjmc() {
+        return sjmc;
     }
 
-    public void setSFSQQT(String SFSQQT) {
-        this.SFSQQT = SFSQQT;
+    public void setSjmc(String sjmc) {
+        this.sjmc = sjmc;
     }
 
-    public String getZYSQ() {
-        return ZYSQ;
+    public  String getFssj() {
+        return fssj;
     }
 
-    public void setZYSQ(String ZYSQ) {
-        this.ZYSQ = ZYSQ;
+    public void setFssj( String fssj) {
+        this.fssj = fssj;
     }
 
-    public String getFSSJ() {
-        return FSSJ;
+    public String getFsdd() {
+        return fsdd;
     }
 
-    public void setFSSJ(String FSSJ) {
-        this.FSSJ = FSSJ;
+    public void setFsdd(String fsdd) {
+        this.fsdd = fsdd;
     }
 
-    public Object getSSJWH() {
-        return SSJWH;
+    public String getSfsqqt() {
+        return sfsqqt;
     }
 
-    public void setSSJWH(Object SSJWH) {
-        this.SSJWH = SSJWH;
+    public void setSfsqqt(String sfsqqt) {
+        this.sfsqqt = sfsqqt;
     }
 
-    public String getJWD() {
-        return JWD;
+    public String getDcbm() {
+        return dcbm;
     }
 
-    public void setJWD(String JWD) {
-        this.JWD = JWD;
+    public void setDcbm(String dcbm) {
+        this.dcbm = dcbm;
     }
 
-    public boolean isIsYj() {
-        return isYj;
+    public String getSjly() {
+        return sjly;
     }
 
-    public void setIsYj(boolean isYj) {
-        this.isYj = isYj;
+    public void setSjly(String sjly) {
+        this.sjly = sjly;
     }
 
-    public String getBXXS() {
-        return BXXS;
+    public String getZysq() {
+        return zysq;
     }
 
-    public void setBXXS(String BXXS) {
-        this.BXXS = BXXS;
+    public void setZysq(String zysq) {
+        this.zysq = zysq;
     }
 
-    public String getSFSJ() {
-        return SFSJ;
+    public String getSjgyqk() {
+        return sjgyqk;
     }
 
-    public void setSFSJ(String SFSJ) {
-        this.SFSJ = SFSJ;
+    public void setSjgyqk(String sjgyqk) {
+        this.sjgyqk = sjgyqk;
     }
 
-    public String getSFSW() {
-        return SFSW;
+    public String getGm() {
+        return gm;
     }
 
-    public void setSFSW(String SFSW) {
-        this.SFSW = SFSW;
+    public void setGm(String gm) {
+        this.gm = gm;
     }
 
-    public String getID() {
-        return ID;
+    public String getBxxs() {
+        return bxxs;
     }
 
-    public void setID(String ID) {
-        this.ID = ID;
+    public void setBxxs(String bxxs) {
+        this.bxxs = bxxs;
     }
 
-    public Object getSCLSX() {
-        return SCLSX;
+    public String getSfsw() {
+        return sfsw;
     }
 
-    public void setSCLSX(Object SCLSX) {
-        this.SCLSX = SCLSX;
+    public void setSfsw(String sfsw) {
+        this.sfsw = sfsw;
     }
 
-    public String getLDPS() {
-        return LDPS;
+    public String getSfsj() {
+        return sfsj;
     }
 
-    public void setLDPS(String LDPS) {
-        this.LDPS = LDPS;
+    public void setSfsj(String sfsj) {
+        this.sfsj = sfsj;
     }
 
-    public String getSSJD() {
-        return SSJD;
+    public String getSfsyq() {
+        return sfsyq;
     }
 
-    public void setSSJD(String SSJD) {
-        this.SSJD = SSJD;
+    public void setSfsyq(String sfsyq) {
+        this.sfsyq = sfsyq;
     }
 
-    public Object getCLSX() {
-        return CLSX;
+    public String getSfgacz() {
+        return sfgacz;
     }
 
-    public void setCLSX(Object CLSX) {
-        this.CLSX = CLSX;
+    public void setSfgacz(String sfgacz) {
+        this.sfgacz = sfgacz;
     }
 
-    public String getLRBM() {
-        return LRBM;
+    public String getSsjd() {
+        return ssjd;
     }
 
-    public void setLRBM(String LRBM) {
-        this.LRBM = LRBM;
+    public void setSsjd(String ssjd) {
+        this.ssjd = ssjd;
     }
 
-    public String getZT() {
-        return ZT;
+    public String getLdps() {
+        return ldps;
     }
 
-    public void setZT(String ZT) {
-        this.ZT = ZT;
+    public void setLdps(String ldps) {
+        this.ldps = ldps;
     }
 
-    public String getDCBM() {
-        return DCBM;
+    public String getJwd() {
+        return jwd;
     }
 
-    public void setDCBM(String DCBM) {
-        this.DCBM = DCBM;
+    public void setJwd(String jwd) {
+        this.jwd = jwd;
     }
 
-    public String getSFGACZ() {
-        return SFGACZ;
+    public String getClsx() {
+        return clsx;
     }
 
-    public void setSFGACZ(String SFGACZ) {
-        this.SFGACZ = SFGACZ;
+    public void setClsx(String clsx) {
+        this.clsx = clsx;
     }
 
-    public String getSJGYQK() {
-        return SJGYQK;
+    public String getLrr() {
+        return lrr;
     }
 
-    public void setSJGYQK(String SJGYQK) {
-        this.SJGYQK = SJGYQK;
+    public void setLrr(String lrr) {
+        this.lrr = lrr;
     }
 
-    public String getLRR() {
-        return LRR;
+    public String getLrbm() {
+        return lrbm;
     }
 
-    public void setLRR(String LRR) {
-        this.LRR = LRR;
+    public void setLrbm(String lrbm) {
+        this.lrbm = lrbm;
     }
 
-    public String getSFSYQ() {
-        return SFSYQ;
+    public String getLrsj() {
+        return lrsj;
     }
 
-    public void setSFSYQ(String SFSYQ) {
-        this.SFSYQ = SFSYQ;
+    public void setLrsj(String lrsj) {
+        this.lrsj = lrsj;
     }
 
-    public Object getXCTS() {
-        return XCTS;
+    public String getZt() {
+        return zt;
     }
 
-    public void setXCTS(Object XCTS) {
-        this.XCTS = XCTS;
+    public void setZt(String zt) {
+        this.zt = zt;
     }
 
-    public String getLRSJ() {
-        return LRSJ;
+    public String getSssq() {
+        return sssq;
     }
 
-    public void setLRSJ(String LRSJ) {
-        this.LRSJ = LRSJ;
+    public void setSssq(String sssq) {
+        this.sssq = sssq;
     }
 
-    public String getSJMC() {
-        return SJMC;
+    public String getSsjwh() {
+        return ssjwh;
     }
 
-    public void setSJMC(String SJMC) {
-        this.SJMC = SJMC;
+    public void setSsjwh(String ssjwh) {
+        this.ssjwh = ssjwh;
     }
 
-    public boolean isIsDb() {
-        return isDb;
+    public String getZnbm() {
+        return znbm;
     }
 
-    public void setIsDb(boolean isDb) {
-        this.isDb = isDb;
+    public void setZnbm(String znbm) {
+        this.znbm = znbm;
     }
 
-    public String getGM() {
-        return GM;
+    public String getBxxsfy() {
+        return bxxsfy;
     }
 
-    public void setGM(String GM) {
-        this.GM = GM;
+    public void setBxxsfy(String bxxsfy) {
+        this.bxxsfy = bxxsfy;
     }
 
-    public String getFSDD() {
-        return FSDD;
+    public String getClsjfy() {
+        return clsjfy;
     }
 
-    public void setFSDD(String FSDD) {
-        this.FSDD = FSDD;
+    public void setClsjfy(String clsjfy) {
+        this.clsjfy = clsjfy;
     }
 
-    public String getSJLY() {
-        return SJLY;
+    public String getXcts() {
+        return xcts;
     }
 
-    public void setSJLY(String SJLY) {
-        this.SJLY = SJLY;
+    public void setXcts(String xcts) {
+        this.xcts = xcts;
     }
 }
+
+

@@ -1,7 +1,9 @@
 package com.ky.kyandroid.activity.evententry;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -16,13 +18,32 @@ import android.widget.TextView;
 import com.ky.kyandroid.R;
 import com.ky.kyandroid.activity.supervision.SuperVisionAddActivity;
 import com.ky.kyandroid.adapter.FragmentAdapter;
+import com.ky.kyandroid.bean.NetWorkConnection;
+import com.ky.kyandroid.entity.EventEntity;
+import com.ky.kyandroid.entity.TFtSjRyEntity;
+import com.ky.kyandroid.util.JsonUtil;
+import com.ky.kyandroid.util.SpUtil;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.Cache;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 
 /**
@@ -112,16 +133,46 @@ public class EventEntryAddActivity extends FragmentActivity {
 
     private Intent intent;
 
+    /**
+     * 临时事件ID;
+     */
+    private String uuid;
+
+    /**
+     * SharedPreferences
+     */
+    private SharedPreferences sp;
+    /**
+     * 网路工具类
+     */
+    private NetWorkConnection netWorkConnection;
+
+    /**
+     * 用户ID
+     */
+    public static final String USER_ID = "userId";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_evententry_add);
         ButterKnife.bind(this);
+        uuid = UUID.randomUUID().toString().trim().replaceAll("-", "").toUpperCase() ;
         intent=getIntent();
+        initEvent();
         initToolbar();
         initPageView();
         initViewData();
+    }
+
+    /**
+     * 初始化事件
+     */
+    private void initEvent() {
+        sp = SpUtil.getSharePerference(this);
+        // 初始化网络工具
+        netWorkConnection = new NetWorkConnection(this);
     }
 
     /**
@@ -131,7 +182,7 @@ public class EventEntryAddActivity extends FragmentActivity {
     private void initPageView() {
         eventEntryAdd_basic = new EventEntryAdd_Basic(intent);
         eventEntryAdd_person = new EventEntryAdd_Person();
-        eventEntryAdd_attachment = new EventEntryAdd_Attachment();
+        eventEntryAdd_attachment = new EventEntryAdd_Attachment(uuid);
         // 设置Fragment集合
         List<Fragment> fragmList = new ArrayList<Fragment>();
         fragmList.add(eventEntryAdd_basic);
@@ -238,6 +289,25 @@ public class EventEntryAddActivity extends FragmentActivity {
                 break;
             /**保存草稿按钮*/
             case R.id.save_draft_btn:
+                String userId=sp.getString(USER_ID,"");
+                EventEntity eventEntity = eventEntryAdd_basic.PackageData();
+                eventEntity.setId(uuid);
+                List<TFtSjRyEntity> tFtSjRyEntityList = eventEntryAdd_person.tFtSjRyEntityList();
+                /* 得到SD卡得路径 */
+                String sdcard = Environment.getExternalStorageDirectory().getAbsolutePath().toString();
+                File fileRoute = new File(sdcard + "/img/" + uuid);
+                File files[] = fileRoute.listFiles();
+                String[] filesName = new String[files.length];
+                for(int i=0;i<files.length;i++){
+                    filesName[i]=files[i].getName();
+                }
+                HashMap map =new HashMap();
+                map.put("entity",eventEntity);
+                map.put("tFtSjRyEntityList",tFtSjRyEntityList);
+                map.put("filesName",filesName);
+                map.put("type","1");
+                String paramMap = JsonUtil.map2Json(map);
+                sendMultipart(userId,paramMap,files);
                /* PackageData();
                 if ("".equals(message)) {
                     boolean flag ;
@@ -265,8 +335,51 @@ public class EventEntryAddActivity extends FragmentActivity {
                 } else {
                     Toast.makeText(EventEntryAdd_Basic.this.getActivity(), message, Toast.LENGTH_SHORT).show();
                 }*/
-                break;
+                    break;
+                }
         }
-    }
 
+    /**
+     * 上传文件及参数
+     */
+    private void sendMultipart(String userId,String paramMap,File[] files){
+        File sdcache = getExternalCacheDir();
+        int cacheSize = 10 * 1024 * 1024;
+        //设置超时时间及缓存，下边都应该这样设置的。
+        OkHttpClient.Builder builder = new OkHttpClient.Builder()
+                .connectTimeout(15, TimeUnit.SECONDS)
+                .writeTimeout(20, TimeUnit.SECONDS)
+                .readTimeout(20, TimeUnit.SECONDS)
+                .cache(new Cache(sdcache.getAbsoluteFile(), cacheSize));
+
+        OkHttpClient mOkHttpClient=builder.build();
+        MultipartBody.Builder requestBody = new MultipartBody.Builder();
+        requestBody.setType(MultipartBody.FORM);
+        requestBody.addFormDataPart("userId", userId);//设置post的参数
+        requestBody.addFormDataPart("jsonData", paramMap);//设置post的参数
+        if(files!=null && files.length>0){
+            for(int i = 0;i<files.length;i++){
+                requestBody.addFormDataPart("image", files[i].getName(),
+                        RequestBody.create(MediaType.parse("application/octet-stream; charset=utf-8"), files[i]));
+            }
+
+        }
+        Request request = new Request.Builder()
+                .header("Authorization", "Client-ID " + "...")
+                .url("http://192.168.1.102:8080/ft/kyAndroid/sjSave.action")//请求的url
+                .post(requestBody.build())
+                .build();
+
+        mOkHttpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Log.i("InfoMSG", response.body().string());
+            }
+        });
+    }
 }

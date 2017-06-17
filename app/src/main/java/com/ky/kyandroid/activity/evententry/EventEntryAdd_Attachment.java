@@ -41,6 +41,7 @@ import butterknife.OnClick;
  * Created by Caizhui on 2017-6-9.
  */
 
+@SuppressLint("ValidFragment")
 public class EventEntryAdd_Attachment extends Fragment {
     @BindView(R.id.add_attachment)
     Button addAttachment;
@@ -70,6 +71,13 @@ public class EventEntryAdd_Attachment extends Fragment {
      */
     private String photoName;
 
+    public  String uuid;
+
+    @SuppressLint("ValidFragment")
+    public EventEntryAdd_Attachment(String uuid){
+        this.uuid = uuid;
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -78,7 +86,7 @@ public class EventEntryAdd_Attachment extends Fragment {
         if (Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
             /* 得到SD卡得路径 */
             sdcard = Environment.getExternalStorageDirectory().getAbsolutePath().toString();
-            fileRoute = new File(sdcard +"/img");
+            fileRoute = new File(sdcard +"/img/"+uuid);
             if(!fileRoute.exists()){
                 fileRoute.mkdirs();
             }

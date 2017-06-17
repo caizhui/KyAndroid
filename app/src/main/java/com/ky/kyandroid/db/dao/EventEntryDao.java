@@ -3,7 +3,7 @@ package com.ky.kyandroid.db.dao;
 import android.util.Log;
 
 import com.ky.kyandroid.db.BaseDao;
-import com.ky.kyandroid.entity.EventEntryEntity;
+import com.ky.kyandroid.entity.EventEntity;
 
 import org.xutils.db.sqlite.WhereBuilder;
 import org.xutils.ex.DbException;
@@ -25,7 +25,7 @@ public class EventEntryDao extends BaseDao {
      * @param entity
      * @return
      */
-    public boolean saveEventEntryEntity(EventEntryEntity entity){
+    public boolean saveEventEntryEntity(EventEntity entity){
         boolean flag = false;
         try {
             saveOrUpdateEntity(entity);
@@ -45,7 +45,7 @@ public class EventEntryDao extends BaseDao {
     public boolean ifExist() {
         boolean flag = false;
         try {
-            List<EventEntryEntity> list = (List<EventEntryEntity>) queryList(EventEntryEntity.class);
+            List<EventEntity> list = (List<EventEntity>) queryList(EventEntity.class);
             if (list != null && list.size() > 0) {
                 flag = true;
             }
@@ -61,9 +61,9 @@ public class EventEntryDao extends BaseDao {
      * @param
      * @return
      */
-    public List<EventEntryEntity> queryList() {
+    public List<EventEntity> queryList() {
         try {
-            List<EventEntryEntity> eventEntryList = db.selector(EventEntryEntity.class).findAll();
+            List<EventEntity> eventEntryList = db.selector(EventEntity.class).findAll();
             if (eventEntryList != null && eventEntryList.size() > 0) {
                 return eventEntryList;
             }
@@ -79,10 +79,10 @@ public class EventEntryDao extends BaseDao {
      * @param thingName
      * @return
      */
-    public List<EventEntryEntity> queryListForthingName(String thingName){
+    public List<EventEntity> queryListForthingName(String thingName){
         try {
-            List<EventEntryEntity> eventEntryList = db.selector(EventEntryEntity.class).where("thingname", "==", thingName).findAll();
-            for (EventEntryEntity entity : eventEntryList) {
+            List<EventEntity> eventEntryList = db.selector(EventEntity.class).where("thingname", "==", thingName).findAll();
+            for (EventEntity entity : eventEntryList) {
                 eventEntryList.add(entity);
             }
             return eventEntryList;
@@ -92,10 +92,10 @@ public class EventEntryDao extends BaseDao {
         return null;
     }
 
-    public boolean deleteEventEntry(int id) {
+    public boolean deleteEventEntry(String id) {
         boolean flag =false;
         try {
-            db.delete(EventEntryEntity.class, WhereBuilder.b("id","=", id));
+            db.delete(EventEntity.class, WhereBuilder.b("id","=", id));
             flag=true;
         } catch (DbException e) {
             e.printStackTrace();
@@ -108,7 +108,7 @@ public class EventEntryDao extends BaseDao {
      * @param entity
      * @return
      */
-    public boolean updateEventEntry(EventEntryEntity entity){
+    public boolean updateEventEntry(EventEntity entity){
         boolean flag =false;
         try {
             db.update(entity, String.valueOf(WhereBuilder.b("id","=", entity.getId())),"uuid","thingname","happentime","happenaddress","petitiongroups",
