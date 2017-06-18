@@ -22,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.ky.kyandroid.R;
+import com.ky.kyandroid.util.FileManager;
 import com.ky.kyandroid.view.SelectPicPopupWindow;
 
 import java.io.BufferedOutputStream;
@@ -73,6 +74,11 @@ public class EventEntryAdd_Attachment extends Fragment {
 
     public  String uuid;
 
+    /**
+     * 1，表示拍照，2表示相册
+     */
+    private String isPhoto;
+
     @SuppressLint("ValidFragment")
     public EventEntryAdd_Attachment(String uuid){
         this.uuid = uuid;
@@ -86,7 +92,7 @@ public class EventEntryAdd_Attachment extends Fragment {
         if (Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
             /* 得到SD卡得路径 */
             sdcard = Environment.getExternalStorageDirectory().getAbsolutePath().toString();
-            fileRoute = new File(sdcard +"/img/"+uuid);
+            fileRoute = new File(sdcard +"/img/"+uuid+"/");
             if(!fileRoute.exists()){
                 fileRoute.mkdirs();
             }
@@ -110,45 +116,38 @@ public class EventEntryAdd_Attachment extends Fragment {
     // popupwindow点击事件
     private View.OnClickListener itemsOnClick = new View.OnClickListener() {
         public void onClick(View v) {
-            menuWindow.dismiss();
-            switch (v.getId()) {
-                case R.id.btn_take_photo:
-                    String sdStatus = Environment.getExternalStorageState();
-                    if (!sdStatus.equals(Environment.MEDIA_MOUNTED)) { // 检测sd是否可用
-                        Log.v("TestFile", "SD card is not avaiable/writeable right now.");
-                        return;
-                    }
-                    // 调用系统的拍照功能
-                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    intent.putExtra("camerasensortype", 2);// 调用前置摄像头
-                    intent.putExtra("autofocus", true);// 自动对焦
-                    intent.putExtra("fullScreen", false);// 全屏
-                    intent.putExtra("showActionIcons", false);
-                    // 指定调用相机拍照后照片的储存路径
-                    File out = new File(fileRoute+"/"+getPhotoFileName());
-                    uri = Uri.fromFile(out);
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-                    startActivityForResult(intent, PHOTO_REQUEST_TAKEPHOTO);
-                    break;
-                case R.id.btn_pick_photo:
-                    Intent intents = new Intent(Intent.ACTION_PICK, null);
-                    intents.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-                    startActivityForResult(intents, PHOTO_REQUEST_GALLERY);
-                    break;
-                default:
-                    break;
+                menuWindow.dismiss();
+                switch (v.getId()) {
+                    case R.id.btn_take_photo:
+                        String sdStatus = Environment.getExternalStorageState();
+                        if (!sdStatus.equals(Environment.MEDIA_MOUNTED)) { // 检测sd是否可用
+                            Log.v("TestFile", "SD card is not avaiable/writeable right now.");
+                            return;
+                        }
+                        // 调用系统的拍照功能
+                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        intent.putExtra("camerasensortype", 2);// 调用前置摄像头
+                        intent.putExtra("autofocus", true);// 自动对焦
+                        intent.putExtra("fullScreen", false);// 全屏
+                        intent.putExtra("showActionIcons", false);
+                        // 指定调用相机拍照后照片的储存路径
+                        File out = new File(fileRoute, getPhotoFileName());
+                        uri = Uri.fromFile(out);
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+                        startActivityForResult(intent, PHOTO_REQUEST_TAKEPHOTO);
+                        break;
+                    case R.id.btn_pick_photo:
+                        Intent intents = new Intent(Intent.ACTION_PICK, null);
+                        intents.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+                        startActivityForResult(intents, PHOTO_REQUEST_GALLERY);
+                        break;
+                    default:
+                        break;
+                }
             }
-        }
     };
 
-    // 使用系统当前日期加以调整作为照片的名称
-    @SuppressLint("SimpleDateFormat")
-    private String getPhotoFileName() {
-        Date date = new Date(System.currentTimeMillis());
-        SimpleDateFormat dateFormat = new SimpleDateFormat("'IMG'_yyyyMMdd_HHmmss");
-        photoName = dateFormat.format(date) + ".jpg";
-        return photoName;
-    }
+
 
     // 图片上传回调方法
     @SuppressLint("UseSparseArrays")
@@ -156,10 +155,12 @@ public class EventEntryAdd_Attachment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case PHOTO_REQUEST_TAKEPHOTO:
+                isPhoto="1";
                 startPhotoZoom(uri, 600);
                 break;
             case PHOTO_REQUEST_GALLERY:
                 if (data != null) {
+                    isPhoto="2";
                     uri = data.getData();
                     startPhotoZoom(uri, 600);
                 }
@@ -170,6 +171,10 @@ public class EventEntryAdd_Attachment extends Fragment {
                         try {
                             Bitmap bitmapFromUri = getBitmapFromUri(uri, EventEntryAdd_Attachment.this.getActivity());
                             if (bitmapFromUri != null) {
+                                //先把拍照之后保存在本地的原图删掉。
+                                if("1".equals(isPhoto)){
+                                    boolean flag = FileManager.delFile(fileRoute+"/"+photoName);
+                                }
                                 File file = SavePicInLocal(bitmapFromUri);
                                 FileInputStream fis = new FileInputStream(file);
                                 tupbitmap = BitmapFactory.decodeStream(fis);
@@ -185,7 +190,6 @@ public class EventEntryAdd_Attachment extends Fragment {
     }
 
     ;
-
     private void startPhotoZoom(Uri uri, int size) {
         Intent intent = new Intent("com.android.camera.action.CROP");
         intent.setDataAndType(uri, "image/*");
@@ -215,7 +219,7 @@ public class EventEntryAdd_Attachment extends Fragment {
             baos = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
             byte[] byteArray = baos.toByteArray();// 字节数组输出流转换成字节数组
-            cutfile = new File(fileRoute+"/"+getPhotoFileName());
+            cutfile = new File(fileRoute, getPhotoFileName());
             // 将字节数组写入到刚创建的图片文件中
             fos = new FileOutputStream(cutfile);
             bos = new BufferedOutputStream(fos);
@@ -260,4 +264,14 @@ public class EventEntryAdd_Attachment extends Fragment {
             return null;
         }
     }
+
+    // 使用系统当前日期加以调整作为照片的名称
+    @SuppressLint("SimpleDateFormat")
+    private String getPhotoFileName() {
+        Date date = new Date(System.currentTimeMillis());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("'IMG'_yyyyMMdd_HHmmss");
+        photoName = dateFormat.format(date) + ".jpg";
+        return photoName;
+    }
+
 }

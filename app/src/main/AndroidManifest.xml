@@ -18,7 +18,7 @@
     <uses-feature android:name="android.hardware.camera" />        <!-- 使用照相机权限 -->
     <uses-feature android:name="android.hardware.camera.autofocus" />   <!-- 自动聚焦权限 -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.MOUNT_FORMAT_FILESYSTEMS"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 

@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ky.kyandroid.Constants;
 import com.ky.kyandroid.R;
@@ -287,23 +288,27 @@ public class EventEntryAddActivity extends FragmentActivity {
             case R.id.reporting_leadership_btn:
                 String userId=sp.getString(USER_ID,"");
                 EventEntity eventEntity = eventEntryAdd_basic.PackageData();
-                eventEntity.setId(uuid);
-                List<TFtSjRyEntity> tFtSjRyEntityList = eventEntryAdd_person.tFtSjRyEntityList();
+                if(eventEntity!=null){
+                    eventEntity.setId(uuid);
+                    //上报领导，状态为2
+                    eventEntity.setZt("2");
+                    List<TFtSjRyEntity> tFtSjRyEntityList = eventEntryAdd_person.tFtSjRyEntityList();
                 /* 得到SD卡得路径 */
-                String sdcard = Environment.getExternalStorageDirectory().getAbsolutePath().toString();
-                File fileRoute = new File(sdcard + "/img/" + uuid);
-                File files[] = fileRoute.listFiles();
-                String[] filesName = new String[files.length];
-                for(int i=0;i<files.length;i++){
-                    filesName[i]=files[i].getName();
+                    String sdcard = Environment.getExternalStorageDirectory().getAbsolutePath().toString();
+                    File fileRoute = new File(sdcard + "/img/" + uuid);
+                    File files[] = fileRoute.listFiles();
+                    String[] filesName = new String[files.length];
+                    for(int i=0;i<files.length;i++){
+                        filesName[i]=files[i].getName();
+                    }
+                    HashMap map =new HashMap();
+                    map.put("entity",eventEntity);
+                    map.put("tFtSjRyEntityList",tFtSjRyEntityList);
+                    map.put("filesName",filesName);
+                    map.put("type","1");
+                    String paramMap = JsonUtil.map2Json(map);
+                    sendMultipart(userId,paramMap,files);
                 }
-                HashMap map =new HashMap();
-                map.put("entity",eventEntity);
-                map.put("tFtSjRyEntityList",tFtSjRyEntityList);
-                map.put("filesName",filesName);
-                map.put("type","1");
-                String paramMap = JsonUtil.map2Json(map);
-                sendMultipart(userId,paramMap,files);
                 break;
             /**保存草稿按钮*/
             case R.id.save_draft_btn:
@@ -374,12 +379,15 @@ public class EventEntryAddActivity extends FragmentActivity {
         mOkHttpClient.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-
+                Toast.makeText(EventEntryAddActivity.this, "上报失败", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 Log.i("InfoMSG", response.body().string());
+                Toast.makeText(EventEntryAddActivity.this, "上报成功", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(EventEntryAddActivity.this,EventEntryListActivity.class);
+                startActivity(intent);
             }
         });
     }

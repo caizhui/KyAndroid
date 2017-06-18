@@ -14,11 +14,13 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ky.kyandroid.R;
+import com.ky.kyandroid.bean.CodeValue;
+import com.ky.kyandroid.db.dao.DescEntityDao;
 import com.ky.kyandroid.db.dao.EventEntryDao;
 import com.ky.kyandroid.entity.EventEntity;
-import com.ky.kyandroid.entity.KeyValueEntity;
 import com.ky.kyandroid.util.StringUtils;
 
 import java.util.ArrayList;
@@ -128,12 +130,12 @@ public class EventEntryAdd_Basic extends Fragment {
     /**
      * 设置Spinner控件的初始值
      */
-    public List<KeyValueEntity> spinnerList;
+    public List<CodeValue> spinnerList;
 
     /**
      * 数组 配置器 下拉菜单赋值用
      */
-    ArrayAdapter<KeyValueEntity> adapter;
+    ArrayAdapter<CodeValue> adapter;
 
     public EventEntryDao eventEntryDao;
 
@@ -152,6 +154,9 @@ public class EventEntryAdd_Basic extends Fragment {
 
     public EventEntity eventEntity;
 
+
+    public DescEntityDao descEntityDao;
+
     @SuppressLint("ValidFragment")
     public EventEntryAdd_Basic(Intent intent) {
         this.intent = intent;
@@ -163,6 +168,7 @@ public class EventEntryAdd_Basic extends Fragment {
         View view = inflater.inflate(R.layout.evententeradd_basic_fragment, container, false);
         ButterKnife.bind(this, view);
         eventEntryDao = new EventEntryDao();
+        descEntityDao = new DescEntityDao();
         type = intent.getStringExtra("type");
         eventEntity = (EventEntity) intent.getSerializableExtra("eventEntity");
         initData();
@@ -186,12 +192,11 @@ public class EventEntryAdd_Basic extends Fragment {
             }
         }
         //设置Spinner控件的初始值
-        spinnerList = new ArrayList<KeyValueEntity>();
-        spinnerList.add(new KeyValueEntity("0", "否"));
-        spinnerList.add(new KeyValueEntity("1", "是"));
+        spinnerList = new ArrayList<CodeValue>();
+        spinnerList = descEntityDao.queryListForCV("sfsw");
 
         //将可选内容与ArrayAdapter连接起来
-        adapter = new ArrayAdapter<KeyValueEntity>(EventEntryAdd_Basic.this.getActivity(), android.R.layout.simple_spinner_item, spinnerList);
+        adapter = new ArrayAdapter<CodeValue>(EventEntryAdd_Basic.this.getActivity(), android.R.layout.simple_spinner_item, spinnerList);
         //设置下拉列表的风格
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         foreignRelatedSpinner.setAdapter(adapter);//将adapter 添加到spinner中
@@ -199,42 +204,32 @@ public class EventEntryAdd_Basic extends Fragment {
         involvePublicOpinionSpinner.setAdapter(adapter);//将adapter 添加到spinner中
         publicSecurityDisposalSpinner.setAdapter(adapter);//将adapter 添加到spinner中
 
-        spinnerList = new ArrayList<KeyValueEntity>();
-        spinnerList.add(new KeyValueEntity("", "请选择"));
-        spinnerList.add(new KeyValueEntity("0", "上访"));
-        spinnerList.add(new KeyValueEntity("1", "自杀"));
-        spinnerList.add(new KeyValueEntity("2", "闹事"));
-        spinnerList.add(new KeyValueEntity("3", "聚众"));
-        spinnerList.add(new KeyValueEntity("4", "纠纷"));
-        spinnerList.add(new KeyValueEntity("5", "拉横幅"));
+        spinnerList = new ArrayList<CodeValue>();
+        spinnerList = descEntityDao.queryListForCV("BXXS");
 
         //将可选内容与ArrayAdapter连接起来
-        adapter = new ArrayAdapter<KeyValueEntity>(EventEntryAdd_Basic.this.getActivity(), android.R.layout.simple_spinner_item, spinnerList);
+        adapter = new ArrayAdapter<CodeValue>(EventEntryAdd_Basic.this.getActivity(), android.R.layout.simple_spinner_item, spinnerList);
         //设置下拉列表的风格
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         patternManifestationSpinner.setAdapter(adapter);//将adapter 添加到表现形式spinner中
 
-        spinnerList = new ArrayList<KeyValueEntity>();
-        spinnerList.add(new KeyValueEntity("0", "1-5人"));
-        spinnerList.add(new KeyValueEntity("1", "5-30人"));
-        spinnerList.add(new KeyValueEntity("2", "30-300人"));
-        spinnerList.add(new KeyValueEntity("3", "300-1000人"));
-        spinnerList.add(new KeyValueEntity("4", "1000人以上"));
+        spinnerList = new ArrayList<CodeValue>();
+        spinnerList = descEntityDao.queryListForCV("sjgm");
 
         //将可选内容与ArrayAdapter连接起来
-        adapter = new ArrayAdapter<KeyValueEntity>(EventEntryAdd_Basic.this.getActivity(), android.R.layout.simple_spinner_item, spinnerList);
+        adapter = new ArrayAdapter<CodeValue>(EventEntryAdd_Basic.this.getActivity(), android.R.layout.simple_spinner_item, spinnerList);
         //设置下拉列表的风格
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         scopeTextSpinner.setAdapter(adapter);//将adapter 添加到规模spinner中
 
 
-        spinnerList = new ArrayList<KeyValueEntity>();
-        spinnerList.add(new KeyValueEntity("0", "社区1"));
-        spinnerList.add(new KeyValueEntity("1", "社区2"));
+        spinnerList = new ArrayList<CodeValue>();
+        spinnerList.add(new CodeValue("0", "社区1"));
+        spinnerList.add(new CodeValue("1", "社区2"));
 
 
         //将可选内容与ArrayAdapter连接起来
-        adapter = new ArrayAdapter<KeyValueEntity>(EventEntryAdd_Basic.this.getActivity(), android.R.layout.simple_spinner_item, spinnerList);
+        adapter = new ArrayAdapter<CodeValue>(EventEntryAdd_Basic.this.getActivity(), android.R.layout.simple_spinner_item, spinnerList);
         //设置下拉列表的风格
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         belongCommunitySpinner.setAdapter(adapter);//将adapter 添加到所属社区spinner中
@@ -270,13 +265,13 @@ public class EventEntryAdd_Basic extends Fragment {
         String happenAddressString = happenAddressEdt.getText().toString();
         String petitionGroupsString = petitionGroupsEdt.getText().toString();
         String fieldDepartmenString = fieldDepartmenEdt.getText().toString();
-        String patternManifestationString = patternManifestationSpinner.getSelectedItem().toString();
-        String scopeTextString = scopeTextSpinner.getSelectedItem().toString();
+        String patternManifestationString =descEntityDao.queryCodeByName("BXXS",patternManifestationSpinner.getSelectedItem().toString());
+        String scopeTextString = descEntityDao.queryCodeByName("sjgm",scopeTextSpinner.getSelectedItem().toString());
         String fieldsInvolved = fieldsInvolvedEdt.getText().toString();
-        String foreignRelatedString = foreignRelatedSpinner.getSelectedItem().toString();
-        String involvedXinjiangString = involvedXinjiangSpinner.getSelectedItem().toString();
-        String involvePublicOpinionString = involvePublicOpinionSpinner.getSelectedItem().toString();
-        String publicSecurityDisposalString = publicSecurityDisposalSpinner.getSelectedItem().toString();
+        String foreignRelatedString = descEntityDao.queryCodeByName("sfsw",foreignRelatedSpinner.getSelectedItem().toString());
+        String involvedXinjiangString = descEntityDao.queryCodeByName("sfsw",involvedXinjiangSpinner.getSelectedItem().toString());
+        String involvePublicOpinionString = descEntityDao.queryCodeByName("sfsw",involvePublicOpinionSpinner.getSelectedItem().toString());
+        String publicSecurityDisposalString = descEntityDao.queryCodeByName("sfsw",publicSecurityDisposalSpinner.getSelectedItem().toString());
         String belongStreetString = belongStreetEdt.getText().toString();
         String belongCommunityString = belongCommunitySpinner.getSelectedItem().toString();
         String mainAppealsString = mainAppealsEdt.getText().toString();
@@ -335,7 +330,12 @@ public class EventEntryAdd_Basic extends Fragment {
             eventEntity.setSjgyqk(eventSummaryString);
         }
         eventEntity.setLdps(leadershipInstructionsString);
-        return eventEntity;
+        if(!"".equals(message)){
+            Toast.makeText(EventEntryAdd_Basic.this.getActivity(),message,Toast.LENGTH_SHORT).show();
+        }else{
+            return eventEntity;
+        }
+        return  null;
     }
 
     public EventEntity getEventEntity() {

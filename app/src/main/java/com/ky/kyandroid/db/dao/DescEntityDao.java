@@ -2,11 +2,13 @@ package com.ky.kyandroid.db.dao;
 
 import android.util.Log;
 
+import com.ky.kyandroid.bean.CodeValue;
 import com.ky.kyandroid.db.BaseDao;
 import com.ky.kyandroid.entity.DescEntity;
 
 import org.xutils.ex.DbException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,6 +17,7 @@ import java.util.List;
  */
 
 public class DescEntityDao extends BaseDao {
+
     /** 标识 */
     private static final String TAG = "DescEntityDao";
 
@@ -30,7 +33,7 @@ public class DescEntityDao extends BaseDao {
             saveOrUpdateEntity(entity);
             flag = true;
         } catch (DbException e) {
-            Log.i(TAG, "字典信息保存异常-DescEntity>> " + e.getMessage());
+            Log.i(TAG, "系统字典保存异常-saveDescEntity>> " + e.getMessage());
         }
         return flag;
     }
@@ -49,26 +52,65 @@ public class DescEntityDao extends BaseDao {
                 flag = true;
             }
         } catch (DbException e) {
-            Log.i(TAG, "数据查询异常-ifExist>> " + e.getMessage());
+            Log.i(TAG, "系统字典查询异常-ifExist>> " + e.getMessage());
         }
         return flag;
     }
 
     /**
-     * 查找列表
+     * 根据类型查找字典列表
      *
-     * @param
+     * @param type
      * @return
      */
-    public List<DescEntity> queryListByType(String type) {
+    public List<CodeValue> queryListForCV(String type){
+        List<CodeValue> cvList = new ArrayList<CodeValue>();
         try {
-            List<DescEntity> descEntryList = db.selector(DescEntity.class).and("type","=",type).findAll();
-            if (descEntryList != null && descEntryList.size() > 0) {
-                return descEntryList;
+            List<DescEntity> descList = db.selector(DescEntity.class).where("type", "==", type).findAll();
+            for (DescEntity descEntity : descList) {
+                CodeValue cv = new CodeValue(descEntity.getCode(), descEntity.getValue());
+                cvList.add(cv);
             }
         } catch (DbException e) {
-            Log.i(TAG, "信息查询异常-queryListForCV >> " + e.getMessage());
+            Log.i(TAG, "系统字典查询异常-queryListForCV >> " + e.getMessage());
         }
-        return null;
+        return cvList;
     }
+
+
+    /**
+     * 根据代码类型与代码查找名称
+     * @param type
+     * @param code
+     * @return
+     */
+    public String queryName(String type,String code){
+        List<DescEntity> descList = null;
+        try {
+            descList = db.selector(DescEntity.class).where("type", "==", type).and("code", "==", code).findAll();
+        } catch (DbException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return descList.get(0).getValue();
+    }
+
+    /**
+     * 根据代码类型与名称查找代码
+     * @param type
+     * @param value
+     * @return
+     */
+    public String queryCodeByName(String type,String value){
+        List<DescEntity> descList = null;
+        try {
+            descList = db.selector(DescEntity.class).where("type", "==", type).and("value", "==", value).findAll();
+        } catch (DbException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return descList.get(0).getCode();
+    }
+
+
 }

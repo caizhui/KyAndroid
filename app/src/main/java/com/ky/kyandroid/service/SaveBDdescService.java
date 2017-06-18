@@ -96,6 +96,10 @@ public class SaveBDdescService extends IntentService{
 			for (int i = 0; i < list.size(); i++) {
 				String entityStr = JsonUtil.toJson(list.get(i));
 				DescEntity bd_desc=JsonUtil.fromJson(entityStr, DescEntity.class);
+				String []code =String.valueOf(bd_desc.getCode()).split("\\.");
+				if(code.length>0){
+					bd_desc.setCode(code[0]);
+				}
 				descList.add(bd_desc);
 			}
 			DescEntityDao descDao=new DescEntityDao();
