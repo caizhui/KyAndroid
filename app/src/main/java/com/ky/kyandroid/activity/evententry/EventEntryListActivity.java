@@ -180,7 +180,7 @@ public class EventEntryListActivity extends AppCompatActivity {
     /** 下拉刷新容器 */
     private SwipeRefreshUtil swipeRefreshUtil;
 
-    private List<TFtSjEntity> tempList;
+    private List<TFtSjEntity> tempList ;
 
     /**
      * 是否已经加载本地数据
@@ -203,8 +203,11 @@ public class EventEntryListActivity extends AppCompatActivity {
                     break;
                 // 刷新成功
                 case 1:
+                    //刷新重新初始List
+                    tFtSjEntityList = new ArrayList<TFtSjEntity>();
                     // 判断是否刷新，刷新true,加载false
                     ifrefresh = true;
+                    isIfload=true;
                     //判断是否刷新成功
                     ifRefreshOK = true;
                     //判断是否最后加载到最后
@@ -555,8 +558,8 @@ public class EventEntryListActivity extends AppCompatActivity {
                 if(tempList!=null && tempList.size()>0){
                     tFtSjEntityList.addAll(tempList);
                 }
-                total+=tFtSjEntityList.size();
                 isIfload=false;
+                total+=tempList.size();
             }
 
             // 处理响应信息
