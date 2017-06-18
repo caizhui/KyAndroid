@@ -382,8 +382,8 @@ public class EventEntryListActivity extends AppCompatActivity {
         Intent intent =new Intent(this,EventEntryAddActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable("tFtSjEntity",tFtSjEntity);
-      /*  *//**type 0：新增 1：修改**//*
-        intent.putExtra("type","1");*/
+        /**type 0：新增 1：修改**/
+        intent.putExtra("type","1");
         intent.putExtras(bundle);
         startActivity(intent);
     }
@@ -391,9 +391,11 @@ public class EventEntryListActivity extends AppCompatActivity {
     @OnItemLongClick(R.id.search_evententry_list)
     public boolean OnItemLongClick(final int position){
         tFtSjEntity = (TFtSjEntity) adapter.getItem(position);
-        //1表示事件提交，3表示街道核实 ，6为街道受理，8为街道自行处理
+        //2表示事件提交，3表示街道核实 ，6为街道受理，8为街道自行处理
         if("1".equals(tFtSjEntity.getZt())){
-            listViewContent = new String[]{"删除", "核实", "事件跟踪"};
+            listViewContent = new String[]{"删除"};
+        }else if("2".equals(tFtSjEntity.getZt())){
+            listViewContent = new String[]{"核实", "事件跟踪"};
         }else  if("3".equals(tFtSjEntity.getZt())){
             listViewContent = new String[]{"退回", "不予立案", "受理","作废","事件跟踪"};
         }else  if("6".equals(tFtSjEntity.getZt())){
@@ -410,15 +412,18 @@ public class EventEntryListActivity extends AppCompatActivity {
                     //删除
                     if(pos==0) {
                         message = "";
-                        flag = tFtSjEntityDao.deleteEventEntry(tFtSjEntity.getId());
+                        flag = tFtSjEntityDao.deleteEventEntry(tFtSjEntity.getUuid());
                         if (flag) {
                             Toast.makeText(EventEntryListActivity.this,  "删除成功", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(EventEntryListActivity.this,  "删除失败", Toast.LENGTH_SHORT).show();
                         }
                     }
+                }
+                //事件刚刚录入
+                if("2".equals(tFtSjEntity.getZt())){
                     //街道核实状态为3
-                    if(pos ==1) {
+                    if(pos ==0) {
                         //操作流程方法，因为所有的流程都是改变状态，所以写一个公共方法。
                         OperatingProcess("3","街道核实");
                     }
@@ -559,7 +564,7 @@ public class EventEntryListActivity extends AppCompatActivity {
                     tFtSjEntityList.addAll(tempList);
                 }
                 isIfload=false;
-                total+=tempList.size();
+                total+=tFtSjEntityList.size();
             }
 
             // 处理响应信息

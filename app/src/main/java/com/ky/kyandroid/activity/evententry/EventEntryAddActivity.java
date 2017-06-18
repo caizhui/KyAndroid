@@ -160,14 +160,25 @@ public class EventEntryAddActivity extends FragmentActivity {
 
     private TFtSjRyEntityDao tFtSjRyEntityDao;
 
+    /**type 0：新增 1：修改**/
+    private  String type;
+
+    private TFtSjEntity tFtSjEntity;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_evententry_add);
         ButterKnife.bind(this);
-        uuid = UUID.randomUUID().toString().trim().replaceAll("-", "").toUpperCase() ;
         intent=getIntent();
+        type = intent.getStringExtra("type");
+        tFtSjEntity = (TFtSjEntity) intent.getSerializableExtra("tFtSjEntity");
+        if("1".equals(type)){
+            uuid= tFtSjEntity.getId();
+        }else{
+            uuid = UUID.randomUUID().toString().trim().replaceAll("-", "").toUpperCase() ;
+        }
         tFtSjEntityDao = new TFtSjEntityDao();
         tFtSjRyEntityDao = new TFtSjRyEntityDao();
         initEvent();
@@ -297,8 +308,15 @@ public class EventEntryAddActivity extends FragmentActivity {
             /** 上报领导按钮*/
             case R.id.reporting_leadership_btn:
                 if(eventEntity!=null){
+                    //当上报领导时，如果状态为1，表示是通过草稿去上报的，否则就是直接上报的
+                    if("1".equals(eventEntity.getZt())){
+                        //将本地的草稿数据删除
+                        tFtSjEntityDao.deleteEventEntry(eventEntity.getId());
+                    }else{
+                        //如果是第一次上传，要设置一个uuid，如果是从草稿中上传，就直接拿草稿里面的uuid
+                        eventEntity.setId(uuid);
+                    }
                     HashMap map =new HashMap();
-                    eventEntity.setId(uuid);
                     //上报领导，状态为2
                     eventEntity.setZt("2");
                     List<TFtSjRyEntity> tFtSjRyEntityList = eventEntryAdd_person.tFtSjRyEntityList();
@@ -325,23 +343,31 @@ public class EventEntryAddActivity extends FragmentActivity {
             /**保存草稿按钮*/
             case R.id.save_draft_btn:
                 if(eventEntity!=null){
-                    eventEntity.setId(uuid);
-                    //保存草稿，状态为1
-                    eventEntity.setZt("1");
-                    boolean flag = tFtSjEntityDao.saveTFtSjEntity(eventEntity);
-                    List<TFtSjRyEntity> tFtSjRyEntityList = eventEntryAdd_person.tFtSjRyEntityList();
-                    if(tFtSjRyEntityList!=null && tFtSjRyEntityList.size()>0){
-                        for(int i = 0;i<tFtSjRyEntityList.size();i++){
-                            TFtSjRyEntity entity = tFtSjRyEntityList.get(i);
-                            entity.setSjId(uuid);
-                            flag = tFtSjRyEntityDao.saveTFtSjRyEntity(entity);
-                        }
+                    boolean flag=false;
+                    String message="";
+                    if("1".equals(eventEntity.getZt())){
+                        flag = tFtSjEntityDao.updateTFtSjEntity(eventEntity);
+                        message="修改";
+                    }else{
+                        eventEntity.setId(uuid);
+                        //保存草稿，状态为1
+                        eventEntity.setZt("1");
+                        flag = tFtSjEntityDao.saveTFtSjEntity(eventEntity);
+                        List<TFtSjRyEntity> tFtSjRyEntityList = eventEntryAdd_person.tFtSjRyEntityList();
+                        if(tFtSjRyEntityList!=null && tFtSjRyEntityList.size()>0){
+                            for(int i = 0;i<tFtSjRyEntityList.size();i++){
+                                TFtSjRyEntity entity = tFtSjRyEntityList.get(i);
+                                entity.setSjId(uuid);
+                                flag = tFtSjRyEntityDao.saveTFtSjRyEntity(entity);
+                            }
 
+                        }
+                        message="保存";
                     }
                     if(flag){
-                        Toast.makeText(EventEntryAddActivity.this,"保存成功",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(EventEntryAddActivity.this,message+"成功",Toast.LENGTH_SHORT).show();
                     }else{
-                        Toast.makeText(EventEntryAddActivity.this,"保存失败",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(EventEntryAddActivity.this,message+"失败",Toast.LENGTH_SHORT).show();
                     }
                 }
                     break;

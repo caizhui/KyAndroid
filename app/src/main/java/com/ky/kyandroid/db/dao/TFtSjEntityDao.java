@@ -73,10 +73,10 @@ public class TFtSjEntityDao extends BaseDao {
         return null;
     }
 
-    public boolean deleteEventEntry(String uuid) {
+    public boolean deleteEventEntry(String id) {
         boolean flag =false;
         try {
-            db.delete(TFtSjEntity.class, WhereBuilder.b("uuid","=", uuid));
+            db.delete(TFtSjEntity.class, WhereBuilder.b("id","=", id));
             flag=true;
         } catch (DbException e) {
             e.printStackTrace();
@@ -92,7 +92,7 @@ public class TFtSjEntityDao extends BaseDao {
     public boolean updateTFtSjEntity(TFtSjEntity entity){
         boolean flag =false;
         try {
-            db.update(entity, String.valueOf(WhereBuilder.b("","=", entity.getUuid())),"sjmc","fssj","fsdd","sfsqqt","dcbm",
+            db.update(entity, String.valueOf(WhereBuilder.b("id","=", entity.getId())),"sjmc","fssj","fsdd","sfsqqt","dcbm",
                     "sjly","zysq","sjgyqk","gm","bxxs","sfsw","sfsj",
                     "sfsyq","sfgacz","ssjd","ldps","jwd","clsx","sssq","ssjwh","zt");
             flag = true;
