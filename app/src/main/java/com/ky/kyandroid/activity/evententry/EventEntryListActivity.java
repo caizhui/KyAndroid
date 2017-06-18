@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -13,10 +15,12 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,12 +33,11 @@ import com.ky.kyandroid.bean.PageBean;
 import com.ky.kyandroid.db.dao.EventEntryDao;
 import com.ky.kyandroid.entity.EventEntity;
 import com.ky.kyandroid.util.JsonUtil;
-import com.ky.kyandroid.util.OkHttpUtil;
 import com.ky.kyandroid.util.SpUtil;
 import com.ky.kyandroid.util.StringUtils;
+import com.ky.kyandroid.util.SwipeRefreshUtil;
 import com.solidfire.gson.JsonObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,9 +48,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemClick;
 import butterknife.OnItemLongClick;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
 
 import static com.ky.kyandroid.R.layout.add_department;
 import static com.ky.kyandroid.R.layout.dialog_dispatch_operation;
@@ -94,12 +94,12 @@ public class EventEntryListActivity extends AppCompatActivity {
     /**
      * 事件列表
      */
-    //private List<eventEntity> entryEntityList;
+    private List<EventEntity> eventEntityList;
 
     /**
-     * 事件列表
+     * 每次加载信息List条数
      */
-    private List<EventEntity> eventEntityList;
+    private List<EventEntity> pList;
 
 
     private EventEntityListAdapter adapter;
@@ -141,24 +141,125 @@ public class EventEntryListActivity extends AppCompatActivity {
      */
     public static final String USER_ID = "userId";
 
+    private LinearLayout list_jiazai;
+
+    boolean ifRefreshOK = false, ifrefresh = false;// 是否刷新完毕（防止第一次进入刷新跟加载同时进行）
+    boolean ifDateEnd = false, ifload = false;// 数据是否加载完
+
+    // 当前页
+    private int currentPage;
+
+    //每页显示条数
+    private int pageSize=5;
+
+    /**
+     *
+     */
+    private PageBean pageBean;
+
+    /**
+     * 返回的总条数
+     */
+    private int totalMumber;
+
+    /**
+     * 总条数
+     */
+    private int total;
+
+    /**
+     * 底部标题
+     */
+    private TextView foot_title;
+
+    /**
+     * 加载圆形进度条
+     */
+    private ProgressBar progressBar;
+
+    /** 下拉刷新容器 */
+    private SwipeRefreshUtil swipeRefreshUtil;
+
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
+
         @Override
         public void handleMessage(Message msg) {
+            super.handleMessage(msg);
             // 提示信息
-            String message = String.valueOf(msg.obj == null ? "系统繁忙,请稍后再试"
-                    : msg.obj);
+            String message = String.valueOf(msg.obj == null ? "系统繁忙,请稍后再试" : msg.obj);
             switch (msg.what) {
                 // 失败
                 case 0:
                     Toast.makeText(EventEntryListActivity.this, message, Toast.LENGTH_SHORT).show();
                     break;
-                // 成功跳转
+                // 刷新成功
                 case 1:
+                    // 判断是否刷新，刷新true,加载false
+                    ifrefresh = true;
+                    //判断是否刷新成功
+                    ifRefreshOK = true;
+                    //判断是否最后加载到最后
+                    ifDateEnd = false;
+                    currentPage = 2;
+                    //刷新时总条数从新设值
+                    total=0;
+                    //解析数据
                     handleTransation(message);
+                    totalMumber = pList.size();
+                    if (pList.size() < pageSize) {
+                        ifDateEnd = true;
+                        if(pageBean!=null ){
+                            if(pageBean.getCurrentPage()  == 1){
+                                list_jiazai.setVisibility(View.GONE);
+                            }
+                        }
+                    }
+                    swipeContainer.post(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            swipeContainer.setRefreshing(false);
+                        }
+                    });
+                    adapter.notifyDataSetChanged(eventEntityList);
+                    break;
+                // 加载更多
+                case 2:
+                    //解析数据
+                    handleTransation(message);
+                    currentPage = currentPage + 1;
+                    //当加载的 条数小鱼每页显示条数时，加载完成
+                    if (pList.size() < pageSize) {
+                        ifDateEnd = true;
+                        if(pageBean!=null ){
+                            progressBar.setVisibility(View.GONE);
+                            foot_title.setText("已经没有更多数据了");
+                        }
+                    } else {
+                        ifload = false;
+                        list_jiazai.setVisibility(View.GONE);
+                    }
+                    adapter.notifyDataSetChanged(eventEntityList);
+                    break;
+                //刷新失败
+                case 3:
+                    swipeContainer.post(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            swipeContainer.setRefreshing(false);
+                        }
+                    });
+                    break;
+                //加载失败
+                case 4:
+                    list_jiazai.setVisibility(View.GONE);
                     break;
             }
+            centerText.setText("事件列表("+total+")");
         }
+
     };
 
     @Override
@@ -167,15 +268,13 @@ public class EventEntryListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_evententry_list);
         ButterKnife.bind(this);
         eventEntryDao = new EventEntryDao();
-    }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
+        eventEntityList = new ArrayList<EventEntity>();
         initEvent();
         initData();
+        adapter = new EventEntityListAdapter(eventEntityList,EventEntryListActivity.this);
+        searchEvententryList.setAdapter(adapter);
     }
+
 
     /**
      * 初始化事件
@@ -184,6 +283,13 @@ public class EventEntryListActivity extends AppCompatActivity {
         sp = SpUtil.getSharePerference(this);
         // 初始化网络工具
         netWorkConnection = new NetWorkConnection(this);
+        // 加载“正在加载”布局文件
+        list_jiazai = (LinearLayout) getLayoutInflater().inflate(R.layout.lv_item_jiazai, null);
+        list_jiazai.setVisibility(View.GONE);
+        foot_title = (TextView) list_jiazai.findViewById(R.id.foot_title);
+        progressBar = (ProgressBar)list_jiazai.findViewById(R.id.progressBar);
+        searchEvententryList.addFooterView(list_jiazai, null, false);
+        searchEvententryList.setSelector(new ColorDrawable(Color.TRANSPARENT));
     }
 
     @OnClick({R.id.left_btn,R.id.right_btn})
@@ -208,30 +314,50 @@ public class EventEntryListActivity extends AppCompatActivity {
         final Message msg = new Message();
         msg.what = 0;
         if(netWorkConnection.isWIFIConnection()){
-            Map<String, String> paramsMap = new HashMap<String, String>();
+            final Map<String, String> paramsMap = new HashMap<String, String>();
             String userId=sp.getString(USER_ID,"");
             paramsMap.put("userId",userId);
-            // 发送请求
-            OkHttpUtil.sendRequest(Constants.SERVICE_QUERY_EVENTENTRY, paramsMap, new Callback(){
+            //1.表示刷新，2表示加载
+            swipeRefreshUtil = new SwipeRefreshUtil(swipeContainer, Constants.SERVICE_QUERY_EVENTENTRY, mHandler);
+            //刷新操作(1.表示刷新，2表示加载)
+            swipeRefreshUtil.setSwipeRefresh(paramsMap,1);
+
+            //加载操作
+            searchEvententryList.setOnScrollListener(new AbsListView.OnScrollListener() {
 
                 @Override
-                public void onFailure(Call call, IOException e) {
-                    mHandler.sendEmptyMessage(0);
-                }
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    if (response.isSuccessful()) {
-                        msg.what = 1;
-                        msg.obj = response.body().string();
-                    } else {
-                        msg.obj = "网络异常,请确认网络情况";
+                public void onScrollStateChanged(AbsListView view, int scrollState) {
+                    // 判断是否滑动到最底层
+                    if (view.getLastVisiblePosition() == view.getCount() - 1) {
+                        // 判断返回的条数是否小于每页显示的 条数
+                        if (totalMumber < pageSize) {
+                            list_jiazai.setVisibility(View.VISIBLE);
+                            progressBar.setVisibility(View.GONE);
+                            foot_title.setText("已经没有更多数据了");
+                            return;
+                        }
                     }
-                    mHandler.sendMessage(msg);
+                }
+
+                @Override
+                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                    if (firstVisibleItem + visibleItemCount == totalItemCount && list_jiazai.getVisibility() == View.GONE
+                            && eventEntityList.size() != 0) {
+                        if (ifDateEnd) {
+                            return;
+                        }
+                        if (!ifload) {
+                            ifload = true;
+                            paramsMap.put("currentPage", currentPage+"");
+                            list_jiazai.setVisibility(View.VISIBLE);
+                            //1.表示刷新，2表示加载
+                            swipeRefreshUtil.setSwipeRefresh(paramsMap,2);
+                        }
+                    }
                 }
             });
         }else{
-            msg.obj = "WIFI网络不可用,请检查网络连接情况";
-            mHandler.sendMessage(msg);
+            Toast.makeText(this, "连接不上网络！", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -329,7 +455,7 @@ public class EventEntryListActivity extends AppCompatActivity {
                     }
                 }
                 //对页面数据进行刷新
-                initData();
+               // initData();
                // entryEntityList = eventEntryDao.queryList();
                // adapter.notifyDataSetChanged(entryEntityList);
             }
@@ -413,30 +539,45 @@ public class EventEntryListActivity extends AppCompatActivity {
     }
 
     public void handleTransation(String body) {
-        eventEntityList = new ArrayList<EventEntity>();
         if (StringUtils.isBlank(body)) {
         } else {
             // 处理响应信息
             AckMessage ackMsg = JsonUtil.fromJson(body, AckMessage.class);
-            if (ackMsg != null) {
-                if (AckMessage.SUCCESS.equals(ackMsg.getAckCode())) {
-                    PageBean pageBean =ackMsg.getPageBean();
-                    if(pageBean!=null){
-                        List<JsonObject> list =pageBean.getDataList();
-                        if(list != null && list.size()>0){
-                            for (int i = 0; i < list.size(); i++) {
-                                //先将获取的Object对象转成String
-                                String entityStr = JsonUtil.toJson(list.get(i));
-                                EventEntity eventEntity = JsonUtil.fromJson(entityStr, EventEntity.class);
-                                eventEntityList.add(eventEntity);
-                            }
-                            adapter = new EventEntityListAdapter( eventEntityList,EventEntryListActivity.this);
-                            searchEvententryList.setAdapter(adapter);
+            if (ifrefresh) {
+                eventEntityList = setMessage(ackMsg);
+                ifrefresh = false;
+            } else {
+                eventEntityList.addAll(setMessage(ackMsg));
+            }
+
+        }
+    }
+
+    /**
+     * 设置事件信息
+     *
+     * @param ackMsg
+     * @return
+     */
+    private List<EventEntity> setMessage(AckMessage ackMsg) {
+        pList = new ArrayList<EventEntity>();
+        if (ackMsg != null) {
+            if (AckMessage.SUCCESS.equals(ackMsg.getAckCode())) {
+                pageBean = ackMsg.getPageBean();
+                if(pageBean!=null){
+                    List<JsonObject> list =pageBean.getDataList();
+                    if(list != null && list.size()>0){
+                        for (int i = 0; i < list.size(); i++) {
+                            //先将获取的Object对象转成String
+                            String entityStr = JsonUtil.toJson(list.get(i));
+                            EventEntity eventEntity = JsonUtil.fromJson(entityStr.toLowerCase(), EventEntity.class);
+                            pList.add(eventEntity);
                         }
                     }
                 }
             }
-
         }
+        total +=pList.size();
+        return pList;
     }
 }

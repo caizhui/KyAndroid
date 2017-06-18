@@ -35,7 +35,7 @@ public class OkHttpUtil {
 	private static final String TAG = "OkHttpUtil";
 	/** OkHttpClient */
 	private static OkHttpClient mOkHttpClient = new OkHttpClient();
-	
+
 	/**
 	 * 文件上传类型内部类
 	 */
@@ -417,26 +417,6 @@ public class OkHttpUtil {
 	 *            所需上传文件
 	 */
 	private static void generateFile(Builder requestBuilder, String fileKey, File fileValue) {
-		MultipartBody.Builder multipartBody = new MultipartBody.Builder();
-		if (fileValue != null && fileValue.isFile()) {
-			String fileName = fileValue.getName();
-			RequestBody fileBody = RequestBody.create(MediaType.parse(OKMediaType.MEDIA_TYPE_STREAM), fileValue);
-			multipartBody.setType(MultipartBody.FORM);
-			multipartBody.addFormDataPart(fileKey, fileName, fileBody);
-			requestBuilder.post(multipartBody.build());
-		}
-	}
-
-	/**
-	 * 封装文件参数
-	 *
-	 * @param requestBuilder
-	 * @param fileKey
-	 *            后台文件接收key
-	 * @param fileValue
-	 *            所需上传文件
-	 */
-	private static void generateFiles(Builder requestBuilder, String jsonMap,String fileKey, File fileValue) {
 		MultipartBody.Builder multipartBody = new MultipartBody.Builder();
 		if (fileValue != null && fileValue.isFile()) {
 			String fileName = fileValue.getName();

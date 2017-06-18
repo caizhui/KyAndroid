@@ -15,6 +15,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.ky.kyandroid.Constants;
 import com.ky.kyandroid.R;
 import com.ky.kyandroid.activity.supervision.SuperVisionAddActivity;
 import com.ky.kyandroid.adapter.FragmentAdapter;
@@ -284,11 +285,6 @@ public class EventEntryAddActivity extends FragmentActivity {
                 break;
             /** 上报领导按钮*/
             case R.id.reporting_leadership_btn:
-                Intent intent1 = new Intent(this, SuperVisionAddActivity.class);
-                startActivity(intent1);
-                break;
-            /**保存草稿按钮*/
-            case R.id.save_draft_btn:
                 String userId=sp.getString(USER_ID,"");
                 EventEntity eventEntity = eventEntryAdd_basic.PackageData();
                 eventEntity.setId(uuid);
@@ -308,6 +304,11 @@ public class EventEntryAddActivity extends FragmentActivity {
                 map.put("type","1");
                 String paramMap = JsonUtil.map2Json(map);
                 sendMultipart(userId,paramMap,files);
+                break;
+            /**保存草稿按钮*/
+            case R.id.save_draft_btn:
+                Intent intent1 = new Intent(this, SuperVisionAddActivity.class);
+                startActivity(intent1);
                /* PackageData();
                 if ("".equals(message)) {
                     boolean flag ;
@@ -343,7 +344,7 @@ public class EventEntryAddActivity extends FragmentActivity {
      * 上传文件及参数
      */
     private void sendMultipart(String userId,String paramMap,File[] files){
-        File sdcache = getExternalCacheDir();
+        File sdcache = this.getExternalCacheDir();
         int cacheSize = 10 * 1024 * 1024;
         //设置超时时间及缓存，下边都应该这样设置的。
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
@@ -366,7 +367,7 @@ public class EventEntryAddActivity extends FragmentActivity {
         }
         Request request = new Request.Builder()
                 .header("Authorization", "Client-ID " + "...")
-                .url("http://192.168.1.102:8080/ft/kyAndroid/sjSave.action")//请求的url
+                .url(Constants.SERVICE_BASE_URL+Constants.SERVICE_SAVE_EVENTENTRY)//请求的url
                 .post(requestBody.build())
                 .build();
 

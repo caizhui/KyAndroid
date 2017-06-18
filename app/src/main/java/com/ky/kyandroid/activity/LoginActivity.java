@@ -21,6 +21,7 @@ import com.ky.kyandroid.activity.evententry.EventEntryListActivity;
 import com.ky.kyandroid.bean.AckMessage;
 import com.ky.kyandroid.bean.NetWorkConnection;
 import com.ky.kyandroid.entity.UserEntity;
+import com.ky.kyandroid.service.SaveBDdescService;
 import com.ky.kyandroid.util.JsonUtil;
 import com.ky.kyandroid.util.OkHttpUtil;
 import com.ky.kyandroid.util.SpUtil;
@@ -210,6 +211,7 @@ public class LoginActivity extends AppCompatActivity {
             if (setUserMessage(ackMsg)) {
                 Log.i(TAG, "设置用户信息成功...");
                 sweetAlertDialog.dismiss();
+                startService(new Intent(this, SaveBDdescService.class));
                 Intent intent = new Intent(this,EventEntryListActivity.class);
                 startActivity(intent);
                 finish();

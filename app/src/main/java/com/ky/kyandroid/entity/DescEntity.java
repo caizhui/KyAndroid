@@ -7,10 +7,10 @@ import org.xutils.db.annotation.Table;
  * Created by Caizhui on 2017/6/10.
  * 获取控件键值对
  */
-@Table(name = "t_keyvalue")
-public class KeyValueEntity {
+@Table(name = "t_desc")
+public class DescEntity {
 
-    @Column(name = "id")
+    @Column(name = "id",isId = true,autoGen = false)
     private  String id;
     @Column(name = "code")
     private String code;
@@ -19,9 +19,9 @@ public class KeyValueEntity {
     @Column(name = "type")
     private String type;
 
-    public KeyValueEntity(){};
+    public DescEntity(){};
 
-    public KeyValueEntity(String code, String value) {
+    public DescEntity(String code, String value) {
         this.code = code;
         this.value = value;
     }
