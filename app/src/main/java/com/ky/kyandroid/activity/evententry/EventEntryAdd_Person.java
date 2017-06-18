@@ -66,7 +66,7 @@ public class EventEntryAdd_Person extends Fragment {
      */
     EditText personAddressEdt;
     /**
-     *党员
+     * 党员
      */
     EditText personPartyEdt;
     /**
@@ -98,7 +98,10 @@ public class EventEntryAdd_Person extends Fragment {
 
     private List<TFtSjRyEntity> tFtSjRyEntityList;
 
+    public List<TFtSjRyEntity> sjryList;
+
     EventPersonListAdapter adapter;
+
 
 
     @Nullable
@@ -109,7 +112,6 @@ public class EventEntryAdd_Person extends Fragment {
         tFtSjRyEntityList = new ArrayList<TFtSjRyEntity>();
         return view;
     }
-
 
     @OnClick({R.id.add_person, R.id.delete_person})
     public void onClick(View view) {
@@ -145,7 +147,7 @@ public class EventEntryAdd_Person extends Fragment {
         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                tFtSjRyEntity =new TFtSjRyEntity();
+                tFtSjRyEntity = new TFtSjRyEntity();
                 tFtSjRyEntity.setXm(personNameEdt.getText().toString());
                 tFtSjRyEntity.setXb(personSexEdt.getText().toString());
                 tFtSjRyEntity.setMz(personNationEdt.getText().toString());
@@ -158,8 +160,8 @@ public class EventEntryAdd_Person extends Fragment {
                 tFtSjRyEntity.setXzdz(personDomilcileEdt.getText().toString());
                 tFtSjRyEntity.setComments(personRemarkEdt.getText().toString());
                 tFtSjRyEntityList.add(tFtSjRyEntity);
-                if(tFtSjRyEntityList!=null && tFtSjRyEntityList.size()>0){
-                    adapter = new EventPersonListAdapter(tFtSjRyEntityList,EventEntryAdd_Person.this.getActivity());
+                if (tFtSjRyEntityList != null && tFtSjRyEntityList.size() > 0) {
+                    adapter = new EventPersonListAdapter(tFtSjRyEntityList, EventEntryAdd_Person.this.getActivity());
                     personList.setAdapter(adapter);
                 }
             }
@@ -172,8 +174,19 @@ public class EventEntryAdd_Person extends Fragment {
         builder.create().show();
     }
 
-    public List<TFtSjRyEntity>  tFtSjRyEntityList(){
-        return  tFtSjRyEntityList;
+    public List<TFtSjRyEntity> tFtSjRyEntityList() {
+        return tFtSjRyEntityList;
+    }
+
+    /**
+     * 当查看详情时初始化数据
+     */
+    public void setTFtSjRyEntityList(List<TFtSjRyEntity> sjryList) {
+        this.sjryList = sjryList;
+        if (sjryList != null && sjryList.size() > 0) {
+            adapter = new EventPersonListAdapter(sjryList, EventEntryAdd_Person.this.getActivity());
+            personList.setAdapter(adapter);
+        }
     }
 
 }

@@ -22,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.ky.kyandroid.R;
+import com.ky.kyandroid.entity.TFtSjFjEntity;
 import com.ky.kyandroid.util.FileManager;
 import com.ky.kyandroid.view.SelectPicPopupWindow;
 
@@ -32,6 +33,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -83,6 +85,9 @@ public class EventEntryAdd_Attachment extends Fragment {
     public EventEntryAdd_Attachment(String uuid){
         this.uuid = uuid;
     }
+
+    // 获取事件附件 - 子表信息
+    List<TFtSjFjEntity> sjfjList ;
 
     @Nullable
     @Override
@@ -274,4 +279,11 @@ public class EventEntryAdd_Attachment extends Fragment {
         return photoName;
     }
 
+
+    /**
+     * 当查看详情时初始化数据
+     */
+    public void setTFtSjFjEntityList(List<TFtSjFjEntity> sjfjList) {
+        this.sjfjList = sjfjList;
+    }
 }

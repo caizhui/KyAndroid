@@ -19,12 +19,13 @@ import android.widget.Toast;
 import com.ky.kyandroid.R;
 import com.ky.kyandroid.bean.CodeValue;
 import com.ky.kyandroid.db.dao.DescEntityDao;
-import com.ky.kyandroid.db.dao.EventEntryDao;
 import com.ky.kyandroid.entity.TFtSjEntity;
 import com.ky.kyandroid.util.StringUtils;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -137,7 +138,6 @@ public class EventEntryAdd_Basic extends Fragment {
      */
     ArrayAdapter<CodeValue> adapter;
 
-    public EventEntryDao eventEntryDao;
 
 
     /**
@@ -167,7 +167,6 @@ public class EventEntryAdd_Basic extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.evententeradd_basic_fragment, container, false);
         ButterKnife.bind(this, view);
-        eventEntryDao = new EventEntryDao();
         descEntityDao = new DescEntityDao();
         type = intent.getStringExtra("type");
         tFtSjEntity = (TFtSjEntity) intent.getSerializableExtra("tFtSjEntity");
@@ -254,7 +253,11 @@ public class EventEntryAdd_Basic extends Fragment {
                 new DatePickerDialog(EventEntryAdd_Basic.this.getActivity(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        happenTimeEdt.setText(year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
+                        Date date = new Date(System.currentTimeMillis());
+                        SimpleDateFormat dateFormat = new SimpleDateFormat(" HH:mm:ss");
+                        String time=year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
+                        time +=dateFormat.format(date);
+                        happenTimeEdt.setText(time);
                     }
                 }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
                 break;

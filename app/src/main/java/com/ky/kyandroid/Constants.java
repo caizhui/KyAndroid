@@ -24,6 +24,9 @@ public class Constants {
 	//保存事件接口
 	public final static String SERVICE_SAVE_EVENTENTRY= "kyAndroid/sjSave.action";
 
+	//事件详情接口
+	public final static String SERVICE_DETAIL_EVENT= "kyAndroid/sjDetial.action";
+
     //保存字典项接口
     public final static String SERVICE_QUERY_DESC= "kyAndroid/getDictAll.action";
 

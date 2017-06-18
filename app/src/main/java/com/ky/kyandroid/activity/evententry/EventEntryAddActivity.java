@@ -1,9 +1,12 @@
 package com.ky.kyandroid.activity.evententry;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -19,19 +22,25 @@ import android.widget.Toast;
 import com.ky.kyandroid.Constants;
 import com.ky.kyandroid.R;
 import com.ky.kyandroid.adapter.FragmentAdapter;
+import com.ky.kyandroid.bean.AckMessage;
 import com.ky.kyandroid.bean.NetWorkConnection;
 import com.ky.kyandroid.db.dao.TFtSjEntityDao;
 import com.ky.kyandroid.db.dao.TFtSjRyEntityDao;
+import com.ky.kyandroid.entity.TFtSjDetailEntity;
 import com.ky.kyandroid.entity.TFtSjEntity;
+import com.ky.kyandroid.entity.TFtSjFjEntity;
 import com.ky.kyandroid.entity.TFtSjRyEntity;
 import com.ky.kyandroid.util.JsonUtil;
+import com.ky.kyandroid.util.OkHttpUtil;
 import com.ky.kyandroid.util.SpUtil;
+import com.ky.kyandroid.util.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -165,23 +174,32 @@ public class EventEntryAddActivity extends FragmentActivity {
 
     private TFtSjEntity tFtSjEntity;
 
+    String userId;
+
+    // 获取事件附件 - 子表信息
+    List<TFtSjFjEntity> sjfjList ;
+    // 人员具体信息
+    List<TFtSjRyEntity> sjryList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_evententry_add);
         ButterKnife.bind(this);
+        initEvent();
+        userId=sp.getString(USER_ID,"");
         intent=getIntent();
         type = intent.getStringExtra("type");
         tFtSjEntity = (TFtSjEntity) intent.getSerializableExtra("tFtSjEntity");
+        //1表示修改或者查看信息
         if("1".equals(type)){
             uuid= tFtSjEntity.getId();
+            initData();
         }else{
             uuid = UUID.randomUUID().toString().trim().replaceAll("-", "").toUpperCase() ;
         }
         tFtSjEntityDao = new TFtSjEntityDao();
         tFtSjRyEntityDao = new TFtSjRyEntityDao();
-        initEvent();
         initToolbar();
         initPageView();
         initViewData();
@@ -298,7 +316,6 @@ public class EventEntryAddActivity extends FragmentActivity {
 
     @OnClick({R.id.left_btn,R.id.reporting_leadership_btn,R.id.save_draft_btn})
     public void onClick(View v) {
-        String userId=sp.getString(USER_ID,"");
         TFtSjEntity eventEntity = eventEntryAdd_basic.PackageData();
         switch (v.getId()) {
             /** 返回键 **/
@@ -394,6 +411,7 @@ public class EventEntryAddActivity extends FragmentActivity {
         requestBody.addFormDataPart("jsonData", paramMap);//设置post的参数
         if(files!=null && files.length>0){
             for(int i = 0;i<files.length;i++){
+                //uploadFles
                 requestBody.addFormDataPart("image", files[i].getName(),
                         RequestBody.create(MediaType.parse("application/octet-stream; charset=utf-8"), files[i]));
             }
@@ -419,5 +437,86 @@ public class EventEntryAddActivity extends FragmentActivity {
                 //startActivity(intent);
             }
         });
+    }
+
+
+    @SuppressLint("HandlerLeak")
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            // 提示信息
+            String message = String.valueOf(msg.obj == null ? "系统繁忙,请稍后再试"
+                    : msg.obj);
+            switch (msg.what) {
+                // 失败
+                case 0:
+                    Log.i(TAG, "登录失败...");
+                    Toast.makeText(EventEntryAddActivity.this, message, Toast.LENGTH_SHORT).show();
+                    break;
+                // 成功跳转
+                case 1:
+                    handleTransation(message);
+                    break;
+            }
+        }
+    };
+
+    /**
+     * 处理后续流程
+     *
+     * @param
+     */
+    private void handleTransation(String body) {
+        if (StringUtils.isBlank(body)) {
+        } else {
+            // 处理响应信息
+            AckMessage ackMsg = JsonUtil.fromJson(body, AckMessage.class);
+            if (ackMsg != null) {
+                if (AckMessage.SUCCESS.equals(ackMsg.getAckCode())) {
+                    Object object = ackMsg.getEntity();
+                    //先将获取的Object对象转成String
+                    String entityStr = JsonUtil.toJson(object);
+                    //先将获取的json象转成实体
+                    TFtSjDetailEntity tFtSjDetailEntity = JsonUtil.fromJson(entityStr,TFtSjDetailEntity.class);
+                    if (tFtSjDetailEntity != null) {
+                        sjryList = tFtSjDetailEntity.getSjryList();
+                        sjfjList = tFtSjDetailEntity.getSjfjList();
+                        eventEntryAdd_person.setTFtSjRyEntityList(sjryList);
+                        eventEntryAdd_attachment.setTFtSjFjEntityList(sjfjList);
+                    }
+                }
+            }
+        }
+    }
+
+    public void initData(){
+        final Message msg = new Message();
+        msg.what = 0;
+        if(netWorkConnection.isWIFIConnection()){
+            Map<String, String> paramsMap = new HashMap<String, String>();
+            paramsMap.put("userId",userId);
+            paramsMap.put("id", tFtSjEntity.getId());
+            // 发送请求
+            OkHttpUtil.sendRequest(Constants.SERVICE_DETAIL_EVENT, paramsMap, new Callback(){
+
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    mHandler.sendEmptyMessage(0);
+                }
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    if (response.isSuccessful()) {
+                        msg.what = 1;
+                        msg.obj = response.body().string();
+                    } else {
+                        msg.obj = "网络异常,请确认网络情况";
+                    }
+                    mHandler.sendMessage(msg);
+                }
+            });
+        }else{
+            msg.obj = "WIFI网络不可用,请检查网络连接情况";
+            mHandler.sendMessage(msg);
+        }
     }
 }

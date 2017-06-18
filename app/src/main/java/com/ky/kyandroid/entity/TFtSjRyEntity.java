@@ -127,7 +127,6 @@ public class TFtSjRyEntity {
 	 */
 	private String lrrName;
 
-
 	public  TFtSjRyEntity(){}
 	/**
 	 * 获取 外键 的属性值
