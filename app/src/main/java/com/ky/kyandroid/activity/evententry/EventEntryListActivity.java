@@ -379,8 +379,8 @@ public class EventEntryListActivity extends AppCompatActivity {
         Intent intent =new Intent(this,EventEntryAddActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable("tFtSjEntity",tFtSjEntity);
-        /**type 0：新增 1：修改**/
-        intent.putExtra("type","1");
+      /*  *//**type 0：新增 1：修改**//*
+        intent.putExtra("type","1");*/
         intent.putExtras(bundle);
         startActivity(intent);
     }
@@ -555,6 +555,7 @@ public class EventEntryListActivity extends AppCompatActivity {
                 if(tempList!=null && tempList.size()>0){
                     tFtSjEntityList.addAll(tempList);
                 }
+                total+=tFtSjEntityList.size();
                 isIfload=false;
             }
 

@@ -152,7 +152,7 @@ public class EventEntryAdd_Basic extends Fragment {
      */
     public String type;
 
-    public TFtSjEntity eventEntity;
+    public TFtSjEntity tFtSjEntity;
 
 
     public DescEntityDao descEntityDao;
@@ -170,26 +170,36 @@ public class EventEntryAdd_Basic extends Fragment {
         eventEntryDao = new EventEntryDao();
         descEntityDao = new DescEntityDao();
         type = intent.getStringExtra("type");
-        eventEntity = (TFtSjEntity) intent.getSerializableExtra("eventEntity");
+        tFtSjEntity = (TFtSjEntity) intent.getSerializableExtra("tFtSjEntity");
         initData();
         return view;
     }
 
     public void initData() {
-        if (eventEntity != null) {
-            //当type等于1的时候，只能查看信息
-            if ("1".equals(type)) {
-               /* thingNameEdt.setText(eventEntity.getThingName());
-                happenTimeEdt.setText(eventEntity.getHappenTime());
-                happenAddressEdt.setText(eventEntity.getHappenAddress());
-                petitionGroupsEdt.setText(eventEntity.getPetitionGroups());
-                fieldDepartmenEdt.setText(eventEntity.getFieldDepartmen());
-                fieldsInvolvedEdt.setText(eventEntity.getFieldsInvolved());
-                belongStreetEdt.setText(eventEntity.getBelongStreet());
-                mainAppealsEdt.setText(eventEntity.getMainAppeals());
-                eventSummaryEdt.setText(eventEntity.getEventSummary());
-                leadershipInstructionsEdt.setText(eventEntity.getLeadershipInstructions());*/
+        if (tFtSjEntity != null) {
+            //当状态等于1的时候，表示为草稿，可以修改，其他的时候只能查看信息
+            if (!"1".equals(tFtSjEntity.getZt())) {
+                thingNameEdt.setEnabled(false);
+                happenTimeEdt.setEnabled(false);
+                happenAddressEdt.setEnabled(false);
+                petitionGroupsEdt.setEnabled(false);
+                fieldDepartmenEdt.setEnabled(false);
+                fieldsInvolvedEdt.setEnabled(false);
+                belongStreetEdt.setEnabled(false);
+                mainAppealsEdt.setEnabled(false);
+                eventSummaryEdt.setEnabled(false);
+                leadershipInstructionsEdt.setEnabled(false);
             }
+            thingNameEdt.setText(tFtSjEntity.getSjmc());
+            happenTimeEdt.setText(tFtSjEntity.getFssj());
+            happenAddressEdt.setText(tFtSjEntity.getFsdd());
+            petitionGroupsEdt.setText(tFtSjEntity.getSfsqqt());
+            fieldDepartmenEdt.setText(tFtSjEntity.getDcbm());
+            fieldsInvolvedEdt.setText(tFtSjEntity.getSjly());
+            belongStreetEdt.setText(tFtSjEntity.getSsjd());
+            mainAppealsEdt.setText(tFtSjEntity.getZysq());
+            eventSummaryEdt.setText(tFtSjEntity.getSjgyqk());
+            leadershipInstructionsEdt.setText(tFtSjEntity.getLdps());
         }
         //设置Spinner控件的初始值
         spinnerList = new ArrayList<CodeValue>();
@@ -257,8 +267,8 @@ public class EventEntryAdd_Basic extends Fragment {
     public TFtSjEntity PackageData() {
         //每次保存时先清空message
         message = "";
-        if(eventEntity == null){
-            eventEntity = new TFtSjEntity();
+        if(tFtSjEntity == null){
+            tFtSjEntity = new TFtSjEntity();
         }
         String thingNameString = thingNameEdt.getText().toString();
         String happenTimeString = happenTimeEdt.getText().toString();
@@ -280,69 +290,69 @@ public class EventEntryAdd_Basic extends Fragment {
         if (StringUtils.isBlank(thingNameString)) {
             message += "事件名称不能为空\n";
         } else {
-            eventEntity.setSjmc(thingNameString);
+            tFtSjEntity.setSjmc(thingNameString);
         }
         if (StringUtils.isBlank(happenTimeString)) {
             message += "发生时间不能为空\n";
         } else {
-            eventEntity.setFssj(happenTimeString);
+            tFtSjEntity.setFssj(happenTimeString);
         }
         if (StringUtils.isBlank(happenAddressString)) {
             message += "发生地点不能为空\n";
         } else {
-            eventEntity.setFsdd(happenAddressString);
+            tFtSjEntity.setFsdd(happenAddressString);
         }
-        eventEntity.setSfsqqt(petitionGroupsString);
+        tFtSjEntity.setSfsqqt(petitionGroupsString);
         if (StringUtils.isBlank(fieldDepartmenString)) {
             message += "到场部门不能为空\n";
         } else {
-            eventEntity.setDcbm(fieldDepartmenString);
+            tFtSjEntity.setDcbm(fieldDepartmenString);
         }
         if (StringUtils.isBlank(patternManifestationString)) {
             message += "表现形式不能为空\n";
         } else {
-            eventEntity.setBxxs(patternManifestationString);
+            tFtSjEntity.setBxxs(patternManifestationString);
         }
         if (StringUtils.isBlank(scopeTextString)) {
             message += "规模不能为空\n";
         } else {
-            eventEntity.setGm(scopeTextString);
+            tFtSjEntity.setGm(scopeTextString);
         }
         if (StringUtils.isBlank(fieldsInvolved)) {
             message += "涉及领域不能为空\n";
         } else {
-            eventEntity.setSjly(fieldsInvolved);
+            tFtSjEntity.setSjly(fieldsInvolved);
         }
-        eventEntity.setSfsw(foreignRelatedString);
-        eventEntity.setSfsj(involvedXinjiangString);
-        eventEntity.setSfsyq(involvePublicOpinionString);
-        eventEntity.setSfgacz(publicSecurityDisposalString);
-        eventEntity.setSsjd(belongStreetString);
-        eventEntity.setSssq(belongCommunityString);
+        tFtSjEntity.setSfsw(foreignRelatedString);
+        tFtSjEntity.setSfsj(involvedXinjiangString);
+        tFtSjEntity.setSfsyq(involvePublicOpinionString);
+        tFtSjEntity.setSfgacz(publicSecurityDisposalString);
+        tFtSjEntity.setSsjd(belongStreetString);
+        tFtSjEntity.setSssq(belongCommunityString);
         if (StringUtils.isBlank(mainAppealsString)) {
             message += "主要诉求不能为空\n";
         } else {
-            eventEntity.setZysq(mainAppealsString);
+            tFtSjEntity.setZysq(mainAppealsString);
         }
         if (StringUtils.isBlank(eventSummaryString)) {
             message += "事件概要不能为空\n";
         } else {
-            eventEntity.setSjgyqk(eventSummaryString);
+            tFtSjEntity.setSjgyqk(eventSummaryString);
         }
-        eventEntity.setLdps(leadershipInstructionsString);
+        tFtSjEntity.setLdps(leadershipInstructionsString);
         if(!"".equals(message)){
             Toast.makeText(EventEntryAdd_Basic.this.getActivity(),message,Toast.LENGTH_SHORT).show();
         }else{
-            return eventEntity;
+            return tFtSjEntity;
         }
         return  null;
     }
 
     public TFtSjEntity getEventEntity() {
-        return eventEntity;
+        return tFtSjEntity;
     }
 
-    public void setEventEntity(TFtSjEntity eventEntity) {
-        this.eventEntity = eventEntity;
+    public void setEventEntity(TFtSjEntity tFtSjEntity) {
+        this.tFtSjEntity = tFtSjEntity;
     }
 }
