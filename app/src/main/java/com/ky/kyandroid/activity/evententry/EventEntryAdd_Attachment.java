@@ -87,7 +87,7 @@ public class EventEntryAdd_Attachment extends Fragment {
     }
 
     // 获取事件附件 - 子表信息
-    List<TFtSjFjEntity> sjfjList ;
+    public List<TFtSjFjEntity> sjfjList ;
 
     @Nullable
     @Override
@@ -281,9 +281,23 @@ public class EventEntryAdd_Attachment extends Fragment {
 
 
     /**
-     * 当查看详情时初始化数据
+     * 当查看详情时初始化数据,显示文件
      */
     public void setTFtSjFjEntityList(List<TFtSjFjEntity> sjfjList) {
         this.sjfjList = sjfjList;
+        if(sjfjList!=null && sjfjList.size()>0){
+            sdcard  = Environment.getExternalStorageDirectory().getAbsolutePath().toString();;
+            String fileUri=sdcard+"/img/"+sjfjList.get(0).getSjId()+"/"+sjfjList.get(0).getWjmc();
+            /*File file = new File(fileUri);
+            FileInputStream fis = null;
+            try {
+                /fis = new FileInputStream(file);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            tupbitmap = BitmapFactory.decodeStream(fis);
+            attachmentImg.setImageBitmap(tupbitmap);*/
+        }
+
     }
 }
