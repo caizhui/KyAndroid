@@ -1,5 +1,8 @@
 package com.ky.kyandroid.entity;
 
+import org.xutils.db.annotation.Column;
+import org.xutils.db.annotation.Table;
+
 import java.util.Date;
 
 /**
@@ -7,96 +10,117 @@ import java.util.Date;
  * @author otom3@163.com
  * @date 2017-03-30
  */
+@Table(name = "t_tftsjry")
 public class TFtSjRyEntity {
-	
 
+
+	@Column(name =  "id",isId = true,autoGen = false)
+	private String id;
 	/**
 	 * 外键
 	 */
+	@Column(name = "sjid")
 	private String sjId;
 	
 	/**
 	 * 姓名
 	 */
+	@Column(name = "xm")
 	private String xm;
 	
 	/**
 	 * 性别
 	 */
+	@Column(name = "xb")
 	private String xb;
 	
 	/**
 	 * 民族
 	 */
+	@Column(name = "mz")
 	private String mz;
 	
 	/**
 	 * 证件类型
 	 */
+	@Column(name = "zjlx")
 	private String zjlx;
 	
 	/**
 	 * 证件号码
 	 */
+	@Column(name = "zjhm")
 	private String zjhm;
 	
 	/**
 	 * email
 	 */
+	@Column(name = "email")
 	private String email;
 	
 	/**
 	 * 固定电话
 	 */
+	@Column(name = "gddh")
 	private String gddh;
 	
 	/**
 	 * 移动电话
 	 */
+	@Column(name = "sjid")
 	private String yddh;
 	
 	/**
 	 * 户籍地
 	 */
+	@Column(name = "hjd")
 	private String hjd;
 	
 	/**
 	 * 是否党员
 	 */
+	@Column(name = "sfdy")
 	private String sfdy;
 	
 	/**
 	 * 工作单位
 	 */
+	@Column(name = "gzdw")
 	private String gzdw;
 	
 	/**
 	 * 现住地址
 	 */
+	@Column(name = "xzdz")
 	private String xzdz;
 	
 	/**
 	 * 录入人
 	 */
+	@Column(name = "lrr")
 	private String lrr;
 	
 	/**
 	 * 录入部门
 	 */
+	@Column(name = "lrbm")
 	private String lrbm;
 	
 	/**
 	 * 录入时间
 	 */
+	@Column(name = "lrsj")
 	private Date lrsj;
 	
 	/**
 	 * 备注
 	 */
+	@Column(name = "comments")
 	private String comments;
 	/**
 	 * 拆分表ID
 	 */
+	@Column(name = "cfsjID")
 	private String cfsjID;
 	/*
 	 *录入人姓名，这个属性是不用在表中显示，只是方便查询 ，甚至xml都没有增加这个属性
@@ -104,6 +128,7 @@ public class TFtSjRyEntity {
 	private String lrrName;
 
 
+	public  TFtSjRyEntity(){}
 	/**
 	 * 获取 外键 的属性值
 	 * @return sjId :  外键 
@@ -406,8 +431,12 @@ public class TFtSjRyEntity {
 	public void setLrrName(String lrrName) {
 		this.lrrName = lrrName;
 	}
-	
-	
 
+	public String getId() {
+		return id;
+	}
 
+	public void setId(String id) {
+		this.id = id;
+	}
 }

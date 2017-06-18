@@ -1,104 +1,132 @@
 package com.ky.kyandroid.entity;
 
-import java.util.Date;
+import org.xutils.db.annotation.Column;
+import org.xutils.db.annotation.Table;
+
+import java.io.Serializable;
 
 /**
  * 
  * @author otom3@163.com
- * @date 2017-03-30
+ * @String 2017-03-30
  */
-public class TFtSjEntity {
-	
-	
+@Table(name = "t_tftsj")
+public class TFtSjEntity  implements Serializable{
+	private static final long serialVersionUID = -7620435178023928252L;
+
+	@Column(name =  "id",isId = true,autoGen = false)
+	private String id;
+
+	@Column(name =  "uuid")
+	private String  uuid;
+
 	/**
 	 * 事件名称
 	 */
+	@Column(name =  "sjmc")
 	private String sjmc;
 	
 	/**
 	 * 发生时间
 	 */
-	private Date fssj;
+	@Column(name =  "fssj")
+	private String fssj;
 	
 	/**
 	 * 发生地点
 	 */
+	@Column(name =  "fsdd")
 	private String fsdd;
 	
 	/**
 	 * 上访诉求群体
 	 */
+	@Column(name =  "sfsqqt")
 	private String sfsqqt;
 	
 	/**
 	 * 到场部门
 	 */
+	@Column(name =  "dcbm")
 	private String dcbm;
 	
 	/**
 	 * 涉及领域
 	 */
+	@Column(name =  "sjly")
 	private String sjly;
 	
 	/**
 	 * 主要诉求
 	 */
+	@Column(name =  "zysq")
 	private String zysq;
 	
 	/**
 	 * 事件概要情况
 	 */
+	@Column(name =  "sjgyqk")
 	private String sjgyqk;
 	
 	/**
 	 * 规模
 	 */
+	@Column(name =  "gm")
 	private String gm;
 	
 	/**
 	 * 表现形式
 	 */
+	@Column(name =  "bxxs")
 	private String bxxs;
 	
 	/**
 	 * 是否涉外
 	 */
+	@Column(name =  "sfsw")
 	private String sfsw;
 	
 	/**
 	 * 是否涉疆
 	 */
+	@Column(name =  "sfsj")
 	private String sfsj;
 	
 	/**
 	 * 是否涉舆情
 	 */
+	@Column(name =  "sfsyq")
 	private String sfsyq;
 	
 	/**
 	 * 是否公安处置
 	 */
+	@Column(name =  "sfgacz")
 	private String sfgacz;
 	
 	/**
 	 * 所属街道及社区
 	 */
+	@Column(name =  "ssjd")
 	private String ssjd;
 	
 	/**
 	 * 领导批示
 	 */
+	@Column(name =  "ldps")
 	private String ldps;
 	
 	/**
 	 * 发生地经伟度
 	 */
+	@Column(name =  "jwd")
 	private String jwd;
 	
 	/**
 	 * 处理时限
 	 */
-	private Date clsx;
+	@Column(name =  "clsx")
+	private String clsx;
 	
 	/**
 	 * 录入人
@@ -113,25 +141,39 @@ public class TFtSjEntity {
 	/**
 	 * 录入时间
 	 */
-	private Date lrsj;
+	private String lrsj;
 	
 	/**
 	 * 事件状态
 	 */
+	@Column(name =  "zt")
 	private String zt;
 	/**
 	 * 
 	 */
+	@Column(name =  "sssq")
 	private String sssq;//所属社区
+	@Column(name =  "ssjwh")
 	private String ssjwh;//所属居委会
 	
 	private String znbm;
 	
 	private String bxxsfy;
 	
-	private Date clsjfy;
+	private String clsjfy;
 	
 	private String xcts;
+
+	public  TFtSjEntity(){}
+
+
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
 
 	/**
 	 * 获取 事件名称 的属性值
@@ -156,7 +198,7 @@ public class TFtSjEntity {
 	 * @return fssj :  发生时间 
 	 * @author otom3@163.com
 	 */
-	public Date getFssj(){
+	public String getFssj(){
 		return this.fssj;
 	}
 
@@ -165,7 +207,7 @@ public class TFtSjEntity {
 	 * @param fssj :  发生时间 
 	 * @author otom3@163.com
 	 */
-	public void setFssj(Date fssj){
+	public void setFssj(String fssj){
 		this.fssj	= fssj;
 	}
 	
@@ -428,7 +470,7 @@ public class TFtSjEntity {
 	 * @return clsx :  处理时限 
 	 * @author otom3@163.com
 	 */
-	public Date getClsx(){
+	public String getClsx(){
 		return this.clsx;
 	}
 
@@ -437,7 +479,7 @@ public class TFtSjEntity {
 	 * @param clsx :  处理时限 
 	 * @author otom3@163.com
 	 */
-	public void setClsx(Date clsx){
+	public void setClsx(String clsx){
 		this.clsx	= clsx;
 	}
 	
@@ -482,7 +524,7 @@ public class TFtSjEntity {
 	 * @return lrsj :  录入时间 
 	 * @author otom3@163.com
 	 */
-	public Date getLrsj(){
+	public String getLrsj(){
 		return this.lrsj;
 	}
 
@@ -491,7 +533,7 @@ public class TFtSjEntity {
 	 * @param lrsj :  录入时间 
 	 * @author otom3@163.com
 	 */
-	public void setLrsj(Date lrsj){
+	public void setLrsj(String lrsj){
 		this.lrsj	= lrsj;
 	}
 	
@@ -553,11 +595,11 @@ public class TFtSjEntity {
 		this.bxxsfy = bxxsfy;
 	}
 
-	public Date getClsjfy() {
+	public String getClsjfy() {
 		return clsjfy;
 	}
 
-	public void setClsjfy(Date clsjfy) {
+	public void setClsjfy(String clsjfy) {
 		this.clsjfy = clsjfy;
 	}
 
@@ -568,8 +610,12 @@ public class TFtSjEntity {
 	public void setXcts(String xcts) {
 		this.xcts = xcts;
 	}
-	
-	 
 
+	public String getId() {
+		return id;
+	}
 
+	public void setId(String id) {
+		this.id = id;
+	}
 }

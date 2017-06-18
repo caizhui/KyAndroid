@@ -1,5 +1,7 @@
 package com.ky.kyandroid.entity;
 
+import org.xutils.db.annotation.Table;
+
 import java.io.Serializable;
 
 /**
@@ -7,6 +9,7 @@ import java.io.Serializable;
  * 事件实体
  */
 
+@Table(name =  "t_event")
 public class EventEntity  implements Serializable {
     /**
      * SSSQ : 99
@@ -43,6 +46,8 @@ public class EventEntity  implements Serializable {
 
 
     private String id;
+
+    private String  uuid;
     /**
      * 事件名称
      */
@@ -397,6 +402,14 @@ public class EventEntity  implements Serializable {
 
     public void setXcts(String xcts) {
         this.xcts = xcts;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 }
 

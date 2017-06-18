@@ -7,7 +7,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.ky.kyandroid.R;
-import com.ky.kyandroid.entity.EventEntity;
+import com.ky.kyandroid.entity.TFtSjEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,17 +16,17 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class EventEntityListAdapter extends BaseAdapter {
-    public List<EventEntity> list;
+    public List<TFtSjEntity> list;
     public Context context;
 
 
     public EventEntityListAdapter(Context context) {
         super();
-        list = new ArrayList<EventEntity>();
+        list = new ArrayList<TFtSjEntity>();
         this.context = context;
     }
 
-    public EventEntityListAdapter(List<EventEntity> list, Context context) {
+    public EventEntityListAdapter(List<TFtSjEntity> list, Context context) {
         super();
         this.list = list;
         this.context = context;
@@ -60,6 +60,11 @@ public class EventEntityListAdapter extends BaseAdapter {
         holder.thingName.setText(list.get(position).getSjmc());
         holder.thingAddress.setText(list.get(position).getFsdd());
         holder.thingTime.setText(list.get(position).getFssj());
+        if("1".equals(list.get(position).getZt())){
+            holder.thingStatus.setText("未上报");
+        }else{
+            holder.thingStatus.setText("");
+        }
         return convertView;
     }
 
@@ -69,6 +74,8 @@ public class EventEntityListAdapter extends BaseAdapter {
     class ViewHolder {
         @BindView(R.id.thing_name)
         TextView thingName;
+        @BindView(R.id.thing_status)
+        TextView thingStatus;
         @BindView(R.id.thing_address)
         TextView thingAddress;
         @BindView(R.id.thing_time)
@@ -80,7 +87,7 @@ public class EventEntityListAdapter extends BaseAdapter {
     }
 
 
-    public void notifyDataSetChanged(List<EventEntity> list) {
+    public void notifyDataSetChanged(List<TFtSjEntity> list) {
         this.list = list;
         super.notifyDataSetChanged();
     }

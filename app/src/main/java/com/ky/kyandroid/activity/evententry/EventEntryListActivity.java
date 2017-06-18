@@ -30,8 +30,8 @@ import com.ky.kyandroid.adapter.EventEntityListAdapter;
 import com.ky.kyandroid.bean.AckMessage;
 import com.ky.kyandroid.bean.NetWorkConnection;
 import com.ky.kyandroid.bean.PageBean;
-import com.ky.kyandroid.db.dao.EventEntryDao;
-import com.ky.kyandroid.entity.EventEntity;
+import com.ky.kyandroid.db.dao.TFtSjEntityDao;
+import com.ky.kyandroid.entity.TFtSjEntity;
 import com.ky.kyandroid.util.JsonUtil;
 import com.ky.kyandroid.util.SpUtil;
 import com.ky.kyandroid.util.StringUtils;
@@ -94,17 +94,17 @@ public class EventEntryListActivity extends AppCompatActivity {
     /**
      * 事件列表
      */
-    private List<EventEntity> eventEntityList;
+    private List<TFtSjEntity> tFtSjEntityList;
 
     /**
      * 每次加载信息List条数
      */
-    private List<EventEntity> pList;
+    private List<TFtSjEntity> pList;
 
 
     private EventEntityListAdapter adapter;
 
-    private EventEntryDao eventEntryDao;
+    private TFtSjEntityDao tFtSjEntityDao;
 
     /**
      * 操作人员权限
@@ -115,7 +115,7 @@ public class EventEntryListActivity extends AppCompatActivity {
     /**
      * 事件实体
      */
-    EventEntity eventEntity;
+    TFtSjEntity tFtSjEntity;
 
     /**
      * 提示信息
@@ -180,6 +180,14 @@ public class EventEntryListActivity extends AppCompatActivity {
     /** 下拉刷新容器 */
     private SwipeRefreshUtil swipeRefreshUtil;
 
+    private List<TFtSjEntity> tempList;
+
+    /**
+     * 是否已经加载本地数据
+     */
+    private  boolean isIfload =true;
+
+
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
 
@@ -222,7 +230,7 @@ public class EventEntryListActivity extends AppCompatActivity {
                             swipeContainer.setRefreshing(false);
                         }
                     });
-                    adapter.notifyDataSetChanged(eventEntityList);
+                    adapter.notifyDataSetChanged(tFtSjEntityList);
                     break;
                 // 加载更多
                 case 2:
@@ -240,7 +248,7 @@ public class EventEntryListActivity extends AppCompatActivity {
                         ifload = false;
                         list_jiazai.setVisibility(View.GONE);
                     }
-                    adapter.notifyDataSetChanged(eventEntityList);
+                    adapter.notifyDataSetChanged(tFtSjEntityList);
                     break;
                 //刷新失败
                 case 3:
@@ -267,11 +275,11 @@ public class EventEntryListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_evententry_list);
         ButterKnife.bind(this);
-        eventEntryDao = new EventEntryDao();
-        eventEntityList = new ArrayList<EventEntity>();
+        tFtSjEntityDao = new TFtSjEntityDao();
+        tFtSjEntityList = new ArrayList<TFtSjEntity>();
         initEvent();
         initData();
-        adapter = new EventEntityListAdapter(eventEntityList,EventEntryListActivity.this);
+        adapter = new EventEntityListAdapter(tFtSjEntityList,EventEntryListActivity.this);
         searchEvententryList.setAdapter(adapter);
     }
 
@@ -342,7 +350,7 @@ public class EventEntryListActivity extends AppCompatActivity {
                 @Override
                 public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                     if (firstVisibleItem + visibleItemCount == totalItemCount && list_jiazai.getVisibility() == View.GONE
-                            && eventEntityList.size() != 0) {
+                            && tFtSjEntityList.size() != 0) {
                         if (ifDateEnd) {
                             return;
                         }
@@ -367,10 +375,10 @@ public class EventEntryListActivity extends AppCompatActivity {
      */
     @OnItemClick(R.id.search_evententry_list)
     public  void OnItemClick(int position){
-        eventEntity = (EventEntity) adapter.getItem(position);
+        tFtSjEntity = (TFtSjEntity) adapter.getItem(position);
         Intent intent =new Intent(this,EventEntryAddActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("eventEntity",eventEntity);
+        bundle.putSerializable("tFtSjEntity",tFtSjEntity);
         /**type 0：新增 1：修改**/
         intent.putExtra("type","1");
         intent.putExtras(bundle);
@@ -379,15 +387,15 @@ public class EventEntryListActivity extends AppCompatActivity {
 
     @OnItemLongClick(R.id.search_evententry_list)
     public boolean OnItemLongClick(final int position){
-        eventEntity = (EventEntity) adapter.getItem(position);
+        tFtSjEntity = (TFtSjEntity) adapter.getItem(position);
         //1表示事件提交，3表示街道核实 ，6为街道受理，8为街道自行处理
-        if("1".equals(eventEntity.getZt())){
+        if("1".equals(tFtSjEntity.getZt())){
             listViewContent = new String[]{"删除", "核实", "事件跟踪"};
-        }else  if("3".equals(eventEntity.getZt())){
+        }else  if("3".equals(tFtSjEntity.getZt())){
             listViewContent = new String[]{"退回", "不予立案", "受理","作废","事件跟踪"};
-        }else  if("6".equals(eventEntity.getZt())){
+        }else  if("6".equals(tFtSjEntity.getZt())){
             listViewContent = new String[]{"街道处理", "街道派遣","上报","事件跟踪"};
-        }else  if("8".equals(eventEntity.getZt())){
+        }else  if("8".equals(tFtSjEntity.getZt())){
             listViewContent = new String[]{"自行处理退回","自行处理反馈", "回访核查","事件跟踪"};
         }
         AlertDialog.Builder builder =new AlertDialog.Builder(this);
@@ -395,11 +403,11 @@ public class EventEntryListActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int pos) {
                 //事件刚刚录入
-                if("1".equals(eventEntity.getZt())){
+                if("1".equals(tFtSjEntity.getZt())){
                     //删除
                     if(pos==0) {
                         message = "";
-                        flag = eventEntryDao.deleteEventEntry(eventEntity.getId());
+                        flag = tFtSjEntityDao.deleteEventEntry(tFtSjEntity.getId());
                         if (flag) {
                             Toast.makeText(EventEntryListActivity.this,  "删除成功", Toast.LENGTH_SHORT).show();
                         } else {
@@ -413,7 +421,7 @@ public class EventEntryListActivity extends AppCompatActivity {
                     }
                 }
                 //街道已经核实，做下一步操作
-                if("3".equals(eventEntity.getZt())){
+                if("3".equals(tFtSjEntity.getZt())){
                     if(pos ==0){
                         //街道退回状态为4
                         ReturnOperation(dialog_return_operation,"4","退回");
@@ -429,7 +437,7 @@ public class EventEntryListActivity extends AppCompatActivity {
                     }
                 }
                 //街道已经受理，做下一步操作
-                if("6".equals(eventEntity.getZt())){
+                if("6".equals(tFtSjEntity.getZt())){
                     if (pos == 0) {
                         //街道自行状态为8
                         ReturnOperation(dialog_manage_operation,"8","街道自行处理");
@@ -442,7 +450,7 @@ public class EventEntryListActivity extends AppCompatActivity {
                     }
                 }
                 //街道已经自行受理，做下一步操作
-                if("8".equals(eventEntity.getZt())){
+                if("8".equals(tFtSjEntity.getZt())){
                     if (pos == 0) {
                         //街道自行处理退回为25
                         ReturnOperation(dialog_return_operation,"25","自行处理退回");
@@ -476,8 +484,8 @@ public class EventEntryListActivity extends AppCompatActivity {
         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                eventEntity.setZt(stauts);
-                flag =eventEntryDao.updateEventEntry(eventEntity);
+                tFtSjEntity.setZt(stauts);
+                flag =tFtSjEntityDao.updateTFtSjEntity(tFtSjEntity);
                 if (flag) {
                     Toast.makeText(EventEntryListActivity.this,  message+"成功", Toast.LENGTH_SHORT).show();
                 } else {
@@ -521,8 +529,8 @@ public class EventEntryListActivity extends AppCompatActivity {
         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                eventEntity.setZt(status);
-                flag =eventEntryDao.updateEventEntry(eventEntity);
+                tFtSjEntity.setZt(status);
+                flag =tFtSjEntityDao.updateTFtSjEntity(tFtSjEntity);
                 if (flag) {
                     Toast.makeText(EventEntryListActivity.this,  message+"成功", Toast.LENGTH_SHORT).show();
                 } else {
@@ -541,15 +549,22 @@ public class EventEntryListActivity extends AppCompatActivity {
     public void handleTransation(String body) {
         if (StringUtils.isBlank(body)) {
         } else {
+            //判断是否已经加载本地草稿数据，并且只添加一次
+            if(isIfload){
+                tempList = tFtSjEntityDao.queryList();
+                if(tempList!=null && tempList.size()>0){
+                    tFtSjEntityList.addAll(tempList);
+                }
+                isIfload=false;
+            }
+
             // 处理响应信息
             AckMessage ackMsg = JsonUtil.fromJson(body, AckMessage.class);
             if (ifrefresh) {
-                eventEntityList = setMessage(ackMsg);
+                //tFtSjEntityList = setMessage(ackMsg);
                 ifrefresh = false;
-            } else {
-                eventEntityList.addAll(setMessage(ackMsg));
             }
-
+            tFtSjEntityList.addAll(setMessage(ackMsg));
         }
     }
 
@@ -559,8 +574,8 @@ public class EventEntryListActivity extends AppCompatActivity {
      * @param ackMsg
      * @return
      */
-    private List<EventEntity> setMessage(AckMessage ackMsg) {
-        pList = new ArrayList<EventEntity>();
+    private List<TFtSjEntity> setMessage(AckMessage ackMsg) {
+        pList = new ArrayList<TFtSjEntity>();
         if (ackMsg != null) {
             if (AckMessage.SUCCESS.equals(ackMsg.getAckCode())) {
                 pageBean = ackMsg.getPageBean();
@@ -570,8 +585,8 @@ public class EventEntryListActivity extends AppCompatActivity {
                         for (int i = 0; i < list.size(); i++) {
                             //先将获取的Object对象转成String
                             String entityStr = JsonUtil.toJson(list.get(i));
-                            EventEntity eventEntity = JsonUtil.fromJson(entityStr.toLowerCase(), EventEntity.class);
-                            pList.add(eventEntity);
+                            TFtSjEntity tFtSjEntity = JsonUtil.fromJson(entityStr.toLowerCase(), TFtSjEntity.class);
+                            pList.add(tFtSjEntity);
                         }
                     }
                 }

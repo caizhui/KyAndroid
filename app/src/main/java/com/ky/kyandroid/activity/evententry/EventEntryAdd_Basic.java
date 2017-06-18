@@ -20,7 +20,7 @@ import com.ky.kyandroid.R;
 import com.ky.kyandroid.bean.CodeValue;
 import com.ky.kyandroid.db.dao.DescEntityDao;
 import com.ky.kyandroid.db.dao.EventEntryDao;
-import com.ky.kyandroid.entity.EventEntity;
+import com.ky.kyandroid.entity.TFtSjEntity;
 import com.ky.kyandroid.util.StringUtils;
 
 import java.util.ArrayList;
@@ -152,7 +152,7 @@ public class EventEntryAdd_Basic extends Fragment {
      */
     public String type;
 
-    public EventEntity eventEntity;
+    public TFtSjEntity eventEntity;
 
 
     public DescEntityDao descEntityDao;
@@ -170,7 +170,7 @@ public class EventEntryAdd_Basic extends Fragment {
         eventEntryDao = new EventEntryDao();
         descEntityDao = new DescEntityDao();
         type = intent.getStringExtra("type");
-        eventEntity = (EventEntity) intent.getSerializableExtra("eventEntity");
+        eventEntity = (TFtSjEntity) intent.getSerializableExtra("eventEntity");
         initData();
         return view;
     }
@@ -254,11 +254,11 @@ public class EventEntryAdd_Basic extends Fragment {
     /**
      * 封装数据
      */
-    public EventEntity PackageData() {
+    public TFtSjEntity PackageData() {
         //每次保存时先清空message
         message = "";
         if(eventEntity == null){
-            eventEntity = new EventEntity();
+            eventEntity = new TFtSjEntity();
         }
         String thingNameString = thingNameEdt.getText().toString();
         String happenTimeString = happenTimeEdt.getText().toString();
@@ -338,11 +338,11 @@ public class EventEntryAdd_Basic extends Fragment {
         return  null;
     }
 
-    public EventEntity getEventEntity() {
+    public TFtSjEntity getEventEntity() {
         return eventEntity;
     }
 
-    public void setEventEntity(EventEntity eventEntity) {
+    public void setEventEntity(TFtSjEntity eventEntity) {
         this.eventEntity = eventEntity;
     }
 }

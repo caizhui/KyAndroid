@@ -18,10 +18,11 @@ import android.widget.Toast;
 
 import com.ky.kyandroid.Constants;
 import com.ky.kyandroid.R;
-import com.ky.kyandroid.activity.supervision.SuperVisionAddActivity;
 import com.ky.kyandroid.adapter.FragmentAdapter;
 import com.ky.kyandroid.bean.NetWorkConnection;
-import com.ky.kyandroid.entity.EventEntity;
+import com.ky.kyandroid.db.dao.TFtSjEntityDao;
+import com.ky.kyandroid.db.dao.TFtSjRyEntityDao;
+import com.ky.kyandroid.entity.TFtSjEntity;
 import com.ky.kyandroid.entity.TFtSjRyEntity;
 import com.ky.kyandroid.util.JsonUtil;
 import com.ky.kyandroid.util.SpUtil;
@@ -155,6 +156,11 @@ public class EventEntryAddActivity extends FragmentActivity {
     public static final String USER_ID = "userId";
 
 
+    private TFtSjEntityDao tFtSjEntityDao;
+
+    private TFtSjRyEntityDao tFtSjRyEntityDao;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -162,6 +168,8 @@ public class EventEntryAddActivity extends FragmentActivity {
         ButterKnife.bind(this);
         uuid = UUID.randomUUID().toString().trim().replaceAll("-", "").toUpperCase() ;
         intent=getIntent();
+        tFtSjEntityDao = new TFtSjEntityDao();
+        tFtSjRyEntityDao = new TFtSjRyEntityDao();
         initEvent();
         initToolbar();
         initPageView();
@@ -279,6 +287,8 @@ public class EventEntryAddActivity extends FragmentActivity {
 
     @OnClick({R.id.left_btn,R.id.reporting_leadership_btn,R.id.save_draft_btn})
     public void onClick(View v) {
+        String userId=sp.getString(USER_ID,"");
+        TFtSjEntity eventEntity = eventEntryAdd_basic.PackageData();
         switch (v.getId()) {
             /** 返回键 **/
             case R.id.left_btn:
@@ -286,9 +296,8 @@ public class EventEntryAddActivity extends FragmentActivity {
                 break;
             /** 上报领导按钮*/
             case R.id.reporting_leadership_btn:
-                String userId=sp.getString(USER_ID,"");
-                EventEntity eventEntity = eventEntryAdd_basic.PackageData();
                 if(eventEntity!=null){
+                    HashMap map =new HashMap();
                     eventEntity.setId(uuid);
                     //上报领导，状态为2
                     eventEntity.setZt("2");
@@ -297,14 +306,17 @@ public class EventEntryAddActivity extends FragmentActivity {
                     String sdcard = Environment.getExternalStorageDirectory().getAbsolutePath().toString();
                     File fileRoute = new File(sdcard + "/img/" + uuid);
                     File files[] = fileRoute.listFiles();
-                    String[] filesName = new String[files.length];
-                    for(int i=0;i<files.length;i++){
-                        filesName[i]=files[i].getName();
-                    }
-                    HashMap map =new HashMap();
                     map.put("entity",eventEntity);
-                    map.put("tFtSjRyEntityList",tFtSjRyEntityList);
-                    map.put("filesName",filesName);
+                    if(tFtSjRyEntityList != null){
+                        map.put("tFtSjRyEntityList",tFtSjRyEntityList);
+                    }
+                    if(files!=null && files.length>0){
+                        String[] filesName = new String[files.length];
+                        for(int i=0;i<files.length;i++){
+                            filesName[i]=files[i].getName();
+                        }
+                        map.put("filesName",filesName);
+                    }
                     map.put("type","1");
                     String paramMap = JsonUtil.map2Json(map);
                     sendMultipart(userId,paramMap,files);
@@ -312,35 +324,26 @@ public class EventEntryAddActivity extends FragmentActivity {
                 break;
             /**保存草稿按钮*/
             case R.id.save_draft_btn:
-                Intent intent1 = new Intent(this, SuperVisionAddActivity.class);
-                startActivity(intent1);
-               /* PackageData();
-                if ("".equals(message)) {
-                    boolean flag ;
-                    if("1".equals(type)){
-                        flag = eventEntryDao.updateEventEntry(eventEntryEntity);
-                        if (flag) {
-                            Toast.makeText(EventEntryAdd_Basic.this.getActivity(), "修改成功", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(this.getActivity(), EventEntryListActivity.class);
-                            startActivity(intent);
-                        } else {
-                            Toast.makeText(EventEntryAdd_Basic.this.getActivity(),   "修改失败", Toast.LENGTH_SHORT).show();
+                if(eventEntity!=null){
+                    eventEntity.setId(uuid);
+                    //保存草稿，状态为1
+                    eventEntity.setZt("1");
+                    boolean flag = tFtSjEntityDao.saveTFtSjEntity(eventEntity);
+                    List<TFtSjRyEntity> tFtSjRyEntityList = eventEntryAdd_person.tFtSjRyEntityList();
+                    if(tFtSjRyEntityList!=null && tFtSjRyEntityList.size()>0){
+                        for(int i = 0;i<tFtSjRyEntityList.size();i++){
+                            TFtSjRyEntity entity = tFtSjRyEntityList.get(i);
+                            entity.setSjId(uuid);
+                            flag = tFtSjRyEntityDao.saveTFtSjRyEntity(entity);
                         }
-                    }else{
-                        //事件保存为1，事件提交为2
-                        eventEntryEntity.setStatus("1");
-                        flag = eventEntryDao.saveEventEntryEntity(eventEntryEntity);
-                        if (flag) {
-                            Toast.makeText(EventEntryAdd_Basic.this.getActivity(), "保存成功", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(this.getActivity(), EventEntryListActivity.class);
-                            startActivity(intent);
-                        } else {
-                            Toast.makeText(EventEntryAdd_Basic.this.getActivity(),   "保存失败", Toast.LENGTH_SHORT).show();
-                        }
+
                     }
-                } else {
-                    Toast.makeText(EventEntryAdd_Basic.this.getActivity(), message, Toast.LENGTH_SHORT).show();
-                }*/
+                    if(flag){
+                        Toast.makeText(EventEntryAddActivity.this,"保存成功",Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(EventEntryAddActivity.this,"保存失败",Toast.LENGTH_SHORT).show();
+                    }
+                }
                     break;
                 }
         }
@@ -385,9 +388,9 @@ public class EventEntryAddActivity extends FragmentActivity {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 Log.i("InfoMSG", response.body().string());
-                Toast.makeText(EventEntryAddActivity.this, "上报成功", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(EventEntryAddActivity.this,EventEntryListActivity.class);
-                startActivity(intent);
+                //Toast.makeText(EventEntryAddActivity.this, "上报成功", Toast.LENGTH_SHORT).show();
+                //Intent intent = new Intent(EventEntryAddActivity.this,EventEntryListActivity.class);
+                //startActivity(intent);
             }
         });
     }
