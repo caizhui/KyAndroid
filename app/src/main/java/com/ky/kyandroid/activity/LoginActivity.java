@@ -42,6 +42,7 @@ import okhttp3.Response;
 /**
  * 类名称：登录界面Activity<br/>
  * 创建人： Cz <br/>
+ *
  * @updateRemark 修改备注：
  */
 public class LoginActivity extends AppCompatActivity {
@@ -57,7 +58,7 @@ public class LoginActivity extends AppCompatActivity {
     /**
      * 用户身份证号码
      */
-    public static final String USER_SFZHM= "gmsfhm";
+    public static final String USER_SFZHM = "gmsfhm";
     /**
      * 标识
      */
@@ -118,7 +119,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-        sweetAlertDialog= new SweetAlertDialog(LoginActivity.this,SweetAlertDialog.PROGRESS_TYPE);
+        sweetAlertDialog = new SweetAlertDialog(LoginActivity.this, SweetAlertDialog.PROGRESS_TYPE);
         initEvent();
     }
 
@@ -135,6 +136,7 @@ public class LoginActivity extends AppCompatActivity {
 
     /**
      * 登陆请求
+     *
      * @param v
      */
     @OnClick(R.id.btn_login)
@@ -150,22 +152,23 @@ public class LoginActivity extends AppCompatActivity {
                     msg.obj = "登录名或密码不能为空";
                     mHandler.sendMessage(msg);
                 } else {
-                    if(netWorkConnection.isWIFIConnection()){
+                    if (netWorkConnection.isWIFIConnection()) {
                         sweetAlertDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
                         sweetAlertDialog.setTitleText("Loading");
                         sweetAlertDialog.setCancelable(false);
-                       // sweetAlertDialog.show();
+                        // sweetAlertDialog.show();
                         // 参数列表 - 账号、密码（加密）
                         Map<String, String> paramsMap = new HashMap<String, String>();
                         paramsMap.put("userName", account);
                         paramsMap.put("password", password);
                         // 发送请求
-                        OkHttpUtil.sendRequest(Constants.SERVICE_LOGIN, paramsMap, new Callback(){
+                        OkHttpUtil.sendRequest(Constants.SERVICE_LOGIN, paramsMap, new Callback() {
 
                             @Override
                             public void onFailure(Call call, IOException e) {
                                 mHandler.sendEmptyMessage(0);
                             }
+
                             @Override
                             public void onResponse(Call call, Response response) throws IOException {
                                 if (response.isSuccessful()) {
@@ -177,7 +180,7 @@ public class LoginActivity extends AppCompatActivity {
                                 mHandler.sendMessage(msg);
                             }
                         });
-                    }else{
+                    } else {
                         msg.obj = "WIFI网络不可用,请检查网络连接情况";
                         mHandler.sendMessage(msg);
                     }
@@ -203,9 +206,9 @@ public class LoginActivity extends AppCompatActivity {
                 Log.i(TAG, "设置用户信息成功...");
                 sweetAlertDialog.dismiss();
                 startService(new Intent(this, SaveBDdescService.class));
-                Intent intent = new Intent(this,EventEntryListActivity.class);
+                Intent intent = new Intent(this, EventEntryListActivity.class);
                 startActivity(intent);
-            }else{
+            } else {
                 Log.i(TAG, "设置用户信息失败...");
                 Toast.makeText(this, "登录名或密码错误", Toast.LENGTH_SHORT).show();
             }
@@ -225,7 +228,7 @@ public class LoginActivity extends AppCompatActivity {
                 //先将获取的Object对象转成String
                 String entityStr = JsonUtil.toJson(object);
                 //先将获取的json象转成实体
-                UserEntity user = JsonUtil.fromJson(entityStr,UserEntity.class);
+                UserEntity user = JsonUtil.fromJson(entityStr, UserEntity.class);
                 if (user != null) {
                     SpUtil.setStringSharedPerference(sp, USER_ID, user.getId());
                     SpUtil.setStringSharedPerference(sp, USER_NAME, user.getName());

@@ -147,7 +147,6 @@ public class EventEntryAdd_Basic extends Fragment {
     ArrayAdapter<CodeValue> adapter;
 
 
-
     /**
      * 提示信息
      */
@@ -182,6 +181,9 @@ public class EventEntryAdd_Basic extends Fragment {
         return view;
     }
 
+    /**
+     * 新增页面跟查看详情是同一个页面，初始化页面基本信息
+     */
     public void initData() {
         if (tFtSjEntity != null) {
             //当状态等于1的时候，表示为草稿，可以修改，其他的时候只能查看信息
@@ -210,7 +212,7 @@ public class EventEntryAdd_Basic extends Fragment {
         }
 
         spinnerList = descEntityDao.queryListForCV("sfsw");
-        if(spinnerList==null){
+        if (spinnerList == null) {
             //设置Spinner控件的初始值
             spinnerList = new ArrayList<CodeValue>();
         }
@@ -224,7 +226,7 @@ public class EventEntryAdd_Basic extends Fragment {
         publicSecurityDisposalSpinner.setAdapter(adapter);//将adapter 添加到spinner中
 
         spinnerList = descEntityDao.queryListForCV("BXXS");
-        if(spinnerList==null){
+        if (spinnerList == null) {
             //设置Spinner控件的初始值
             spinnerList = new ArrayList<CodeValue>();
         }
@@ -235,7 +237,7 @@ public class EventEntryAdd_Basic extends Fragment {
         patternManifestationSpinner.setAdapter(adapter);//将adapter 添加到表现形式spinner中
 
         spinnerList = descEntityDao.queryListForCV("XCTS");
-        if(spinnerList==null){
+        if (spinnerList == null) {
             //设置Spinner控件的初始值
             spinnerList = new ArrayList<CodeValue>();
         }
@@ -246,7 +248,7 @@ public class EventEntryAdd_Basic extends Fragment {
         fieldMorpholoySpinner.setAdapter(adapter);//将adapter 添加到现场态势spinner中
 
         spinnerList = descEntityDao.queryListForCV("sjgm");
-        if(spinnerList==null){
+        if (spinnerList == null) {
             //设置Spinner控件的初始值
             spinnerList = new ArrayList<CodeValue>();
         }
@@ -276,16 +278,16 @@ public class EventEntryAdd_Basic extends Fragment {
             case R.id.happen_time_edt:
                 happenTimeEdt.clearFocus();
                 happenTimeEdt.setInputType(InputType.TYPE_NULL);
-                InputMethodManager imm = (InputMethodManager)EventEntryAdd_Basic.this.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(happenTimeEdt.getWindowToken(),0);
+                InputMethodManager imm = (InputMethodManager) EventEntryAdd_Basic.this.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(happenTimeEdt.getWindowToken(), 0);
                 Calendar c = Calendar.getInstance();
                 new DatePickerDialog(EventEntryAdd_Basic.this.getActivity(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                         Date date = new Date(System.currentTimeMillis());
                         SimpleDateFormat dateFormat = new SimpleDateFormat(" HH:mm:ss");
-                        String time=year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
-                        time +=dateFormat.format(date);
+                        String time = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
+                        time += dateFormat.format(date);
                         happenTimeEdt.setText(time);
                     }
                 }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
@@ -299,7 +301,7 @@ public class EventEntryAdd_Basic extends Fragment {
     public TFtSjEntity PackageData() {
         //每次保存时先清空message
         message = "";
-        if(tFtSjEntity == null){
+        if (tFtSjEntity == null) {
             tFtSjEntity = new TFtSjEntity();
         }
         String thingNameString = thingNameEdt.getText().toString();
@@ -307,14 +309,14 @@ public class EventEntryAdd_Basic extends Fragment {
         String happenAddressString = happenAddressEdt.getText().toString();
         String petitionGroupsString = petitionGroupsEdt.getText().toString();
         String fieldDepartmenString = fieldDepartmenEdt.getText().toString();
-        String patternManifestationString =descEntityDao.queryCodeByName("BXXS",patternManifestationSpinner.getSelectedItem().toString());
-        String fieldMorpholoySpinnerString =descEntityDao.queryCodeByName("XCTS",fieldMorpholoySpinner.getSelectedItem().toString());
-        String scopeTextString = descEntityDao.queryCodeByName("sjgm",scopeTextSpinner.getSelectedItem().toString());
+        String patternManifestationString = descEntityDao.queryCodeByName("BXXS", patternManifestationSpinner.getSelectedItem().toString());
+        String fieldMorpholoySpinnerString = descEntityDao.queryCodeByName("XCTS", fieldMorpholoySpinner.getSelectedItem().toString());
+        String scopeTextString = descEntityDao.queryCodeByName("sjgm", scopeTextSpinner.getSelectedItem().toString());
         String fieldsInvolved = fieldsInvolvedEdt.getText().toString();
-        String foreignRelatedString = descEntityDao.queryCodeByName("sfsw",foreignRelatedSpinner.getSelectedItem().toString());
-        String involvedXinjiangString = descEntityDao.queryCodeByName("sfsw",involvedXinjiangSpinner.getSelectedItem().toString());
-        String involvePublicOpinionString = descEntityDao.queryCodeByName("sfsw",involvePublicOpinionSpinner.getSelectedItem().toString());
-        String publicSecurityDisposalString = descEntityDao.queryCodeByName("sfsw",publicSecurityDisposalSpinner.getSelectedItem().toString());
+        String foreignRelatedString = descEntityDao.queryCodeByName("sfsw", foreignRelatedSpinner.getSelectedItem().toString());
+        String involvedXinjiangString = descEntityDao.queryCodeByName("sfsw", involvedXinjiangSpinner.getSelectedItem().toString());
+        String involvePublicOpinionString = descEntityDao.queryCodeByName("sfsw", involvePublicOpinionSpinner.getSelectedItem().toString());
+        String publicSecurityDisposalString = descEntityDao.queryCodeByName("sfsw", publicSecurityDisposalSpinner.getSelectedItem().toString());
         String belongStreetString = belongStreetEdt.getText().toString();
         String belongCommunityString = belongCommunitySpinner.getSelectedItem().toString();
         String mainAppealsString = mainAppealsEdt.getText().toString();
@@ -378,19 +380,11 @@ public class EventEntryAdd_Basic extends Fragment {
             tFtSjEntity.setSjgyqk(eventSummaryString);
         }
         tFtSjEntity.setLdps(leadershipInstructionsString);
-        if(!"".equals(message)){
-            Toast.makeText(EventEntryAdd_Basic.this.getActivity(),message,Toast.LENGTH_SHORT).show();
-        }else{
+        if (!"".equals(message)) {
+            Toast.makeText(EventEntryAdd_Basic.this.getActivity(), message, Toast.LENGTH_SHORT).show();
+        } else {
             return tFtSjEntity;
         }
-        return  null;
-    }
-
-    public TFtSjEntity getEventEntity() {
-        return tFtSjEntity;
-    }
-
-    public void setEventEntity(TFtSjEntity tFtSjEntity) {
-        this.tFtSjEntity = tFtSjEntity;
+        return null;
     }
 }

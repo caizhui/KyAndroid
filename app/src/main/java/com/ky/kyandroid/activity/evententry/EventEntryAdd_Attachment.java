@@ -78,7 +78,7 @@ public class EventEntryAdd_Attachment extends Fragment {
      */
     private String photoName;
 
-    public  String uuid;
+    public String uuid;
 
     /**
      * 1，表示拍照，2表示相册
@@ -86,49 +86,52 @@ public class EventEntryAdd_Attachment extends Fragment {
     private String isPhoto;
 
     @SuppressLint("ValidFragment")
-    public EventEntryAdd_Attachment(String uuid){
+    public EventEntryAdd_Attachment(String uuid) {
         this.uuid = uuid;
     }
 
     // 获取事件附件 - 子表信息
-    public List<TFtSjFjEntity> sjfjList ;
+    public List<TFtSjFjEntity> sjfjList;
 
-    private boolean flag=false;
+    private boolean flag = false;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.evententeradd_attachment_fragment, container, false);
         ButterKnife.bind(this, view);
-        if (Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)){
+        if (Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)) {
             /* 得到SD卡得路径 */
             sdcard = Environment.getExternalStorageDirectory().getAbsolutePath().toString();
-            fileRoute = new File(sdcard +"/img/"+uuid+"/");
+            fileRoute = new File(sdcard + "/img/" + uuid + "/");
+            //显示图片或者创建文件路径
             appendImage();
-        }else{
+        } else {
             Toast.makeText(EventEntryAdd_Attachment.this.getActivity(), "没有SD卡", Toast.LENGTH_LONG).show();
         }
         return view;
     }
 
 
-    //显示图片或者创建文件路径
-    public void appendImage(){
+    /**
+     * 显示图片或者创建文件路径
+     */
+    public void appendImage() {
         //当flag为true时，表示是去查看已经上报事件的图片
-        if(flag){
-            if(sjfjList!=null && sjfjList.size()>0){
-                ImageLoader.getInstance().displayImage(Constants.SERVICE_BASE_URL+sjfjList.get(0).getUrl()
-                        ,attachmentImg, AppContext.getImgBuilder());
+        if (flag) {
+            if (sjfjList != null && sjfjList.size() > 0) {
+                ImageLoader.getInstance().displayImage(Constants.SERVICE_BASE_URL + sjfjList.get(0).getUrl()
+                        , attachmentImg, AppContext.getImgBuilder());
             }
         }
         //如果文件夹不存在，表示第一次进来，需要创建文件夹，否则表示已经进来过，我们需要获取图片显示
-        if(!fileRoute.exists()){
+        if (!fileRoute.exists()) {
             fileRoute.mkdirs();
-        }else{
+        } else {
             //访问本地图片信息
-            if(uuid!=null && !"".equals(uuid)){
+            if (uuid != null && !"".equals(uuid)) {
                 File files[] = fileRoute.listFiles();
-                if(files!=null && files.length>0){
+                if (files != null && files.length > 0) {
                     FileInputStream fis = null;
                     try {
                         fis = new FileInputStream(files[0]);
@@ -156,37 +159,36 @@ public class EventEntryAdd_Attachment extends Fragment {
     // popupwindow点击事件
     private View.OnClickListener itemsOnClick = new View.OnClickListener() {
         public void onClick(View v) {
-                menuWindow.dismiss();
-                switch (v.getId()) {
-                    case R.id.btn_take_photo:
-                        String sdStatus = Environment.getExternalStorageState();
-                        if (!sdStatus.equals(Environment.MEDIA_MOUNTED)) { // 检测sd是否可用
-                            Log.v("TestFile", "SD card is not avaiable/writeable right now.");
-                            return;
-                        }
-                        // 调用系统的拍照功能
-                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        intent.putExtra("camerasensortype", 2);// 调用前置摄像头
-                        intent.putExtra("autofocus", true);// 自动对焦
-                        intent.putExtra("fullScreen", false);// 全屏
-                        intent.putExtra("showActionIcons", false);
-                        // 指定调用相机拍照后照片的储存路径
-                        File out = new File(fileRoute, getPhotoFileName());
-                        uri = Uri.fromFile(out);
-                        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-                        startActivityForResult(intent, PHOTO_REQUEST_TAKEPHOTO);
-                        break;
-                    case R.id.btn_pick_photo:
-                        Intent intents = new Intent(Intent.ACTION_PICK, null);
-                        intents.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-                        startActivityForResult(intents, PHOTO_REQUEST_GALLERY);
-                        break;
-                    default:
-                        break;
-                }
+            menuWindow.dismiss();
+            switch (v.getId()) {
+                case R.id.btn_take_photo:
+                    String sdStatus = Environment.getExternalStorageState();
+                    if (!sdStatus.equals(Environment.MEDIA_MOUNTED)) { // 检测sd是否可用
+                        Log.v("TestFile", "SD card is not avaiable/writeable right now.");
+                        return;
+                    }
+                    // 调用系统的拍照功能
+                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    intent.putExtra("camerasensortype", 2);// 调用前置摄像头
+                    intent.putExtra("autofocus", true);// 自动对焦
+                    intent.putExtra("fullScreen", false);// 全屏
+                    intent.putExtra("showActionIcons", false);
+                    // 指定调用相机拍照后照片的储存路径
+                    File out = new File(fileRoute, getPhotoFileName());
+                    uri = Uri.fromFile(out);
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+                    startActivityForResult(intent, PHOTO_REQUEST_TAKEPHOTO);
+                    break;
+                case R.id.btn_pick_photo:
+                    Intent intents = new Intent(Intent.ACTION_PICK, null);
+                    intents.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+                    startActivityForResult(intents, PHOTO_REQUEST_GALLERY);
+                    break;
+                default:
+                    break;
             }
+        }
     };
-
 
 
     // 图片上传回调方法
@@ -195,12 +197,12 @@ public class EventEntryAdd_Attachment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case PHOTO_REQUEST_TAKEPHOTO:
-                isPhoto="1";
+                isPhoto = "1";
                 startPhotoZoom(uri, 600);
                 break;
             case PHOTO_REQUEST_GALLERY:
                 if (data != null) {
-                    isPhoto="2";
+                    isPhoto = "2";
                     uri = data.getData();
                     startPhotoZoom(uri, 600);
                 }
@@ -212,8 +214,8 @@ public class EventEntryAdd_Attachment extends Fragment {
                             Bitmap bitmapFromUri = getBitmapFromUri(uri, EventEntryAdd_Attachment.this.getActivity());
                             if (bitmapFromUri != null) {
                                 //先把拍照之后保存在本地的原图删掉。
-                                if("1".equals(isPhoto)){
-                                    boolean flag = FileManager.delFile(fileRoute+"/"+photoName);
+                                if ("1".equals(isPhoto)) {
+                                    boolean flag = FileManager.delFile(fileRoute + "/" + photoName);
                                 }
                                 File file = SavePicInLocal(bitmapFromUri);
                                 FileInputStream fis = new FileInputStream(file);
@@ -230,6 +232,7 @@ public class EventEntryAdd_Attachment extends Fragment {
     }
 
     ;
+
     private void startPhotoZoom(Uri uri, int size) {
         Intent intent = new Intent("com.android.camera.action.CROP");
         intent.setDataAndType(uri, "image/*");
@@ -316,10 +319,10 @@ public class EventEntryAdd_Attachment extends Fragment {
 
 
     /**
-     * 当查看详情时初始化数据,显示文件
+     * 当查看已经上报事件详情时初始化数据,显示文件
      */
-    public void setTFtSjFjEntityList(List<TFtSjFjEntity> sjfjList,boolean flag) {
+    public void setTFtSjFjEntityList(List<TFtSjFjEntity> sjfjList, boolean flag) {
         this.sjfjList = sjfjList;
-        this.flag=flag;
+        this.flag = flag;
     }
 }

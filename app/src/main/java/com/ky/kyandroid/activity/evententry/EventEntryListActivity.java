@@ -85,13 +85,13 @@ public class EventEntryListActivity extends AppCompatActivity {
     Button rightBtn;
 
     /**
-     *  List列表
+     * List列表
      */
     @BindView(R.id.search_evententry_list)
     ListView searchEvententryList;
 
     /**
-     *  刷新控件
+     * 刷新控件
      */
     @BindView(R.id.swipe_container)
     SwipeRefreshLayout swipeContainer;
@@ -155,7 +155,7 @@ public class EventEntryListActivity extends AppCompatActivity {
     private int currentPage;
 
     //每页显示条数
-    private int pageSize=5;
+    private int pageSize = 5;
 
     /**
      *
@@ -182,17 +182,19 @@ public class EventEntryListActivity extends AppCompatActivity {
      */
     private ProgressBar progressBar;
 
-    /** 下拉刷新容器 */
+    /**
+     * 下拉刷新容器
+     */
     private SwipeRefreshUtil swipeRefreshUtil;
 
-    private List<TFtSjEntity> tempList ;
+    private List<TFtSjEntity> tempList;
 
     /**
      * 是否已经加载本地数据
      */
-    private  boolean isIfload =true;
+    private boolean isIfload = true;
 
-    private  String userId;
+    private String userId;
 
 
     @SuppressLint("HandlerLeak")
@@ -214,21 +216,21 @@ public class EventEntryListActivity extends AppCompatActivity {
                     tFtSjEntityList = new ArrayList<TFtSjEntity>();
                     // 判断是否刷新，刷新true,加载false
                     ifrefresh = true;
-                    isIfload=true;
+                    isIfload = true;
                     //判断是否刷新成功
                     ifRefreshOK = true;
                     //判断是否最后加载到最后
                     ifDateEnd = false;
                     currentPage = 2;
                     //刷新时总条数从新设值
-                    total=0;
+                    total = 0;
                     //解析数据
                     handleTransation(message);
                     totalMumber = pList.size();
                     if (pList.size() < pageSize) {
                         ifDateEnd = true;
-                        if(pageBean!=null ){
-                            if(pageBean.getCurrentPage()  == 1){
+                        if (pageBean != null) {
+                            if (pageBean.getCurrentPage() == 1) {
                                 list_jiazai.setVisibility(View.GONE);
                             }
                         }
@@ -250,7 +252,7 @@ public class EventEntryListActivity extends AppCompatActivity {
                     //当加载的 条数小鱼每页显示条数时，加载完成
                     if (pList.size() < pageSize) {
                         ifDateEnd = true;
-                        if(pageBean!=null ){
+                        if (pageBean != null) {
                             progressBar.setVisibility(View.GONE);
                             foot_title.setText("已经没有更多数据了");
                         }
@@ -275,7 +277,7 @@ public class EventEntryListActivity extends AppCompatActivity {
                     list_jiazai.setVisibility(View.GONE);
                     break;
             }
-            centerText.setText("事件列表("+total+")");
+            centerText.setText("事件列表(" + total + ")");
         }
 
     };
@@ -287,10 +289,12 @@ public class EventEntryListActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         tFtSjEntityDao = new TFtSjEntityDao();
         tFtSjEntityList = new ArrayList<TFtSjEntity>();
+        //初始化事件
         initEvent();
+        // List列表设置初始化数据
         initData();
-        userId=sp.getString(USER_ID,"");
-        adapter = new EventEntityListAdapter(tFtSjEntityList,EventEntryListActivity.this);
+        userId = sp.getString(USER_ID, "");
+        adapter = new EventEntityListAdapter(tFtSjEntityList, EventEntryListActivity.this);
         searchEvententryList.setAdapter(adapter);
     }
 
@@ -306,12 +310,12 @@ public class EventEntryListActivity extends AppCompatActivity {
         list_jiazai = (LinearLayout) getLayoutInflater().inflate(R.layout.lv_item_jiazai, null);
         list_jiazai.setVisibility(View.GONE);
         foot_title = (TextView) list_jiazai.findViewById(R.id.foot_title);
-        progressBar = (ProgressBar)list_jiazai.findViewById(R.id.progressBar);
+        progressBar = (ProgressBar) list_jiazai.findViewById(R.id.progressBar);
         searchEvententryList.addFooterView(list_jiazai, null, false);
         searchEvententryList.setSelector(new ColorDrawable(Color.TRANSPARENT));
     }
 
-    @OnClick({R.id.left_btn,R.id.right_btn})
+    @OnClick({R.id.left_btn, R.id.right_btn})
     public void onClick(View v) {
         switch (v.getId()) {
             /** 返回键 **/
@@ -329,17 +333,17 @@ public class EventEntryListActivity extends AppCompatActivity {
     /**
      * List列表设置初始化数据
      */
-    public  void initData(){
+    public void initData() {
         final Message msg = new Message();
         msg.what = 0;
-        if(netWorkConnection.isWIFIConnection()){
+        if (netWorkConnection.isWIFIConnection()) {
             final Map<String, String> paramsMap = new HashMap<String, String>();
-            String userId=sp.getString(USER_ID,"");
-            paramsMap.put("userId",userId);
+            String userId = sp.getString(USER_ID, "");
+            paramsMap.put("userId", userId);
             //1.表示刷新，2表示加载
             swipeRefreshUtil = new SwipeRefreshUtil(swipeContainer, Constants.SERVICE_QUERY_EVENTENTRY, mHandler);
             //刷新操作(1.表示刷新，2表示加载)
-            swipeRefreshUtil.setSwipeRefresh(paramsMap,1);
+            swipeRefreshUtil.setSwipeRefresh(paramsMap, 1);
 
             //加载操作
             searchEvententryList.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -367,121 +371,128 @@ public class EventEntryListActivity extends AppCompatActivity {
                         }
                         if (!ifload) {
                             ifload = true;
-                            paramsMap.put("currentPage", currentPage+"");
+                            paramsMap.put("currentPage", currentPage + "");
                             list_jiazai.setVisibility(View.VISIBLE);
                             //1.表示刷新，2表示加载
-                            swipeRefreshUtil.setSwipeRefresh(paramsMap,2);
+                            swipeRefreshUtil.setSwipeRefresh(paramsMap, 2);
                         }
                     }
                 }
             });
-        }else{
+        } else {
             Toast.makeText(this, "连接不上网络！", Toast.LENGTH_LONG).show();
         }
     }
 
     /**
      * 点击List列表Item
+     *
      * @param position
      */
     @OnItemClick(R.id.search_evententry_list)
-    public  void OnItemClick(int position){
+    public void OnItemClick(int position) {
         tFtSjEntity = (TFtSjEntity) adapter.getItem(position);
-        Intent intent =new Intent(this,EventEntryAddActivity.class);
+        Intent intent = new Intent(this, EventEntryAddActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("tFtSjEntity",tFtSjEntity);
+        bundle.putSerializable("tFtSjEntity", tFtSjEntity);
         /**type 0：新增 1：修改**/
-        intent.putExtra("type","1");
+        intent.putExtra("type", "1");
         intent.putExtras(bundle);
         startActivity(intent);
     }
 
+    /**
+     * 长按list列表
+     *
+     * @param position
+     * @return
+     */
     @OnItemLongClick(R.id.search_evententry_list)
-    public boolean OnItemLongClick(final int position){
+    public boolean OnItemLongClick(final int position) {
         tFtSjEntity = (TFtSjEntity) adapter.getItem(position);
         //2表示事件提交，3表示街道核实 ，6为街道受理，8为街道自行处理
-        if("1".equals(tFtSjEntity.getZt())){
+        if ("1".equals(tFtSjEntity.getZt())) {
             listViewContent = new String[]{"删除"};
-        }else if("2".equals(tFtSjEntity.getZt())){
+        } else if ("2".equals(tFtSjEntity.getZt())) {
             listViewContent = new String[]{"核实", "事件跟踪"};
-        }else  if("3".equals(tFtSjEntity.getZt())){
-            listViewContent = new String[]{"退回", "不予立案", "受理","作废","事件跟踪"};
-        }else  if("6".equals(tFtSjEntity.getZt())){
-            listViewContent = new String[]{"街道处理", "街道派遣","上报","事件跟踪"};
-        }else  if("8".equals(tFtSjEntity.getZt())){
-            listViewContent = new String[]{"自行处理退回","自行处理反馈", "回访核查","事件跟踪"};
+        } else if ("3".equals(tFtSjEntity.getZt())) {
+            listViewContent = new String[]{"退回", "不予立案", "受理", "作废", "事件跟踪"};
+        } else if ("6".equals(tFtSjEntity.getZt())) {
+            listViewContent = new String[]{"街道处理", "街道派遣", "上报", "事件跟踪"};
+        } else if ("8".equals(tFtSjEntity.getZt())) {
+            listViewContent = new String[]{"自行处理退回", "自行处理反馈", "回访核查", "事件跟踪"};
         }
-        AlertDialog.Builder builder =new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setItems(listViewContent, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int pos) {
                 //事件刚刚录入
-                if("1".equals(tFtSjEntity.getZt())){
+                if ("1".equals(tFtSjEntity.getZt())) {
                     //删除
-                    if(pos==0) {
+                    if (pos == 0) {
                         message = "";
                         flag = tFtSjEntityDao.deleteEventEntry(tFtSjEntity.getUuid());
                         if (flag) {
-                            Toast.makeText(EventEntryListActivity.this,  "删除成功", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(EventEntryListActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(EventEntryListActivity.this,  "删除失败", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(EventEntryListActivity.this, "删除失败", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
                 //事件刚刚录入
-                if("2".equals(tFtSjEntity.getZt())){
+                if ("2".equals(tFtSjEntity.getZt())) {
                     //街道核实状态为3
-                    if(pos ==0) {
+                    if (pos == 0) {
                         //操作流程方法，因为所有的流程都是改变状态，所以写一个公共方法。
-                        OperatingProcess("3","街道核实");
+                        OperatingProcess("3", "街道核实");
                     }
                 }
                 //街道已经核实，做下一步操作
-                if("3".equals(tFtSjEntity.getZt())){
-                    if(pos ==0){
+                if ("3".equals(tFtSjEntity.getZt())) {
+                    if (pos == 0) {
                         //街道退回状态为4
-                        ReturnOperation(dialog_return_operation,"4","退回");
+                        ReturnOperation(dialog_return_operation, "4", "退回");
                     } else if (pos == 1) {
                         //街道不予立案状态为5
-                        ReturnOperation(dialog_return_operation,"5","不予立案");
-                    }else if (pos == 2) {
+                        ReturnOperation(dialog_return_operation, "5", "不予立案");
+                    } else if (pos == 2) {
                         //街道受理状态为6
-                        OperatingProcess("6","街道受理");
-                    }else if (pos == 3) {
+                        OperatingProcess("6", "街道受理");
+                    } else if (pos == 3) {
                         //街道作废状态为7
-                        ReturnOperation(dialog_return_operation,"7","作废");
+                        ReturnOperation(dialog_return_operation, "7", "作废");
                     }
                 }
                 //街道已经受理，做下一步操作
-                if("6".equals(tFtSjEntity.getZt())){
+                if ("6".equals(tFtSjEntity.getZt())) {
                     if (pos == 0) {
                         //街道自行状态为8
-                        ReturnOperation(dialog_manage_operation,"8","街道自行处理");
-                    }else if (pos == 1) {
+                        ReturnOperation(dialog_manage_operation, "8", "街道自行处理");
+                    } else if (pos == 1) {
                         //街道派遣状态为9
-                        ReturnOperation(dialog_dispatch_operation,"9","街道派遣");
-                    }else if (pos == 2) {
+                        ReturnOperation(dialog_dispatch_operation, "9", "街道派遣");
+                    } else if (pos == 2) {
                         //街道上报状态为16
-                        OperatingProcess("16","街道上报");
+                        OperatingProcess("16", "街道上报");
                     }
                 }
                 //街道已经自行受理，做下一步操作
-                if("8".equals(tFtSjEntity.getZt())){
+                if ("8".equals(tFtSjEntity.getZt())) {
                     if (pos == 0) {
                         //街道自行处理退回为25
-                        ReturnOperation(dialog_return_operation,"25","自行处理退回");
-                    }else if (pos == 1) {
+                        ReturnOperation(dialog_return_operation, "25", "自行处理退回");
+                    } else if (pos == 1) {
                         //自行处理反馈为
                         //ReturnOperation(diaog_dispatch_operation,"9","自行处理反馈");
-                    }else if (pos == 2) {
+                    } else if (pos == 2) {
                         //街道上报状态为12
-                        OperatingProcess("12","回访核查");
+                        OperatingProcess("12", "回访核查");
                     }
                 }
                 //对页面数据进行刷新
-               // initData();
-               // entryEntityList = eventEntryDao.queryList();
-               // adapter.notifyDataSetChanged(entryEntityList);
+                // initData();
+                // entryEntityList = eventEntryDao.queryList();
+                // adapter.notifyDataSetChanged(entryEntityList);
             }
         });
         builder.create().show();
@@ -491,30 +502,32 @@ public class EventEntryListActivity extends AppCompatActivity {
 
     /**
      * 受理操作流程
+     *
      * @param stauts
      */
-    public void OperatingProcess(final String stauts, final String message){
+    public void OperatingProcess(final String stauts, final String message) {
         final Message msg = new Message();
         msg.what = 0;
-        AlertDialog.Builder builder =new AlertDialog.Builder(EventEntryListActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(EventEntryListActivity.this);
         builder.setTitle("信息");
         builder.setMessage("确定要执行次操作吗？");
         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 tFtSjEntity.setZt(stauts);
-                if(netWorkConnection.isWIFIConnection()){
+                if (netWorkConnection.isWIFIConnection()) {
                     // sweetAlertDialog.show();
                     // 参数列表 - 账号、密码（加密）
                     Map<String, String> paramsMap = new HashMap<String, String>();
                     paramsMap.put("userId", userId);
                     // 发送请求
-                    OkHttpUtil.sendRequest(Constants.SERVICE_LOGIN, paramsMap, new Callback(){
+                    OkHttpUtil.sendRequest(Constants.SERVICE_LOGIN, paramsMap, new Callback() {
 
                         @Override
                         public void onFailure(Call call, IOException e) {
                             mHandler.sendEmptyMessage(0);
                         }
+
                         @Override
                         public void onResponse(Call call, Response response) throws IOException {
                             if (response.isSuccessful()) {
@@ -526,7 +539,7 @@ public class EventEntryListActivity extends AppCompatActivity {
                             mHandler.sendMessage(msg);
                         }
                     });
-                }else{
+                } else {
                     msg.obj = "WIFI网络不可用,请检查网络连接情况";
                     mHandler.sendMessage(msg);
                 }
@@ -543,14 +556,14 @@ public class EventEntryListActivity extends AppCompatActivity {
     /**
      * 退回,不予立案操作
      */
-    public  void ReturnOperation(int layout,final String status, String title){
+    public void ReturnOperation(int layout, final String status, String title) {
         final View mView = LayoutInflater.from(EventEntryListActivity.this).inflate(layout, null);
         //当点击为街道派遣时执行下面代码
-        if(layout == dialog_dispatch_operation){
+        if (layout == dialog_dispatch_operation) {
             //获取弹出框添加按钮
-            final View view1= mView.findViewById(R.id.add_diapatch);
+            final View view1 = mView.findViewById(R.id.add_diapatch);
             //获取需要添加控件的L
-            final LinearLayout linearlayout_dispatch= (LinearLayout) mView.findViewById(R.id.linearlayout_dispatch);
+            final LinearLayout linearlayout_dispatch = (LinearLayout) mView.findViewById(R.id.linearlayout_dispatch);
             view1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -562,18 +575,18 @@ public class EventEntryListActivity extends AppCompatActivity {
                 }
             });
         }
-        AlertDialog.Builder builder =new AlertDialog.Builder(EventEntryListActivity.this);
-        builder.setTitle(title+"原因");
+        AlertDialog.Builder builder = new AlertDialog.Builder(EventEntryListActivity.this);
+        builder.setTitle(title + "原因");
         builder.setView(mView);
         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 tFtSjEntity.setZt(status);
-                flag =tFtSjEntityDao.updateTFtSjEntity(tFtSjEntity);
+                flag = tFtSjEntityDao.updateTFtSjEntity(tFtSjEntity);
                 if (flag) {
-                    Toast.makeText(EventEntryListActivity.this,  message+"成功", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EventEntryListActivity.this, message + "成功", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(EventEntryListActivity.this,  message+"失败", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EventEntryListActivity.this, message + "失败", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -585,17 +598,22 @@ public class EventEntryListActivity extends AppCompatActivity {
         builder.create().show();
     }
 
+    /**
+     * 当从后台查询到数据周，做相应的处理，并且会将本地的草稿信息显示出来
+     *
+     * @param body
+     */
     public void handleTransation(String body) {
         if (StringUtils.isBlank(body)) {
         } else {
             //判断是否已经加载本地草稿数据，并且只添加一次
-            if(isIfload){
+            if (isIfload) {
                 tempList = tFtSjEntityDao.queryList();
-                if(tempList!=null && tempList.size()>0){
+                if (tempList != null && tempList.size() > 0) {
                     tFtSjEntityList.addAll(tempList);
                 }
-                isIfload=false;
-                total+=tFtSjEntityList.size();
+                isIfload = false;
+                total += tFtSjEntityList.size();
             }
 
             // 处理响应信息
@@ -619,9 +637,9 @@ public class EventEntryListActivity extends AppCompatActivity {
         if (ackMsg != null) {
             if (AckMessage.SUCCESS.equals(ackMsg.getAckCode())) {
                 pageBean = ackMsg.getPageBean();
-                if(pageBean!=null){
-                    List<JsonObject> list =pageBean.getDataList();
-                    if(list != null && list.size()>0){
+                if (pageBean != null) {
+                    List<JsonObject> list = pageBean.getDataList();
+                    if (list != null && list.size() > 0) {
                         for (int i = 0; i < list.size(); i++) {
                             //先将获取的Object对象转成String
                             String entityStr = JsonUtil.toJson(list.get(i));
@@ -632,7 +650,7 @@ public class EventEntryListActivity extends AppCompatActivity {
                 }
             }
         }
-        total +=pList.size();
+        total += pList.size();
         return pList;
     }
 }

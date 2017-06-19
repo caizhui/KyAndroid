@@ -100,7 +100,7 @@ public class EventEntryAdd_Person extends Fragment {
     /**
      * 是否查看本地详细信息
      */
-    private  boolean flag=false;
+    private boolean flag = false;
 
     @Nullable
     @Override
@@ -108,11 +108,11 @@ public class EventEntryAdd_Person extends Fragment {
         View view = inflater.inflate(R.layout.evententeradd_person_fragment, container, false);
         ButterKnife.bind(this, view);
         tFtSjRyEntityList = new ArrayList<TFtSjRyEntity>();
-        //判断是否查看本地详细信息，如果是true就
-        if(flag){
+        //判断是否查看本地详细信息，如果是true就执行下面方法
+        if (flag) {
             if (sjryList != null && sjryList.size() > 0) {
                 adapter = new EventPersonListAdapter(sjryList, EventEntryAdd_Person.this.getActivity());
-                if(personList!=null){
+                if (personList != null) {
                     personList.setAdapter(adapter);
                 }
 
@@ -185,13 +185,13 @@ public class EventEntryAdd_Person extends Fragment {
     }
 
     /**
-     * 当查看上报详情时初始化数据
+     * 当查看已经上报事件详情时初始化数据
      */
     public void setTFtSjRyEntityList(List<TFtSjRyEntity> sjryList) {
         this.sjryList = sjryList;
         if (sjryList != null && sjryList.size() > 0) {
             adapter = new EventPersonListAdapter(sjryList, EventEntryAdd_Person.this.getActivity());
-            if(personList!=null){
+            if (personList != null) {
                 personList.setAdapter(adapter);
             }
 
@@ -201,9 +201,9 @@ public class EventEntryAdd_Person extends Fragment {
     /**
      * 当查看本地详情时初始化数据
      */
-    public void setTFtSjRyEntityList(List<TFtSjRyEntity> sjryList,boolean flag) {
+    public void setTFtSjRyEntityList(List<TFtSjRyEntity> sjryList, boolean flag) {
         this.sjryList = sjryList;
-        this.flag=flag;
+        this.flag = flag;
     }
 
 }
