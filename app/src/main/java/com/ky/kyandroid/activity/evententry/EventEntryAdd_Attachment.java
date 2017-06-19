@@ -21,15 +21,19 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.ky.kyandroid.AppContext;
+import com.ky.kyandroid.Constants;
 import com.ky.kyandroid.R;
 import com.ky.kyandroid.entity.TFtSjFjEntity;
 import com.ky.kyandroid.util.FileManager;
 import com.ky.kyandroid.view.SelectPicPopupWindow;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -89,6 +93,8 @@ public class EventEntryAdd_Attachment extends Fragment {
     // 获取事件附件 - 子表信息
     public List<TFtSjFjEntity> sjfjList ;
 
+    private boolean flag=false;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -98,13 +104,42 @@ public class EventEntryAdd_Attachment extends Fragment {
             /* 得到SD卡得路径 */
             sdcard = Environment.getExternalStorageDirectory().getAbsolutePath().toString();
             fileRoute = new File(sdcard +"/img/"+uuid+"/");
-            if(!fileRoute.exists()){
-                fileRoute.mkdirs();
-            }
+            appendImage();
         }else{
             Toast.makeText(EventEntryAdd_Attachment.this.getActivity(), "没有SD卡", Toast.LENGTH_LONG).show();
         }
         return view;
+    }
+
+
+    //显示图片或者创建文件路径
+    public void appendImage(){
+        //当flag为true时，表示是去查看已经上报事件的图片
+        if(flag){
+            if(sjfjList!=null && sjfjList.size()>0){
+                ImageLoader.getInstance().displayImage(Constants.SERVICE_BASE_URL+sjfjList.get(0).getUrl()
+                        ,attachmentImg, AppContext.getImgBuilder());
+            }
+        }
+        //如果文件夹不存在，表示第一次进来，需要创建文件夹，否则表示已经进来过，我们需要获取图片显示
+        if(!fileRoute.exists()){
+            fileRoute.mkdirs();
+        }else{
+            //访问本地图片信息
+            if(uuid!=null && !"".equals(uuid)){
+                File files[] = fileRoute.listFiles();
+                if(files!=null && files.length>0){
+                    FileInputStream fis = null;
+                    try {
+                        fis = new FileInputStream(files[0]);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    tupbitmap = BitmapFactory.decodeStream(fis);
+                    attachmentImg.setImageBitmap(tupbitmap);
+                }
+            }
+        }
     }
 
     @OnClick(R.id.add_attachment)
@@ -283,21 +318,8 @@ public class EventEntryAdd_Attachment extends Fragment {
     /**
      * 当查看详情时初始化数据,显示文件
      */
-    public void setTFtSjFjEntityList(List<TFtSjFjEntity> sjfjList) {
+    public void setTFtSjFjEntityList(List<TFtSjFjEntity> sjfjList,boolean flag) {
         this.sjfjList = sjfjList;
-        if(sjfjList!=null && sjfjList.size()>0){
-            sdcard  = Environment.getExternalStorageDirectory().getAbsolutePath().toString();;
-            String fileUri=sdcard+"/img/"+sjfjList.get(0).getSjId()+"/"+sjfjList.get(0).getWjmc();
-            /*File file = new File(fileUri);
-            FileInputStream fis = null;
-            try {
-                /fis = new FileInputStream(file);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-            tupbitmap = BitmapFactory.decodeStream(fis);
-            attachmentImg.setImageBitmap(tupbitmap);*/
-        }
-
+        this.flag=flag;
     }
 }

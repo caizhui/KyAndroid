@@ -1,6 +1,5 @@
 package com.ky.kyandroid.activity.evententry;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -167,7 +166,7 @@ public class EventEntryAddActivity extends FragmentActivity {
 
     private TFtSjEntityDao tFtSjEntityDao;
 
-    private TFtSjRyEntityDao tFtSjRyEntityDao;
+    public TFtSjRyEntityDao tFtSjRyEntityDao;
 
     /**type 0：新增 1：修改**/
     private  String type;
@@ -191,18 +190,28 @@ public class EventEntryAddActivity extends FragmentActivity {
         intent=getIntent();
         type = intent.getStringExtra("type");
         tFtSjEntity = (TFtSjEntity) intent.getSerializableExtra("tFtSjEntity");
+        tFtSjEntityDao = new TFtSjEntityDao();
+        tFtSjRyEntityDao = new TFtSjRyEntityDao();
         //1表示修改或者查看信息
         if("1".equals(type)){
             uuid= tFtSjEntity.getId();
-            initData();
         }else{
             uuid = UUID.randomUUID().toString().trim().replaceAll("-", "").toUpperCase() ;
         }
-        tFtSjEntityDao = new TFtSjEntityDao();
-        tFtSjRyEntityDao = new TFtSjRyEntityDao();
         initToolbar();
         initPageView();
         initViewData();
+        //1表示修改或者查看信息
+        if("1".equals(type)){
+            if("1".equals(tFtSjEntity.getZt())){
+                //查询保存在本地的详细信息
+                initData();
+            }else{
+                //查询已经上报的详细信息
+                initOnLineData();
+            }
+
+        }
     }
 
     /**
@@ -313,6 +322,154 @@ public class EventEntryAddActivity extends FragmentActivity {
         });
     }
 
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            // 提示信息
+            String message = String.valueOf(msg.obj == null ? "系统繁忙,请稍后再试"
+                    : msg.obj);
+            switch (msg.what) {
+                // 失败
+                case 0:
+                    Toast.makeText(EventEntryAddActivity.this, message, Toast.LENGTH_SHORT).show();
+                    break;
+                // 获取数据成功
+                case 1:
+                    handleTransation(message);
+                    break;
+                //上传数据成功
+                case 2:
+                    Toast.makeText(EventEntryAddActivity.this, "上传成功", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(EventEntryAddActivity.this,EventEntryListActivity.class);
+                    startActivity(intent);
+                    break;
+            }
+        }
+    };
+
+    /**
+     * 处理后续流程
+     *
+     * @param
+     */
+    private void handleTransation(String body) {
+        if (StringUtils.isBlank(body)) {
+        } else {
+            // 处理响应信息
+            AckMessage ackMsg = JsonUtil.fromJson(body, AckMessage.class);
+            if (ackMsg != null) {
+                if (AckMessage.SUCCESS.equals(ackMsg.getAckCode())) {
+                    Object object = ackMsg.getEntity();
+                    //先将获取的Object对象转成String
+                    String entityStr = JsonUtil.toJson(object);
+                    //先将获取的json象转成实体
+                    TFtSjDetailEntity tFtSjDetailEntity = JsonUtil.fromJson(entityStr,TFtSjDetailEntity.class);
+                    if (tFtSjDetailEntity != null) {
+                        sjryList = tFtSjDetailEntity.getSjryList();
+                        sjfjList = tFtSjDetailEntity.getSjfjList();
+                        eventEntryAdd_person.setTFtSjRyEntityList(sjryList);
+                        eventEntryAdd_attachment.setTFtSjFjEntityList(sjfjList,true);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * //查询已经上报详情数据
+     */
+    public void initOnLineData(){
+        final Message msg = new Message();
+        msg.what = 0;
+        if(netWorkConnection.isWIFIConnection()){
+            Map<String, String> paramsMap = new HashMap<String, String>();
+            paramsMap.put("userId",userId);
+            paramsMap.put("id", tFtSjEntity.getId());
+            // 发送请求
+            OkHttpUtil.sendRequest(Constants.SERVICE_DETAIL_EVENT, paramsMap, new Callback(){
+
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    mHandler.sendEmptyMessage(0);
+                }
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    if (response.isSuccessful()) {
+                        msg.what = 1;
+                        msg.obj = response.body().string();
+                    } else {
+                        msg.obj = "网络异常,请确认网络情况";
+                    }
+                    mHandler.sendMessage(msg);
+                }
+            });
+        }else{
+            msg.obj = "WIFI网络不可用,请检查网络连接情况";
+            mHandler.sendMessage(msg);
+        }
+    }
+
+    /**
+     * 查看保存在我本地的详细信息
+     */
+    public void initData(){
+        sjryList = tFtSjRyEntityDao.queryListBySjId(uuid);
+        eventEntryAdd_person.setTFtSjRyEntityList(sjryList,true);
+    }
+
+
+    /**
+     * 上传文件及参数
+     */
+    private void sendMultipart(String userId,String paramMap,File[] files){
+        File sdcache = this.getExternalCacheDir();
+        int cacheSize = 10 * 1024 * 1024;
+        //设置超时时间及缓存，下边都应该这样设置的。
+        OkHttpClient.Builder builder = new OkHttpClient.Builder()
+                .connectTimeout(15, TimeUnit.SECONDS)
+                .writeTimeout(20, TimeUnit.SECONDS)
+                .readTimeout(20, TimeUnit.SECONDS)
+                .cache(new Cache(sdcache.getAbsoluteFile(), cacheSize));
+
+        OkHttpClient mOkHttpClient=builder.build();
+        MultipartBody.Builder requestBody = new MultipartBody.Builder();
+        requestBody.setType(MultipartBody.FORM);
+        requestBody.addFormDataPart("userId", userId);//设置post的参数
+        requestBody.addFormDataPart("jsonData", paramMap);//设置post的参数
+        if(files!=null && files.length>0){
+            for(int i = 0;i<files.length;i++){
+                //uploadFles
+                requestBody.addFormDataPart("uploadFles", files[i].getName(),
+                        RequestBody.create(MediaType.parse("application/octet-stream; charset=utf-8"), files[i]));
+            }
+
+        }
+        Request request = new Request.Builder()
+                .header("Authorization", "Client-ID " + "...")
+                .url(Constants.SERVICE_BASE_URL+Constants.SERVICE_SAVE_EVENTENTRY)//请求的url
+                .post(requestBody.build())
+                .build();
+
+        final Message msg = new Message();
+        msg.what = 0;
+        mOkHttpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                mHandler.sendEmptyMessage(0);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    msg.what = 2;
+                    msg.obj = response.body().string();
+                } else {
+                    msg.obj = "网络异常,请确认网络情况";
+                }
+                mHandler.sendMessage(msg);
+            }
+        });
+    }
 
     @OnClick({R.id.left_btn,R.id.reporting_leadership_btn,R.id.save_draft_btn})
     public void onClick(View v) {
@@ -352,7 +509,6 @@ public class EventEntryAddActivity extends FragmentActivity {
                         }
                         map.put("filesName",filesName);
                     }
-                    map.put("type","1");
                     String paramMap = JsonUtil.map2Json(map);
                     sendMultipart(userId,paramMap,files);
                 }
@@ -383,140 +539,14 @@ public class EventEntryAddActivity extends FragmentActivity {
                     }
                     if(flag){
                         Toast.makeText(EventEntryAddActivity.this,message+"成功",Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(EventEntryAddActivity.this,EventEntryListActivity.class);
+                        startActivity(intent);
                     }else{
                         Toast.makeText(EventEntryAddActivity.this,message+"失败",Toast.LENGTH_SHORT).show();
                     }
                 }
-                    break;
-                }
-        }
-
-    /**
-     * 上传文件及参数
-     */
-    private void sendMultipart(String userId,String paramMap,File[] files){
-        File sdcache = this.getExternalCacheDir();
-        int cacheSize = 10 * 1024 * 1024;
-        //设置超时时间及缓存，下边都应该这样设置的。
-        OkHttpClient.Builder builder = new OkHttpClient.Builder()
-                .connectTimeout(15, TimeUnit.SECONDS)
-                .writeTimeout(20, TimeUnit.SECONDS)
-                .readTimeout(20, TimeUnit.SECONDS)
-                .cache(new Cache(sdcache.getAbsoluteFile(), cacheSize));
-
-        OkHttpClient mOkHttpClient=builder.build();
-        MultipartBody.Builder requestBody = new MultipartBody.Builder();
-        requestBody.setType(MultipartBody.FORM);
-        requestBody.addFormDataPart("userId", userId);//设置post的参数
-        requestBody.addFormDataPart("jsonData", paramMap);//设置post的参数
-        if(files!=null && files.length>0){
-            for(int i = 0;i<files.length;i++){
-                //uploadFles
-                requestBody.addFormDataPart("image", files[i].getName(),
-                        RequestBody.create(MediaType.parse("application/octet-stream; charset=utf-8"), files[i]));
-            }
-
-        }
-        Request request = new Request.Builder()
-                .header("Authorization", "Client-ID " + "...")
-                .url(Constants.SERVICE_BASE_URL+Constants.SERVICE_SAVE_EVENTENTRY)//请求的url
-                .post(requestBody.build())
-                .build();
-
-        mOkHttpClient.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                Toast.makeText(EventEntryAddActivity.this, "上报失败", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                Log.i("InfoMSG", response.body().string());
-                //Toast.makeText(EventEntryAddActivity.this, "上报成功", Toast.LENGTH_SHORT).show();
-                //Intent intent = new Intent(EventEntryAddActivity.this,EventEntryListActivity.class);
-                //startActivity(intent);
-            }
-        });
-    }
-
-
-    @SuppressLint("HandlerLeak")
-    private Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            // 提示信息
-            String message = String.valueOf(msg.obj == null ? "系统繁忙,请稍后再试"
-                    : msg.obj);
-            switch (msg.what) {
-                // 失败
-                case 0:
-                    Log.i(TAG, "登录失败...");
-                    Toast.makeText(EventEntryAddActivity.this, message, Toast.LENGTH_SHORT).show();
-                    break;
-                // 成功跳转
-                case 1:
-                    handleTransation(message);
-                    break;
-            }
-        }
-    };
-
-    /**
-     * 处理后续流程
-     *
-     * @param
-     */
-    private void handleTransation(String body) {
-        if (StringUtils.isBlank(body)) {
-        } else {
-            // 处理响应信息
-            AckMessage ackMsg = JsonUtil.fromJson(body, AckMessage.class);
-            if (ackMsg != null) {
-                if (AckMessage.SUCCESS.equals(ackMsg.getAckCode())) {
-                    Object object = ackMsg.getEntity();
-                    //先将获取的Object对象转成String
-                    String entityStr = JsonUtil.toJson(object);
-                    //先将获取的json象转成实体
-                    TFtSjDetailEntity tFtSjDetailEntity = JsonUtil.fromJson(entityStr,TFtSjDetailEntity.class);
-                    if (tFtSjDetailEntity != null) {
-                        sjryList = tFtSjDetailEntity.getSjryList();
-                        sjfjList = tFtSjDetailEntity.getSjfjList();
-                        eventEntryAdd_person.setTFtSjRyEntityList(sjryList);
-                        eventEntryAdd_attachment.setTFtSjFjEntityList(sjfjList);
-                    }
-                }
-            }
+                break;
         }
     }
 
-    public void initData(){
-        final Message msg = new Message();
-        msg.what = 0;
-        if(netWorkConnection.isWIFIConnection()){
-            Map<String, String> paramsMap = new HashMap<String, String>();
-            paramsMap.put("userId",userId);
-            paramsMap.put("id", tFtSjEntity.getId());
-            // 发送请求
-            OkHttpUtil.sendRequest(Constants.SERVICE_DETAIL_EVENT, paramsMap, new Callback(){
-
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    mHandler.sendEmptyMessage(0);
-                }
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    if (response.isSuccessful()) {
-                        msg.what = 1;
-                        msg.obj = response.body().string();
-                    } else {
-                        msg.obj = "网络异常,请确认网络情况";
-                    }
-                    mHandler.sendMessage(msg);
-                }
-            });
-        }else{
-            msg.obj = "WIFI网络不可用,请检查网络连接情况";
-            mHandler.sendMessage(msg);
-        }
-    }
 }

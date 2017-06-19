@@ -35,11 +35,6 @@ public class EventEntryAdd_Person extends Fragment {
     @BindView(R.id.add_person)
     Button addPerson;
     /**
-     * 删除按钮
-     */
-    @BindView(R.id.delete_person)
-    Button deletePerson;
-    /**
      * 当事人List
      */
     @BindView(R.id.person_list)
@@ -102,7 +97,10 @@ public class EventEntryAdd_Person extends Fragment {
 
     EventPersonListAdapter adapter;
 
-
+    /**
+     * 是否查看本地详细信息
+     */
+    private  boolean flag=false;
 
     @Nullable
     @Override
@@ -110,16 +108,24 @@ public class EventEntryAdd_Person extends Fragment {
         View view = inflater.inflate(R.layout.evententeradd_person_fragment, container, false);
         ButterKnife.bind(this, view);
         tFtSjRyEntityList = new ArrayList<TFtSjRyEntity>();
+        //判断是否查看本地详细信息，如果是true就
+        if(flag){
+            if (sjryList != null && sjryList.size() > 0) {
+                adapter = new EventPersonListAdapter(sjryList, EventEntryAdd_Person.this.getActivity());
+                if(personList!=null){
+                    personList.setAdapter(adapter);
+                }
+
+            }
+        }
         return view;
     }
 
-    @OnClick({R.id.add_person, R.id.delete_person})
+    @OnClick({R.id.add_person})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.add_person:
                 addPersonInfo();
-                break;
-            case R.id.delete_person:
                 break;
         }
     }
@@ -179,14 +185,25 @@ public class EventEntryAdd_Person extends Fragment {
     }
 
     /**
-     * 当查看详情时初始化数据
+     * 当查看上报详情时初始化数据
      */
     public void setTFtSjRyEntityList(List<TFtSjRyEntity> sjryList) {
         this.sjryList = sjryList;
         if (sjryList != null && sjryList.size() > 0) {
             adapter = new EventPersonListAdapter(sjryList, EventEntryAdd_Person.this.getActivity());
-            personList.setAdapter(adapter);
+            if(personList!=null){
+                personList.setAdapter(adapter);
+            }
+
         }
+    }
+
+    /**
+     * 当查看本地详情时初始化数据
+     */
+    public void setTFtSjRyEntityList(List<TFtSjRyEntity> sjryList,boolean flag) {
+        this.sjryList = sjryList;
+        this.flag=flag;
     }
 
 }

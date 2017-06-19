@@ -155,13 +155,17 @@ public class TFtSjEntity  implements Serializable{
 	private String sssq;//所属社区
 	@Column(name =  "ssjwh")
 	private String ssjwh;//所属居委会
-	
+
+	@Column(name =  "znbm")
 	private String znbm;
-	
+
+	@Column(name = "bxxsfy")
 	private String bxxsfy;
-	
+
+	@Column(name = "clsjfy")
 	private String clsjfy;
-	
+
+	@Column(name = "xcts")
 	private String xcts;
 
 	public  TFtSjEntity(){}

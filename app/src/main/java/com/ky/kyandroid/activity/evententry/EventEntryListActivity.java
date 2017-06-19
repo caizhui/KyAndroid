@@ -33,11 +33,13 @@ import com.ky.kyandroid.bean.PageBean;
 import com.ky.kyandroid.db.dao.TFtSjEntityDao;
 import com.ky.kyandroid.entity.TFtSjEntity;
 import com.ky.kyandroid.util.JsonUtil;
+import com.ky.kyandroid.util.OkHttpUtil;
 import com.ky.kyandroid.util.SpUtil;
 import com.ky.kyandroid.util.StringUtils;
 import com.ky.kyandroid.util.SwipeRefreshUtil;
 import com.solidfire.gson.JsonObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,6 +50,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemClick;
 import butterknife.OnItemLongClick;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 import static com.ky.kyandroid.R.layout.add_department;
 import static com.ky.kyandroid.R.layout.dialog_dispatch_operation;
@@ -187,6 +192,8 @@ public class EventEntryListActivity extends AppCompatActivity {
      */
     private  boolean isIfload =true;
 
+    private  String userId;
+
 
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
@@ -282,6 +289,7 @@ public class EventEntryListActivity extends AppCompatActivity {
         tFtSjEntityList = new ArrayList<TFtSjEntity>();
         initEvent();
         initData();
+        userId=sp.getString(USER_ID,"");
         adapter = new EventEntityListAdapter(tFtSjEntityList,EventEntryListActivity.this);
         searchEvententryList.setAdapter(adapter);
     }
@@ -486,6 +494,8 @@ public class EventEntryListActivity extends AppCompatActivity {
      * @param stauts
      */
     public void OperatingProcess(final String stauts, final String message){
+        final Message msg = new Message();
+        msg.what = 0;
         AlertDialog.Builder builder =new AlertDialog.Builder(EventEntryListActivity.this);
         builder.setTitle("信息");
         builder.setMessage("确定要执行次操作吗？");
@@ -493,11 +503,32 @@ public class EventEntryListActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 tFtSjEntity.setZt(stauts);
-                flag =tFtSjEntityDao.updateTFtSjEntity(tFtSjEntity);
-                if (flag) {
-                    Toast.makeText(EventEntryListActivity.this,  message+"成功", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(EventEntryListActivity.this,  message+"失败", Toast.LENGTH_SHORT).show();
+                if(netWorkConnection.isWIFIConnection()){
+                    // sweetAlertDialog.show();
+                    // 参数列表 - 账号、密码（加密）
+                    Map<String, String> paramsMap = new HashMap<String, String>();
+                    paramsMap.put("userId", userId);
+                    // 发送请求
+                    OkHttpUtil.sendRequest(Constants.SERVICE_LOGIN, paramsMap, new Callback(){
+
+                        @Override
+                        public void onFailure(Call call, IOException e) {
+                            mHandler.sendEmptyMessage(0);
+                        }
+                        @Override
+                        public void onResponse(Call call, Response response) throws IOException {
+                            if (response.isSuccessful()) {
+                                msg.what = 1;
+                                msg.obj = response.body().string();
+                            } else {
+                                msg.obj = "网络异常,请确认网络情况";
+                            }
+                            mHandler.sendMessage(msg);
+                        }
+                    });
+                }else{
+                    msg.obj = "WIFI网络不可用,请检查网络连接情况";
+                    mHandler.sendMessage(msg);
                 }
             }
         });

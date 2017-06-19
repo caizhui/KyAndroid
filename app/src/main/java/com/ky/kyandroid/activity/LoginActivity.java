@@ -141,15 +141,6 @@ public class LoginActivity extends AppCompatActivity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_login:
-               /* // 账号与密码
-                String account = String.valueOf(etAccount.getText());
-                String password = String.valueOf(etPassword.getText());
-                if (StringUtils.isBlank(account) || StringUtils.isBlank(password)) {
-                    Toast.makeText(this,"用户名或密码不能为空",Toast.LENGTH_SHORT).show();
-                } else {
-                    Intent intent = new Intent(this, EventEntryListActivity.class);
-                    startActivity(intent);
-                }*/
                 // 账号与密码
                 String account = String.valueOf(etAccount.getText());
                 String password = String.valueOf(etPassword.getText());
@@ -214,7 +205,6 @@ public class LoginActivity extends AppCompatActivity {
                 startService(new Intent(this, SaveBDdescService.class));
                 Intent intent = new Intent(this,EventEntryListActivity.class);
                 startActivity(intent);
-                finish();
             }else{
                 Log.i(TAG, "设置用户信息失败...");
                 Toast.makeText(this, "登录名或密码错误", Toast.LENGTH_SHORT).show();

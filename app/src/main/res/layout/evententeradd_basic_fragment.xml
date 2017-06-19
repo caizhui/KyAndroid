@@ -54,13 +54,12 @@
                     android:layout_height="wrap_content"
                     android:text="@string/happen_time" />
 
-                <TextView
+                <EditText
                     android:id="@+id/happen_time_edt"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textSize="16sp"
-                    android:background="@null"/>
+                    android:textSize="16sp"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -165,6 +164,32 @@
 
                 <Spinner
                     android:id="@+id/pattern_manifestation_spinner"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="*"
+                    android:textColor="@color/red" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="10dp">`
+
+                <TextView
+                    style="@style/TextStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/field_morphology" />
+
+                <Spinner
+                    android:id="@+id/field_morphology_spinner"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"

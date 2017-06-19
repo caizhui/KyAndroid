@@ -43,9 +43,9 @@ public class TFtSjRyEntityDao extends BaseDao {
      * @param
      * @return
      */
-    public List<TFtSjRyEntity> queryList() {
+    public List<TFtSjRyEntity> queryListBySjId(String sjId) {
         try {
-            List<TFtSjRyEntity> eventEntryList = db.selector(TFtSjRyEntity.class).findAll();
+            List<TFtSjRyEntity> eventEntryList = db.selector(TFtSjRyEntity.class).where("sjid","=",sjId).findAll();
             if (eventEntryList != null && eventEntryList.size() > 0) {
                 return eventEntryList;
             }

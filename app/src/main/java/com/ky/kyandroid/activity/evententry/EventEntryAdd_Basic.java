@@ -2,18 +2,20 @@ package com.ky.kyandroid.activity.evententry;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ky.kyandroid.R;
@@ -50,7 +52,7 @@ public class EventEntryAdd_Basic extends Fragment {
      * 发生时间
      */
     @BindView(R.id.happen_time_edt)
-    TextView happenTimeEdt;
+    EditText happenTimeEdt;
     /**
      * 发生地点
      */
@@ -71,6 +73,12 @@ public class EventEntryAdd_Basic extends Fragment {
      */
     @BindView(R.id.pattern_manifestation_spinner)
     Spinner patternManifestationSpinner;
+
+    /**
+     * 表现形式
+     */
+    @BindView(R.id.field_morphology_spinner)
+    Spinner fieldMorpholoySpinner;
     /**
      * 规模
      */
@@ -200,10 +208,12 @@ public class EventEntryAdd_Basic extends Fragment {
             eventSummaryEdt.setText(tFtSjEntity.getSjgyqk());
             leadershipInstructionsEdt.setText(tFtSjEntity.getLdps());
         }
-        //设置Spinner控件的初始值
-        spinnerList = new ArrayList<CodeValue>();
-        spinnerList = descEntityDao.queryListForCV("sfsw");
 
+        spinnerList = descEntityDao.queryListForCV("sfsw");
+        if(spinnerList==null){
+            //设置Spinner控件的初始值
+            spinnerList = new ArrayList<CodeValue>();
+        }
         //将可选内容与ArrayAdapter连接起来
         adapter = new ArrayAdapter<CodeValue>(EventEntryAdd_Basic.this.getActivity(), android.R.layout.simple_spinner_item, spinnerList);
         //设置下拉列表的风格
@@ -213,18 +223,33 @@ public class EventEntryAdd_Basic extends Fragment {
         involvePublicOpinionSpinner.setAdapter(adapter);//将adapter 添加到spinner中
         publicSecurityDisposalSpinner.setAdapter(adapter);//将adapter 添加到spinner中
 
-        spinnerList = new ArrayList<CodeValue>();
         spinnerList = descEntityDao.queryListForCV("BXXS");
-
+        if(spinnerList==null){
+            //设置Spinner控件的初始值
+            spinnerList = new ArrayList<CodeValue>();
+        }
         //将可选内容与ArrayAdapter连接起来
         adapter = new ArrayAdapter<CodeValue>(EventEntryAdd_Basic.this.getActivity(), android.R.layout.simple_spinner_item, spinnerList);
         //设置下拉列表的风格
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         patternManifestationSpinner.setAdapter(adapter);//将adapter 添加到表现形式spinner中
 
-        spinnerList = new ArrayList<CodeValue>();
-        spinnerList = descEntityDao.queryListForCV("sjgm");
+        spinnerList = descEntityDao.queryListForCV("XCTS");
+        if(spinnerList==null){
+            //设置Spinner控件的初始值
+            spinnerList = new ArrayList<CodeValue>();
+        }
+        //将可选内容与ArrayAdapter连接起来
+        adapter = new ArrayAdapter<CodeValue>(EventEntryAdd_Basic.this.getActivity(), android.R.layout.simple_spinner_item, spinnerList);
+        //设置下拉列表的风格
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        fieldMorpholoySpinner.setAdapter(adapter);//将adapter 添加到现场态势spinner中
 
+        spinnerList = descEntityDao.queryListForCV("sjgm");
+        if(spinnerList==null){
+            //设置Spinner控件的初始值
+            spinnerList = new ArrayList<CodeValue>();
+        }
         //将可选内容与ArrayAdapter连接起来
         adapter = new ArrayAdapter<CodeValue>(EventEntryAdd_Basic.this.getActivity(), android.R.layout.simple_spinner_item, spinnerList);
         //设置下拉列表的风格
@@ -249,6 +274,10 @@ public class EventEntryAdd_Basic extends Fragment {
         switch (v.getId()) {
             /** 点击发生时间控件 **/
             case R.id.happen_time_edt:
+                happenTimeEdt.clearFocus();
+                happenTimeEdt.setInputType(InputType.TYPE_NULL);
+                InputMethodManager imm = (InputMethodManager)EventEntryAdd_Basic.this.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(happenTimeEdt.getWindowToken(),0);
                 Calendar c = Calendar.getInstance();
                 new DatePickerDialog(EventEntryAdd_Basic.this.getActivity(), new DatePickerDialog.OnDateSetListener() {
                     @Override
@@ -279,6 +308,7 @@ public class EventEntryAdd_Basic extends Fragment {
         String petitionGroupsString = petitionGroupsEdt.getText().toString();
         String fieldDepartmenString = fieldDepartmenEdt.getText().toString();
         String patternManifestationString =descEntityDao.queryCodeByName("BXXS",patternManifestationSpinner.getSelectedItem().toString());
+        String fieldMorpholoySpinnerString =descEntityDao.queryCodeByName("XCTS",fieldMorpholoySpinner.getSelectedItem().toString());
         String scopeTextString = descEntityDao.queryCodeByName("sjgm",scopeTextSpinner.getSelectedItem().toString());
         String fieldsInvolved = fieldsInvolvedEdt.getText().toString();
         String foreignRelatedString = descEntityDao.queryCodeByName("sfsw",foreignRelatedSpinner.getSelectedItem().toString());
@@ -315,6 +345,11 @@ public class EventEntryAdd_Basic extends Fragment {
             message += "表现形式不能为空\n";
         } else {
             tFtSjEntity.setBxxs(patternManifestationString);
+        }
+        if (StringUtils.isBlank(fieldMorpholoySpinnerString)) {
+            message += "现场态势不能为空\n";
+        } else {
+            tFtSjEntity.setXcts(fieldMorpholoySpinnerString);
         }
         if (StringUtils.isBlank(scopeTextString)) {
             message += "规模不能为空\n";

@@ -6,11 +6,11 @@ import java.util.List;
 /**
  * 类名称：请求响应message<br/>
  * 类描述：<br/>
- * 
+ *
  * 创建人： Cz <br/>
  * 创建时间：2016年9月20日 下午4:54:23 <br/>
  * @updateRemark 修改备注：
- *     
+ *
  */
 public class AckMessage implements Serializable{
 
