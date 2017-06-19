@@ -4,6 +4,7 @@ import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 
@@ -167,6 +168,10 @@ public class TFtSjEntity  implements Serializable{
 
 	@Column(name = "xcts")
 	private String xcts;
+
+	private String ztname;
+
+	private List<TFtZtlzEntity> anlist;
 
 	public  TFtSjEntity(){}
 
@@ -621,5 +626,21 @@ public class TFtSjEntity  implements Serializable{
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public String getZtname() {
+		return ztname;
+	}
+
+	public void setZtname(String ztname) {
+		this.ztname = ztname;
+	}
+
+	public List<TFtZtlzEntity> getAnlist() {
+		return anlist;
+	}
+
+	public void setAnlist(List<TFtZtlzEntity> anlist) {
+		this.anlist = anlist;
 	}
 }

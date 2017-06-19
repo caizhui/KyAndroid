@@ -516,8 +516,6 @@ public class EventEntryListActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialogInterface, int i) {
                 tFtSjEntity.setZt(stauts);
                 if (netWorkConnection.isWIFIConnection()) {
-                    // sweetAlertDialog.show();
-                    // 参数列表 - 账号、密码（加密）
                     Map<String, String> paramsMap = new HashMap<String, String>();
                     paramsMap.put("userId", userId);
                     // 发送请求

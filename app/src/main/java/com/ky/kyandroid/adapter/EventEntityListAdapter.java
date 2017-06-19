@@ -63,7 +63,7 @@ public class EventEntityListAdapter extends BaseAdapter {
         if("1".equals(list.get(position).getZt())){
             holder.thingStatus.setText("未上报");
         }else{
-            holder.thingStatus.setText("");
+            holder.thingStatus.setText(list.get(position).getZtname());
         }
         return convertView;
     }
