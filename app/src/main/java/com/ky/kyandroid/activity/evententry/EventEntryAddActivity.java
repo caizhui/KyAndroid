@@ -339,7 +339,7 @@ public class EventEntryAddActivity extends FragmentActivity {
                     break;
                 //上传数据成功
                 case 2:
-                    Toast.makeText(EventEntryAddActivity.this, "上传成功", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EventEntryAddActivity.this, "上报成功", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(EventEntryAddActivity.this,EventEntryListActivity.class);
                     startActivity(intent);
                     break;
