@@ -1,6 +1,7 @@
 package com.ky.kyandroid.activity.evententry;
 
 import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,10 +18,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +37,7 @@ import com.ky.kyandroid.bean.NetWorkConnection;
 import com.ky.kyandroid.bean.PageBean;
 import com.ky.kyandroid.db.dao.TFtSjEntityDao;
 import com.ky.kyandroid.entity.TFtSjEntity;
+import com.ky.kyandroid.entity.TFtZtlzEntity;
 import com.ky.kyandroid.util.JsonUtil;
 import com.ky.kyandroid.util.OkHttpUtil;
 import com.ky.kyandroid.util.SpUtil;
@@ -40,7 +46,10 @@ import com.ky.kyandroid.util.SwipeRefreshUtil;
 import com.solidfire.gson.JsonObject;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,10 +63,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-import static com.ky.kyandroid.R.layout.add_department;
-import static com.ky.kyandroid.R.layout.dialog_dispatch_operation;
-import static com.ky.kyandroid.R.layout.dialog_manage_operation;
-import static com.ky.kyandroid.R.layout.dialog_return_operation;
+import static com.ky.kyandroid.R.layout.dialog_streethandle_operation;
 
 /**
  * Created by Caizhui on 2017-6-9.
@@ -112,9 +118,14 @@ public class EventEntryListActivity extends AppCompatActivity {
     private TFtSjEntityDao tFtSjEntityDao;
 
     /**
-     * 操作人员权限
+     * 操作人员权限名称
      */
     private String[] listViewContent;
+
+    /**
+     * 操作人员权限实体
+     */
+    private TFtZtlzEntity[] tFtZtlzEntities;
 
 
     /**
@@ -196,6 +207,28 @@ public class EventEntryListActivity extends AppCompatActivity {
 
     private String userId;
 
+    /****弹出框用到的一些控件start**/
+
+    /**
+     * 退回原因输入框
+     */
+    private EditText returnEdt;
+
+    RadioGroup radioGroup;
+    RadioButton radioButton01;
+    RadioButton radioButton02;
+    RadioButton radioButton03;
+
+    /**
+     * 处理时间
+     */
+    TextView happenTimeEdt;
+
+    /**
+     * 处理原因
+     */
+    EditText reasonEdt;
+    /****弹出框用到的一些控件end**/
 
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
@@ -276,6 +309,16 @@ public class EventEntryListActivity extends AppCompatActivity {
                 case 4:
                     list_jiazai.setVisibility(View.GONE);
                     break;
+                //修改状态成功
+                case 5:
+                    Toast.makeText(EventEntryListActivity.this, "操作成功", Toast.LENGTH_SHORT).show();
+                    initData();
+                    break;
+                //修改状态失败
+                case 6:
+                    Toast.makeText(EventEntryListActivity.this, "操作失败", Toast.LENGTH_SHORT).show();
+                    break;
+
             }
             centerText.setText("事件列表(" + total + ")");
         }
@@ -384,217 +427,6 @@ public class EventEntryListActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * 点击List列表Item
-     *
-     * @param position
-     */
-    @OnItemClick(R.id.search_evententry_list)
-    public void OnItemClick(int position) {
-        tFtSjEntity = (TFtSjEntity) adapter.getItem(position);
-        Intent intent = new Intent(this, EventEntryAddActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("tFtSjEntity", tFtSjEntity);
-        /**type 0：新增 1：修改**/
-        intent.putExtra("type", "1");
-        intent.putExtras(bundle);
-        startActivity(intent);
-    }
-
-    /**
-     * 长按list列表
-     *
-     * @param position
-     * @return
-     */
-    @OnItemLongClick(R.id.search_evententry_list)
-    public boolean OnItemLongClick(final int position) {
-        tFtSjEntity = (TFtSjEntity) adapter.getItem(position);
-        //2表示事件提交，3表示街道核实 ，6为街道受理，8为街道自行处理
-        if ("1".equals(tFtSjEntity.getZt())) {
-            listViewContent = new String[]{"删除"};
-        } else if ("2".equals(tFtSjEntity.getZt())) {
-            listViewContent = new String[]{"核实", "事件跟踪"};
-        } else if ("3".equals(tFtSjEntity.getZt())) {
-            listViewContent = new String[]{"退回", "不予立案", "受理", "作废", "事件跟踪"};
-        } else if ("6".equals(tFtSjEntity.getZt())) {
-            listViewContent = new String[]{"街道处理", "街道派遣", "上报", "事件跟踪"};
-        } else if ("8".equals(tFtSjEntity.getZt())) {
-            listViewContent = new String[]{"自行处理退回", "自行处理反馈", "回访核查", "事件跟踪"};
-        }
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setItems(listViewContent, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int pos) {
-                //事件刚刚录入
-                if ("1".equals(tFtSjEntity.getZt())) {
-                    //删除
-                    if (pos == 0) {
-                        message = "";
-                        flag = tFtSjEntityDao.deleteEventEntry(tFtSjEntity.getUuid());
-                        if (flag) {
-                            Toast.makeText(EventEntryListActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(EventEntryListActivity.this, "删除失败", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                }
-                //事件刚刚录入
-                if ("2".equals(tFtSjEntity.getZt())) {
-                    //街道核实状态为3
-                    if (pos == 0) {
-                        //操作流程方法，因为所有的流程都是改变状态，所以写一个公共方法。
-                        OperatingProcess("3", "街道核实");
-                    }
-                }
-                //街道已经核实，做下一步操作
-                if ("3".equals(tFtSjEntity.getZt())) {
-                    if (pos == 0) {
-                        //街道退回状态为4
-                        ReturnOperation(dialog_return_operation, "4", "退回");
-                    } else if (pos == 1) {
-                        //街道不予立案状态为5
-                        ReturnOperation(dialog_return_operation, "5", "不予立案");
-                    } else if (pos == 2) {
-                        //街道受理状态为6
-                        OperatingProcess("6", "街道受理");
-                    } else if (pos == 3) {
-                        //街道作废状态为7
-                        ReturnOperation(dialog_return_operation, "7", "作废");
-                    }
-                }
-                //街道已经受理，做下一步操作
-                if ("6".equals(tFtSjEntity.getZt())) {
-                    if (pos == 0) {
-                        //街道自行状态为8
-                        ReturnOperation(dialog_manage_operation, "8", "街道自行处理");
-                    } else if (pos == 1) {
-                        //街道派遣状态为9
-                        ReturnOperation(dialog_dispatch_operation, "9", "街道派遣");
-                    } else if (pos == 2) {
-                        //街道上报状态为16
-                        OperatingProcess("16", "街道上报");
-                    }
-                }
-                //街道已经自行受理，做下一步操作
-                if ("8".equals(tFtSjEntity.getZt())) {
-                    if (pos == 0) {
-                        //街道自行处理退回为25
-                        ReturnOperation(dialog_return_operation, "25", "自行处理退回");
-                    } else if (pos == 1) {
-                        //自行处理反馈为
-                        //ReturnOperation(diaog_dispatch_operation,"9","自行处理反馈");
-                    } else if (pos == 2) {
-                        //街道上报状态为12
-                        OperatingProcess("12", "回访核查");
-                    }
-                }
-                //对页面数据进行刷新
-                // initData();
-                // entryEntityList = eventEntryDao.queryList();
-                // adapter.notifyDataSetChanged(entryEntityList);
-            }
-        });
-        builder.create().show();
-        return true;
-    }
-
-
-    /**
-     * 受理操作流程
-     *
-     * @param stauts
-     */
-    public void OperatingProcess(final String stauts, final String message) {
-        final Message msg = new Message();
-        msg.what = 0;
-        AlertDialog.Builder builder = new AlertDialog.Builder(EventEntryListActivity.this);
-        builder.setTitle("信息");
-        builder.setMessage("确定要执行次操作吗？");
-        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                tFtSjEntity.setZt(stauts);
-                if (netWorkConnection.isWIFIConnection()) {
-                    Map<String, String> paramsMap = new HashMap<String, String>();
-                    paramsMap.put("userId", userId);
-                    // 发送请求
-                    OkHttpUtil.sendRequest(Constants.SERVICE_LOGIN, paramsMap, new Callback() {
-
-                        @Override
-                        public void onFailure(Call call, IOException e) {
-                            mHandler.sendEmptyMessage(0);
-                        }
-
-                        @Override
-                        public void onResponse(Call call, Response response) throws IOException {
-                            if (response.isSuccessful()) {
-                                msg.what = 1;
-                                msg.obj = response.body().string();
-                            } else {
-                                msg.obj = "网络异常,请确认网络情况";
-                            }
-                            mHandler.sendMessage(msg);
-                        }
-                    });
-                } else {
-                    msg.obj = "WIFI网络不可用,请检查网络连接情况";
-                    mHandler.sendMessage(msg);
-                }
-            }
-        });
-        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-            }
-        });
-        builder.create().show();
-    }
-
-    /**
-     * 退回,不予立案操作
-     */
-    public void ReturnOperation(int layout, final String status, String title) {
-        final View mView = LayoutInflater.from(EventEntryListActivity.this).inflate(layout, null);
-        //当点击为街道派遣时执行下面代码
-        if (layout == dialog_dispatch_operation) {
-            //获取弹出框添加按钮
-            final View view1 = mView.findViewById(R.id.add_diapatch);
-            //获取需要添加控件的L
-            final LinearLayout linearlayout_dispatch = (LinearLayout) mView.findViewById(R.id.linearlayout_dispatch);
-            view1.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Toast.makeText(EventEntryListActivity.this, "AAAA", Toast.LENGTH_SHORT).show();
-                    linearlayout_dispatch.setOrientation(LinearLayout.VERTICAL);
-                    //获取自定义文件
-                    View view2 = LayoutInflater.from(EventEntryListActivity.this).inflate(add_department, null);
-                    linearlayout_dispatch.addView(view2);
-                }
-            });
-        }
-        AlertDialog.Builder builder = new AlertDialog.Builder(EventEntryListActivity.this);
-        builder.setTitle(title + "原因");
-        builder.setView(mView);
-        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                tFtSjEntity.setZt(status);
-                flag = tFtSjEntityDao.updateTFtSjEntity(tFtSjEntity);
-                if (flag) {
-                    Toast.makeText(EventEntryListActivity.this, message + "成功", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(EventEntryListActivity.this, message + "失败", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-            }
-        });
-        builder.create().show();
-    }
 
     /**
      * 当从后台查询到数据周，做相应的处理，并且会将本地的草稿信息显示出来
@@ -650,5 +482,251 @@ public class EventEntryListActivity extends AppCompatActivity {
         }
         total += pList.size();
         return pList;
+    }
+
+    /**
+     * 点击List列表Item
+     *
+     * @param position
+     */
+    @OnItemClick(R.id.search_evententry_list)
+    public void OnItemClick(int position) {
+        tFtSjEntity = (TFtSjEntity) adapter.getItem(position);
+        Intent intent = new Intent(this, EventEntryAddActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("tFtSjEntity", tFtSjEntity);
+        /**type 0：新增 1：修改**/
+        intent.putExtra("type", "1");
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
+
+    /**
+     * 长按list列表
+     *
+     * @param position
+     * @return
+     */
+    @OnItemLongClick(R.id.search_evententry_list)
+    public boolean OnItemLongClick(final int position) {
+        tFtSjEntity = (TFtSjEntity) adapter.getItem(position);
+        //2表示事件提交，3表示街道核实 ，6为街道受理，8为街道自行处理
+        List<TFtZtlzEntity> tFtZtlzEntityList = tFtSjEntity.getAnlist();
+        if (tFtZtlzEntityList != null && tFtZtlzEntityList.size() > 0) {
+            listViewContent = new String[tFtZtlzEntityList.size()];
+            tFtZtlzEntities = new TFtZtlzEntity[tFtZtlzEntityList.size()];
+            for (int i = 0; i < tFtZtlzEntityList.size(); i++) {
+                listViewContent[i] = tFtZtlzEntityList.get(i).getName();
+                tFtZtlzEntities[i] = tFtZtlzEntityList.get(i);
+            }
+
+        }
+        if (listViewContent != null && listViewContent.length > 0) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setItems(listViewContent, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int pos) {
+                    //事件刚刚录入
+                    if ("1".equals(tFtSjEntity.getZt())) {
+                        //删除
+                        if (pos == 0) {
+                            message = "";
+                            flag = tFtSjEntityDao.deleteEventEntry(tFtSjEntity.getUuid());
+                            if (flag) {
+                                Toast.makeText(EventEntryListActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(EventEntryListActivity.this, "删除失败", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    } else {
+                        //根据点击的item项获取该item对应的实体，
+                        TFtZtlzEntity tFtZtlzEntity = tFtZtlzEntities[pos];
+                        //当3.退回和4.不予受理的时候，弹出自定义对话框
+                        if ("3".equals(tFtZtlzEntity.getNextzt()) || "4".equals(tFtZtlzEntity.getNextzt())) {
+                            ReturnOperation(tFtZtlzEntity, R.layout.dialog_return_operation, tFtZtlzEntity.getActionname());
+                        } else if ("6".equals(tFtZtlzEntity.getNextzt())) {
+                            //当6事件作废的时候，弹出自定义对话框
+                            ReturnOperation(tFtZtlzEntity, R.layout.dialog_cancel_operation, tFtZtlzEntity.getActionname());
+                        } else if ("7".equals(tFtZtlzEntity.getNextzt())) {
+                            //当7街道自行处理的时候，弹出自定义对话框
+                            streetHandleOperation(tFtZtlzEntity, dialog_streethandle_operation, tFtZtlzEntity.getActionname());
+                        } else {
+                            //其他的弹出确定对话框
+                            OperatingProcess(tFtZtlzEntity);
+                        }
+
+                    }
+                }
+            });
+            builder.create().show();
+        }
+        return true;
+    }
+
+
+    /**
+     * 受理操作流程
+     *
+     * @param
+     */
+    public void OperatingProcess(final TFtZtlzEntity tFtZtlzEntity) {
+        final Message msg = new Message();
+        //初始状态为6，表示状态修改不成功
+        msg.what = 6;
+        AlertDialog.Builder builder = new AlertDialog.Builder(EventEntryListActivity.this);
+        builder.setTitle("信息");
+        builder.setMessage("确定要执行次操作吗？");
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if (netWorkConnection.isWIFIConnection()) {
+                    Map<String, String> paramsMap = new HashMap<String, String>();
+                    paramsMap.put("userId", userId);
+                    paramsMap.put("sjId", tFtSjEntity.getId());
+                    paramsMap.put("action", tFtZtlzEntity.getAction());
+                    paramsMap.put("actionName", tFtZtlzEntity.getActionname());
+                    paramsMap.put("zt", tFtSjEntity.getZt());
+                    paramsMap.put("nextZt", tFtZtlzEntity.getNextzt());
+                    // 发送请求
+                    OkHttpUtil.sendRequest(Constants.SERVICE_EDIT_EVENT, paramsMap, new Callback() {
+
+                        @Override
+                        public void onFailure(Call call, IOException e) {
+                            mHandler.sendEmptyMessage(0);
+                        }
+
+                        @Override
+                        public void onResponse(Call call, Response response) throws IOException {
+                            if (response.isSuccessful()) {
+                                msg.what = 5;
+                                msg.obj = response.body().string();
+                            } else {
+                                msg.obj = "网络异常,请确认网络情况";
+                            }
+                            mHandler.sendMessage(msg);
+                        }
+                    });
+                } else {
+                    msg.obj = "WIFI网络不可用,请检查网络连接情况";
+                    mHandler.sendMessage(msg);
+                }
+            }
+        });
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+            }
+        });
+        builder.create().show();
+    }
+
+    /**
+     * 退回,不予立案,作废操作
+     */
+    public void ReturnOperation(final TFtZtlzEntity tFtZtlzEntity, int layout, String title) {
+        final View mView = LayoutInflater.from(EventEntryListActivity.this).inflate(layout, null);
+        //获取弹出框的属性
+        returnEdt = ButterKnife.findById(mView, R.id.return_edt);
+        radioGroup = ButterKnife.findById(mView, R.id.radioGroup);
+        radioButton01 = ButterKnife.findById(mView, R.id.radioButton01);
+        radioButton02 = ButterKnife.findById(mView, R.id.radioButton02);
+        radioButton03 = ButterKnife.findById(mView, R.id.radioButton03);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if (radioButton01.getId() == checkedId) {
+                    returnEdt.setText(radioButton01.getText().toString());
+                } else if (radioButton02.getId() == checkedId) {
+                    returnEdt.setText(radioButton02.getText().toString());
+                } else if (radioButton03.getId() == checkedId) {
+                    returnEdt.setText(radioButton03.getText().toString());
+                }
+            }
+        });
+        //将修改状态的数据上传到后台
+        sendOperation(mView,tFtZtlzEntity,title);
+    }
+
+
+    /**
+     * 街道自行处理操作
+     */
+    public void streetHandleOperation(final TFtZtlzEntity tFtZtlzEntity, int layout, String title) {
+        final View mView = LayoutInflater.from(EventEntryListActivity.this).inflate(layout, null);
+        //处理时间
+        happenTimeEdt = ButterKnife.findById(mView, R.id.happen_time_edt);
+        //处理原因
+        reasonEdt = ButterKnife.findById(mView, R.id.reason_edt);
+        Calendar c = Calendar.getInstance();
+        new DatePickerDialog(EventEntryListActivity.this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                Date date = new Date(System.currentTimeMillis());
+                SimpleDateFormat dateFormat = new SimpleDateFormat(" HH:mm:ss");
+                String time = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
+                time += dateFormat.format(date);
+                happenTimeEdt.setText(time);
+            }
+        }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
+        //将修改状态的数据上传到后台
+        sendOperation(mView, tFtZtlzEntity, title);
+    }
+
+
+    /**
+     * 将修改状态的数据上传到后台
+     */
+    public void sendOperation(final View mView, final TFtZtlzEntity tFtZtlzEntity, String title) {
+        final Message msg = new Message();
+        //初始状态为6，表示状态修改不成功
+        msg.what = 6;
+        AlertDialog.Builder builder = new AlertDialog.Builder(EventEntryListActivity.this);
+        builder.setTitle(title + "原因");
+        builder.setView(mView);
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if (netWorkConnection.isWIFIConnection()) {
+                    Map<String, String> paramsMap = new HashMap<String, String>();
+                    paramsMap.put("userId", userId);
+                    paramsMap.put("sjId", tFtSjEntity.getId());
+                    paramsMap.put("action", tFtZtlzEntity.getAction());
+                    paramsMap.put("actionName", tFtZtlzEntity.getActionname());
+                    paramsMap.put("zt", tFtSjEntity.getZt());
+                    paramsMap.put("nextZt", tFtZtlzEntity.getNextzt());
+                    if(returnEdt!=null){
+                        paramsMap.put("czyy", returnEdt.getText().toString());
+                    }
+                    // 发送请求
+                    OkHttpUtil.sendRequest(Constants.SERVICE_EDIT_EVENT, paramsMap, new Callback() {
+
+                        @Override
+                        public void onFailure(Call call, IOException e) {
+                            mHandler.sendEmptyMessage(0);
+                        }
+
+                        @Override
+                        public void onResponse(Call call, Response response) throws IOException {
+                            if (response.isSuccessful()) {
+                                msg.what = 5;
+                                msg.obj = response.body().string();
+                            } else {
+                                msg.obj = "网络异常,请确认网络情况";
+                            }
+                            mHandler.sendMessage(msg);
+                        }
+                    });
+                } else {
+                    msg.obj = "WIFI网络不可用,请检查网络连接情况";
+                    mHandler.sendMessage(msg);
+                }
+            }
+        });
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+            }
+        });
+        builder.create().show();
     }
 }

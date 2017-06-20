@@ -27,6 +27,9 @@ public class Constants {
 	//事件详情接口
 	public final static String SERVICE_DETAIL_EVENT= "ft/kyAndroid/sjDetial.action";
 
+	//事件详情接口
+	public final static String SERVICE_EDIT_EVENT= "ft/kyAndroid/sjEdit.action";
+
     //保存字典项接口
     public final static String SERVICE_QUERY_DESC= "ft/kyAndroid/getDictAll.action";
 

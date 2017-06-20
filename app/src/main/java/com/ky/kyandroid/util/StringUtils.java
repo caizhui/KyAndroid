@@ -1,20 +1,10 @@
 package com.ky.kyandroid.util;
 
+
 import android.annotation.SuppressLint;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
 /**
- * 类名称：手机工具类
- * JIRA：
- * 类描述：
- * 
- * 创建人： cz
- * 创建时间：2015年3月31日 下午1:35:53
- * 
- * @updateRemark 修改备注：
+ * 类名称：字符串工具类
  *     
  */
 @SuppressLint("DefaultLocale")
@@ -90,31 +80,4 @@ public class StringUtils {
 		newDate = newDate.replaceAll("日", "");
 		return newDate.trim();
 	}
-
-
-	/**
-	 * 格式化string为Date
-	 * 
-	 * @param datestr
-	 * @return date
-	 */
-	public static Date parseDate(String datestr) {
-		if (null == datestr || "".equals(datestr)) {
-			return null;
-		}
-		try {
-			String fmtstr = null;
-			if (datestr.indexOf(':') > 0) {
-				fmtstr = "yyyy-MM-dd HH:mm:ss";
-			} else {
-
-				fmtstr = "yyyy-MM-dd";
-			}
-			SimpleDateFormat sdf = new SimpleDateFormat(fmtstr, Locale.UK);
-			return sdf.parse(datestr);
-		} catch (Exception e) {
-			return null;
-		}
-	}
-
 }
