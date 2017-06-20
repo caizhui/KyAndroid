@@ -1,6 +1,9 @@
 package com.ky.kyandroid.entity;
 
-public class TFtZtlzEntity {
+import java.io.Serializable;
+
+public class TFtZtlzEntity implements Serializable {
+	private static final long serialVersionUID = -7620435178023928252L;
 
 	private String id;
 	
