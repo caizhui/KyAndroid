@@ -26,6 +26,7 @@ import butterknife.Optional;
 
 /**
  * Created by Caizhui on 2017-6-9.
+ * 事件录入人员界面
  */
 
 public class EventEntryAdd_Person extends Fragment {

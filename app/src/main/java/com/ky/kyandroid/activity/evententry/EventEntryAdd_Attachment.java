@@ -46,6 +46,7 @@ import butterknife.OnClick;
 
 /**
  * Created by Caizhui on 2017-6-9.
+ * 事件录入附件界面
  */
 
 @SuppressLint("ValidFragment")
