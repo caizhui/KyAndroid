@@ -17,7 +17,6 @@ import android.widget.Toast;
 
 import com.ky.kyandroid.Constants;
 import com.ky.kyandroid.R;
-import com.ky.kyandroid.activity.evententry.EventEntryListActivity;
 import com.ky.kyandroid.bean.AckMessage;
 import com.ky.kyandroid.bean.NetWorkConnection;
 import com.ky.kyandroid.entity.UserEntity;
@@ -206,7 +205,7 @@ public class LoginActivity extends AppCompatActivity {
                 Log.i(TAG, "设置用户信息成功...");
                 sweetAlertDialog.dismiss();
                 startService(new Intent(this, SaveBDdescService.class));
-                Intent intent = new Intent(this, EventEntryListActivity.class);
+                Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
             } else {
                 Log.i(TAG, "设置用户信息失败...");

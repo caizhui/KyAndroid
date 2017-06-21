@@ -33,4 +33,10 @@ public class Constants {
     //保存字典项接口
     public final static String SERVICE_QUERY_DESC= "ft/kyAndroid/getDictAll.action";
 
+	//查询我的任务接口
+	public final static String SERVICE_QUERY_TASK= "ft/kyAndroid/myTasks.action";
+
+	//修改我的任务状态接口
+	public final static String SERVICE_QUERY_TASKRECV= "ft/kyAndroid/taskRecv.action";
+
 }

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <include layout="@layout/linearlayout_head" />
+
+        <RadioGroup
+            android:id="@+id/radiogroup"
+            android:layout_width="300dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="12dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/border_select_fragment_bt_bg"
+            android:orientation="horizontal"
+            android:padding="1dp" >
+
+            <RadioButton
+                android:id="@+id/radiobtn_baseinfo"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:background="@drawable/color_bg_query_radiobutton_left"
+                android:button="@null"
+                android:gravity="center"
+                android:text="@string/evententry_basic"
+                android:textColor="@drawable/color_query_radiobutton" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="fill_parent"
+                android:background="@color/toolbar_green" />
+
+            <RadioButton
+                android:id="@+id/radiobtn_person"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:background="@drawable/color_bg_query_radiobutton"
+                android:button="@null"
+                android:gravity="center"
+                android:text="@string/evententry_person"
+                android:textColor="@drawable/color_query_radiobutton" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="fill_parent"
+                android:background="@color/toolbar_green" />
+
+            <RadioButton
+                android:id="@+id/radiobtn_attachment"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:background="@drawable/color_bg_query_radiobutton_right"
+                android:button="@null"
+                android:gravity="center"
+                android:text="@string/evententry_attachment"
+                android:textColor="@drawable/color_query_radiobutton" />
+        </RadioGroup>
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/fragment_viewpager"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginTop="10dp" >
+            </android.support.v4.view.ViewPager>
+        </LinearLayout>
+
+</LinearLayout>
