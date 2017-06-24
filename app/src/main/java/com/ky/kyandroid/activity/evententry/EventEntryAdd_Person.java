@@ -1,6 +1,8 @@
 package com.ky.kyandroid.activity.evententry;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,6 +16,7 @@ import android.widget.ListView;
 
 import com.ky.kyandroid.R;
 import com.ky.kyandroid.adapter.EventPersonListAdapter;
+import com.ky.kyandroid.entity.TFtSjEntity;
 import com.ky.kyandroid.entity.TFtSjRyEntity;
 
 import java.util.ArrayList;
@@ -29,6 +32,7 @@ import butterknife.Optional;
  * 事件录入人员界面
  */
 
+@SuppressLint("ValidFragment")
 public class EventEntryAdd_Person extends Fragment {
     /**
      * 新增按钮
@@ -103,11 +107,38 @@ public class EventEntryAdd_Person extends Fragment {
      */
     private boolean flag = false;
 
+    public String uuid;
+    /**
+     * 0表示可以新增，1表示可以修改或者查看详情
+     */
+    public  String type;
+
+    public Intent intent;
+
+    /**
+     * 事件实体
+     */
+    private TFtSjEntity tFtSjEntity;
+
+    @SuppressLint("ValidFragment")
+    public EventEntryAdd_Person(Intent intent){
+        this.intent = intent;
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.evententeradd_person_fragment, container, false);
         ButterKnife.bind(this, view);
+        type = intent.getStringExtra("type");
+        tFtSjEntity = (TFtSjEntity) intent.getSerializableExtra("tFtSjEntity");
+        if(tFtSjEntity!=null){
+            uuid = tFtSjEntity.getId();
+        }
+        //当type为1时，表示为修改或者查看详情，但是只有事件状态为1才能修改，其他为查看详情
+        if("1".equals(type)&&!("1".equals(tFtSjEntity.getZt()))){
+            addPerson.setVisibility(View.GONE);
+        }
         tFtSjRyEntityList = new ArrayList<TFtSjRyEntity>();
         //判断是否查看本地详细信息，如果是true就执行下面方法
         if (flag) {

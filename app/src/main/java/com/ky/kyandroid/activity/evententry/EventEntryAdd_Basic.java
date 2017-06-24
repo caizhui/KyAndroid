@@ -198,6 +198,14 @@ public class EventEntryAdd_Basic extends Fragment {
                 mainAppealsEdt.setEnabled(false);
                 eventSummaryEdt.setEnabled(false);
                 leadershipInstructionsEdt.setEnabled(false);
+                //以下为下拉框控件
+                fieldMorpholoySpinner.setEnabled(false);
+                scopeTextSpinner.setEnabled(false);
+                foreignRelatedSpinner.setEnabled(false);
+                involvedXinjiangSpinner.setEnabled(false);
+                involvePublicOpinionSpinner.setEnabled(false);
+                publicSecurityDisposalSpinner.setEnabled(false);
+                belongCommunitySpinner.setEnabled(false);
             }
             thingNameEdt.setText(tFtSjEntity.getSjmc());
             happenTimeEdt.setText(tFtSjEntity.getFssj());
@@ -209,66 +217,74 @@ public class EventEntryAdd_Basic extends Fragment {
             mainAppealsEdt.setText(tFtSjEntity.getZysq());
             eventSummaryEdt.setText(tFtSjEntity.getSjgyqk());
             leadershipInstructionsEdt.setText(tFtSjEntity.getLdps());
-        }
+            //以下为下拉控件设置默认值
+            fieldMorpholoySpinner.setSelection(Integer.valueOf(tFtSjEntity.getBxxs().split(",")[0]));
+            scopeTextSpinner.setSelection(Integer.valueOf(tFtSjEntity.getGm()));
+            foreignRelatedSpinner.setSelection(Integer.valueOf(tFtSjEntity.getSfsw()));
+            involvedXinjiangSpinner.setSelection(Integer.valueOf(tFtSjEntity.getSfsj()));
+            involvePublicOpinionSpinner.setSelection(Integer.valueOf(tFtSjEntity.getSfsyq()));
+            publicSecurityDisposalSpinner.setSelection(Integer.valueOf(tFtSjEntity.getSfgacz()));
+        }else{
+            spinnerList = descEntityDao.queryListForCV("sfsw");
+            if (spinnerList == null) {
+                //设置Spinner控件的初始值
+                spinnerList = new ArrayList<CodeValue>();
+            }
+            //将可选内容与ArrayAdapter连接起来
+            adapter = new ArrayAdapter<CodeValue>(EventEntryAdd_Basic.this.getActivity(), android.R.layout.simple_spinner_item, spinnerList);
+            //设置下拉列表的风格
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            foreignRelatedSpinner.setAdapter(adapter);//将adapter 添加到spinner中
+            involvedXinjiangSpinner.setAdapter(adapter);//将adapter 添加到spinner中
+            involvePublicOpinionSpinner.setAdapter(adapter);//将adapter 添加到spinner中
+            publicSecurityDisposalSpinner.setAdapter(adapter);//将adapter 添加到spinner中
 
-        spinnerList = descEntityDao.queryListForCV("sfsw");
-        if (spinnerList == null) {
-            //设置Spinner控件的初始值
+            spinnerList = descEntityDao.queryListForCV("BXXS");
+            if (spinnerList == null) {
+                //设置Spinner控件的初始值
+                spinnerList = new ArrayList<CodeValue>();
+            }
+            //将可选内容与ArrayAdapter连接起来
+            adapter = new ArrayAdapter<CodeValue>(EventEntryAdd_Basic.this.getActivity(), android.R.layout.simple_spinner_item, spinnerList);
+            //设置下拉列表的风格
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            patternManifestationSpinner.setAdapter(adapter);//将adapter 添加到表现形式spinner中
+
+            spinnerList = descEntityDao.queryListForCV("XCTS");
+            if (spinnerList == null) {
+                //设置Spinner控件的初始值
+                spinnerList = new ArrayList<CodeValue>();
+            }
+            //将可选内容与ArrayAdapter连接起来
+            adapter = new ArrayAdapter<CodeValue>(EventEntryAdd_Basic.this.getActivity(), android.R.layout.simple_spinner_item, spinnerList);
+            //设置下拉列表的风格
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            fieldMorpholoySpinner.setAdapter(adapter);//将adapter 添加到现场态势spinner中
+
+            spinnerList = descEntityDao.queryListForCV("sjgm");
+            if (spinnerList == null) {
+                //设置Spinner控件的初始值
+                spinnerList = new ArrayList<CodeValue>();
+            }
+            //将可选内容与ArrayAdapter连接起来
+            adapter = new ArrayAdapter<CodeValue>(EventEntryAdd_Basic.this.getActivity(), android.R.layout.simple_spinner_item, spinnerList);
+            //设置下拉列表的风格
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            scopeTextSpinner.setAdapter(adapter);//将adapter 添加到规模spinner中
+
+
             spinnerList = new ArrayList<CodeValue>();
+            spinnerList.add(new CodeValue("0", "社区1"));
+            spinnerList.add(new CodeValue("1", "社区2"));
+
+
+            //将可选内容与ArrayAdapter连接起来
+            adapter = new ArrayAdapter<CodeValue>(EventEntryAdd_Basic.this.getActivity(), android.R.layout.simple_spinner_item, spinnerList);
+            //设置下拉列表的风格
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            belongCommunitySpinner.setAdapter(adapter);//将adapter 添加到所属社区spinner中
         }
-        //将可选内容与ArrayAdapter连接起来
-        adapter = new ArrayAdapter<CodeValue>(EventEntryAdd_Basic.this.getActivity(), android.R.layout.simple_spinner_item, spinnerList);
-        //设置下拉列表的风格
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        foreignRelatedSpinner.setAdapter(adapter);//将adapter 添加到spinner中
-        involvedXinjiangSpinner.setAdapter(adapter);//将adapter 添加到spinner中
-        involvePublicOpinionSpinner.setAdapter(adapter);//将adapter 添加到spinner中
-        publicSecurityDisposalSpinner.setAdapter(adapter);//将adapter 添加到spinner中
 
-        spinnerList = descEntityDao.queryListForCV("BXXS");
-        if (spinnerList == null) {
-            //设置Spinner控件的初始值
-            spinnerList = new ArrayList<CodeValue>();
-        }
-        //将可选内容与ArrayAdapter连接起来
-        adapter = new ArrayAdapter<CodeValue>(EventEntryAdd_Basic.this.getActivity(), android.R.layout.simple_spinner_item, spinnerList);
-        //设置下拉列表的风格
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        patternManifestationSpinner.setAdapter(adapter);//将adapter 添加到表现形式spinner中
-
-        spinnerList = descEntityDao.queryListForCV("XCTS");
-        if (spinnerList == null) {
-            //设置Spinner控件的初始值
-            spinnerList = new ArrayList<CodeValue>();
-        }
-        //将可选内容与ArrayAdapter连接起来
-        adapter = new ArrayAdapter<CodeValue>(EventEntryAdd_Basic.this.getActivity(), android.R.layout.simple_spinner_item, spinnerList);
-        //设置下拉列表的风格
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        fieldMorpholoySpinner.setAdapter(adapter);//将adapter 添加到现场态势spinner中
-
-        spinnerList = descEntityDao.queryListForCV("sjgm");
-        if (spinnerList == null) {
-            //设置Spinner控件的初始值
-            spinnerList = new ArrayList<CodeValue>();
-        }
-        //将可选内容与ArrayAdapter连接起来
-        adapter = new ArrayAdapter<CodeValue>(EventEntryAdd_Basic.this.getActivity(), android.R.layout.simple_spinner_item, spinnerList);
-        //设置下拉列表的风格
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        scopeTextSpinner.setAdapter(adapter);//将adapter 添加到规模spinner中
-
-
-        spinnerList = new ArrayList<CodeValue>();
-        spinnerList.add(new CodeValue("0", "社区1"));
-        spinnerList.add(new CodeValue("1", "社区2"));
-
-
-        //将可选内容与ArrayAdapter连接起来
-        adapter = new ArrayAdapter<CodeValue>(EventEntryAdd_Basic.this.getActivity(), android.R.layout.simple_spinner_item, spinnerList);
-        //设置下拉列表的风格
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        belongCommunitySpinner.setAdapter(adapter);//将adapter 添加到所属社区spinner中
     }
 
     @OnClick({R.id.happen_time_edt})

@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -118,6 +119,12 @@ public class EventEntryAddActivity extends FragmentActivity {
     public RadioButton radiobtn_attachment;
 
     /**
+     * 上报领导，保存草稿LinearLayout
+     */
+    @BindView(R.id.btn_linearlayout)
+    public LinearLayout btnLinearlayout;
+
+    /**
      * 上报领导按钮
      */
     @BindView(R.id.reporting_leadership_btn)
@@ -217,6 +224,7 @@ public class EventEntryAddActivity extends FragmentActivity {
                 initData();
             } else {
                 //查询已经上报的详细信息
+                btnLinearlayout.setVisibility(View.GONE);
                 initOnLineData();
             }
 
@@ -239,8 +247,8 @@ public class EventEntryAddActivity extends FragmentActivity {
     @SuppressWarnings("deprecation")
     private void initPageView() {
         eventEntryAdd_basic = new EventEntryAdd_Basic(intent);
-        eventEntryAdd_person = new EventEntryAdd_Person();
-        eventEntryAdd_attachment = new EventEntryAdd_Attachment(uuid);
+        eventEntryAdd_person = new EventEntryAdd_Person(intent);
+        eventEntryAdd_attachment = new EventEntryAdd_Attachment(intent);
         // 设置Fragment集合
         List<Fragment> fragmList = new ArrayList<Fragment>();
         fragmList.add(eventEntryAdd_basic);
@@ -487,7 +495,6 @@ public class EventEntryAddActivity extends FragmentActivity {
 
     @OnClick({R.id.left_btn, R.id.reporting_leadership_btn, R.id.save_draft_btn})
     public void onClick(View v) {
-        TFtSjEntity eventEntity = eventEntryAdd_basic.PackageData();
         switch (v.getId()) {
             /** 返回键 **/
             case R.id.left_btn:
@@ -495,6 +502,7 @@ public class EventEntryAddActivity extends FragmentActivity {
                 break;
             /** 上报领导按钮*/
             case R.id.reporting_leadership_btn:
+                TFtSjEntity eventEntity = eventEntryAdd_basic.PackageData();
                 if (eventEntity != null) {
                     //当上报领导时，如果状态为1，表示是通过草稿去上报的，否则就是直接上报的
                     if ("1".equals(eventEntity.getZt())) {
@@ -530,17 +538,18 @@ public class EventEntryAddActivity extends FragmentActivity {
                 break;
             /**保存草稿按钮*/
             case R.id.save_draft_btn:
-                if (eventEntity != null) {
+                TFtSjEntity tempenenEntity = eventEntryAdd_basic.PackageData();
+                if (tempenenEntity != null) {
                     boolean flag = false;
                     String message = "";
-                    if ("1".equals(eventEntity.getZt())) {
-                        flag = tFtSjEntityDao.updateTFtSjEntity(eventEntity);
+                    if ("1".equals(tempenenEntity.getZt())) {
+                        flag = tFtSjEntityDao.updateTFtSjEntity(tempenenEntity);
                         message = "修改";
                     } else {
-                        eventEntity.setId(uuid);
+                        tempenenEntity.setId(uuid);
                         //保存草稿，状态为1
-                        eventEntity.setZt("1");
-                        flag = tFtSjEntityDao.saveTFtSjEntity(eventEntity);
+                        tempenenEntity.setZt("1");
+                        flag = tFtSjEntityDao.saveTFtSjEntity(tempenenEntity);
                         List<TFtSjRyEntity> tFtSjRyEntityList = eventEntryAdd_person.tFtSjRyEntityList();
                         if (tFtSjRyEntityList != null && tFtSjRyEntityList.size() > 0) {
                             for (int i = 0; i < tFtSjRyEntityList.size(); i++) {

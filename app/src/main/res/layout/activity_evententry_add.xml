@@ -72,6 +72,7 @@
                 android:layout_marginTop="10dp" >
             </android.support.v4.view.ViewPager>
         <LinearLayout
+            android:id="@+id/btn_linearlayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
@@ -81,6 +82,8 @@
                 android:id="@+id/reporting_leadership_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
                 android:background="#44AB34"
                 android:text="上报领导" />
 
@@ -90,6 +93,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:background="#2196F3"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
                 android:text="保存草稿" />
 
         </LinearLayout>

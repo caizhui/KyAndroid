@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.ky.kyandroid.AppContext;
 import com.ky.kyandroid.Constants;
 import com.ky.kyandroid.R;
+import com.ky.kyandroid.entity.TFtSjEntity;
 import com.ky.kyandroid.entity.TFtSjFjEntity;
 import com.ky.kyandroid.util.FileManager;
 import com.ky.kyandroid.view.SelectPicPopupWindow;
@@ -80,6 +81,12 @@ public class EventEntryAdd_Attachment extends Fragment {
     private String photoName;
 
     public String uuid;
+    /**
+     * 0表示可以新增，1表示可以修改或者查看详情
+     */
+    public  String type;
+
+    public Intent  intent;
 
     /**
      * 1，表示拍照，2表示相册
@@ -87,9 +94,14 @@ public class EventEntryAdd_Attachment extends Fragment {
     private String isPhoto;
 
     @SuppressLint("ValidFragment")
-    public EventEntryAdd_Attachment(String uuid) {
-        this.uuid = uuid;
+    public EventEntryAdd_Attachment(Intent intent) {
+        this.intent= intent;
     }
+
+    /**
+     * 事件实体
+     */
+    private TFtSjEntity tFtSjEntity;
 
     // 获取事件附件 - 子表信息
     public List<TFtSjFjEntity> sjfjList;
@@ -101,6 +113,15 @@ public class EventEntryAdd_Attachment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.evententeradd_attachment_fragment, container, false);
         ButterKnife.bind(this, view);
+        type = intent.getStringExtra("type");
+        tFtSjEntity = (TFtSjEntity) intent.getSerializableExtra("tFtSjEntity");
+        if(tFtSjEntity!=null){
+            uuid = tFtSjEntity.getId();
+        }
+        //当type为1时，表示为修改或者查看详情，但是只有事件状态为1才能修改，其他为查看详情
+        if("1".equals(type)&&!("1".equals(tFtSjEntity.getZt()))){
+            addAttachment.setVisibility(View.GONE);
+        }
         if (Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)) {
             /* 得到SD卡得路径 */
             sdcard = Environment.getExternalStorageDirectory().getAbsolutePath().toString();
