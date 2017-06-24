@@ -20,7 +20,7 @@
             android:layout_marginBottom="15dp"
             android:layout_marginLeft="23dp"
             android:layout_marginRight="23dp"
-            android:layout_marginTop="80dp"
+            android:layout_marginTop="20dp"
             android:background="@drawable/border_login_bg"
             android:gravity="center_vertical"
             android:orientation="horizontal" >
@@ -69,17 +69,5 @@
 
 
     </RelativeLayout>
-
-    <Button
-        android:id="@+id/addip_btn"
-        android:layout_width="match_parent"
-        android:layout_height="43dp"
-        android:layout_below="@id/rlay_login_and_password"
-        android:layout_marginLeft="22dp"
-        android:layout_marginRight="22dp"
-        android:layout_marginTop="35dp"
-        android:background="@drawable/button_selector_shape_red"
-        android:text="确定"
-        android:textColor="@color/white" />
 
 </RelativeLayout>

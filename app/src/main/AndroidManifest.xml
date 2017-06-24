@@ -37,11 +37,6 @@
             </intent-filter>
         </activity>
 
-        <!--设置IP页面-->
-        <activity android:name=".activity.SettingIpActivity"
-            android:windowSoftInputMode = "stateAlwaysHidden|adjustPan">
-        </activity>
-
         <!--主界面-->
         <activity android:name=".activity.MainActivity"
             android:windowSoftInputMode = "stateAlwaysHidden|adjustPan">

@@ -1,14 +1,17 @@
 package com.ky.kyandroid.activity;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,6 +31,7 @@ import com.ky.kyandroid.util.StringUtils;
 import com.ky.kyandroid.util.SweetAlertDialogUtil;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -103,6 +107,15 @@ public class LoginActivity extends AppCompatActivity {
      */
     private SweetAlertDialogUtil sweetAlertDialogUtil;
 
+    /**
+     * IP输入框
+     */
+    EditText etIp;
+    /**
+     * 端口输入框
+     */
+    EditText etPort;
+
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
         @Override
@@ -156,8 +169,7 @@ public class LoginActivity extends AppCompatActivity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.setting_ip:
-                Intent intent = new Intent(this,SettingIpActivity.class);
-                startActivity(intent);
+                settingIp();
                 break;
             case R.id.btn_login:
                 // 账号与密码
@@ -263,4 +275,62 @@ public class LoginActivity extends AppCompatActivity {
         }
         return false;
     }
+
+    /**
+     * 弹出自定义对话框设置IP和端口
+     */
+    public void settingIp(){
+        final View mView = LayoutInflater.from(this).inflate(R.layout.activity_settingip, null);
+        etIp = ButterKnife.findById(mView,R.id.et_ip);
+        etPort = ButterKnife.findById(mView,R.id.et_port);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+        builder.setTitle("设置IP和端口信息");
+        builder.setView(mView);
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                String ip = etIp.getText().toString();
+                String port = etPort.getText().toString();
+                String message = "";
+                if ("".equals(ip)) {
+                    message += "IP不能为空\n";
+                } else {
+                    SpUtil.setStringSharedPerference(sp, "ip", ip);
+                }
+                if ("".equals(port)) {
+                    message += "端口不能为空";
+                } else {
+                    SpUtil.setStringSharedPerference(sp, "port", port);
+                }
+                if (!"".equals(message)) {
+                    Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
+                    builder.setCancelable(false);
+                    //canCloseDialog(dialogInterface, false);//不关闭对话框
+                    return;
+                }
+            }
+        });
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+            }
+        });
+        builder.create().show();
+    }
+
+    /**
+     * 不关闭对话框
+     * @param dialogInterface
+     * @param close
+     */
+    private void canCloseDialog(DialogInterface dialogInterface, boolean close) {
+        try {
+            Field field = dialogInterface.getClass().getSuperclass().getDeclaredField("mShowing");
+            field.setAccessible(true);
+            field.set(dialogInterface, close);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
