@@ -59,7 +59,7 @@ public class TaskEntityListAdapter extends BaseAdapter {
         }
         holder.thingName.setText(list.get(position).getSjmc());
         holder.thingAddress.setText(list.get(position).getFsdd());
-        holder.thingTime.setText(list.get(position).getSfsj());
+        holder.thingTime.setText(list.get(position).getFssj());
         holder.thingStatus.setText(list.get(position).getZtname());
         return convertView;
     }

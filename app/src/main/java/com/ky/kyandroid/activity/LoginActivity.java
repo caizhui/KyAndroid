@@ -3,7 +3,6 @@ package com.ky.kyandroid.activity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -13,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ky.kyandroid.Constants;
@@ -25,6 +25,7 @@ import com.ky.kyandroid.util.JsonUtil;
 import com.ky.kyandroid.util.OkHttpUtil;
 import com.ky.kyandroid.util.SpUtil;
 import com.ky.kyandroid.util.StringUtils;
+import com.ky.kyandroid.util.SweetAlertDialogUtil;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -33,7 +34,6 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cn.pedant.SweetAlert.SweetAlertDialog;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -54,6 +54,11 @@ public class LoginActivity extends AppCompatActivity {
      * 用户名称
      */
     public static final String USER_NAME = "userName";
+
+    /**
+     * 用户职能名称
+     */
+    public static final String NAME = "name";
     /**
      * 用户身份证号码
      */
@@ -77,6 +82,12 @@ public class LoginActivity extends AppCompatActivity {
      */
     @BindView(R.id.btn_login)
     Button btnLogin;
+
+    /**
+     * 设置IP
+     */
+    @BindView(R.id.setting_ip)
+    TextView settingIpText;
     /**
      * SharedPreferences
      */
@@ -87,7 +98,10 @@ public class LoginActivity extends AppCompatActivity {
     private NetWorkConnection netWorkConnection;
 
 
-    private SweetAlertDialog sweetAlertDialog;
+    /**
+     * 弹出框工具类
+     */
+    private SweetAlertDialogUtil sweetAlertDialogUtil;
 
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
@@ -100,7 +114,7 @@ public class LoginActivity extends AppCompatActivity {
                 // 失败
                 case 0:
                     Log.i(TAG, "登录失败...");
-                    sweetAlertDialog.dismiss();
+                    sweetAlertDialogUtil.dismissAlertDialog();
                     Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
                     break;
                 // 成功跳转
@@ -118,7 +132,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-        sweetAlertDialog = new SweetAlertDialog(LoginActivity.this, SweetAlertDialog.PROGRESS_TYPE);
+        sweetAlertDialogUtil = new SweetAlertDialogUtil(LoginActivity.this);
         initEvent();
     }
 
@@ -138,24 +152,34 @@ public class LoginActivity extends AppCompatActivity {
      *
      * @param v
      */
-    @OnClick(R.id.btn_login)
+    @OnClick({R.id.btn_login,R.id.setting_ip})
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.setting_ip:
+                Intent intent = new Intent(this,SettingIpActivity.class);
+                startActivity(intent);
+                break;
             case R.id.btn_login:
                 // 账号与密码
                 String account = String.valueOf(etAccount.getText());
                 String password = String.valueOf(etPassword.getText());
                 final Message msg = new Message();
-                msg.what = 0;
+                //IP
+                String ip=sp.getString("ip", "");
+                //端口
+                String port=sp.getString("port", "");
                 if (StringUtils.isBlank(account) || StringUtils.isBlank(password)) {
                     msg.obj = "登录名或密码不能为空";
                     mHandler.sendMessage(msg);
+                }else if(StringUtils.isBlank(ip)|| StringUtils.isBlank(port)){
+                    Toast.makeText(this,"服务器IP和端口不能为空，请设置IP和端口",Toast.LENGTH_SHORT).show();
+                    return;
                 } else {
+                    //拼凑IP和端口
+                    Constants.SERVICE_BASE_URL="http://"+ip+":"+port+"/";
                     if (netWorkConnection.isWIFIConnection()) {
-                        sweetAlertDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-                        sweetAlertDialog.setTitleText("Loading");
-                        sweetAlertDialog.setCancelable(false);
-                        // sweetAlertDialog.show();
+                        sweetAlertDialogUtil.loadAlertDialog();
+                        msg.what = 0;
                         // 参数列表 - 账号、密码（加密）
                         Map<String, String> paramsMap = new HashMap<String, String>();
                         paramsMap.put("userName", account);
@@ -203,7 +227,7 @@ public class LoginActivity extends AppCompatActivity {
             AckMessage ackMsg = JsonUtil.fromJson(body, AckMessage.class);
             if (setUserMessage(ackMsg)) {
                 Log.i(TAG, "设置用户信息成功...");
-                sweetAlertDialog.dismiss();
+                sweetAlertDialogUtil.dismissAlertDialog();
                 startService(new Intent(this, SaveBDdescService.class));
                 Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
@@ -230,7 +254,8 @@ public class LoginActivity extends AppCompatActivity {
                 UserEntity user = JsonUtil.fromJson(entityStr, UserEntity.class);
                 if (user != null) {
                     SpUtil.setStringSharedPerference(sp, USER_ID, user.getId());
-                    SpUtil.setStringSharedPerference(sp, USER_NAME, user.getName());
+                    SpUtil.setStringSharedPerference(sp, USER_NAME, user.getUserName());
+                    SpUtil.setStringSharedPerference(sp, NAME, user.getName());
                     SpUtil.setStringSharedPerference(sp, USER_SFZHM, user.getGmsfhm());
                     return true;
                 }

@@ -33,6 +33,7 @@ import com.ky.kyandroid.util.JsonUtil;
 import com.ky.kyandroid.util.OkHttpUtil;
 import com.ky.kyandroid.util.SpUtil;
 import com.ky.kyandroid.util.StringUtils;
+import com.ky.kyandroid.util.SweetAlertDialogUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -182,12 +183,18 @@ public class EventEntryAddActivity extends FragmentActivity {
     // 人员具体信息
     List<TFtSjRyEntity> sjryList;
 
+    /**
+     * 弹出框工具类
+     */
+    private SweetAlertDialogUtil sweetAlertDialogUtil;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_evententry_add);
         ButterKnife.bind(this);
         initEvent();
+        sweetAlertDialogUtil = new SweetAlertDialogUtil(EventEntryAddActivity.this);
         userId = sp.getString(USER_ID, "");
         intent = getIntent();
         type = intent.getStringExtra("type");
@@ -220,6 +227,7 @@ public class EventEntryAddActivity extends FragmentActivity {
      * 初始化事件
      */
     private void initEvent() {
+        sweetAlertDialogUtil = new SweetAlertDialogUtil(this);
         sp = SpUtil.getSharePerference(this);
         // 初始化网络工具
         netWorkConnection = new NetWorkConnection(this);
@@ -341,6 +349,7 @@ public class EventEntryAddActivity extends FragmentActivity {
                     break;
                 //上传数据成功
                 case 2:
+                    sweetAlertDialogUtil.dismissAlertDialog();
                     Toast.makeText(EventEntryAddActivity.this, "上报成功", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(EventEntryAddActivity.this, EventEntryListActivity.class);
                     startActivity(intent);
@@ -515,6 +524,7 @@ public class EventEntryAddActivity extends FragmentActivity {
                         map.put("filesName", filesName);
                     }
                     String paramMap = JsonUtil.map2Json(map);
+                    sweetAlertDialogUtil.loadAlertDialog();
                     sendMultipart(userId, paramMap, files);
                 }
                 break;

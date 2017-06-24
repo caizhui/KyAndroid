@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,9 +24,9 @@
             <TextView
                 android:id="@+id/happen_time_edt"
                 android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:gravity="start"
-                android:background="#ECECEC"/>
+                android:layout_height="40dp"
+                android:background="#ECECEC"
+                android:gravity="start" />
 
         </LinearLayout>
 
@@ -46,10 +47,50 @@
                 android:id="@+id/reason_edt"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                android:gravity="start"
-                android:background="#ECECEC"/>
+                android:background="#ECECEC"
+                android:gravity="start" />
 
         </LinearLayout>
+
+        <Button
+            android:id="@+id/add_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="添加"
+            android:visibility="gone"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#A2A2A2"
+            android:minHeight="45dp"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="附件"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="操作"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/linearlayout_dispatch"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"></LinearLayout>
 
     </LinearLayout>
 

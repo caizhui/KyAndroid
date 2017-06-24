@@ -1,6 +1,7 @@
 package com.ky.kyandroid.activity.task;
 
 import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,9 +14,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -36,11 +40,15 @@ import com.ky.kyandroid.util.JsonUtil;
 import com.ky.kyandroid.util.OkHttpUtil;
 import com.ky.kyandroid.util.SpUtil;
 import com.ky.kyandroid.util.StringUtils;
+import com.ky.kyandroid.util.SweetAlertDialogUtil;
 import com.ky.kyandroid.util.SwipeRefreshUtil;
 import com.solidfire.gson.JsonObject;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +61,9 @@ import butterknife.OnItemLongClick;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
+
+import static com.ky.kyandroid.R.layout.dialog_streethandle_item;
+import static com.ky.kyandroid.R.layout.dialog_streethandle_operation;
 
 /**
  * Created by Caizhui on 2017-6-9.
@@ -194,6 +205,33 @@ public class TaskListActivity extends AppCompatActivity {
 
     private String userId;
 
+    /**
+     * 处理时间
+     */
+    TextView happenTimeEdt;
+
+    /**
+     * 处理原因
+     */
+    EditText reasonEdt;
+
+    /**
+     * 文件新增按钮
+     */
+    Button fileAddBtn;
+
+    /**
+     * 文件名字
+     */
+    TextView  fileName;
+
+    /****弹出框用到的一些控件end**/
+
+    /**
+     * 弹出框工具类
+     */
+    private SweetAlertDialogUtil sweetAlertDialogUtil;
+
 
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
@@ -276,11 +314,13 @@ public class TaskListActivity extends AppCompatActivity {
                     break;
                 //修改状态成功
                 case 5:
+                    sweetAlertDialogUtil.dismissAlertDialog();
                     Toast.makeText(TaskListActivity.this, "操作成功", Toast.LENGTH_SHORT).show();
                     initData();
                     break;
                 //修改状态失败
                 case 6:
+                    sweetAlertDialogUtil.dismissAlertDialog();
                     Toast.makeText(TaskListActivity.this, "操作失败", Toast.LENGTH_SHORT).show();
                     break;
 
@@ -296,6 +336,7 @@ public class TaskListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_evententry_list);
         ButterKnife.bind(this);
         taskEntityList = new ArrayList<TaskEntity>();
+        sweetAlertDialogUtil = new SweetAlertDialogUtil(TaskListActivity.this);
         //初始化事件
         initEvent();
         // List列表设置初始化数据
@@ -462,13 +503,15 @@ public class TaskListActivity extends AppCompatActivity {
     @OnItemLongClick(R.id.search_evententry_list)
     public boolean OnItemLongClick(final int position) {
         taskEntity = (TaskEntity) adapter.getItem(position);
-        //2表示事件提交，3表示街道核实 ，6为街道受理，8为街道自行处理
+        //获取按钮list信息
         List<TFtZtlzEntity> tFtZtlzEntityList = taskEntity.getAnlist();
         if (tFtZtlzEntityList != null && tFtZtlzEntityList.size() > 0) {
             listViewContent = new String[tFtZtlzEntityList.size()];
             tFtZtlzEntities = new TFtZtlzEntity[tFtZtlzEntityList.size()];
             for (int i = 0; i < tFtZtlzEntityList.size(); i++) {
+                //获取按钮list信息中的name
                 listViewContent[i] = tFtZtlzEntityList.get(i).getName();
+                //获取按钮list信息中的按钮实体
                 tFtZtlzEntities[i] = tFtZtlzEntityList.get(i);
             }
 
@@ -480,9 +523,13 @@ public class TaskListActivity extends AppCompatActivity {
                 public void onClick(DialogInterface dialogInterface, int pos) {
                     //根据点击的item项获取该item对应的实体，
                     TFtZtlzEntity tFtZtlzEntity = tFtZtlzEntities[pos];
-                    //其他的弹出确定对话框
-                    OperatingProcess(tFtZtlzEntity);
-
+                    if ("8.2".equals(tFtZtlzEntity.getNextzt())) {
+                        //当7街道自行处理的时候，弹出自定义对话框
+                        streetHandleOperation(tFtZtlzEntity, dialog_streethandle_operation, tFtZtlzEntity.getActionname());
+                    }else{
+                        //其他的弹出确定对话框
+                        OperatingProcess(tFtZtlzEntity,Constants.SERVICE_QUERY_TASKRECV);
+                    }
                     }
             });
             builder.create().show();
@@ -492,11 +539,55 @@ public class TaskListActivity extends AppCompatActivity {
 
 
     /**
+     * 街道自行处理操作
+     */
+    public void streetHandleOperation(final TFtZtlzEntity tFtZtlzEntity, int layout, String title) {
+        final View mView = LayoutInflater.from(TaskListActivity.this).inflate(layout, null);
+        //处理时间
+        happenTimeEdt = ButterKnife.findById(mView, R.id.happen_time_edt);
+        //处理原因
+        reasonEdt = ButterKnife.findById(mView, R.id.reason_edt);
+        fileAddBtn = ButterKnife.findById(mView, R.id.add_btn);
+        //获取需要添加控件的L
+        final LinearLayout linearlayout_dispatch = (LinearLayout) mView.findViewById(R.id.linearlayout_dispatch);
+        fileAddBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                linearlayout_dispatch.setOrientation(LinearLayout.VERTICAL);
+                //获取自定义文件
+                View view2 = LayoutInflater.from(TaskListActivity.this).inflate(dialog_streethandle_item, null);
+                linearlayout_dispatch.addView(view2);
+                fileName = (TextView) view2.findViewById(R.id.file_name);
+            }
+        });
+        happenTimeEdt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Calendar c = Calendar.getInstance();
+                new DatePickerDialog(TaskListActivity.this, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                        Date date = new Date(System.currentTimeMillis());
+                        SimpleDateFormat dateFormat = new SimpleDateFormat(" HH:mm:ss");
+                        String time = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
+                        time += dateFormat.format(date);
+                        happenTimeEdt.setText(time);
+                    }
+                }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
+
+        //将修改状态的数据上传到后台
+        sendOperation(mView,tFtZtlzEntity,title);
+    }
+
+
+    /**
      * 受理操作流程
      *
      * @param
      */
-    public void OperatingProcess(final TFtZtlzEntity tFtZtlzEntity) {
+    public void OperatingProcess(final TFtZtlzEntity tFtZtlzEntity, final String url) {
         final Message msg = new Message();
         //初始状态为6，表示状态修改不成功
         msg.what = 6;
@@ -507,16 +598,21 @@ public class TaskListActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (netWorkConnection.isWIFIConnection()) {
+                    sweetAlertDialogUtil.loadAlertDialog();
                     Map<String, String> paramsMap = new HashMap<String, String>();
                     paramsMap.put("userId", userId);
                     paramsMap.put("sjId", taskEntity.getId());
-                   /* paramsMap.put("action", tFtZtlzEntity.getAction());
-                    paramsMap.put("actionName", tFtZtlzEntity.getActionname());*/
                     paramsMap.put("zt", taskEntity.getZt());
                     paramsMap.put("nextZt", tFtZtlzEntity.getNextzt());
                     paramsMap.put("clId", taskEntity.getClid());
+                    if(happenTimeEdt!=null){
+                        paramsMap.put("lrclsj", happenTimeEdt.getText().toString());
+                    }
+                    if(reasonEdt!=null){
+                        paramsMap.put("lrclqk", reasonEdt.getText().toString());
+                    }
                     // 发送请求
-                    OkHttpUtil.sendRequest(Constants.SERVICE_QUERY_TASKRECV, paramsMap, new Callback() {
+                    OkHttpUtil.sendRequest(url,paramsMap, new Callback() {
 
                         @Override
                         public void onFailure(Call call, IOException e) {
@@ -545,6 +641,66 @@ public class TaskListActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialogInterface, int i) {
             }
         });
+        builder.create().show();
+    }
+
+    /**
+     * 将修改状态的数据上传到后台
+     */
+    public void sendOperation(final View mView, final TFtZtlzEntity tFtZtlzEntity, String title) {
+        final Message msg = new Message();
+        //初始状态为6，表示状态修改不成功
+        msg.what = 6;
+        AlertDialog.Builder builder = new AlertDialog.Builder(TaskListActivity.this);
+        builder.setTitle(title + "原因");
+        builder.setView(mView);
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if (netWorkConnection.isWIFIConnection()) {
+                    sweetAlertDialogUtil.loadAlertDialog();
+                    Map<String, String> paramsMap = new HashMap<String, String>();
+                    paramsMap.put("userId", userId);
+                    paramsMap.put("sjId", taskEntity.getId());
+                    paramsMap.put("zt", taskEntity.getZt());
+                    paramsMap.put("nextZt", tFtZtlzEntity.getNextzt());
+                    paramsMap.put("clId", taskEntity.getClid());
+                    if(happenTimeEdt!=null){
+                        paramsMap.put("lrclsj", happenTimeEdt.getText().toString());
+                    }
+                    if(reasonEdt!=null){
+                        paramsMap.put("lrclqk", reasonEdt.getText().toString());
+                    }
+                    // 发送请求
+                    OkHttpUtil.sendRequest(Constants.SERVICE_TASK_HADLE,paramsMap, new Callback() {
+
+                        @Override
+                        public void onFailure(Call call, IOException e) {
+                            mHandler.sendEmptyMessage(0);
+                        }
+
+                        @Override
+                        public void onResponse(Call call, Response response) throws IOException {
+                            if (response.isSuccessful()) {
+                                msg.what = 5;
+                                msg.obj = response.body().string();
+                            } else {
+                                msg.obj = "网络异常,请确认网络情况";
+                            }
+                            mHandler.sendMessage(msg);
+                        }
+                    });
+                } else {
+                    msg.obj = "WIFI网络不可用,请检查网络连接情况";
+                    mHandler.sendMessage(msg);
+                }
+                }
+            });
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                }
+            });
         builder.create().show();
     }
 

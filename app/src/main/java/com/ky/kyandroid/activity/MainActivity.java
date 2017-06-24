@@ -1,30 +1,25 @@
 package com.ky.kyandroid.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.SimpleAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ky.kyandroid.R;
 import com.ky.kyandroid.activity.evententry.EventEntryListActivity;
 import com.ky.kyandroid.activity.supervision.SuperVisionAddActivity;
 import com.ky.kyandroid.activity.task.TaskListActivity;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.ky.kyandroid.util.SpUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.OnItemClick;
 
 /**
  * Created by Caizhui on 2017-6-8.
@@ -34,83 +29,110 @@ import butterknife.OnItemClick;
 public class MainActivity extends AppCompatActivity {
 
     /**
-     * 标题栏左边按钮
+     * 导航栏左右按钮
      */
     @BindView(R.id.left_btn)
     ImageView leftBtn;
-
     /**
-     * 标题栏中间标题
+     * 导航栏中间文字
      */
     @BindView(R.id.center_text)
     TextView centerText;
-
     /**
-     * 标题栏右边按钮
+     * 导航栏右边按钮
      */
     @BindView(R.id.right_btn)
     Button rightBtn;
+    /**
+     * 我的事件
+     */
+    @BindView(R.id.event_img)
+    ImageView eventImageView;
+    /**
+     * 我的任务
+     */
+    @BindView(R.id.task_img)
+    ImageView taskImageView;
+    /**
+     * 督查督办
+     */
+    @BindView(R.id.supervision_img)
+    ImageView supervisionImageView;
+    /**
+     * 我的事件LinearLayout
+     */
+    @BindView(R.id.event_linearlayout)
+    LinearLayout eventLinearlayout;
+    /**
+     * 我的任务LinearLayout
+     */
+    @BindView(R.id.task_linearlayout)
+    LinearLayout taskLinearlayout;
+    /**
+     * 督查督办LinearLayout
+     */
+    @BindView(R.id.supervision_linearlayout)
+    LinearLayout supervisionLinearlayout;
+    @BindView(R.id.event_text)
+    TextView eventText;
+    @BindView(R.id.task_text)
+    TextView taskText;
+    @BindView(R.id.supervision_text)
+    TextView supervisionText;
 
-    @BindView(R.id.gridView)
-    GridView gridView;
-    private List<Map<String, Object>> data_list;
-    private SimpleAdapter sim_adapter;
-    // 图片封装为一个数组
-    private int[] icon = { R.mipmap.pp, R.mipmap.pp,
-            R.mipmap.pp, R.mipmap.pp};
-    private String[] iconName = { "我的事件", "我的任务", "督察督办", "地图" };
+    /**
+     * SharedPreferences
+     */
+    private SharedPreferences sp;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
         centerText.setText("维稳办信息");
         rightBtn.setVisibility(View.INVISIBLE);
-        //新建List
-        data_list = new ArrayList<Map<String, Object>>();
-        //获取数据
-        getData();
-        //新建适配器
-        String [] from ={"image","text"};
-        int [] to = {R.id.image,R.id.text};
-        sim_adapter = new SimpleAdapter(this, data_list, R.layout.activity_main_item, from, to);
-        //配置适配器
-        gridView.setAdapter(sim_adapter);
-
+        initEvent();
     }
 
-    public List<Map<String, Object>> getData(){
-        //cion和iconName的长度是相同的，这里任选其一都可以
-        for(int i=0;i<icon.length;i++){
-            Map<String, Object> map = new HashMap<String, Object>();
-            map.put("image", icon[i]);
-            map.put("text", iconName[i]);
-            data_list.add(map);
+    /**
+     * 初始化事件
+     */
+    private void initEvent() {
+        sp = SpUtil.getSharePerference(this);
+        String name = sp.getString("name", "");
+        if ("街道办工作人员".equals(name)) {
+            taskLinearlayout.setVisibility(View.GONE);
+            supervisionLinearlayout.setVisibility(View.GONE);
+        } else if ("街道职能部门".equals(name) || "区职能部门".equals(name)) {
+            eventLinearlayout.setVisibility(View.GONE);
+        } else if ("区维稳办".equals(name)) {
+            taskLinearlayout.setVisibility(View.GONE);
         }
-
-        return data_list;
     }
 
-    @OnItemClick(R.id.gridView)
-    public  void OnItemClick(int position){
-        Intent intent = new Intent();
-        if(position == 0){
-            intent.setClass(this, EventEntryListActivity.class);
-        }else if(position == 1){
-            intent.setClass(this, TaskListActivity.class);
-        }else if(position == 2){
-            intent.setClass(this, SuperVisionAddActivity.class);
-        }
-        startActivity(intent);
-    }
-
-    @OnClick({R.id.left_btn})
+    @OnClick({R.id.left_btn, R.id.event_img, R.id.task_img, R.id.supervision_img})
     public void onClick(View v) {
+        Intent intent = new Intent();
         switch (v.getId()) {
             /** 返回键 **/
             case R.id.left_btn:
                 onBackPressed();
+                break;
+            /**我的事件*/
+            case R.id.event_img:
+                intent.setClass(this, EventEntryListActivity.class);
+                startActivity(intent);
+                break;
+            /**我的任务*/
+            case R.id.task_img:
+                intent.setClass(this, TaskListActivity.class);
+                startActivity(intent);
+                break;
+            /**督查督办*/
+            case R.id.supervision_img:
+                intent.setClass(this, SuperVisionAddActivity.class);
+                startActivity(intent);
                 break;
         }
     }

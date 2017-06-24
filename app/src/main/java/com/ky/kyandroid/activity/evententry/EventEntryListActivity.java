@@ -1,7 +1,6 @@
 package com.ky.kyandroid.activity.evententry;
 
 import android.annotation.SuppressLint;
-import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,7 +17,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -42,14 +40,12 @@ import com.ky.kyandroid.util.JsonUtil;
 import com.ky.kyandroid.util.OkHttpUtil;
 import com.ky.kyandroid.util.SpUtil;
 import com.ky.kyandroid.util.StringUtils;
+import com.ky.kyandroid.util.SweetAlertDialogUtil;
 import com.ky.kyandroid.util.SwipeRefreshUtil;
 import com.solidfire.gson.JsonObject;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -210,9 +206,19 @@ public class EventEntryListActivity extends AppCompatActivity {
     /****弹出框用到的一些控件start**/
 
     /**
+     * 自行处理事件输入框
+     */
+    private TextView happendTImeEdt;
+
+    /**
      * 退回原因输入框
      */
     private EditText returnEdt;
+
+    /**
+     * 自行处理反馈处理人输入框
+     */
+    private EditText handlePersonEdt;
 
     RadioGroup radioGroup;
     RadioButton radioButton01;
@@ -228,7 +234,23 @@ public class EventEntryListActivity extends AppCompatActivity {
      * 处理原因
      */
     EditText reasonEdt;
+
+    /**
+     * 文件新增按钮
+     */
+    Button fileAddBtn;
+
+    /**
+     * 文件名字
+     */
+    TextView  fileName;
+
     /****弹出框用到的一些控件end**/
+
+    /**
+     * 弹出框工具类
+     */
+    private SweetAlertDialogUtil sweetAlertDialogUtil;
 
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
@@ -311,11 +333,13 @@ public class EventEntryListActivity extends AppCompatActivity {
                     break;
                 //修改状态成功
                 case 5:
+                    sweetAlertDialogUtil.dismissAlertDialog();
                     Toast.makeText(EventEntryListActivity.this, "操作成功", Toast.LENGTH_SHORT).show();
                     initData();
                     break;
                 //修改状态失败
                 case 6:
+                    sweetAlertDialogUtil.dismissAlertDialog();
                     Toast.makeText(EventEntryListActivity.this, "操作失败", Toast.LENGTH_SHORT).show();
                     break;
 
@@ -330,6 +354,7 @@ public class EventEntryListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_evententry_list);
         ButterKnife.bind(this);
+        sweetAlertDialogUtil = new SweetAlertDialogUtil(this);
         tFtSjEntityDao = new TFtSjEntityDao();
         tFtSjEntityList = new ArrayList<TFtSjEntity>();
         //初始化事件
@@ -519,9 +544,6 @@ public class EventEntryListActivity extends AppCompatActivity {
                 listViewContent[i] = tFtZtlzEntityList.get(i).getName();
                 tFtZtlzEntities[i] = tFtZtlzEntityList.get(i);
             }
-
-        }
-        if (listViewContent != null && listViewContent.length > 0) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setItems(listViewContent, new DialogInterface.OnClickListener() {
                 @Override
@@ -544,12 +566,21 @@ public class EventEntryListActivity extends AppCompatActivity {
                         //当3.退回和4.不予受理的时候，弹出自定义对话框
                         if ("3".equals(tFtZtlzEntity.getNextzt()) || "4".equals(tFtZtlzEntity.getNextzt())) {
                             ReturnOperation(tFtZtlzEntity, R.layout.dialog_return_operation, tFtZtlzEntity.getActionname());
+                        }  else if ("5".equals(tFtZtlzEntity.getNextzt())) {
+                            //当5街道自行退回的时候，弹出自定义对话框
+                            ReturnOperation(tFtZtlzEntity, R.layout.dialog_streetreturn_operation, tFtZtlzEntity.getActionname());
                         } else if ("6".equals(tFtZtlzEntity.getNextzt())) {
                             //当6事件作废的时候，弹出自定义对话框
                             ReturnOperation(tFtZtlzEntity, R.layout.dialog_cancel_operation, tFtZtlzEntity.getActionname());
                         } else if ("7".equals(tFtZtlzEntity.getNextzt())) {
                             //当7街道自行处理的时候，弹出自定义对话框
-                            streetHandleOperation(tFtZtlzEntity, dialog_streethandle_operation, tFtZtlzEntity.getActionname());
+                            ReturnOperation(tFtZtlzEntity, dialog_streethandle_operation, tFtZtlzEntity.getActionname());
+                        }else if ("7.2".equals(tFtZtlzEntity.getNextzt())) {
+                            //当7.2事件街道自行处理反馈的时候，弹出自定义对话框
+                            ReturnOperation(tFtZtlzEntity, R.layout.dialog_streetfeedback_operation, tFtZtlzEntity.getActionname());
+                        }else if ("10".equals(tFtZtlzEntity.getNextzt()) || "7,8".equals(tFtZtlzEntity.getNextzt()) ) {
+                            //当10回访核查通过或者7,8回访核查不通过的时候，弹出自定义对话框
+                            ReturnOperation(tFtZtlzEntity, R.layout.dialog_verification_operation, tFtZtlzEntity.getActionname());
                         } else {
                             //其他的弹出确定对话框
                             OperatingProcess(tFtZtlzEntity);
@@ -559,6 +590,8 @@ public class EventEntryListActivity extends AppCompatActivity {
                 }
             });
             builder.create().show();
+        }else{
+            Toast.makeText(this, "不能做下一步操作！", Toast.LENGTH_SHORT).show();
         }
         return true;
     }
@@ -580,6 +613,7 @@ public class EventEntryListActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (netWorkConnection.isWIFIConnection()) {
+                    sweetAlertDialogUtil.loadAlertDialog();
                     Map<String, String> paramsMap = new HashMap<String, String>();
                     paramsMap.put("userId", userId);
                     paramsMap.put("sjId", tFtSjEntity.getId());
@@ -626,6 +660,8 @@ public class EventEntryListActivity extends AppCompatActivity {
     public void ReturnOperation(final TFtZtlzEntity tFtZtlzEntity, int layout, String title) {
         final View mView = LayoutInflater.from(EventEntryListActivity.this).inflate(layout, null);
         //获取弹出框的属性
+        handlePersonEdt = ButterKnife.findById(mView, R.id.handle_person_edt);
+        happendTImeEdt = ButterKnife.findById(mView, R.id.happen_time_edt);
         returnEdt = ButterKnife.findById(mView, R.id.return_edt);
         radioGroup = ButterKnife.findById(mView, R.id.radioGroup);
         radioButton01 = ButterKnife.findById(mView, R.id.radioButton01);
@@ -648,29 +684,6 @@ public class EventEntryListActivity extends AppCompatActivity {
     }
 
 
-    /**
-     * 街道自行处理操作
-     */
-    public void streetHandleOperation(final TFtZtlzEntity tFtZtlzEntity, int layout, String title) {
-        final View mView = LayoutInflater.from(EventEntryListActivity.this).inflate(layout, null);
-        //处理时间
-        happenTimeEdt = ButterKnife.findById(mView, R.id.happen_time_edt);
-        //处理原因
-        reasonEdt = ButterKnife.findById(mView, R.id.reason_edt);
-        Calendar c = Calendar.getInstance();
-        new DatePickerDialog(EventEntryListActivity.this, new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                Date date = new Date(System.currentTimeMillis());
-                SimpleDateFormat dateFormat = new SimpleDateFormat(" HH:mm:ss");
-                String time = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
-                time += dateFormat.format(date);
-                happenTimeEdt.setText(time);
-            }
-        }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
-        //将修改状态的数据上传到后台
-        sendOperation(mView, tFtZtlzEntity, title);
-    }
 
 
     /**
@@ -687,6 +700,7 @@ public class EventEntryListActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (netWorkConnection.isWIFIConnection()) {
+                    sweetAlertDialogUtil.loadAlertDialog();
                     Map<String, String> paramsMap = new HashMap<String, String>();
                     paramsMap.put("userId", userId);
                     paramsMap.put("sjId", tFtSjEntity.getId());
@@ -694,8 +708,14 @@ public class EventEntryListActivity extends AppCompatActivity {
                     paramsMap.put("actionName", tFtZtlzEntity.getActionname());
                     paramsMap.put("zt", tFtSjEntity.getZt());
                     paramsMap.put("nextZt", tFtZtlzEntity.getNextzt());
+                    if(happendTImeEdt!=null){
+                        paramsMap.put("lrclsj", returnEdt.getText().toString());
+                    }
                     if(returnEdt!=null){
                         paramsMap.put("czyy", returnEdt.getText().toString());
+                    }
+                    if(handlePersonEdt!=null){
+                        paramsMap.put("clr", handlePersonEdt.getText().toString());
                     }
                     // 发送请求
                     OkHttpUtil.sendRequest(Constants.SERVICE_EDIT_EVENT, paramsMap, new Callback() {
@@ -729,4 +749,5 @@ public class EventEntryListActivity extends AppCompatActivity {
         });
         builder.create().show();
     }
+
 }
