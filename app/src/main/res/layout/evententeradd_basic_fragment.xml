@@ -58,6 +58,7 @@
                     android:id="@+id/happen_time_edt"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:background="@null"
                     android:layout_weight="1"
                     android:textSize="16sp"/>
 
@@ -175,6 +176,8 @@
                     android:text="*"
                     android:textColor="@color/red" />
             </LinearLayout>
+
+            <include layout="@layout/linearlayout_one" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -407,6 +410,7 @@
                     android:layout_width="0dp"
                     android:layout_height="100dp"
                     android:background="@null"
+                    android:gravity="start"
                     android:textSize="16sp"
                     android:layout_weight="1" />
 
@@ -436,6 +440,7 @@
                     android:layout_width="0dp"
                     android:layout_height="100dp"
                     android:background="@null"
+                    android:gravity="start"
                     android:textSize="16sp"
                     android:layout_weight="1" />
 
@@ -465,6 +470,7 @@
                     android:layout_width="match_parent"
                     android:background="@null"
                     android:textSize="16sp"
+                    android:gravity="start"
                     android:layout_height="100dp" />
             </LinearLayout>
 

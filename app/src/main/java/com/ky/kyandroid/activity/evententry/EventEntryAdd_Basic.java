@@ -2,16 +2,14 @@ package com.ky.kyandroid.activity.evententry;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.text.InputType;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -32,7 +30,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
+import butterknife.OnTouch;
 
 /**
  * Created by Caizhui on 2017-6-9.
@@ -75,7 +73,7 @@ public class EventEntryAdd_Basic extends Fragment {
     Spinner patternManifestationSpinner;
 
     /**
-     * 表现形式
+     * 现场态势
      */
     @BindView(R.id.field_morphology_spinner)
     Spinner fieldMorpholoySpinner;
@@ -185,6 +183,64 @@ public class EventEntryAdd_Basic extends Fragment {
      * 新增页面跟查看详情是同一个页面，初始化页面基本信息
      */
     public void initData() {
+        spinnerList = descEntityDao.queryListForCV("sfsw");
+        if (spinnerList == null) {
+            //设置Spinner控件的初始值
+            spinnerList = new ArrayList<CodeValue>();
+        }
+        //将可选内容与ArrayAdapter连接起来
+        adapter = new ArrayAdapter<CodeValue>(EventEntryAdd_Basic.this.getActivity(), android.R.layout.simple_spinner_item, spinnerList);
+        //设置下拉列表的风格
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        foreignRelatedSpinner.setAdapter(adapter);//将adapter 添加到spinner中
+        involvedXinjiangSpinner.setAdapter(adapter);//将adapter 添加到spinner中
+        involvePublicOpinionSpinner.setAdapter(adapter);//将adapter 添加到spinner中
+        publicSecurityDisposalSpinner.setAdapter(adapter);//将adapter 添加到spinner中
+
+        spinnerList = descEntityDao.queryListForCV("BXXS");
+        if (spinnerList == null) {
+            //设置Spinner控件的初始值
+            spinnerList = new ArrayList<CodeValue>();
+        }
+        //将可选内容与ArrayAdapter连接起来
+        adapter = new ArrayAdapter<CodeValue>(EventEntryAdd_Basic.this.getActivity(), android.R.layout.simple_spinner_item, spinnerList);
+        //设置下拉列表的风格
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        patternManifestationSpinner.setAdapter(adapter);//将adapter 添加到表现形式spinner中
+
+        spinnerList = descEntityDao.queryListForCV("XCTS");
+        if (spinnerList == null) {
+            //设置Spinner控件的初始值
+            spinnerList = new ArrayList<CodeValue>();
+        }
+        //将可选内容与ArrayAdapter连接起来
+        adapter = new ArrayAdapter<CodeValue>(EventEntryAdd_Basic.this.getActivity(), android.R.layout.simple_spinner_item, spinnerList);
+        //设置下拉列表的风格
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        fieldMorpholoySpinner.setAdapter(adapter);//将adapter 添加到现场态势spinner中
+
+        spinnerList = descEntityDao.queryListForCV("sjgm");
+        if (spinnerList == null) {
+            //设置Spinner控件的初始值
+            spinnerList = new ArrayList<CodeValue>();
+        }
+        //将可选内容与ArrayAdapter连接起来
+        adapter = new ArrayAdapter<CodeValue>(EventEntryAdd_Basic.this.getActivity(), android.R.layout.simple_spinner_item, spinnerList);
+        //设置下拉列表的风格
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        scopeTextSpinner.setAdapter(adapter);//将adapter 添加到规模spinner中
+
+
+        spinnerList = new ArrayList<CodeValue>();
+        spinnerList.add(new CodeValue("0", "社区1"));
+        spinnerList.add(new CodeValue("1", "社区2"));
+
+
+        //将可选内容与ArrayAdapter连接起来
+        adapter = new ArrayAdapter<CodeValue>(EventEntryAdd_Basic.this.getActivity(), android.R.layout.simple_spinner_item, spinnerList);
+        //设置下拉列表的风格
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        belongCommunitySpinner.setAdapter(adapter);//将adapter 添加到所属社区spinner中
         if (tFtSjEntity != null) {
             //当状态等于1的时候，表示为草稿，可以修改，其他的时候只能查看信息
             if (!"1".equals(tFtSjEntity.getZt())) {
@@ -199,6 +255,7 @@ public class EventEntryAdd_Basic extends Fragment {
                 eventSummaryEdt.setEnabled(false);
                 leadershipInstructionsEdt.setEnabled(false);
                 //以下为下拉框控件
+                patternManifestationSpinner.setEnabled(false);
                 fieldMorpholoySpinner.setEnabled(false);
                 scopeTextSpinner.setEnabled(false);
                 foreignRelatedSpinner.setEnabled(false);
@@ -218,97 +275,55 @@ public class EventEntryAdd_Basic extends Fragment {
             eventSummaryEdt.setText(tFtSjEntity.getSjgyqk());
             leadershipInstructionsEdt.setText(tFtSjEntity.getLdps());
             //以下为下拉控件设置默认值
-            fieldMorpholoySpinner.setSelection(Integer.valueOf(tFtSjEntity.getBxxs().split(",")[0]));
-            scopeTextSpinner.setSelection(Integer.valueOf(tFtSjEntity.getGm()));
-            foreignRelatedSpinner.setSelection(Integer.valueOf(tFtSjEntity.getSfsw()));
-            involvedXinjiangSpinner.setSelection(Integer.valueOf(tFtSjEntity.getSfsj()));
-            involvePublicOpinionSpinner.setSelection(Integer.valueOf(tFtSjEntity.getSfsyq()));
-            publicSecurityDisposalSpinner.setSelection(Integer.valueOf(tFtSjEntity.getSfgacz()));
-        }else{
-            spinnerList = descEntityDao.queryListForCV("sfsw");
-            if (spinnerList == null) {
-                //设置Spinner控件的初始值
-                spinnerList = new ArrayList<CodeValue>();
+            if(tFtSjEntity.getBxxs()!=null) {
+                patternManifestationSpinner.setSelection(Integer.valueOf(tFtSjEntity.getBxxs().split(",")[0]) - 1);
             }
-            //将可选内容与ArrayAdapter连接起来
-            adapter = new ArrayAdapter<CodeValue>(EventEntryAdd_Basic.this.getActivity(), android.R.layout.simple_spinner_item, spinnerList);
-            //设置下拉列表的风格
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            foreignRelatedSpinner.setAdapter(adapter);//将adapter 添加到spinner中
-            involvedXinjiangSpinner.setAdapter(adapter);//将adapter 添加到spinner中
-            involvePublicOpinionSpinner.setAdapter(adapter);//将adapter 添加到spinner中
-            publicSecurityDisposalSpinner.setAdapter(adapter);//将adapter 添加到spinner中
-
-            spinnerList = descEntityDao.queryListForCV("BXXS");
-            if (spinnerList == null) {
-                //设置Spinner控件的初始值
-                spinnerList = new ArrayList<CodeValue>();
+            if(tFtSjEntity.getXcts()!=null){
+                fieldMorpholoySpinner.setSelection(Integer.valueOf(tFtSjEntity.getXcts()));
             }
-            //将可选内容与ArrayAdapter连接起来
-            adapter = new ArrayAdapter<CodeValue>(EventEntryAdd_Basic.this.getActivity(), android.R.layout.simple_spinner_item, spinnerList);
-            //设置下拉列表的风格
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            patternManifestationSpinner.setAdapter(adapter);//将adapter 添加到表现形式spinner中
-
-            spinnerList = descEntityDao.queryListForCV("XCTS");
-            if (spinnerList == null) {
-                //设置Spinner控件的初始值
-                spinnerList = new ArrayList<CodeValue>();
+            if(tFtSjEntity.getGm()!=null){
+                scopeTextSpinner.setSelection(Integer.valueOf(tFtSjEntity.getGm()));
             }
-            //将可选内容与ArrayAdapter连接起来
-            adapter = new ArrayAdapter<CodeValue>(EventEntryAdd_Basic.this.getActivity(), android.R.layout.simple_spinner_item, spinnerList);
-            //设置下拉列表的风格
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            fieldMorpholoySpinner.setAdapter(adapter);//将adapter 添加到现场态势spinner中
-
-            spinnerList = descEntityDao.queryListForCV("sjgm");
-            if (spinnerList == null) {
-                //设置Spinner控件的初始值
-                spinnerList = new ArrayList<CodeValue>();
+            if(tFtSjEntity.getSfsw()!=null){
+                foreignRelatedSpinner.setSelection(Integer.valueOf(tFtSjEntity.getSfsw()));
             }
-            //将可选内容与ArrayAdapter连接起来
-            adapter = new ArrayAdapter<CodeValue>(EventEntryAdd_Basic.this.getActivity(), android.R.layout.simple_spinner_item, spinnerList);
-            //设置下拉列表的风格
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            scopeTextSpinner.setAdapter(adapter);//将adapter 添加到规模spinner中
+            if(tFtSjEntity.getSfsj()!=null){
+                involvedXinjiangSpinner.setSelection(Integer.valueOf(tFtSjEntity.getSfsj()));
+            }
+            if(tFtSjEntity.getSfsyq()!=null){
+                involvePublicOpinionSpinner.setSelection(Integer.valueOf(tFtSjEntity.getSfsyq()));
+            }
+            if(tFtSjEntity.getSfgacz()!=null) {
+                publicSecurityDisposalSpinner.setSelection(Integer.valueOf(tFtSjEntity.getSfgacz()));
+            }
 
-
-            spinnerList = new ArrayList<CodeValue>();
-            spinnerList.add(new CodeValue("0", "社区1"));
-            spinnerList.add(new CodeValue("1", "社区2"));
-
-
-            //将可选内容与ArrayAdapter连接起来
-            adapter = new ArrayAdapter<CodeValue>(EventEntryAdd_Basic.this.getActivity(), android.R.layout.simple_spinner_item, spinnerList);
-            //设置下拉列表的风格
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            belongCommunitySpinner.setAdapter(adapter);//将adapter 添加到所属社区spinner中
         }
 
     }
 
-    @OnClick({R.id.happen_time_edt})
-    public void onClick(View v) {
+    @OnTouch({R.id.happen_time_edt})
+    public boolean OnTouch(View v, MotionEvent event) {
         switch (v.getId()) {
             /** 点击发生时间控件 **/
             case R.id.happen_time_edt:
-                happenTimeEdt.clearFocus();
-                happenTimeEdt.setInputType(InputType.TYPE_NULL);
-                InputMethodManager imm = (InputMethodManager) EventEntryAdd_Basic.this.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(happenTimeEdt.getWindowToken(), 0);
-                Calendar c = Calendar.getInstance();
-                new DatePickerDialog(EventEntryAdd_Basic.this.getActivity(), new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        Date date = new Date(System.currentTimeMillis());
-                        SimpleDateFormat dateFormat = new SimpleDateFormat(" HH:mm:ss");
-                        String time = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
-                        time += dateFormat.format(date);
-                        happenTimeEdt.setText(time);
-                    }
-                }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
+                if(event.getAction() == MotionEvent.ACTION_DOWN){
+                    happenTimeEdt.clearFocus();
+                    Calendar c = Calendar.getInstance();
+                    new DatePickerDialog(EventEntryAdd_Basic.this.getActivity(), new DatePickerDialog.OnDateSetListener() {
+                        @Override
+                        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                            Date date = new Date(System.currentTimeMillis());
+                            SimpleDateFormat dateFormat = new SimpleDateFormat(" HH:mm:ss");
+                            String time = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
+                            time += dateFormat.format(date);
+                            happenTimeEdt.setText(time);
+                        }
+                    }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
+                    return false;
+                }
                 break;
         }
+        return false;
     }
 
     /**
