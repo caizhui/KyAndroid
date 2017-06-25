@@ -12,9 +12,11 @@ import android.widget.TextView;
 
 import com.ky.kyandroid.R;
 import com.ky.kyandroid.adapter.EventRelevanceListAdapter;
+import com.ky.kyandroid.entity.TFtSjEntity;
 import com.ky.kyandroid.entity.TFtSjGlsjEntity;
 
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -57,6 +59,11 @@ public class EventRelevanceListActivity extends AppCompatActivity {
 
     private Intent intent;
 
+    /**
+     * 事件关联Map信息
+     */
+    private Map<String,TFtSjEntity> glsjListMap;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,7 +80,12 @@ public class EventRelevanceListActivity extends AppCompatActivity {
      */
     public void initData(){
         tFtSjGlsjEntityList = (List<TFtSjGlsjEntity>) intent.getSerializableExtra("tFtSjGlsjEntityList");
+        glsjListMap = (Map<String, TFtSjEntity>) intent.getSerializableExtra("glsjListMap");
         if(tFtSjGlsjEntityList!=null){
+            for (TFtSjGlsjEntity tFtSjGlsjEntity: tFtSjGlsjEntityList) {
+                tFtSjGlsjEntity.setGlsjName(glsjListMap.get(tFtSjGlsjEntity.getGlsjId()).getSjmc());
+                tFtSjGlsjEntity.setLrbmmc(glsjListMap.get(tFtSjGlsjEntity.getGlsjId()).getLrbm());
+            }
             centerText.setText("事件关联("+tFtSjGlsjEntityList.size()+")");
             adapter = new EventRelevanceListAdapter(tFtSjGlsjEntityList,this);
             eventLogList.setAdapter(adapter);

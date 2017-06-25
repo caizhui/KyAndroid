@@ -60,9 +60,17 @@ public class EventRelevanceListAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();// 取出ViewHolder对象
         }
-        holder.eventrelevanceGlsj.setText(list.get(position).getGlsjId() + "(" + list.get(position).getGlgx() + ")");
+        String glgx="未知";
+        if("1".equals(list.get(position).getGlgx())){
+            glgx="因果关系";
+        }else if("2".equals(list.get(position).getGlgx())){
+            glgx="同一当事人";
+        }else if("3".equals(list.get(position).getGlgx())){
+            glgx="当事人有亲属关系";
+        }
+        holder.eventrelevanceGlsj.setText(list.get(position).getGlsjName() + "(" + glgx + ")");
         holder.eventrelevanceLrr.setText(list.get(position).getLrr());
-        holder.eventrelevanceLrbm.setText(list.get(position).getLrbm());
+        holder.eventrelevanceLrbm.setText(list.get(position).getLrbmmc());
         holder.eventrelevanceLrsj.setText(list.get(position).getLrsj());
         return convertView;
     }

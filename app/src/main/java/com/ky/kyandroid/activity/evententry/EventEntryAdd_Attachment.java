@@ -134,6 +134,11 @@ public class EventEntryAdd_Attachment extends Fragment {
      */
     private TFtSjDetailEntity tFtSjDetailEntity;
 
+    /**
+     * 事件关联Map信息
+     */
+    private Map<String,TFtSjEntity> glsjListMap;
+
     private boolean flag = false;
 
     @Nullable
@@ -219,8 +224,10 @@ public class EventEntryAdd_Attachment extends Fragment {
                 List<TFtSjGlsjEntity> tFtSjGlsjEntityList = null;
                 if(tFtSjDetailEntity!=null){
                     tFtSjGlsjEntityList =tFtSjDetailEntity.getGlsjList();
+                    glsjListMap = tFtSjDetailEntity.getGlsjListMap();
                 }
                 intent1.putExtra("tFtSjGlsjEntityList", (Serializable) tFtSjGlsjEntityList);
+                intent1.putExtra("glsjListMap", (Serializable) glsjListMap);
                 startActivity(intent1);
                 break;
         }

@@ -26,6 +26,11 @@ public class TFtSjGlsjEntity  implements Serializable{
 	private String glsjId;
 
 	/**
+	 * 关联事件名称
+	 */
+	private String glsjName;
+
+	/**
 	 * 关联关系(字典GLGX)
 	 */
 	private String glgx;
@@ -39,6 +44,11 @@ public class TFtSjGlsjEntity  implements Serializable{
 	 * 录入部门
 	 */
 	private String lrbm;
+
+	/**
+	 * 录入部门名称
+	 */
+	private String lrbmmc;
 
 	/**
 	 * 录入时间
@@ -194,5 +204,21 @@ public class TFtSjGlsjEntity  implements Serializable{
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public String getGlsjName() {
+		return glsjName;
+	}
+
+	public void setGlsjName(String glsjName) {
+		this.glsjName = glsjName;
+	}
+
+	public String getLrbmmc() {
+		return lrbmmc;
+	}
+
+	public void setLrbmmc(String lrbmmc) {
+		this.lrbmmc = lrbmmc;
 	}
 }

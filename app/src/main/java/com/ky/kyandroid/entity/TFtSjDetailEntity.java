@@ -1,6 +1,7 @@
 package com.ky.kyandroid.entity;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Caizhui on 2017/6/18.
@@ -26,6 +27,11 @@ public class TFtSjDetailEntity {
      * 事件关联信息
      */
     List<TFtSjGlsjEntity> glsjList;
+
+    /**
+     * 事件关联Map信息
+     */
+    Map<String,TFtSjEntity> glsjListMap;
 
     public List<TFtSjFjEntity> getSjfjList() {
         return sjfjList;
@@ -57,5 +63,13 @@ public class TFtSjDetailEntity {
 
     public void setGlsjList(List<TFtSjGlsjEntity> glsjList) {
         this.glsjList = glsjList;
+    }
+
+    public Map<String, TFtSjEntity> getGlsjListMap() {
+        return glsjListMap;
+    }
+
+    public void setGlsjListMap(Map<String, TFtSjEntity> glsjListMap) {
+        this.glsjListMap = glsjListMap;
     }
 }
