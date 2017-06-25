@@ -281,12 +281,14 @@ public class EventEntryListActivity extends AppCompatActivity {
                     total = 0;
                     //解析数据
                     handleTransation(message);
-                    totalMumber = pList.size();
-                    if (pList.size() < pageSize) {
-                        ifDateEnd = true;
-                        if (pageBean != null) {
-                            if (pageBean.getCurrentPage() == 1) {
-                                list_jiazai.setVisibility(View.GONE);
+                    if(pList!=null){
+                        totalMumber = pList.size();
+                        if (pList.size() < pageSize) {
+                            ifDateEnd = true;
+                            if (pageBean != null) {
+                                if (pageBean.getCurrentPage() == 1) {
+                                    list_jiazai.setVisibility(View.GONE);
+                                }
                             }
                         }
                     }

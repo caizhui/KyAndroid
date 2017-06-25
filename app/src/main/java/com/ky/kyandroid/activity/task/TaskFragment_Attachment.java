@@ -101,6 +101,7 @@ public class TaskFragment_Attachment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.evententeradd_attachment_fragment, container, false);
         ButterKnife.bind(this, view);
+        addAttachment.setVisibility(View.GONE);
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             /* 得到SD卡得路径 */
             sdcard = Environment.getExternalStorageDirectory().getAbsolutePath().toString();

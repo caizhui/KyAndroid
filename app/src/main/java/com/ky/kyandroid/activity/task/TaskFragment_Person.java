@@ -108,6 +108,7 @@ public class TaskFragment_Person extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.evententeradd_person_fragment, container, false);
         ButterKnife.bind(this, view);
+        addPerson.setVisibility(View.GONE);
         tFtSjRyEntityList = new ArrayList<TFtSjRyEntity>();
         //判断是否查看本地详细信息，如果是true就执行下面方法
         if (flag) {

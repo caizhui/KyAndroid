@@ -174,30 +174,6 @@ public class TaskFragment_Basic extends Fragment {
      * 新增页面跟查看详情是同一个页面，初始化页面基本信息
      */
     public void initData() {
-        if (taskEntity != null) {
-           //只能查看信息
-            thingNameEdt.setEnabled(false);
-            happenTimeEdt.setEnabled(false);
-            happenAddressEdt.setEnabled(false);
-            petitionGroupsEdt.setEnabled(false);
-            fieldDepartmenEdt.setEnabled(false);
-            fieldsInvolvedEdt.setEnabled(false);
-            belongStreetEdt.setEnabled(false);
-            mainAppealsEdt.setEnabled(false);
-            eventSummaryEdt.setEnabled(false);
-            leadershipInstructionsEdt.setEnabled(false);
-            thingNameEdt.setText(taskEntity.getSjmc());
-            happenTimeEdt.setText(taskEntity.getFssj());
-            happenAddressEdt.setText(taskEntity.getFsdd());
-            petitionGroupsEdt.setText(taskEntity.getSfsqqt());
-            fieldDepartmenEdt.setText(taskEntity.getDcbm());
-            fieldsInvolvedEdt.setText(taskEntity.getSjly());
-            belongStreetEdt.setText(taskEntity.getSsjd());
-            mainAppealsEdt.setText(taskEntity.getZysq());
-            eventSummaryEdt.setText(taskEntity.getSjgyqk());
-            leadershipInstructionsEdt.setText(taskEntity.getLdps());
-        }
-
         spinnerList = descEntityDao.queryListForCV("sfsw");
         if (spinnerList == null) {
             //设置Spinner控件的初始值
@@ -256,5 +232,60 @@ public class TaskFragment_Basic extends Fragment {
         //设置下拉列表的风格
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         belongCommunitySpinner.setAdapter(adapter);//将adapter 添加到所属社区spinner中
+        if (taskEntity != null) {
+           //只能查看信息
+            thingNameEdt.setEnabled(false);
+            happenTimeEdt.setEnabled(false);
+            happenAddressEdt.setEnabled(false);
+            petitionGroupsEdt.setEnabled(false);
+            fieldDepartmenEdt.setEnabled(false);
+            fieldsInvolvedEdt.setEnabled(false);
+            belongStreetEdt.setEnabled(false);
+            mainAppealsEdt.setEnabled(false);
+            eventSummaryEdt.setEnabled(false);
+            leadershipInstructionsEdt.setEnabled(false);
+            //以下为下拉框控件
+            patternManifestationSpinner.setEnabled(false);
+            fieldMorpholoySpinner.setEnabled(false);
+            scopeTextSpinner.setEnabled(false);
+            foreignRelatedSpinner.setEnabled(false);
+            involvedXinjiangSpinner.setEnabled(false);
+            involvePublicOpinionSpinner.setEnabled(false);
+            publicSecurityDisposalSpinner.setEnabled(false);
+            belongCommunitySpinner.setEnabled(false);
+            thingNameEdt.setText(taskEntity.getSjmc());
+            happenTimeEdt.setText(taskEntity.getFssj());
+            happenAddressEdt.setText(taskEntity.getFsdd());
+            petitionGroupsEdt.setText(taskEntity.getSfsqqt());
+            fieldDepartmenEdt.setText(taskEntity.getDcbm());
+            fieldsInvolvedEdt.setText(taskEntity.getSjly());
+            belongStreetEdt.setText(taskEntity.getSsjd());
+            mainAppealsEdt.setText(taskEntity.getZysq());
+            eventSummaryEdt.setText(taskEntity.getSjgyqk());
+            leadershipInstructionsEdt.setText(taskEntity.getLdps());
+            //以下为下拉控件设置默认值
+            if(taskEntity.getBxxs()!=null) {
+                patternManifestationSpinner.setSelection(Integer.valueOf(taskEntity.getBxxs().split(",")[0]) - 1);
+            }
+            /*if(taskEntity.get()!=null){
+                fieldMorpholoySpinner.setSelection(Integer.valueOf(taskEntity.getXcts()));
+            }*/
+            if(taskEntity.getGm()!=null){
+                scopeTextSpinner.setSelection(Integer.valueOf(taskEntity.getGm()));
+            }
+            if(taskEntity.getSfsw()!=null){
+                foreignRelatedSpinner.setSelection(Integer.valueOf(taskEntity.getSfsw()));
+            }
+            if(taskEntity.getSfsj()!=null){
+                involvedXinjiangSpinner.setSelection(Integer.valueOf(taskEntity.getSfsj()));
+            }
+            if(taskEntity.getSfsyq()!=null){
+                involvePublicOpinionSpinner.setSelection(Integer.valueOf(taskEntity.getSfsyq()));
+            }
+            if(taskEntity.getSfgacz()!=null) {
+                publicSecurityDisposalSpinner.setSelection(Integer.valueOf(taskEntity.getSfgacz()));
+            }
+        }
+
     }
 }
