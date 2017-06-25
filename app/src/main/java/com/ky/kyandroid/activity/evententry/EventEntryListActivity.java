@@ -634,6 +634,7 @@ public class EventEntryListActivity extends AppCompatActivity {
 
                         @Override
                         public void onFailure(Call call, IOException e) {
+                            msg.what=6;
                             mHandler.sendEmptyMessage(0);
                         }
 
@@ -755,6 +756,7 @@ public class EventEntryListActivity extends AppCompatActivity {
 
                         @Override
                         public void onFailure(Call call, IOException e) {
+                            msg.what=6;
                             mHandler.sendEmptyMessage(0);
                         }
 
