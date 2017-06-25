@@ -42,7 +42,10 @@ public class Constants {
 	//街道自行处理接口
 	public final static String SERVICE_TASK_HADLE= "ft/kyAndroid/taskHandle.action";
 
-	//街道自行处理接口
+	//消息最新条目数处理接口
 	public final static String SERVICE_NOTICE_NUM_HADLE= "ft/kyAndroid/msgNotice.action";
+
+	//街道自行处理接口
+	public final static String SERVICE_ZXCL= "ft/kyAndroid/zxclDispatch.action";
 
 }
