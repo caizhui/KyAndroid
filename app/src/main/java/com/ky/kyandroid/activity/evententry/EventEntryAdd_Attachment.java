@@ -24,8 +24,11 @@ import android.widget.Toast;
 import com.ky.kyandroid.AppContext;
 import com.ky.kyandroid.Constants;
 import com.ky.kyandroid.R;
+import com.ky.kyandroid.entity.TFtSjDetailEntity;
 import com.ky.kyandroid.entity.TFtSjEntity;
 import com.ky.kyandroid.entity.TFtSjFjEntity;
+import com.ky.kyandroid.entity.TFtSjGlsjEntity;
+import com.ky.kyandroid.entity.TFtSjLogEntity;
 import com.ky.kyandroid.util.FileManager;
 import com.ky.kyandroid.view.SelectPicPopupWindow;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -36,6 +39,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -52,8 +56,27 @@ import butterknife.OnClick;
 
 @SuppressLint("ValidFragment")
 public class EventEntryAdd_Attachment extends Fragment {
+    /**
+     *  新增附件按钮
+     */
     @BindView(R.id.add_attachment)
     Button addAttachment;
+
+    /**
+     *  事件关联日志按钮
+     */
+    @BindView(R.id.event_log)
+    Button eventLogBtn;
+
+    /**
+     *  事件关联按钮
+     */
+    @BindView(R.id.event_relevance)
+    Button eventRelevanceBtn;
+
+    /**
+     * 图片控件
+     */
     @BindView(R.id.attachment_img)
     ImageView attachmentImg;
 
@@ -106,6 +129,11 @@ public class EventEntryAdd_Attachment extends Fragment {
     // 获取事件附件 - 子表信息
     public List<TFtSjFjEntity> sjfjList;
 
+    /**
+     * 事件其他信息全部信息
+     */
+    private TFtSjDetailEntity tFtSjDetailEntity;
+
     private boolean flag = false;
 
     @Nullable
@@ -121,6 +149,8 @@ public class EventEntryAdd_Attachment extends Fragment {
         //当type为1时，表示为修改或者查看详情，但是只有事件状态为1才能修改，其他为查看详情
         if("1".equals(type)&&!("1".equals(tFtSjEntity.getZt()))){
             addAttachment.setVisibility(View.GONE);
+            eventLogBtn.setVisibility(View.VISIBLE);
+            eventRelevanceBtn.setVisibility(View.VISIBLE);
         }
         if (Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)) {
             /* 得到SD卡得路径 */
@@ -167,13 +197,31 @@ public class EventEntryAdd_Attachment extends Fragment {
         }
     }
 
-    @OnClick(R.id.add_attachment)
+    @OnClick({R.id.add_attachment,R.id.event_log,R.id.event_relevance})
     public void OnClick(View view) {
         switch (view.getId()) {
             case R.id.add_attachment:
                 menuWindow = new SelectPicPopupWindow(EventEntryAdd_Attachment.this.getActivity(), itemsOnClick);
                 // 显示窗口
                 menuWindow.showAtLocation(main, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0); // 设置layout在PopupWindow中显示的位置
+                break;
+            case R.id.event_log:
+                Intent intent =new Intent(this.getActivity(),EventLogListActivity.class);
+                List<TFtSjLogEntity> tFtSjLogEntityList = null;
+                if(tFtSjDetailEntity!=null){
+                    tFtSjLogEntityList =tFtSjDetailEntity.getSjlogList();
+                }
+                intent.putExtra("tFtSjLogEntityList", (Serializable) tFtSjLogEntityList);
+                startActivity(intent);
+                break;
+            case R.id.event_relevance:
+                Intent intent1 =new Intent(this.getActivity(),EventRelevanceListActivity.class);
+                List<TFtSjGlsjEntity> tFtSjGlsjEntityList = null;
+                if(tFtSjDetailEntity!=null){
+                    tFtSjGlsjEntityList =tFtSjDetailEntity.getGlsjList();
+                }
+                intent1.putExtra("tFtSjGlsjEntityList", (Serializable) tFtSjGlsjEntityList);
+                startActivity(intent1);
                 break;
         }
     }
@@ -347,4 +395,13 @@ public class EventEntryAdd_Attachment extends Fragment {
         this.sjfjList = sjfjList;
         this.flag = flag;
     }
+
+    /**
+     * 当查看已经上报事件详情时初始化数据,显示文件
+     */
+    public void settFtSjDetailEntityList(TFtSjDetailEntity tFtSjDetailEntity) {
+        this.tFtSjDetailEntity = tFtSjDetailEntity;
+    }
+
+
 }

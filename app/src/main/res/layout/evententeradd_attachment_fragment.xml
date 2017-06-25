@@ -19,8 +19,36 @@
                 android:id="@+id/add_attachment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="#44AB34"
+                android:background="@color/blue_btn_bg_color"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:textSize="14sp"
                 android:text="添加"/>
+
+            <Button
+                android:id="@+id/event_log"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:background="@color/blue_btn_bg_color"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:textSize="14sp"
+                android:text="办理日志"
+                android:visibility="gone"/>
+
+            <Button
+                android:id="@+id/event_relevance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:background="@color/blue_btn_bg_color"
+                android:text="关联事件"
+                android:textSize="14sp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:visibility="gone"/>
+
 
 
         </LinearLayout>

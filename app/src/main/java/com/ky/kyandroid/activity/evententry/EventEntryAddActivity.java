@@ -225,6 +225,8 @@ public class EventEntryAddActivity extends FragmentActivity {
             } else {
                 //查询已经上报的详细信息
                 btnLinearlayout.setVisibility(View.GONE);
+                //当查看详情时，会有很多页签，所以将附件页面变成其他，进去可以看到进入其他页面的按钮
+                radiobtn_attachment.setText("其他");
                 initOnLineData();
             }
 
@@ -390,6 +392,8 @@ public class EventEntryAddActivity extends FragmentActivity {
                         eventEntryAdd_person.setTFtSjRyEntityList(sjryList);
                         //将附件信息放在附件页面
                         eventEntryAdd_attachment.setTFtSjFjEntityList(sjfjList, true);
+                        //将其他信息放在附件页面
+                        eventEntryAdd_attachment.settFtSjDetailEntityList(tFtSjDetailEntity);
                     }
                 }
             }

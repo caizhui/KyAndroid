@@ -51,6 +51,13 @@
         <activity android:name=".activity.evententry.EventEntryListActivity"
             android:screenOrientation="portrait"/>
 
+        <!--事件日志Activity-->
+        <activity android:name=".activity.evententry.EventLogListActivity"
+            android:screenOrientation="portrait"/>
+
+        <!--事件关联Activity-->
+        <activity android:name=".activity.evententry.EventRelevanceListActivity"
+            android:screenOrientation="portrait"/>
 
         <!--我的任务列表-->
         <activity android:name=".activity.task.TaskListActivity"
