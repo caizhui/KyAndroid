@@ -196,6 +196,11 @@ public class EventEntryAddActivity extends FragmentActivity {
      */
     private SweetAlertDialogUtil sweetAlertDialogUtil;
 
+    /**
+     * 操作类型add edit
+     */
+    String czlx;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -453,7 +458,7 @@ public class EventEntryAddActivity extends FragmentActivity {
     /**
      * 上传文件及参数
      */
-    private void sendMultipart(String userId, String paramMap, File[] files) {
+    private void sendMultipart(String userId, String paramMap, File[] files,String czlx) {
         File sdcache = this.getExternalCacheDir();
         int cacheSize = 10 * 1024 * 1024;
         //设置超时时间及缓存，下边都应该这样设置的。
@@ -468,6 +473,7 @@ public class EventEntryAddActivity extends FragmentActivity {
         requestBody.setType(MultipartBody.FORM);
         requestBody.addFormDataPart("userId", userId);//设置post的参数
         requestBody.addFormDataPart("jsonData", paramMap);//设置post的参数
+        requestBody.addFormDataPart("czlx", czlx);//设置post的参数
         if (files != null && files.length > 0) {
             for (int i = 0; i < files.length; i++) {
                 //uploadFles
@@ -515,9 +521,14 @@ public class EventEntryAddActivity extends FragmentActivity {
                 eventEntity = eventEntryAdd_basic.PackageData();
                 if (eventEntity != null) {
                     //当上报领导时，如果id为空，表示状态为0，表示是通过草稿去上报的，否则就是直接上报的
-                    if (eventEntity.getId()==null) {
+                    if ("0".equals(eventEntity.getZt())) {
                         //如果是第一次上传，要设置一个uuid，如果是从草稿中上传，就直接拿草稿里面的uuid
                         eventEntity.setId(uuid);
+                    }
+                    if ("3".equals(eventEntity.getZt())){
+                        czlx="edit";
+                    }else{
+                        czlx="add";
                     }
                     HashMap map = new HashMap();
                     //上报领导，状态为1
@@ -541,7 +552,7 @@ public class EventEntryAddActivity extends FragmentActivity {
                     }
                     String paramMap = JsonUtil.map2Json(map);
                     sweetAlertDialogUtil.loadAlertDialog();
-                    sendMultipart(userId, paramMap, files);
+                    sendMultipart(userId, paramMap, files,czlx);
                 }
                 break;
             /**保存草稿按钮*/
