@@ -127,6 +127,13 @@ public class TFtSjRyEntity {
 	 */
 	private String lrrName;
 
+
+	/**
+	 * 车牌号码
+	 */
+	@Column(name = "cphm")
+	private String cphm;
+
 	public  TFtSjRyEntity(){}
 	/**
 	 * 获取 外键 的属性值
@@ -437,5 +444,13 @@ public class TFtSjRyEntity {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public String getCphm() {
+		return cphm;
+	}
+
+	public void setCphm(String cphm) {
+		this.cphm = cphm;
 	}
 }

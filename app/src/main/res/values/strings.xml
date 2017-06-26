@@ -33,12 +33,14 @@
     <string name="person_name">姓名</string>
     <string name="person_sex">性别</string>
     <string name="person_nation">民族</string>
+    <string name="person_idcard_type">证件类型</string>
     <string name="person_idcard">证件号码</string>
     <string name="person_address">户籍地</string>
     <string name="person_party">党员</string>
     <string name="person_email">电子邮件</string>
     <string name="person_telephone">固定电话</string>
     <string name="person_mobile">移动电话</string>
+    <string name="person_cph">车牌号</string>
     <string name="person_jobaddress">工作单位</string>
     <string name="person_domilcile">现住地址</string>
     <string name="person_remark">备注</string>
