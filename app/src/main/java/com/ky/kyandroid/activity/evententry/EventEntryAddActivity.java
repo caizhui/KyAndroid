@@ -249,8 +249,8 @@ public class EventEntryAddActivity extends FragmentActivity {
     @SuppressWarnings("deprecation")
     private void initPageView() {
         eventEntryAdd_basic = new EventEntryAdd_Basic(intent);
-        eventEntryAdd_person = new EventEntryAdd_Person(intent);
-        eventEntryAdd_attachment = new EventEntryAdd_Attachment(intent);
+        eventEntryAdd_person = new EventEntryAdd_Person(intent,uuid);
+        eventEntryAdd_attachment = new EventEntryAdd_Attachment(intent,uuid);
         // 设置Fragment集合
         List<Fragment> fragmList = new ArrayList<Fragment>();
         fragmList.add(eventEntryAdd_basic);
@@ -351,6 +351,7 @@ public class EventEntryAddActivity extends FragmentActivity {
             switch (msg.what) {
                 // 失败
                 case 0:
+                    sweetAlertDialogUtil.dismissAlertDialog();
                     Toast.makeText(EventEntryAddActivity.this, message, Toast.LENGTH_SHORT).show();
                     break;
                 // 获取详细信息数据成功
@@ -554,15 +555,6 @@ public class EventEntryAddActivity extends FragmentActivity {
                         //保存草稿，状态为1
                         tempenenEntity.setZt("1");
                         flag = tFtSjEntityDao.saveTFtSjEntity(tempenenEntity);
-                        List<TFtSjRyEntity> tFtSjRyEntityList = eventEntryAdd_person.tFtSjRyEntityList();
-                        if (tFtSjRyEntityList != null && tFtSjRyEntityList.size() > 0) {
-                            for (int i = 0; i < tFtSjRyEntityList.size(); i++) {
-                                TFtSjRyEntity entity = tFtSjRyEntityList.get(i);
-                                entity.setSjId(uuid);
-                                flag = tFtSjRyEntityDao.saveTFtSjRyEntity(entity);
-                            }
-
-                        }
                         message = "保存";
                     }
                     if (flag) {

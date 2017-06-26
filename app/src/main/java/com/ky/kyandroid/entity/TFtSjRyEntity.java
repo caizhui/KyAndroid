@@ -14,8 +14,8 @@ import java.util.Date;
 public class TFtSjRyEntity {
 
 
-	@Column(name =  "id",isId = true,autoGen = false)
-	private String id;
+	@Column(name = "id",isId = true,autoGen = true)
+	private int id;
 	/**
 	 * 外键
 	 */
@@ -431,11 +431,11 @@ public class TFtSjRyEntity {
 		this.lrrName = lrrName;
 	}
 
-	public String getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 }

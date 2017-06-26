@@ -117,8 +117,9 @@ public class EventEntryAdd_Attachment extends Fragment {
     private String isPhoto;
 
     @SuppressLint("ValidFragment")
-    public EventEntryAdd_Attachment(Intent intent) {
+    public EventEntryAdd_Attachment(Intent intent,String uuid) {
         this.intent= intent;
+        this.uuid = uuid;
     }
 
     /**

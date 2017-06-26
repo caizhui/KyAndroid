@@ -55,12 +55,40 @@ public class TFtSjRyEntityDao extends BaseDao {
         return null;
     }
 
+    public boolean deleteEventEntryByuuid(String sjid) {
+        boolean flag =false;
+        try {
+            db.delete(TFtSjRyEntity.class, WhereBuilder.b("sjid","=", sjid));
+            flag= true;
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+        return flag;
+    }
 
-    public boolean deleteEventEntry(String id) {
+    public boolean deleteEventEntry(int id) {
         boolean flag =false;
         try {
             db.delete(TFtSjRyEntity.class, WhereBuilder.b("id","=", id));
             flag=true;
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+        return flag;
+    }
+
+    /**
+     * 修改
+     * @param entity
+     * @return
+     */
+    public boolean updateTFtSjRyEntity(TFtSjRyEntity entity){
+        boolean flag =false;
+        try {
+            db.update(entity, String.valueOf(WhereBuilder.b("id","=", entity.getId())),"sjid","xm","xb","mz","zjlx",
+                    "zjhm","email","gddh","sjid","hjd","sfdy","gzdw",
+                    "xzdz","lrr","lrbm","lrsj","comments","cfsjID");
+            flag = true;
         } catch (DbException e) {
             e.printStackTrace();
         }

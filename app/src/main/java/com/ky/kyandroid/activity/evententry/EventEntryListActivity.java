@@ -269,10 +269,12 @@ public class EventEntryListActivity extends AppCompatActivity {
             switch (msg.what) {
                 // 失败
                 case 0:
+                    sweetAlertDialogUtil.dismissAlertDialog();
                     Toast.makeText(EventEntryListActivity.this, message, Toast.LENGTH_SHORT).show();
                     break;
                 // 刷新成功
                 case 1:
+                    sweetAlertDialogUtil.dismissAlertDialog();
                     //刷新重新初始List
                     tFtSjEntityList = new ArrayList<TFtSjEntity>();
                     // 判断是否刷新，刷新true,加载false
@@ -309,6 +311,7 @@ public class EventEntryListActivity extends AppCompatActivity {
                     break;
                 // 加载更多
                 case 2:
+                    sweetAlertDialogUtil.dismissAlertDialog();
                     //解析数据
                     handleTransation(message);
                     currentPage = currentPage + 1;
