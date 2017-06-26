@@ -31,6 +31,16 @@ public class SweetAlertDialogUtil {
     }
 
     /**
+     * 弹出loading框
+     */
+    public  void loadAlertDialog(String titleText){
+        sweetAlertDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        sweetAlertDialog.setTitleText(titleText);
+        sweetAlertDialog.setCancelable(false);
+        sweetAlertDialog.show();
+    }
+
+    /**
      * 取消弹出框
      */
     public void dismissAlertDialog(){

@@ -7,7 +7,7 @@ public class Constants {
 	
 	/** 服务器连接基础Url */
 
-	public static String SERVICE_BASE_URL="http://192.168.1.101:8080/";
+	public static String SERVICE_BASE_URL="http://192.168.1.102:8080/";
 
 	/** 成功标识 */
 	public final static String SUCCESS = "SUCCESS";
@@ -44,6 +44,12 @@ public class Constants {
 
 	//消息最新条目数处理接口
 	public final static String SERVICE_NOTICE_NUM_HADLE= "ft/kyAndroid/msgNotice.action";
+
+	//消息最新修改处理接口
+	public final static String SERVICE_NOTICE_EDIT_HADLE= "ft/kyAndroid/msgEdit.action";
+
+	//消息最新查询处理接口
+	public final static String SERVICE_NOTICE_LIST_HADLE= "ft/kyAndroid/msgList.action";
 
 	//街道自行处理接口
 	public final static String SERVICE_ZXCL= "ft/kyAndroid/zxclDispatch.action";

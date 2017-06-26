@@ -15,4 +15,10 @@
         <item name="android:padding">5dp</item>
     </style>
 
+    <!-- pop 菜单 -->
+    <style name="pop_menu2">
+        <item name="android:windowEnterAnimation">@anim/fade_in</item>
+        <item name="android:windowExitAnimation">@anim/fade_out</item>
+    </style>
+
 </resources>

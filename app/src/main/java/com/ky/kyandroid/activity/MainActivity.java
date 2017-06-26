@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.ky.kyandroid.Constants;
 import com.ky.kyandroid.R;
 import com.ky.kyandroid.activity.evententry.EventEntryListActivity;
+import com.ky.kyandroid.activity.msg.MsgNoticeActivity;
 import com.ky.kyandroid.activity.supervision.SuperVisionAddActivity;
 import com.ky.kyandroid.activity.task.TaskListActivity;
 import com.ky.kyandroid.bean.AckMessage;
@@ -67,6 +68,11 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.right_btn)
     Button rightBtn;
     /**
+     * 消息提醒铃铛
+     */
+    @BindView(R.id.notice_icon)
+    ImageView noticeIcon;
+    /**
      * 我的事件
      */
     @BindView(R.id.event_img)
@@ -81,9 +87,6 @@ public class MainActivity extends AppCompatActivity {
      */
     @BindView(R.id.supervision_img)
     ImageView supervisionImageView;
-
-    @BindView(R.id.info_img)
-    ImageView info_img;
 
     /**
      * 我的事件LinearLayout
@@ -178,9 +181,10 @@ public class MainActivity extends AppCompatActivity {
             taskLinearlayout.setVisibility(View.GONE);
         }
         // 初始化信息标识
-        badge = new BadgeView(this, info_img);
+        badge = new BadgeView(this, noticeIcon);
         badge.setBadgePosition(BadgeView.POSITION_TOP_RIGHT);
         badge.setBadgeBackgroundColor(Color.parseColor("#FF0033"));
+        badge.setVisibility(View.GONE);
         anim = new TranslateAnimation(-100, 0, 0, 0);
         anim.setInterpolator(new BounceInterpolator());
         anim.setDuration(1000);
@@ -272,7 +276,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    @OnClick({R.id.left_btn, R.id.event_img, R.id.task_img, R.id.supervision_img})
+    @OnClick({R.id.left_btn, R.id.event_img, R.id.task_img, R.id.supervision_img,R.id.notice_icon})
     public void onClick(View v) {
         Intent intent = new Intent();
         switch (v.getId()) {
@@ -288,6 +292,11 @@ public class MainActivity extends AppCompatActivity {
             /**我的任务*/
             case R.id.task_img:
                 intent.setClass(this, TaskListActivity.class);
+                startActivity(intent);
+                break;
+            /** 信息提醒 **/
+            case R.id.notice_icon:
+                intent.setClass(this, MsgNoticeActivity.class);
                 startActivity(intent);
                 break;
             /**督查督办*/

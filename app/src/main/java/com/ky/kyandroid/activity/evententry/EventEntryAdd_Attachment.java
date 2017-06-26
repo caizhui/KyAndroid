@@ -158,7 +158,7 @@ public class EventEntryAdd_Attachment extends Fragment {
             eventLogBtn.setVisibility(View.VISIBLE);
             eventRelevanceBtn.setVisibility(View.VISIBLE);
         }
-        if (Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)) {
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             /* 得到SD卡得路径 */
             sdcard = Environment.getExternalStorageDirectory().getAbsolutePath().toString();
             fileRoute = new File(sdcard + "/img/" + uuid + "/");
