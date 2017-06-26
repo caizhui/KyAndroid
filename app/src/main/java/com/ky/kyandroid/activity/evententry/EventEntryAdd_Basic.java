@@ -243,7 +243,7 @@ public class EventEntryAdd_Basic extends Fragment {
         belongCommunitySpinner.setAdapter(adapter);//将adapter 添加到所属社区spinner中
         if (tFtSjEntity != null) {
             //当状态等于1的时候，表示为草稿，可以修改，其他的时候只能查看信息
-            if (!"1".equals(tFtSjEntity.getZt())) {
+            if (!"0".equals(tFtSjEntity.getZt())) {
                 thingNameEdt.setEnabled(false);
                 happenTimeEdt.setEnabled(false);
                 happenAddressEdt.setEnabled(false);

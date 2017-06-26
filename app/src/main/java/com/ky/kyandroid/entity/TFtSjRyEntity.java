@@ -15,7 +15,7 @@ public class TFtSjRyEntity {
 
 
 	@Column(name = "id",isId = true,autoGen = true)
-	private int id;
+	private int uuid;
 	/**
 	 * 外键
 	 */
@@ -438,12 +438,12 @@ public class TFtSjRyEntity {
 		this.lrrName = lrrName;
 	}
 
-	public int getId() {
-		return id;
+	public int getUuid() {
+		return uuid;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setUuid(int uuid) {
+		this.uuid = uuid;
 	}
 
 	public String getCphm() {

@@ -176,7 +176,7 @@ public class EventEntryAdd_Person extends Fragment {
             uuid = tFtSjEntity.getId();
         }
         //当type为1时，表示为修改或者查看详情，但是只有事件状态为1才能修改，其他为查看详情
-        if("1".equals(type)&&!("1".equals(tFtSjEntity.getZt()))){
+        if("1".equals(type)&&!("0".equals(tFtSjEntity.getZt()))){
             addPerson.setVisibility(View.GONE);
         }
         //tFtSjRyEntityList = new ArrayList<TFtSjRyEntity>();
@@ -215,7 +215,7 @@ public class EventEntryAdd_Person extends Fragment {
         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                boolean flag = tFtSjRyEntityDao.deleteEventEntry(tFtSjRyEntity.getId());
+                boolean flag = tFtSjRyEntityDao.deleteEventEntry(tFtSjRyEntity.getUuid());
                 if(flag){
                     Toast.makeText(EventEntryAdd_Person.this.getActivity(),"删除成功",Toast.LENGTH_SHORT).show();
                 }else{
@@ -331,7 +331,7 @@ public class EventEntryAdd_Person extends Fragment {
             isDetail = false;
         }
         //当type为1时，表示为修改或者查看详情，但是只有事件状态为1才能修改，其他为查看详情
-        if("1".equals(type)&&!("1".equals(tFtSjEntity.getZt()))){
+        if("1".equals(type)&&!("0".equals(tFtSjEntity.getZt()))){
             personNameEdt.setEnabled(false);
             personSexSpinner.setEnabled(false);
             personNationSpinner.setEnabled(false);
@@ -372,7 +372,7 @@ public class EventEntryAdd_Person extends Fragment {
                 tFtSjRyEntity.setComments(personRemarkEdt.getText().toString());
                 tFtSjRyEntity.setSjId(uuid);
                 String message="";
-                if(tFtSjRyEntity.getId()!=0){
+                if(tFtSjRyEntity.getUuid()!=0){
                     flag = tFtSjRyEntityDao.updateTFtSjRyEntity(tFtSjRyEntity);
                     tFtSjRyEntity = null;
                     message="修改";

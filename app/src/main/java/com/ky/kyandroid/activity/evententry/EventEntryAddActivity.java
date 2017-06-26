@@ -190,6 +190,7 @@ public class EventEntryAddActivity extends FragmentActivity {
     // 人员具体信息
     List<TFtSjRyEntity> sjryList;
 
+    private TFtSjEntity eventEntity;
     /**
      * 弹出框工具类
      */
@@ -219,7 +220,7 @@ public class EventEntryAddActivity extends FragmentActivity {
         initViewData();
         //当type=1时，判断是修改草稿信息还是查看上报事件详细信息
         if ("1".equals(type)) {
-            if ("1".equals(tFtSjEntity.getZt())) {
+            if ("0".equals(tFtSjEntity.getZt())) {
                 //查询保存在本地的详细信息
                 initData();
             } else {
@@ -360,6 +361,8 @@ public class EventEntryAddActivity extends FragmentActivity {
                     break;
                 //上传数据成功
                 case 2:
+                    //将本地的草稿数据删除
+                    tFtSjEntityDao.deleteEventEntry(eventEntity.getId());
                     sweetAlertDialogUtil.dismissAlertDialog();
                     Toast.makeText(EventEntryAddActivity.this, "上报成功", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(EventEntryAddActivity.this, EventEntryListActivity.class);
@@ -507,20 +510,18 @@ public class EventEntryAddActivity extends FragmentActivity {
                 break;
             /** 上报领导按钮*/
             case R.id.reporting_leadership_btn:
-                TFtSjEntity eventEntity = eventEntryAdd_basic.PackageData();
+                eventEntity = eventEntryAdd_basic.PackageData();
                 if (eventEntity != null) {
                     //当上报领导时，如果状态为1，表示是通过草稿去上报的，否则就是直接上报的
-                    if ("1".equals(eventEntity.getZt())) {
-                        //将本地的草稿数据删除
-                        tFtSjEntityDao.deleteEventEntry(eventEntity.getId());
-                    } else {
+                    if (!"0".equals(eventEntity.getZt())) {
                         //如果是第一次上传，要设置一个uuid，如果是从草稿中上传，就直接拿草稿里面的uuid
                         eventEntity.setId(uuid);
                     }
                     HashMap map = new HashMap();
-                    //上报领导，状态为2
-                    eventEntity.setZt("2");
+                    //上报领导，状态为1
+                    eventEntity.setZt("1");
                     List<TFtSjRyEntity> tFtSjRyEntityList = eventEntryAdd_person.tFtSjRyEntityList();
+                    tFtSjRyEntityDao.deleteEventEntryByuuid(uuid);
                 /* 得到SD卡得路径 */
                     String sdcard = Environment.getExternalStorageDirectory().getAbsolutePath().toString();
                     File fileRoute = new File(sdcard + "/img/" + uuid);
@@ -552,8 +553,8 @@ public class EventEntryAddActivity extends FragmentActivity {
                         message = "修改";
                     } else {
                         tempenenEntity.setId(uuid);
-                        //保存草稿，状态为1
-                        tempenenEntity.setZt("1");
+                        //保存草稿，状态为0
+                        tempenenEntity.setZt("0");
                         flag = tFtSjEntityDao.saveTFtSjEntity(tempenenEntity);
                         message = "保存";
                     }

@@ -560,7 +560,7 @@ public class EventEntryListActivity extends AppCompatActivity {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int pos) {
                     //事件刚刚录入
-                    if ("1".equals(tFtSjEntity.getZt())) {
+                    if ("0".equals(tFtSjEntity.getZt())) {
                         //删除
                         if (pos == 0) {
                             message = "";

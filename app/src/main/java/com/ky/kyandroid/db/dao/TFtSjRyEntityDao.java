@@ -85,7 +85,7 @@ public class TFtSjRyEntityDao extends BaseDao {
     public boolean updateTFtSjRyEntity(TFtSjRyEntity entity){
         boolean flag =false;
         try {
-            db.update(entity, String.valueOf(WhereBuilder.b("id","=", entity.getId())),"sjid","xm","xb","mz","zjlx",
+            db.update(entity, String.valueOf(WhereBuilder.b("id","=", entity.getUuid())),"sjid","xm","xb","mz","zjlx",
                     "zjhm","email","gddh","sjid","hjd","sfdy","gzdw",
                     "xzdz","lrr","lrbm","lrsj","comments","cfsjID");
             flag = true;

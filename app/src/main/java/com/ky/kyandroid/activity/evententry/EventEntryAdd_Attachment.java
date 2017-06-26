@@ -153,7 +153,7 @@ public class EventEntryAdd_Attachment extends Fragment {
             uuid = tFtSjEntity.getId();
         }
         //当type为1时，表示为修改或者查看详情，但是只有事件状态为1才能修改，其他为查看详情
-        if("1".equals(type)&&!("1".equals(tFtSjEntity.getZt()))){
+        if("1".equals(type)&&!("0".equals(tFtSjEntity.getZt()))){
             addAttachment.setVisibility(View.GONE);
             eventLogBtn.setVisibility(View.VISIBLE);
             eventRelevanceBtn.setVisibility(View.VISIBLE);

@@ -61,7 +61,9 @@ public class EventEntityListAdapter extends BaseAdapter {
         holder.thingAddress.setText(list.get(position).getFsdd());
         holder.thingTime.setText(list.get(position).getFssj());
         if("1".equals(list.get(position).getZt())){
-            holder.thingStatus.setText("未上报");
+            holder.thingStatus.setText("录入");
+        }else if("0".equals(list.get(position).getZt())){
+            holder.thingStatus.setText("草稿");
         }else{
             holder.thingStatus.setText(list.get(position).getZtname());
         }
