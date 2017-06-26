@@ -175,8 +175,8 @@ public class EventEntryAdd_Person extends Fragment {
         if(tFtSjEntity!=null){
             uuid = tFtSjEntity.getId();
         }
-        //当type为1时，表示为修改或者查看详情，但是只有事件状态为1才能修改，其他为查看详情
-        if("1".equals(type)&&!("0".equals(tFtSjEntity.getZt()))){
+        //当type为1时，表示为修改或者查看详情，但是只有事件状态为0草稿或者3街道退回才能修改，其他为查看详情
+        if("1".equals(type)&&(!("0".equals(tFtSjEntity.getZt()))&&!("3".equals(tFtSjEntity.getZt())))){
             addPerson.setVisibility(View.GONE);
         }
         //tFtSjRyEntityList = new ArrayList<TFtSjRyEntity>();

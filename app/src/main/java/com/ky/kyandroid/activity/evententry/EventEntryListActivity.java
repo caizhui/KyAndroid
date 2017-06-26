@@ -576,18 +576,18 @@ public class EventEntryListActivity extends AppCompatActivity {
                         TFtZtlzEntity tFtZtlzEntity = tFtZtlzEntities[pos];
                         //当3.退回和4.不予受理的时候，弹出自定义对话框
                         if ("3".equals(tFtZtlzEntity.getNextzt()) || "4".equals(tFtZtlzEntity.getNextzt())) {
-                            ReturnOperation(tFtZtlzEntity, R.layout.dialog_return_operation, tFtZtlzEntity.getActionname(),Constants.SERVICE_EDIT_EVENT);
+                            ReturnOperation(tFtZtlzEntity, R.layout.dialog_return_operation, tFtZtlzEntity.getActionname()+"原因",Constants.SERVICE_EDIT_EVENT);
                         }  else if ("5".equals(tFtZtlzEntity.getNextzt())) {
                             //当5街道自行退回的时候，弹出自定义对话框
                             if("2".equals(tFtSjEntity.getZt())){
                                 //当前状态为2，受理。
                                 OperatingProcess(tFtZtlzEntity);
                             }else{
-                                ReturnOperation(tFtZtlzEntity, R.layout.dialog_streetreturn_operation, tFtZtlzEntity.getActionname(),Constants.SERVICE_EDIT_EVENT);
+                                ReturnOperation(tFtZtlzEntity, R.layout.dialog_streetreturn_operation, tFtZtlzEntity.getActionname()+"原因",Constants.SERVICE_EDIT_EVENT);
                             }
                         } else if ("6".equals(tFtZtlzEntity.getNextzt())) {
                             //当6事件作废的时候，弹出自定义对话框
-                            ReturnOperation(tFtZtlzEntity, R.layout.dialog_cancel_operation, tFtZtlzEntity.getActionname(),Constants.SERVICE_EDIT_EVENT);
+                            ReturnOperation(tFtZtlzEntity, R.layout.dialog_cancel_operation, tFtZtlzEntity.getActionname()+"原因",Constants.SERVICE_EDIT_EVENT);
                         } else if ("7".equals(tFtZtlzEntity.getNextzt())) {
                             //当7街道自行处理的时候，弹出自定义对话框
                             ReturnOperation(tFtZtlzEntity, dialog_streethandle_operation, tFtZtlzEntity.getActionname(),Constants.SERVICE_ZXCL );
@@ -596,16 +596,16 @@ public class EventEntryListActivity extends AppCompatActivity {
                             ReturnOperation(tFtZtlzEntity, R.layout.dialog_streetfeedback_operation, tFtZtlzEntity.getActionname(),Constants.SERVICE_EDIT_EVENT );
                         }else if("7,8".equals(tFtZtlzEntity.getNextzt()) ){
                             //当走街道自行处理这条线时，如果当前状态为9，则退回到7街道自行处理，否则退回8，弹出自定义对话框
-                            if("9".equals(tFtSjEntity.getZt())){
+                          /*  if("9".equals(tFtSjEntity.getZt())){
                                 tFtZtlzEntity.setNextzt("7");
                             }else{
                                 tFtZtlzEntity.setNextzt("8");
-                            }
+                            }*/
                             //当10回访核查通过或者7,8回访核查不通过的时候，弹出自定义对话框
-                            ReturnOperation(tFtZtlzEntity, R.layout.dialog_verification_operation, tFtZtlzEntity.getActionname(),Constants.SERVICE_EDIT_EVENT);
+                            ReturnOperation(tFtZtlzEntity, R.layout.dialog_verification_operation, tFtZtlzEntity.getActionname()+"原因",Constants.SERVICE_EDIT_EVENT);
                         } else if ("10".equals(tFtZtlzEntity.getNextzt())) {
                             //当10回访核查，弹出自定义对话框
-                            ReturnOperation(tFtZtlzEntity, R.layout.dialog_verification_operation, tFtZtlzEntity.getActionname(),Constants.SERVICE_EDIT_EVENT);
+                            ReturnOperation(tFtZtlzEntity, R.layout.dialog_verification_operation, tFtZtlzEntity.getActionname()+"原因",Constants.SERVICE_EDIT_EVENT);
                         } else {
                             //其他的弹出确定对话框
                             OperatingProcess(tFtZtlzEntity);

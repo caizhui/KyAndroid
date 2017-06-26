@@ -224,8 +224,10 @@ public class EventEntryAddActivity extends FragmentActivity {
                 //查询保存在本地的详细信息
                 initData();
             } else {
-                //查询已经上报的详细信息
-                btnLinearlayout.setVisibility(View.GONE);
+                //查询已经上报的详细信息,如果当前状态为3表示街道退回，录入人是可以修改之后重新上报的。
+                if(!"3".equals(tFtSjEntity.getZt())){
+                    btnLinearlayout.setVisibility(View.GONE);
+                }
                 //当查看详情时，会有很多页签，所以将附件页面变成其他，进去可以看到进入其他页面的按钮
                 radiobtn_attachment.setText("其他");
                 initOnLineData();
@@ -512,8 +514,8 @@ public class EventEntryAddActivity extends FragmentActivity {
             case R.id.reporting_leadership_btn:
                 eventEntity = eventEntryAdd_basic.PackageData();
                 if (eventEntity != null) {
-                    //当上报领导时，如果状态为1，表示是通过草稿去上报的，否则就是直接上报的
-                    if (!"0".equals(eventEntity.getZt())) {
+                    //当上报领导时，如果id为空，表示状态为0，表示是通过草稿去上报的，否则就是直接上报的
+                    if (eventEntity.getId()==null) {
                         //如果是第一次上传，要设置一个uuid，如果是从草稿中上传，就直接拿草稿里面的uuid
                         eventEntity.setId(uuid);
                     }
