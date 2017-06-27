@@ -1,0 +1,39 @@
+vpn:
+ls-guest01    keyun!@#$
+ls-guest02    gzky!@#$  
+ls-guest03    kyxx6089 
+
+系统地址：http://192.168.21.101:8088/ft/
+用户  hqb01(id=58e454465167622328e096f6) 录入   hqb02(id=58e4553a5167622328e096fa)  街道处理  hqb03 街道职能部门处理 ft01  区处理  ft02 区职能部门处理
+密码都是a12345
+
+事件ID = 58ff66d64839fe38bcc20f97
+
+请各位注意保密，来往文件传输要用中文加密
+
+svn:  d1-cz/d1cz123,d1-cz1/d1cz123,d1-ccl/d1ccl123
+
+
+svn:http://192.168.0.6:881/svn/bigdata/ft/
+
+com.ky.ft.ft
+svn:http://192.168.0.6:881/svn/bigdata/ft/com.ky.ft.app
+svn:http://192.168.0.6:881/svn/bigdata/ft/com.ky.ft.webapp
+
+1、E4R#PJJ5 4!DRASKT 
+KYDATA10@1.Q4RFS7LG-0DG1IUPI-MVSW7492-XMUBDURL-PMM9MMRU-MWMMRRJM-MSRMNUUM-URRYXRRG-YWMGZARJ
+2、E2L!$Q!L 6WZ8E7M7 - 家里 
+KYDATA10@1.QFQ5KDXW-Q44PUOOF-56MV9JB6-RRMO4RMM-RRMMURB0-BZVUURAD-XPMRRMUM-RXUMRZXM-UWYPURGU
+
+---------------------系列Action -----------------
+事件街道核实action : sjJdhs.action  -｛ 退回操作ACTION: sjReject ｝
+
+测试ACTION - 事件查询
+http://localhost:8080/ft/kyAndroid/sjList.action?userId=58e4553a5167622328e096fa
+-- 登陆
+http://localhost:8080/ft/kyAndroid/login.action?userName=hqb02&password=a12345
+-- 获取baseCode【例如退回原因上面的单选框列表】getCzyyList.action hczh_sjxxxq.ftl 3025行
+
+-- 街道自行处理 hczh_sjxxxq.ftl 2827行
+
+-- 督办受理 dubanSl.action
