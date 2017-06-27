@@ -219,8 +219,6 @@ public class EventEntryAdd_Attachment extends Fragment {
                     adapter.notifyDataSetChanged(fileEntityList);
                 }
 
-                /*ImageLoader.getInstance().displayImage(Constants.SERVICE_BASE_URL + sjfjList.get(0).getUrl()
-                        , attachmentImg, AppContext.getImgBuilder());*/
             }
         }
         //如果文件夹不存在，表示第一次进来，需要创建文件夹，否则表示已经进来过，我们需要获取图片显示
@@ -252,7 +250,6 @@ public class EventEntryAdd_Attachment extends Fragment {
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
-                    //attachmentImg.setImageBitmap(tupbitmap);
                 }
             }
         }
