@@ -42,4 +42,7 @@ public class Constants {
 	//街道自行处理接口
 	public final static String SERVICE_TASK_HADLE= "ft/kyAndroid/taskHandle.action";
 
+	//测试提交成功与否
+	public final static String TEST_SUCCESS_MSG= "小鸡追追女仔";
+
 }
