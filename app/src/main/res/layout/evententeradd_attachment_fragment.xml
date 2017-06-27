@@ -54,13 +54,13 @@
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:padding="10dp">
 
-            <ImageView
-                android:id="@+id/attachment_img"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-
+           <ListView
+               android:id="@+id/image_list"
+               android:layout_width="match_parent"
+               android:layout_height="match_parent"/>
         </LinearLayout>
     </LinearLayout>
 

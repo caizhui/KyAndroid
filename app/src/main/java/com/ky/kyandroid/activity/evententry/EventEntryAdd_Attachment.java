@@ -17,13 +17,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Toast;
 
-import com.ky.kyandroid.AppContext;
-import com.ky.kyandroid.Constants;
 import com.ky.kyandroid.R;
+import com.ky.kyandroid.adapter.EventImageListAdapter;
+import com.ky.kyandroid.entity.FileEntity;
 import com.ky.kyandroid.entity.TFtSjDetailEntity;
 import com.ky.kyandroid.entity.TFtSjEntity;
 import com.ky.kyandroid.entity.TFtSjFjEntity;
@@ -31,7 +31,6 @@ import com.ky.kyandroid.entity.TFtSjGlsjEntity;
 import com.ky.kyandroid.entity.TFtSjLogEntity;
 import com.ky.kyandroid.util.FileManager;
 import com.ky.kyandroid.view.SelectPicPopupWindow;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
@@ -41,6 +40,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -74,14 +74,21 @@ public class EventEntryAdd_Attachment extends Fragment {
     @BindView(R.id.event_relevance)
     Button eventRelevanceBtn;
 
-    /**
+   /* *//**
      * 图片控件
-     */
+     *//*
     @BindView(R.id.attachment_img)
-    ImageView attachmentImg;
+    ImageView attachmentImg;*/
 
     @BindView(R.id.main)
     LinearLayout main;
+
+    /**
+     * 附件List
+     */
+    @BindView(R.id.image_list)
+    ListView imageList;
+
     private static final int PHOTO_REQUEST_TAKEPHOTO = 1;// 拍照
     private static final int PHOTO_REQUEST_GALLERY = 2;// 从相册中选择
     private static final int PHOTO_REQUEST_CUT = 3;// 结果
@@ -142,6 +149,21 @@ public class EventEntryAdd_Attachment extends Fragment {
 
     private boolean flag = false;
 
+    /**
+     * 存放图片List
+     */
+    private List<FileEntity>   fileEntityList;
+
+    /**
+     * 文件实体
+     */
+    private FileEntity fileEntity;
+
+    /**
+     * 文件adapter
+     */
+    private EventImageListAdapter adapter;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -149,6 +171,10 @@ public class EventEntryAdd_Attachment extends Fragment {
         ButterKnife.bind(this, view);
         type = intent.getStringExtra("type");
         tFtSjEntity = (TFtSjEntity) intent.getSerializableExtra("tFtSjEntity");
+        fileEntityList =new ArrayList<FileEntity>();
+        //初始化imageList
+        adapter = new EventImageListAdapter(fileEntityList, EventEntryAdd_Attachment.this.getActivity());
+        imageList.setAdapter(adapter);
         if(tFtSjEntity!=null){
             uuid = tFtSjEntity.getId();
         }
@@ -178,8 +204,23 @@ public class EventEntryAdd_Attachment extends Fragment {
         //当flag为true时，表示是去查看已经上报事件的图片
         if (flag) {
             if (sjfjList != null && sjfjList.size() > 0) {
-                ImageLoader.getInstance().displayImage(Constants.SERVICE_BASE_URL + sjfjList.get(0).getUrl()
-                        , attachmentImg, AppContext.getImgBuilder());
+
+                for(int i=0;i<sjfjList.size();i++){
+                    fileEntity = new FileEntity();
+                    if(sjfjList.get(i).getUrl()!=null){
+                        fileEntity.setFileUrl(sjfjList.get(i).getUrl());
+                    }
+                    if(fileEntityList==null){
+                        fileEntityList =new ArrayList<FileEntity>();
+                    }
+                    fileEntityList.add(fileEntity);
+                }
+                if (fileEntityList != null && fileEntityList.size() > 0) {
+                    adapter.notifyDataSetChanged(fileEntityList);
+                }
+
+                /*ImageLoader.getInstance().displayImage(Constants.SERVICE_BASE_URL + sjfjList.get(0).getUrl()
+                        , attachmentImg, AppContext.getImgBuilder());*/
             }
         }
         //如果文件夹不存在，表示第一次进来，需要创建文件夹，否则表示已经进来过，我们需要获取图片显示
@@ -192,12 +233,26 @@ public class EventEntryAdd_Attachment extends Fragment {
                 if (files != null && files.length > 0) {
                     FileInputStream fis = null;
                     try {
-                        fis = new FileInputStream(files[0]);
+                        for(int i=0;i<files.length;i++){
+                            fis = new FileInputStream(files[i]);
+                            tupbitmap = BitmapFactory.decodeStream(fis);
+                            fileEntity = new FileEntity();
+                            if(tupbitmap!=null){
+                                fileEntity.setBitmap(tupbitmap);
+                            }
+                            if(fileEntityList==null){
+                                fileEntityList =new ArrayList<FileEntity>();
+                            }
+                            fileEntityList.add(fileEntity);
+                            if (fileEntityList != null && fileEntityList.size() > 0) {
+                                adapter.notifyDataSetChanged(fileEntityList);
+                            }
+                        }
+
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
-                    tupbitmap = BitmapFactory.decodeStream(fis);
-                    attachmentImg.setImageBitmap(tupbitmap);
+                    //attachmentImg.setImageBitmap(tupbitmap);
                 }
             }
         }
@@ -298,7 +353,18 @@ public class EventEntryAdd_Attachment extends Fragment {
                                 File file = SavePicInLocal(bitmapFromUri);
                                 FileInputStream fis = new FileInputStream(file);
                                 tupbitmap = BitmapFactory.decodeStream(fis);
-                                attachmentImg.setImageBitmap(tupbitmap);
+                                fileEntity = new FileEntity();
+                                if(tupbitmap!=null){
+                                    fileEntity.setBitmap(tupbitmap);
+                                }
+                                if(fileEntityList==null){
+                                    fileEntityList =new ArrayList<FileEntity>();
+                                }
+                                fileEntityList.add(fileEntity);
+                                if (fileEntityList != null && fileEntityList.size() > 0) {
+                                    adapter.notifyDataSetChanged(fileEntityList);
+                                }
+                               // attachmentImg.setImageBitmap(tupbitmap);
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
