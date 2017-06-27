@@ -114,8 +114,6 @@ public class EventEntryAdd_Person extends Fragment {
 
     TFtSjRyEntity tFtSjRyEntity;
 
-   /* private List<TFtSjRyEntity> tFtSjRyEntityList;*/
-
     public List<TFtSjRyEntity> sjryList;
 
     EventPersonListAdapter adapter;
