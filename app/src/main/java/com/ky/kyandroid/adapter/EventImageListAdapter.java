@@ -23,7 +23,6 @@ public class EventImageListAdapter extends BaseAdapter {
     public List<FileEntity> list;
     public Context context;
 
-
     public EventImageListAdapter(Context context) {
         super();
         list = new ArrayList<FileEntity>();
@@ -52,7 +51,7 @@ public class EventImageListAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         if (convertView == null) {
             convertView = View.inflate(context, R.layout.activity_image_item, null);
@@ -69,7 +68,7 @@ public class EventImageListAdapter extends BaseAdapter {
             holder.attachmentImg.setImageBitmap(list.get(position).getBitmap());
         }
 
-        holder.imageMs.setText(list.get(position).getFileMc());
+        holder.imageMs.setText(list.get(position).getFileMs());
         return convertView;
     }
 

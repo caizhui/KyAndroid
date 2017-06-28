@@ -410,7 +410,6 @@ public class EventEntryAdd_Attachment extends Fragment {
             bos.write(byteArray);
         } catch (Exception e) {
             e.printStackTrace();
-
         } finally {
             if (baos != null) {
                 try {
@@ -457,7 +456,6 @@ public class EventEntryAdd_Attachment extends Fragment {
         photoName = dateFormat.format(date) + ".jpg";
         return photoName;
     }
-
 
     /**
      * 当查看已经上报事件详情时初始化数据,显示文件
