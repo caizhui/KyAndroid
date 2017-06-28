@@ -54,6 +54,7 @@
                 android:id="@+id/et_account"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:textColor="@color/white"
                 android:background="@color/transparent"
                 android:hint="@string/login_hint_account"
                 android:textColorHint="@color/white"
@@ -84,6 +85,7 @@
                 android:layout_height="match_parent"
                 android:background="@color/transparent"
                 android:hint="@string/login_hint_password"
+                android:textColor="@color/white"
                 android:textColorHint="@color/white"
                 android:inputType="textPassword" />
         </LinearLayout>
