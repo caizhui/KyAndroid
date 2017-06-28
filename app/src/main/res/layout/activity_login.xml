@@ -112,7 +112,7 @@
                 android:layout_height="wrap_content"
                 android:text="设置IP"
                 android:layout_gravity="center"
-                android:textColor="@color/button_stroke_color"
+                android:textColor="@color/white"
                 android:textSize="16sp" />
         </LinearLayout>
 
