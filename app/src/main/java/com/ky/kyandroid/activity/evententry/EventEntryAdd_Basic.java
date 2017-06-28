@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -61,11 +62,19 @@ public class EventEntryAdd_Basic extends Fragment {
      */
     @BindView(R.id.petition_groups_edt)
     EditText petitionGroupsEdt;
-    /**
+   /* *//**
      * 到场部门
-     */
+     *//*
     @BindView(R.id.field_departmen_edt)
-    EditText fieldDepartmenEdt;
+    EditText fieldDepartmenEdt;*/
+    @BindView(R.id.field_departmen_spinner_one)
+    Spinner fieldDepartmenSpinnerOne;
+
+    @BindView(R.id.field_departmen_spinner_two)
+    Spinner fieldDepartmenSpinnerTwo;
+
+    @BindView(R.id.field_departmen_spinner_three)
+    Spinner fieldDepartmenSpinnerThree;
     /**
      * 表现形式
      */
@@ -162,6 +171,49 @@ public class EventEntryAdd_Basic extends Fragment {
 
     public DescEntityDao descEntityDao;
 
+    private Spinner provinceSpinner = null; // 省（省、直辖市）
+    private Spinner citySpinner = null; // 市
+    private Spinner countrySpinner = null; // 区
+
+    private ArrayAdapter<String> fieldDepartmenSpinnerOneAdapter = null; // 省
+    private ArrayAdapter<String> fieldDepartmenSpinnerTwoAdapter = null; // 市
+    private ArrayAdapter<String> fieldDepartmenSpinnerThreeAdapter = null; // 区
+
+    private int provincePosition = 3;
+
+    // 省级选项值
+    private String[] province = new String[] { "北京", "上海", "天津", "广东" };// ,"重庆","黑龙江","江苏","山东","浙江","香港","澳门"};
+
+    // 市级选项值
+    private String[][] city = new String[][] {
+            { "东城区", "西城区", "崇文区", "宣武区", "朝阳区", "海淀区", "丰台区", "石景山区", "门头沟区","房山区", "通州区", "顺义区", "大兴区", "昌平区", "平谷区", "怀柔区", "密云县","延庆县" },
+            { "长宁区", "静安区", "普陀区", "闸北区", "虹口区" },
+            { "和平区", "河东区", "河西区", "南开区", "河北区", "红桥区", "塘沽区", "汉沽区", "大港区","东丽区" },
+            { "广州", "深圳", "韶关" // ,"珠海","汕头","佛山","湛江","肇庆","江门","茂名","惠州","梅州",
+                    // "汕尾","河源","阳江","清远","东莞","中山","潮州","揭阳","云浮"
+            } };
+
+    // 区县级选项值
+    private String[][][] country = new String[][][]
+            {
+                    {   //北京
+                            {"无"},{"无"},{"无"},{"无"},{"无"},{"无"},{"无"},{"无"},{"无"},{"无"},
+                            {"无"},{"无"},{"无"},{"无"},{"无"},{"无"},{"无"},{"无"}
+                    },
+                    {    //上海
+                            {"无"},{"无"},{"无"},{"无"},{"无"}
+                    },
+                    {    //天津
+                            {"无"},{"无"},{"无"},{"无"},{"无"},{"无"},{"无"},{"无"},{"无"},{"无"}
+                    },
+                    {    //广东
+                            {"海珠区","荔湾区","越秀区","白云区","萝岗区","天河区","黄埔区","花都区","从化市","增城市","番禺区","南沙区"}, //广州
+                            {"宝安区","福田区","龙岗区","罗湖区","南山区","盐田区"}, //深圳
+                            {"武江区","浈江区","曲江区","乐昌市","南雄市","始兴县","仁化县","翁源县","新丰县","乳源县"}  //韶关
+                    }
+            };
+
+
     @SuppressLint("ValidFragment")
     public EventEntryAdd_Basic(Intent intent) {
         this.intent = intent;
@@ -248,7 +300,7 @@ public class EventEntryAdd_Basic extends Fragment {
                 happenTimeEdt.setEnabled(false);
                 happenAddressEdt.setEnabled(false);
                 petitionGroupsEdt.setEnabled(false);
-                fieldDepartmenEdt.setEnabled(false);
+                //fieldDepartmenEdt.setEnabled(false);
                 fieldsInvolvedEdt.setEnabled(false);
                 belongStreetEdt.setEnabled(false);
                 mainAppealsEdt.setEnabled(false);
@@ -268,7 +320,7 @@ public class EventEntryAdd_Basic extends Fragment {
             happenTimeEdt.setText(tFtSjEntity.getFssj());
             happenAddressEdt.setText(tFtSjEntity.getFsdd());
             petitionGroupsEdt.setText(tFtSjEntity.getSfsqqt());
-            fieldDepartmenEdt.setText(tFtSjEntity.getDcbm());
+            //fieldDepartmenEdt.setText(tFtSjEntity.getDcbm());
             fieldsInvolvedEdt.setText(tFtSjEntity.getSjly());
             belongStreetEdt.setText(tFtSjEntity.getSsjd());
             mainAppealsEdt.setText(tFtSjEntity.getZysq());
@@ -339,7 +391,7 @@ public class EventEntryAdd_Basic extends Fragment {
         String happenTimeString = happenTimeEdt.getText().toString();
         String happenAddressString = happenAddressEdt.getText().toString();
         String petitionGroupsString = petitionGroupsEdt.getText().toString();
-        String fieldDepartmenString = fieldDepartmenEdt.getText().toString();
+       // String fieldDepartmenString = fieldDepartmenEdt.getText().toString();
         String patternManifestationString = descEntityDao.queryCodeByName("BXXS", patternManifestationSpinner.getSelectedItem().toString());
         String fieldMorpholoySpinnerString = descEntityDao.queryCodeByName("XCTS", fieldMorpholoySpinner.getSelectedItem().toString());
         String scopeTextString = descEntityDao.queryCodeByName("sjgm", scopeTextSpinner.getSelectedItem().toString());
@@ -369,11 +421,11 @@ public class EventEntryAdd_Basic extends Fragment {
             tFtSjEntity.setFsdd(happenAddressString);
         }
         tFtSjEntity.setSfsqqt(petitionGroupsString);
-        if (StringUtils.isBlank(fieldDepartmenString)) {
+       /* if (StringUtils.isBlank(fieldDepartmenString)) {
             message += "到场部门不能为空\n";
         } else {
             tFtSjEntity.setDcbm(fieldDepartmenString);
-        }
+        }*/
         if (StringUtils.isBlank(patternManifestationString)) {
             message += "表现形式不能为空\n";
         } else {
@@ -417,5 +469,64 @@ public class EventEntryAdd_Basic extends Fragment {
             return tFtSjEntity;
         }
         return null;
+    }
+
+    public  void setFieldDepartmen(){
+        // 装载适配器和值
+        fieldDepartmenSpinnerOneAdapter = new ArrayAdapter<String>(EventEntryAdd_Basic.this.getActivity(),
+                android.R.layout.simple_spinner_item, province);
+        fieldDepartmenSpinnerOne.setAdapter(fieldDepartmenSpinnerOneAdapter);
+
+        fieldDepartmenSpinnerTwoAdapter = new ArrayAdapter<String>(EventEntryAdd_Basic.this.getActivity(),
+                android.R.layout.simple_spinner_item, city[3]);
+        citySpinner.setAdapter(fieldDepartmenSpinnerTwoAdapter);
+
+        fieldDepartmenSpinnerThreeAdapter = new ArrayAdapter<String>(EventEntryAdd_Basic.this.getActivity(),
+                android.R.layout.simple_spinner_item, country[3][0]);
+        countrySpinner.setAdapter(fieldDepartmenSpinnerThreeAdapter);
+
+        // 省下拉框监听
+        provinceSpinner
+                .setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+                    @Override
+                    public void onItemSelected(AdapterView<?> arg0, View arg1,
+                                               int position, long arg3) {
+
+                        fieldDepartmenSpinnerTwoAdapter = new ArrayAdapter<String>(
+                                EventEntryAdd_Basic.this.getActivity().getApplication(),
+                                android.R.layout.simple_spinner_item,
+                                city[position]);
+                        citySpinner.setAdapter(fieldDepartmenSpinnerTwoAdapter);
+
+                        provincePosition = position; // 记录当前省级序号，留给下面修改县级适配器时用
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> arg0) {
+
+                    }
+
+                });
+
+        // 市级下拉监听
+        citySpinner
+                .setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+                    @Override
+                    public void onItemSelected(AdapterView<?> arg0, View arg1,
+                                               int position, long arg3) {
+                        fieldDepartmenSpinnerThreeAdapter = new ArrayAdapter<String>(
+                                EventEntryAdd_Basic.this.getActivity().getApplication(),
+                                android.R.layout.simple_spinner_item,
+                                country[provincePosition][position]);
+                        countrySpinner.setAdapter(fieldDepartmenSpinnerThreeAdapter);
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> arg0) {
+
+                    }
+                });
     }
 }

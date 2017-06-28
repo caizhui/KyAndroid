@@ -52,11 +52,11 @@ public class TaskFragment_Basic extends Fragment {
      */
     @BindView(R.id.petition_groups_edt)
     EditText petitionGroupsEdt;
-    /**
+  /*  *//**
      * 到场部门
-     */
+     *//*
     @BindView(R.id.field_departmen_edt)
-    EditText fieldDepartmenEdt;
+    EditText fieldDepartmenEdt;*/
     /**
      * 表现形式
      */
@@ -238,7 +238,7 @@ public class TaskFragment_Basic extends Fragment {
             happenTimeEdt.setEnabled(false);
             happenAddressEdt.setEnabled(false);
             petitionGroupsEdt.setEnabled(false);
-            fieldDepartmenEdt.setEnabled(false);
+           // fieldDepartmenEdt.setEnabled(false);
             fieldsInvolvedEdt.setEnabled(false);
             belongStreetEdt.setEnabled(false);
             mainAppealsEdt.setEnabled(false);
@@ -257,7 +257,7 @@ public class TaskFragment_Basic extends Fragment {
             happenTimeEdt.setText(taskEntity.getFssj());
             happenAddressEdt.setText(taskEntity.getFsdd());
             petitionGroupsEdt.setText(taskEntity.getSfsqqt());
-            fieldDepartmenEdt.setText(taskEntity.getDcbm());
+           // fieldDepartmenEdt.setText(taskEntity.getDcbm());
             fieldsInvolvedEdt.setText(taskEntity.getSjly());
             belongStreetEdt.setText(taskEntity.getSsjd());
             mainAppealsEdt.setText(taskEntity.getZysq());

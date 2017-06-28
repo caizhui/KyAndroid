@@ -134,13 +134,31 @@
                     android:layout_height="wrap_content"
                     android:text="@string/field_departmen" />
 
-                <EditText
+                <Spinner
+                    android:id="@+id/field_departmen_spinner_one"
+                    android:layout_width="0dip"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content" />
+
+                <Spinner
+                    android:id="@+id/field_departmen_spinner_two"
+                    android:layout_width="0dip"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content" />
+
+                <Spinner
+                    android:id="@+id/field_departmen_spinner_three"
+                    android:layout_width="0dip"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content" />
+
+                <!--<EditText
                     android:id="@+id/field_departmen_edt"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:background="@null"
                     android:textSize="16sp"
-                    android:layout_weight="1" />
+                    android:layout_weight="1" />-->
 
                 <TextView
                     android:layout_width="wrap_content"
