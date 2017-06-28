@@ -5,7 +5,16 @@
     android:fitsSystemWindows="true"
     android:clipToPadding="false"
     android:focusable="true"
-    android:focusableInTouchMode="true" >
+    android:focusableInTouchMode="true"
+    android:background="@mipmap/login_backgroud">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="30dp"
+        android:src="@mipmap/login_title" />
 
     <ImageView
         android:id="@+id/login_picture"
@@ -13,9 +22,9 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="40dp"
-        android:layout_marginTop="52dp"
+        android:layout_marginTop="100dp"
         android:contentDescription="@string/app_name"
-        android:src="@mipmap/login_logo" />
+        android:src="@mipmap/login_tx" />
 
     <RelativeLayout
         android:id="@+id/rlay_login_and_password"
@@ -47,6 +56,7 @@
                 android:layout_height="match_parent"
                 android:background="@color/transparent"
                 android:hint="@string/login_hint_account"
+                android:textColorHint="@color/white"
                 android:inputType="text" />
         </LinearLayout>
 
@@ -74,6 +84,7 @@
                 android:layout_height="match_parent"
                 android:background="@color/transparent"
                 android:hint="@string/login_hint_password"
+                android:textColorHint="@color/white"
                 android:inputType="textPassword" />
         </LinearLayout>
 
@@ -82,15 +93,23 @@
             android:layout_width="match_parent"
             android:layout_height="42dp"
             android:layout_below="@id/lay_password"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="23dp"
-            android:gravity="right" >
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="23dp"
+            android:gravity="left" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:layout_gravity="center"
+                android:src="@mipmap/login_setting" />
 
             <TextView
                 android:id="@+id/setting_ip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="设置IP"
+                android:layout_gravity="center"
                 android:textColor="@color/button_stroke_color"
                 android:textSize="16sp" />
         </LinearLayout>
@@ -105,9 +124,8 @@
         android:layout_below="@id/rlay_login_and_password"
         android:layout_marginLeft="22dp"
         android:layout_marginRight="22dp"
-        android:layout_marginTop="35dp"
-        android:background="@drawable/button_selector_shape_red"
-        android:text="登录"
+        android:layout_marginTop="20dp"
+        android:background="@mipmap/login_ok"
         android:textColor="@color/white" />
 
 </RelativeLayout>
