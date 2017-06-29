@@ -200,11 +200,11 @@ public class EventEntryAdd_Basic extends Fragment {
     /**
      * 一级菜单名称数组
      **/
-    String[] GroupNameArray = new String[]{};
+    String[] GroupNameArray ;
     /**
      * 二级菜单名称数组
      **/
-    String[] childNameArray = new String[]{};
+    String[] childNameArray ;
 
     ListView groupListView = null;
     ListView childListView = null;
@@ -410,8 +410,8 @@ public class EventEntryAdd_Basic extends Fragment {
         String happenTimeString = happenTimeEdt.getText().toString();
         String happenAddressString = happenAddressEdt.getText().toString();
         String petitionGroupsString = petitionGroupsEdt.getText().toString();
-        // String fieldDepartmenString = descEntityDao.queryCodeByName("dcbm", fieldDepartmenEdt.getText().toString());
-        String fieldDepartmenString = fieldDepartmenEdt.getText().toString();
+        String fieldDepartmenString = descEntityDao.queryCodeByName("dcbm", fieldDepartmenEdt.getText().toString());
+        //String fieldDepartmenString = fieldDepartmenEdt.getText().toString();
         String patternManifestationString = descEntityDao.queryCodeByName("BXXS", patternManifestationSpinner.getSelectedItem().toString());
         String fieldMorpholoySpinnerString = descEntityDao.queryCodeByName("XCTS", fieldMorpholoySpinner.getSelectedItem().toString());
         String scopeTextString = descEntityDao.queryCodeByName("sjgm", scopeTextSpinner.getSelectedItem().toString());
@@ -495,26 +495,23 @@ public class EventEntryAdd_Basic extends Fragment {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.field_departmen_layout:
-               /* tabStateArr[0] = !tabStateArr[0];
+                tabStateArr[0] = !tabStateArr[0];
                 int[] location = new int[2];
-                spinnerType="sjly";
+                spinnerType="dcbm";
                 fieldDepartmenLayout.getLocationOnScreen(location);// 获取控件在屏幕中的位置,方便展示Popupwindow
                 animation=null;
                 animation = new TranslateAnimation(0, 0, -700, location[1]);
                 animation.setDuration(500);
-                List<CodeValue> codeValueList = descEntityDao.queryPidList();
+                List<CodeValue> aaa =descEntityDao.queryListByDcbm(spinnerType);
+                List<CodeValue> codeValueList = descEntityDao.queryPidList(spinnerType);
+                /** 一级菜单名称数组 **/
+                GroupNameArray = new String[codeValueList.size()];
                 if(codeValueList!=null && codeValueList.size()>0){
-                    *//** 一级菜单名称数组 **//*
-                    GroupNameArray = new String[codeValueList.size()];
                     for(int i=0;i<codeValueList.size();i++){
                         GroupNameArray[i]= codeValueList.get(i).getValue();
                     }
                 }
-                if (tabStateArr[0]) {// 判断是否需要关闭弹出层
-                    showPupupWindow();
-                } else {
-                    mPopupWindow.dismiss();
-                }*/
+                showPupupWindow();
                 break;
             case R.id.fields_involved_linearlayout:
                 int[] location1 = new int[2];
@@ -523,10 +520,10 @@ public class EventEntryAdd_Basic extends Fragment {
                 spinnerType = "sjly";
                 animation = new TranslateAnimation(0, 0, -700, location1[1]);
                 animation.setDuration(500);
-                List<CodeValue> codeValueList1 = descEntityDao.queryPidList();
+                List<CodeValue> codeValueList1 = descEntityDao.queryPidList(spinnerType);
+                /** 一级菜单名称数组 **/
+                GroupNameArray = new String[codeValueList1.size()];
                 if (codeValueList1 != null && codeValueList1.size() > 0) {
-                    /** 一级菜单名称数组 **/
-                    GroupNameArray = new String[codeValueList1.size()];
                     for (int i = 0; i < codeValueList1.size(); i++) {
                         GroupNameArray[i] = codeValueList1.get(i).getValue();
                     }
@@ -583,19 +580,17 @@ public class EventEntryAdd_Basic extends Fragment {
      * 展示区域选择的对话框
      */
     private void showPupupWindow() {
-        if (mPopupWindow == null) {
-            showPupWindow = LayoutInflater.from(EventEntryAdd_Basic.this.getActivity()).inflate(
-                    R.layout.bottom_layout, null);
-            initPopuWindow(showPupWindow);
+        showPupWindow = LayoutInflater.from(EventEntryAdd_Basic.this.getActivity()).inflate(
+                R.layout.bottom_layout, null);
+        initPopuWindow(showPupWindow);
 
-            groupListView = (ListView) showPupWindow
-                    .findViewById(R.id.listView1);
-            childListView = (ListView) showPupWindow
-                    .findViewById(R.id.listView2);
+        groupListView = (ListView) showPupWindow
+                .findViewById(R.id.listView1);
+        childListView = (ListView) showPupWindow
+                .findViewById(R.id.listView2);
 
-            groupAdapter = new GroupAdapter(EventEntryAdd_Basic.this.getActivity(), GroupNameArray);
-            groupListView.setAdapter(groupAdapter);
-        }
+        groupAdapter = new GroupAdapter(EventEntryAdd_Basic.this.getActivity(), GroupNameArray);
+        groupListView.setAdapter(groupAdapter);
 
         groupListView.setOnItemClickListener(new MyItemClick());
 
@@ -638,8 +633,8 @@ public class EventEntryAdd_Basic extends Fragment {
             String pidName = (String) groupAdapter.getItem(position);
             String pidCode = descEntityDao.queryCodeByName(spinnerType, pidName);
             List<CodeValue> childCodeValueList = descEntityDao.queryValueListByPid(spinnerType, pidCode);
+            childNameArray = new String[childCodeValueList.size()];
             if (childCodeValueList != null && childCodeValueList.size() > 0) {
-                childNameArray = new String[childCodeValueList.size()];
                 for (int i = 0; i < childCodeValueList.size(); i++) {
                     childNameArray[i] = childCodeValueList.get(i).getValue();
                 }

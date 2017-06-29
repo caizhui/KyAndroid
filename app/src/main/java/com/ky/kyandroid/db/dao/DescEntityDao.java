@@ -76,7 +76,25 @@ public class DescEntityDao extends BaseDao {
         }
         return cvList;
     }
-
+    /**
+     * 查父类型
+     *
+     * @param
+     * @return
+     */
+    public List<CodeValue> queryListByDcbm(String type){
+        List<CodeValue> cvList = new ArrayList<CodeValue>();
+        try {
+            List<DescEntity> descList = db.selector(DescEntity.class).where("type", "==", type).findAll();
+            for (DescEntity descEntity : descList) {
+                CodeValue cv = new CodeValue(descEntity.getCode(), descEntity.getValue());
+                cvList.add(cv);
+            }
+        } catch (DbException e) {
+            Log.i(TAG, "系统字典查询异常-queryListForCV >> " + e.getMessage());
+        }
+        return cvList;
+    }
 
     /**
      * 查父类型
@@ -84,10 +102,10 @@ public class DescEntityDao extends BaseDao {
      * @param
      * @return
      */
-    public List<CodeValue> queryPidList(){
+    public List<CodeValue> queryPidList(String type){
         List<CodeValue> cvList = new ArrayList<CodeValue>();
         try {
-            List<DescEntity> descList = db.selector(DescEntity.class).where("parentId", "==", "0").and("type","==","sjly").findAll();
+            List<DescEntity> descList = db.selector(DescEntity.class).where("parentId", "==", "0").and("type","==",type).findAll();
             for (DescEntity descEntity : descList) {
                 CodeValue cv = new CodeValue(descEntity.getCode(), descEntity.getValue());
                 cvList.add(cv);
