@@ -178,9 +178,9 @@ public class LoginActivity extends AppCompatActivity {
                 String password = String.valueOf(etPassword.getText());
                 final Message msg = new Message();
                 //IP
-                String ip=sp.getString("ip", "");
+                String ip=sp.getString("ip", "").trim();
                 //端口
-                String port=sp.getString("port", "");
+                String port=sp.getString("port", "").trim();
                 if (StringUtils.isBlank(account) || StringUtils.isBlank(password)) {
                     msg.obj = "登录名或密码不能为空";
                     mHandler.sendMessage(msg);
@@ -317,6 +317,8 @@ public class LoginActivity extends AppCompatActivity {
                     builder.setCancelable(false);
                     //canCloseDialog(dialogInterface, false);//不关闭对话框
                     return;
+                }else{
+                    Toast.makeText(LoginActivity.this, "设置IP成功", Toast.LENGTH_SHORT).show();
                 }
             }
         });
