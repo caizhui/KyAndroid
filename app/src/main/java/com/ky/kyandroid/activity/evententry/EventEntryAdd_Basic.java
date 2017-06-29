@@ -4,20 +4,30 @@ import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.ky.kyandroid.R;
+import com.ky.kyandroid.adapter.ChildAdapter;
+import com.ky.kyandroid.adapter.GroupAdapter;
 import com.ky.kyandroid.bean.CodeValue;
 import com.ky.kyandroid.db.dao.DescEntityDao;
 import com.ky.kyandroid.entity.TFtSjEntity;
@@ -31,6 +41,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.OnTouch;
 
 /**
@@ -62,19 +73,22 @@ public class EventEntryAdd_Basic extends Fragment {
      */
     @BindView(R.id.petition_groups_edt)
     EditText petitionGroupsEdt;
-   /* *//**
+    /**
+     * 到场部门LinearLayout
+     */
+    @BindView(R.id.field_departmen_layout)
+    LinearLayout fieldDepartmenLayout;
+    /**
      * 到场部门
-     *//*
+     */
     @BindView(R.id.field_departmen_edt)
-    EditText fieldDepartmenEdt;*/
-    @BindView(R.id.field_departmen_spinner_one)
-    Spinner fieldDepartmenSpinnerOne;
+    EditText fieldDepartmenEdt;
 
-    @BindView(R.id.field_departmen_spinner_two)
-    Spinner fieldDepartmenSpinnerTwo;
-
-    @BindView(R.id.field_departmen_spinner_three)
-    Spinner fieldDepartmenSpinnerThree;
+    /**
+     * 到场部门图标
+     */
+    @BindView(R.id.field_departmen_img)
+    ImageView fieldDepartmenImg;
     /**
      * 表现形式
      */
@@ -92,10 +106,20 @@ public class EventEntryAdd_Basic extends Fragment {
     @BindView(R.id.scope_text_spinner)
     Spinner scopeTextSpinner;
     /**
+     * 涉及领域LinearLayout
+     */
+    @BindView(R.id.fields_involved_linearlayout)
+    LinearLayout fieldsInvolvedLinearLayout;
+    /**
      * 涉及领域
      */
     @BindView(R.id.fields_involved_edt)
     EditText fieldsInvolvedEdt;
+    /**
+     * 涉及领域img
+     */
+    @BindView(R.id.fields_involved_img)
+    ImageView fieldsInvolvedImg;
     /**
      * 是否涉外
      */
@@ -171,53 +195,36 @@ public class EventEntryAdd_Basic extends Fragment {
 
     public DescEntityDao descEntityDao;
 
-    private Spinner provinceSpinner = null; // 省（省、直辖市）
-    private Spinner citySpinner = null; // 市
-    private Spinner countrySpinner = null; // 区
+    View showPupWindow = null; // 选择区域的view
 
-    private ArrayAdapter<String> fieldDepartmenSpinnerOneAdapter = null; // 省
-    private ArrayAdapter<String> fieldDepartmenSpinnerTwoAdapter = null; // 市
-    private ArrayAdapter<String> fieldDepartmenSpinnerThreeAdapter = null; // 区
+    /** 一级菜单名称数组 **/
+    String[] GroupNameArray = new String[]{};
+    /** 二级菜单名称数组 **/
+    String[] childNameArray  = new String[]{};
 
-    private int provincePosition = 3;
+    ListView groupListView = null;
+    ListView childListView = null;
+    GroupAdapter groupAdapter = null;
+    ChildAdapter childAdapter = null;
 
-    // 省级选项值
-    private String[] province = new String[] { "北京", "上海", "天津", "广东" };// ,"重庆","黑龙江","江苏","山东","浙江","香港","澳门"};
+    TranslateAnimation animation;// 出现的动画效果
+    // 屏幕的宽高
+    public static int screen_width = 0;
+    public static int screen_height = 0;
 
-    // 市级选项值
-    private String[][] city = new String[][] {
-            { "东城区", "西城区", "崇文区", "宣武区", "朝阳区", "海淀区", "丰台区", "石景山区", "门头沟区","房山区", "通州区", "顺义区", "大兴区", "昌平区", "平谷区", "怀柔区", "密云县","延庆县" },
-            { "长宁区", "静安区", "普陀区", "闸北区", "虹口区" },
-            { "和平区", "河东区", "河西区", "南开区", "河北区", "红桥区", "塘沽区", "汉沽区", "大港区","东丽区" },
-            { "广州", "深圳", "韶关" // ,"珠海","汕头","佛山","湛江","肇庆","江门","茂名","惠州","梅州",
-                    // "汕尾","河源","阳江","清远","东莞","中山","潮州","揭阳","云浮"
-            } };
+    private boolean[] tabStateArr = new boolean[4];// 标记tab的选中状态，方便设置
 
-    // 区县级选项值
-    private String[][][] country = new String[][][]
-            {
-                    {   //北京
-                            {"无"},{"无"},{"无"},{"无"},{"无"},{"无"},{"无"},{"无"},{"无"},{"无"},
-                            {"无"},{"无"},{"无"},{"无"},{"无"},{"无"},{"无"},{"无"}
-                    },
-                    {    //上海
-                            {"无"},{"无"},{"无"},{"无"},{"无"}
-                    },
-                    {    //天津
-                            {"无"},{"无"},{"无"},{"无"},{"无"},{"无"},{"无"},{"无"},{"无"},{"无"}
-                    },
-                    {    //广东
-                            {"海珠区","荔湾区","越秀区","白云区","萝岗区","天河区","黄埔区","花都区","从化市","增城市","番禺区","南沙区"}, //广州
-                            {"宝安区","福田区","龙岗区","罗湖区","南山区","盐田区"}, //深圳
-                            {"武江区","浈江区","曲江区","乐昌市","南雄市","始兴县","仁化县","翁源县","新丰县","乳源县"}  //韶关
-                    }
-            };
-
+    PopupWindow mPopupWindow = null;
 
     @SuppressLint("ValidFragment")
     public EventEntryAdd_Basic(Intent intent) {
         this.intent = intent;
     }
+
+    /**
+     * 判断是那个树 dcbm(到场部门),sjly(涉及领域)
+     */
+    private  String spinnerType;
 
     @Nullable
     @Override
@@ -227,6 +234,10 @@ public class EventEntryAdd_Basic extends Fragment {
         descEntityDao = new DescEntityDao();
         type = intent.getStringExtra("type");
         tFtSjEntity = (TFtSjEntity) intent.getSerializableExtra("tFtSjEntity");
+        DisplayMetrics dm = new DisplayMetrics();
+        EventEntryAdd_Basic.this.getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm); // 获取手机屏幕的大小
+        screen_width = dm.widthPixels;
+        screen_height = dm.heightPixels;
         initData();
         return view;
     }
@@ -327,25 +338,25 @@ public class EventEntryAdd_Basic extends Fragment {
             eventSummaryEdt.setText(tFtSjEntity.getSjgyqk());
             leadershipInstructionsEdt.setText(tFtSjEntity.getLdps());
             //以下为下拉控件设置默认值
-            if(tFtSjEntity.getBxxs()!=null) {
+            if (tFtSjEntity.getBxxs() != null) {
                 patternManifestationSpinner.setSelection(Integer.valueOf(tFtSjEntity.getBxxs().split(",")[0]) - 1);
             }
-            if(tFtSjEntity.getXcts()!=null){
+            if (tFtSjEntity.getXcts() != null) {
                 fieldMorpholoySpinner.setSelection(Integer.valueOf(tFtSjEntity.getXcts()));
             }
-            if(tFtSjEntity.getGm()!=null){
+            if (tFtSjEntity.getGm() != null) {
                 scopeTextSpinner.setSelection(Integer.valueOf(tFtSjEntity.getGm()));
             }
-            if(tFtSjEntity.getSfsw()!=null){
+            if (tFtSjEntity.getSfsw() != null) {
                 foreignRelatedSpinner.setSelection(Integer.valueOf(tFtSjEntity.getSfsw()));
             }
-            if(tFtSjEntity.getSfsj()!=null){
+            if (tFtSjEntity.getSfsj() != null) {
                 involvedXinjiangSpinner.setSelection(Integer.valueOf(tFtSjEntity.getSfsj()));
             }
-            if(tFtSjEntity.getSfsyq()!=null){
+            if (tFtSjEntity.getSfsyq() != null) {
                 involvePublicOpinionSpinner.setSelection(Integer.valueOf(tFtSjEntity.getSfsyq()));
             }
-            if(tFtSjEntity.getSfgacz()!=null) {
+            if (tFtSjEntity.getSfgacz() != null) {
                 publicSecurityDisposalSpinner.setSelection(Integer.valueOf(tFtSjEntity.getSfgacz()));
             }
 
@@ -358,7 +369,7 @@ public class EventEntryAdd_Basic extends Fragment {
         switch (v.getId()) {
             /** 点击发生时间控件 **/
             case R.id.happen_time_edt:
-                if(event.getAction() == MotionEvent.ACTION_DOWN){
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     happenTimeEdt.clearFocus();
                     Calendar c = Calendar.getInstance();
                     new DatePickerDialog(EventEntryAdd_Basic.this.getActivity(), new DatePickerDialog.OnDateSetListener() {
@@ -391,11 +402,12 @@ public class EventEntryAdd_Basic extends Fragment {
         String happenTimeString = happenTimeEdt.getText().toString();
         String happenAddressString = happenAddressEdt.getText().toString();
         String petitionGroupsString = petitionGroupsEdt.getText().toString();
-       // String fieldDepartmenString = fieldDepartmenEdt.getText().toString();
+        // String fieldDepartmenString = descEntityDao.queryCodeByName("dcbm", fieldDepartmenEdt.getText().toString());
+        String fieldDepartmenString =  fieldDepartmenEdt.getText().toString();
         String patternManifestationString = descEntityDao.queryCodeByName("BXXS", patternManifestationSpinner.getSelectedItem().toString());
         String fieldMorpholoySpinnerString = descEntityDao.queryCodeByName("XCTS", fieldMorpholoySpinner.getSelectedItem().toString());
         String scopeTextString = descEntityDao.queryCodeByName("sjgm", scopeTextSpinner.getSelectedItem().toString());
-        String fieldsInvolved = fieldsInvolvedEdt.getText().toString();
+        String fieldsInvolved = descEntityDao.queryCodeByName("sjly", fieldsInvolvedEdt.getText().toString());
         String foreignRelatedString = descEntityDao.queryCodeByName("sfsw", foreignRelatedSpinner.getSelectedItem().toString());
         String involvedXinjiangString = descEntityDao.queryCodeByName("sfsw", involvedXinjiangSpinner.getSelectedItem().toString());
         String involvePublicOpinionString = descEntityDao.queryCodeByName("sfsw", involvePublicOpinionSpinner.getSelectedItem().toString());
@@ -421,11 +433,11 @@ public class EventEntryAdd_Basic extends Fragment {
             tFtSjEntity.setFsdd(happenAddressString);
         }
         tFtSjEntity.setSfsqqt(petitionGroupsString);
-       /* if (StringUtils.isBlank(fieldDepartmenString)) {
+       if (StringUtils.isBlank(fieldDepartmenString)) {
             message += "到场部门不能为空\n";
         } else {
             tFtSjEntity.setDcbm(fieldDepartmenString);
-        }*/
+        }
         if (StringUtils.isBlank(patternManifestationString)) {
             message += "表现形式不能为空\n";
         } else {
@@ -471,62 +483,191 @@ public class EventEntryAdd_Basic extends Fragment {
         return null;
     }
 
-    public  void setFieldDepartmen(){
-        // 装载适配器和值
-        fieldDepartmenSpinnerOneAdapter = new ArrayAdapter<String>(EventEntryAdd_Basic.this.getActivity(),
-                android.R.layout.simple_spinner_item, province);
-        fieldDepartmenSpinnerOne.setAdapter(fieldDepartmenSpinnerOneAdapter);
-
-        fieldDepartmenSpinnerTwoAdapter = new ArrayAdapter<String>(EventEntryAdd_Basic.this.getActivity(),
-                android.R.layout.simple_spinner_item, city[3]);
-        citySpinner.setAdapter(fieldDepartmenSpinnerTwoAdapter);
-
-        fieldDepartmenSpinnerThreeAdapter = new ArrayAdapter<String>(EventEntryAdd_Basic.this.getActivity(),
-                android.R.layout.simple_spinner_item, country[3][0]);
-        countrySpinner.setAdapter(fieldDepartmenSpinnerThreeAdapter);
-
-        // 省下拉框监听
-        provinceSpinner
-                .setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-                    @Override
-                    public void onItemSelected(AdapterView<?> arg0, View arg1,
-                                               int position, long arg3) {
-
-                        fieldDepartmenSpinnerTwoAdapter = new ArrayAdapter<String>(
-                                EventEntryAdd_Basic.this.getActivity().getApplication(),
-                                android.R.layout.simple_spinner_item,
-                                city[position]);
-                        citySpinner.setAdapter(fieldDepartmenSpinnerTwoAdapter);
-
-                        provincePosition = position; // 记录当前省级序号，留给下面修改县级适配器时用
+    @OnClick({R.id.field_departmen_layout,R.id.fields_involved_linearlayout})
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.field_departmen_layout:
+               /* tabStateArr[0] = !tabStateArr[0];
+                int[] location = new int[2];
+                spinnerType="sjly";
+                fieldDepartmenLayout.getLocationOnScreen(location);// 获取控件在屏幕中的位置,方便展示Popupwindow
+                animation=null;
+                animation = new TranslateAnimation(0, 0, -700, location[1]);
+                animation.setDuration(500);
+                List<CodeValue> codeValueList = descEntityDao.queryPidList();
+                if(codeValueList!=null && codeValueList.size()>0){
+                    *//** 一级菜单名称数组 **//*
+                    GroupNameArray = new String[codeValueList.size()];
+                    for(int i=0;i<codeValueList.size();i++){
+                        GroupNameArray[i]= codeValueList.get(i).getValue();
                     }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> arg0) {
-
+                }
+                if (tabStateArr[0]) {// 判断是否需要关闭弹出层
+                    showPupupWindow();
+                } else {
+                    mPopupWindow.dismiss();
+                }*/
+                break;
+            case R.id.fields_involved_linearlayout:
+                tabStateArr[1] = !tabStateArr[1];
+                int[] location1 = new int[2];
+                fieldsInvolvedLinearLayout.getLocationOnScreen(location1);// 获取控件在屏幕中的位置,方便展示Popupwindow
+                animation=null;
+                spinnerType="sjly";
+                animation = new TranslateAnimation(0, 0, -700, location1[1]);
+                animation.setDuration(500);
+                List<CodeValue> codeValueList1 = descEntityDao.queryPidList();
+                if(codeValueList1!=null && codeValueList1.size()>0){
+                    /** 一级菜单名称数组 **/
+                    GroupNameArray = new String[codeValueList1.size()];
+                    for(int i=0;i<codeValueList1.size();i++){
+                        GroupNameArray[i]= codeValueList1.get(i).getValue();
                     }
+                }
+                if (tabStateArr[1]) {// 判断是否需要关闭弹出层
+                    showPupupWindow();
+                } else {
+                    mPopupWindow.dismiss();
+                }
+                break;
+        }
 
-                });
-
-        // 市级下拉监听
-        citySpinner
-                .setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-                    @Override
-                    public void onItemSelected(AdapterView<?> arg0, View arg1,
-                                               int position, long arg3) {
-                        fieldDepartmenSpinnerThreeAdapter = new ArrayAdapter<String>(
-                                EventEntryAdd_Basic.this.getActivity().getApplication(),
-                                android.R.layout.simple_spinner_item,
-                                country[provincePosition][position]);
-                        countrySpinner.setAdapter(fieldDepartmenSpinnerThreeAdapter);
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> arg0) {
-
-                    }
-                });
     }
+
+  /*  *//**
+            * 设置tab的状态
+	 *
+             * @param img
+	 *            // ImageView对象
+	 *            // TextView对象
+             * @param state
+	 *            // 状态
+      *//*
+    private void setTabState(ImageView img, boolean state) {
+        if (state) {// 选中状态
+            img.setBackgroundResource(R.mipmap.up);
+        } else {
+            img.setBackgroundResource(R.mipmap.down);
+        }
+    }*/
+
+    /**
+     * 初始化 PopupWindow
+     *
+     * @param view
+     */
+    public void initPopuWindow(View view) {
+		/* 第一个参数弹出显示view 后两个是窗口大小 */
+        mPopupWindow = new PopupWindow(view, screen_width, screen_height);
+		/* 设置背景显示 */
+        mPopupWindow.setBackgroundDrawable(getResources().getDrawable(
+                R.drawable.mypop_bg));
+		/* 设置触摸外面时消失 */
+         mPopupWindow.setOutsideTouchable(true);
+
+        mPopupWindow.update();
+        mPopupWindow.setTouchable(true);
+		/* 设置点击menu以外其他地方以及返回键退出 */
+        mPopupWindow.setFocusable(true);
+
+        /**
+         * 1.解决再次点击MENU键无反应问题 2.sub_view是PopupWindow的子View
+         */
+        view.setFocusableInTouchMode(true);
+    }
+
+    /**
+     * 展示区域选择的对话框
+     */
+    private void showPupupWindow() {
+        if (mPopupWindow == null) {
+            showPupWindow = LayoutInflater.from(EventEntryAdd_Basic.this.getActivity()).inflate(
+                    R.layout.bottom_layout, null);
+            initPopuWindow(showPupWindow);
+
+            groupListView = (ListView) showPupWindow
+                    .findViewById(R.id.listView1);
+            childListView = (ListView) showPupWindow
+                    .findViewById(R.id.listView2);
+
+            groupAdapter = new GroupAdapter(EventEntryAdd_Basic.this.getActivity(), GroupNameArray);
+            groupListView.setAdapter(groupAdapter);
+        }
+
+        groupListView.setOnItemClickListener(new MyItemClick());
+
+        childListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                String name=(String) parent.getItemAtPosition(position);
+                    Toast.makeText(EventEntryAdd_Basic.this.getActivity(),position+"",Toast.LENGTH_SHORT).show();
+                if("sjly".equals(spinnerType)){
+                    fieldsInvolvedEdt.setText(name);
+                    fieldsInvolvedImg.setBackgroundResource(R.mipmap.down);
+                }else{
+                    fieldDepartmenEdt.setText(name);
+                    fieldDepartmenImg.setBackgroundResource(R.mipmap.down);
+                }
+                mPopupWindow.dismiss();
+            }
+        });
+
+        showPupWindow.setAnimation(animation);
+        showPupWindow.startAnimation(animation);
+
+        if("sjly".equals(spinnerType)){
+            mPopupWindow.showAsDropDown(fieldsInvolvedLinearLayout, -5, 10);
+        }else{
+            mPopupWindow.showAsDropDown(fieldDepartmenLayout, -5, 10);
+        }
+
+
+    }
+
+    class MyItemClick implements AdapterView.OnItemClickListener {
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position,
+                                long id) {
+
+            groupAdapter.setSelectedPosition(position);
+            String pidName = (String) groupAdapter.getItem(position);
+            String pidCode = descEntityDao.queryCodeByName(spinnerType,pidName);
+            List<CodeValue>  childCodeValueList= descEntityDao.queryValueListByPid(spinnerType,pidCode);
+            if(childCodeValueList!=null && childCodeValueList.size()>0){
+                childNameArray = new  String[childCodeValueList.size()];
+                for(int i=0;i<childCodeValueList.size();i++){
+                    childNameArray[i]=childCodeValueList.get(i).getValue();
+                }
+            }
+            if (childAdapter == null) {
+                childAdapter = new ChildAdapter(EventEntryAdd_Basic.this.getActivity());
+                childListView.setAdapter(childAdapter);
+            }
+
+            Message msg = new Message();
+            msg.what = 20;
+            msg.arg1 = position;
+            handler.sendMessage(msg);
+        }
+
+    }
+
+    @SuppressLint("HandlerLeak")
+    Handler handler = new Handler() {
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 20:
+                    childAdapter.setChildData(childNameArray);
+                    childAdapter.notifyDataSetChanged();
+                    groupAdapter.notifyDataSetChanged();
+                    break;
+                default:
+                    break;
+            }
+
+        };
+    };
+
 }

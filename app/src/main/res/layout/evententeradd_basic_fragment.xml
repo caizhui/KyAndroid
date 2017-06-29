@@ -123,6 +123,7 @@
             <include layout="@layout/linearlayout_one" />
 
             <LinearLayout
+                android:id="@+id/field_departmen_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -134,31 +135,24 @@
                     android:layout_height="wrap_content"
                     android:text="@string/field_departmen" />
 
-                <Spinner
-                    android:id="@+id/field_departmen_spinner_one"
-                    android:layout_width="0dip"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content" />
 
-                <Spinner
-                    android:id="@+id/field_departmen_spinner_two"
-                    android:layout_width="0dip"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content" />
-
-                <Spinner
-                    android:id="@+id/field_departmen_spinner_three"
-                    android:layout_width="0dip"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content" />
-
-                <!--<EditText
+              <EditText
                     android:id="@+id/field_departmen_edt"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:background="@null"
+                    android:gravity="center_vertical"
                     android:textSize="16sp"
-                    android:layout_weight="1" />-->
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/field_departmen_img"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="4dp"
+                    android:background="@mipmap/down" />
+
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -256,6 +250,7 @@
             <include layout="@layout/linearlayout_one" />
 
             <LinearLayout
+                android:id="@+id/fields_involved_linearlayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -270,10 +265,20 @@
                 <EditText
                     android:id="@+id/fields_involved_edt"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:background="@null"
                     android:textSize="16sp"
+                    android:gravity="center_vertical"
                     android:layout_weight="1" />
+
+
+                <ImageView
+                    android:id="@+id/fields_involved_img"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="4dp"
+                    android:background="@mipmap/down" />
 
                 <TextView
                     android:layout_width="wrap_content"
