@@ -197,10 +197,14 @@ public class EventEntryAdd_Basic extends Fragment {
 
     View showPupWindow = null; // 选择区域的view
 
-    /** 一级菜单名称数组 **/
+    /**
+     * 一级菜单名称数组
+     **/
     String[] GroupNameArray = new String[]{};
-    /** 二级菜单名称数组 **/
-    String[] childNameArray  = new String[]{};
+    /**
+     * 二级菜单名称数组
+     **/
+    String[] childNameArray = new String[]{};
 
     ListView groupListView = null;
     ListView childListView = null;
@@ -224,7 +228,7 @@ public class EventEntryAdd_Basic extends Fragment {
     /**
      * 判断是那个树 dcbm(到场部门),sjly(涉及领域)
      */
-    private  String spinnerType;
+    private String spinnerType;
 
     @Nullable
     @Override
@@ -332,8 +336,8 @@ public class EventEntryAdd_Basic extends Fragment {
             happenAddressEdt.setText(tFtSjEntity.getFsdd());
             petitionGroupsEdt.setText(tFtSjEntity.getSfsqqt());
             fieldDepartmenEdt.setText(tFtSjEntity.getDcbm());
-            if(tFtSjEntity.getSjly()!=null && !"".equals(tFtSjEntity.getSjly())){
-                String sjlyName=descEntityDao.queryName("sjly",tFtSjEntity.getSjly());
+            if (tFtSjEntity.getSjly() != null && !"".equals(tFtSjEntity.getSjly())) {
+                String sjlyName = descEntityDao.queryName("sjly", tFtSjEntity.getSjly());
                 fieldsInvolvedEdt.setText(sjlyName);
             }
 
@@ -407,7 +411,7 @@ public class EventEntryAdd_Basic extends Fragment {
         String happenAddressString = happenAddressEdt.getText().toString();
         String petitionGroupsString = petitionGroupsEdt.getText().toString();
         // String fieldDepartmenString = descEntityDao.queryCodeByName("dcbm", fieldDepartmenEdt.getText().toString());
-        String fieldDepartmenString =  fieldDepartmenEdt.getText().toString();
+        String fieldDepartmenString = fieldDepartmenEdt.getText().toString();
         String patternManifestationString = descEntityDao.queryCodeByName("BXXS", patternManifestationSpinner.getSelectedItem().toString());
         String fieldMorpholoySpinnerString = descEntityDao.queryCodeByName("XCTS", fieldMorpholoySpinner.getSelectedItem().toString());
         String scopeTextString = descEntityDao.queryCodeByName("sjgm", scopeTextSpinner.getSelectedItem().toString());
@@ -437,7 +441,7 @@ public class EventEntryAdd_Basic extends Fragment {
             tFtSjEntity.setFsdd(happenAddressString);
         }
         tFtSjEntity.setSfsqqt(petitionGroupsString);
-       if (StringUtils.isBlank(fieldDepartmenString)) {
+        if (StringUtils.isBlank(fieldDepartmenString)) {
             message += "到场部门不能为空\n";
         } else {
             tFtSjEntity.setDcbm(fieldDepartmenString);
@@ -487,9 +491,9 @@ public class EventEntryAdd_Basic extends Fragment {
         return null;
     }
 
-    @OnClick({R.id.field_departmen_layout,R.id.fields_involved_linearlayout})
+    @OnClick({R.id.field_departmen_layout, R.id.fields_involved_linearlayout})
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.field_departmen_layout:
                /* tabStateArr[0] = !tabStateArr[0];
                 int[] location = new int[2];
@@ -515,16 +519,16 @@ public class EventEntryAdd_Basic extends Fragment {
             case R.id.fields_involved_linearlayout:
                 int[] location1 = new int[2];
                 fieldsInvolvedLinearLayout.getLocationOnScreen(location1);// 获取控件在屏幕中的位置,方便展示Popupwindow
-                animation=null;
-                spinnerType="sjly";
+                animation = null;
+                spinnerType = "sjly";
                 animation = new TranslateAnimation(0, 0, -700, location1[1]);
                 animation.setDuration(500);
                 List<CodeValue> codeValueList1 = descEntityDao.queryPidList();
-                if(codeValueList1!=null && codeValueList1.size()>0){
+                if (codeValueList1 != null && codeValueList1.size() > 0) {
                     /** 一级菜单名称数组 **/
                     GroupNameArray = new String[codeValueList1.size()];
-                    for(int i=0;i<codeValueList1.size();i++){
-                        GroupNameArray[i]= codeValueList1.get(i).getValue();
+                    for (int i = 0; i < codeValueList1.size(); i++) {
+                        GroupNameArray[i] = codeValueList1.get(i).getValue();
                     }
                 }
                 showPupupWindow();
@@ -534,14 +538,14 @@ public class EventEntryAdd_Basic extends Fragment {
     }
 
   /*  *//**
-            * 设置tab的状态
-	 *
-             * @param img
-	 *            // ImageView对象
-	 *            // TextView对象
-             * @param state
-	 *            // 状态
-      *//*
+     * 设置tab的状态
+     *
+     * @param img
+     *            // ImageView对象
+     *            // TextView对象
+     * @param state
+     *            // 状态
+     *//*
     private void setTabState(ImageView img, boolean state) {
         if (state) {// 选中状态
             img.setBackgroundResource(R.mipmap.up);
@@ -556,13 +560,13 @@ public class EventEntryAdd_Basic extends Fragment {
      * @param view
      */
     public void initPopuWindow(View view) {
-		/* 第一个参数弹出显示view 后两个是窗口大小 */
+        /* 第一个参数弹出显示view 后两个是窗口大小 */
         mPopupWindow = new PopupWindow(view, screen_width, screen_height);
 		/* 设置背景显示 */
         mPopupWindow.setBackgroundDrawable(getResources().getDrawable(
                 R.drawable.mypop_bg));
 		/* 设置触摸外面时消失 */
-         mPopupWindow.setOutsideTouchable(true);
+        mPopupWindow.setOutsideTouchable(true);
 
         mPopupWindow.update();
         mPopupWindow.setTouchable(true);
@@ -599,12 +603,12 @@ public class EventEntryAdd_Basic extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                String name=(String) parent.getItemAtPosition(position);
-                    Toast.makeText(EventEntryAdd_Basic.this.getActivity(),position+"",Toast.LENGTH_SHORT).show();
-                if("sjly".equals(spinnerType)){
+                String name = (String) parent.getItemAtPosition(position);
+                Toast.makeText(EventEntryAdd_Basic.this.getActivity(), position + "", Toast.LENGTH_SHORT).show();
+                if ("sjly".equals(spinnerType)) {
                     fieldsInvolvedEdt.setText(name);
                     fieldsInvolvedImg.setBackgroundResource(R.mipmap.down);
-                }else{
+                } else {
                     fieldDepartmenEdt.setText(name);
                     fieldDepartmenImg.setBackgroundResource(R.mipmap.down);
                 }
@@ -615,9 +619,9 @@ public class EventEntryAdd_Basic extends Fragment {
         showPupWindow.setAnimation(animation);
         showPupWindow.startAnimation(animation);
 
-        if("sjly".equals(spinnerType)){
+        if ("sjly".equals(spinnerType)) {
             mPopupWindow.showAsDropDown(fieldsInvolvedLinearLayout, -5, 10);
-        }else{
+        } else {
             mPopupWindow.showAsDropDown(fieldDepartmenLayout, -5, 10);
         }
 
@@ -632,12 +636,12 @@ public class EventEntryAdd_Basic extends Fragment {
 
             groupAdapter.setSelectedPosition(position);
             String pidName = (String) groupAdapter.getItem(position);
-            String pidCode = descEntityDao.queryCodeByName(spinnerType,pidName);
-            List<CodeValue>  childCodeValueList= descEntityDao.queryValueListByPid(spinnerType,pidCode);
-            if(childCodeValueList!=null && childCodeValueList.size()>0){
-                childNameArray = new  String[childCodeValueList.size()];
-                for(int i=0;i<childCodeValueList.size();i++){
-                    childNameArray[i]=childCodeValueList.get(i).getValue();
+            String pidCode = descEntityDao.queryCodeByName(spinnerType, pidName);
+            List<CodeValue> childCodeValueList = descEntityDao.queryValueListByPid(spinnerType, pidCode);
+            if (childCodeValueList != null && childCodeValueList.size() > 0) {
+                childNameArray = new String[childCodeValueList.size()];
+                for (int i = 0; i < childCodeValueList.size(); i++) {
+                    childNameArray[i] = childCodeValueList.get(i).getValue();
                 }
             }
             if (childAdapter == null) {
@@ -666,7 +670,9 @@ public class EventEntryAdd_Basic extends Fragment {
                     break;
             }
 
-        };
+        }
+
+        ;
     };
 
 }
