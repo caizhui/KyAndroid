@@ -132,6 +132,7 @@ public class LoginActivity extends AppCompatActivity {
                     break;
                 // 成功跳转
                 case 1:
+                    sweetAlertDialogUtil.dismissAlertDialog();
                     Log.i(TAG, "登录成功...");
                     handleTransation(message);
                     break;
@@ -239,7 +240,6 @@ public class LoginActivity extends AppCompatActivity {
             AckMessage ackMsg = JsonUtil.fromJson(body, AckMessage.class);
             if (setUserMessage(ackMsg)) {
                 Log.i(TAG, "设置用户信息成功...");
-                sweetAlertDialogUtil.dismissAlertDialog();
                 startService(new Intent(this, SaveBDdescService.class));
                 Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
@@ -283,6 +283,16 @@ public class LoginActivity extends AppCompatActivity {
         final View mView = LayoutInflater.from(this).inflate(R.layout.activity_settingip, null);
         etIp = ButterKnife.findById(mView,R.id.et_ip);
         etPort = ButterKnife.findById(mView,R.id.et_port);
+        //IP
+        String ip=sp.getString("ip", "");
+        //端口
+        String port=sp.getString("port", "");
+        if(!"".equals(ip)){
+            etIp.setText(ip);
+        }
+        if(!"".equals(port)){
+            etPort.setText(port);
+        }
         final AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
         builder.setTitle("设置IP和端口信息");
         builder.setView(mView);

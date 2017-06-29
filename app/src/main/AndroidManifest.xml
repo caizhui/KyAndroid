@@ -74,9 +74,15 @@
             android:windowSoftInputMode = "stateAlwaysHidden|adjustPan"
             android:screenOrientation="portrait"/>
 
+        <!--消息提醒Activity-->
+        <activity android:name=".activity.msg.MsgNoticeActivity"
+            android:windowSoftInputMode = "stateAlwaysHidden|adjustPan"
+            android:screenOrientation="portrait"/>
+
         <!-- 字典服务 -->
         <service android:name="com.ky.kyandroid.service.SaveBDdescService" >
         </service>
+
     </application>
 
 

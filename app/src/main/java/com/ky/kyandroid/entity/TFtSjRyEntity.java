@@ -14,8 +14,8 @@ import java.util.Date;
 public class TFtSjRyEntity {
 
 
-	@Column(name =  "id",isId = true,autoGen = false)
-	private String id;
+	@Column(name = "id",isId = true,autoGen = true)
+	private int uuid;
 	/**
 	 * 外键
 	 */
@@ -126,6 +126,13 @@ public class TFtSjRyEntity {
 	 *录入人姓名，这个属性是不用在表中显示，只是方便查询 ，甚至xml都没有增加这个属性
 	 */
 	private String lrrName;
+
+
+	/**
+	 * 车牌号码
+	 */
+	@Column(name = "cphm")
+	private String cphm;
 
 	public  TFtSjRyEntity(){}
 	/**
@@ -431,11 +438,19 @@ public class TFtSjRyEntity {
 		this.lrrName = lrrName;
 	}
 
-	public String getId() {
-		return id;
+	public int getUuid() {
+		return uuid;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setUuid(int uuid) {
+		this.uuid = uuid;
+	}
+
+	public String getCphm() {
+		return cphm;
+	}
+
+	public void setCphm(String cphm) {
+		this.cphm = cphm;
 	}
 }

@@ -18,6 +18,8 @@ public class DescEntity {
     private String value;
     @Column(name = "type")
     private String type;
+    @Column(name = "parentId")
+    private String parentId;
 
     public DescEntity(){};
 
@@ -62,5 +64,13 @@ public class DescEntity {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
     }
 }

@@ -79,6 +79,46 @@ public class DescEntityDao extends BaseDao {
 
 
     /**
+     * 查父类型
+     *
+     * @param
+     * @return
+     */
+    public List<CodeValue> queryPidList(){
+        List<CodeValue> cvList = new ArrayList<CodeValue>();
+        try {
+            List<DescEntity> descList = db.selector(DescEntity.class).where("parentId", "==", "0").and("type","==","sjly").findAll();
+            for (DescEntity descEntity : descList) {
+                CodeValue cv = new CodeValue(descEntity.getCode(), descEntity.getValue());
+                cvList.add(cv);
+            }
+        } catch (DbException e) {
+            Log.i(TAG, "系统字典查询异常-queryListForCV >> " + e.getMessage());
+        }
+        return cvList;
+    }
+
+    /**
+     * 根据父id查找子内容
+     *
+     * @param
+     * @return
+     */
+    public List<CodeValue> queryValueListByPid(String type,String parentId){
+        List<CodeValue> cvList = new ArrayList<CodeValue>();
+        try {
+            List<DescEntity> descList = db.selector(DescEntity.class).where("type", "==", type).and("parentId", "==", parentId).findAll();
+            for (DescEntity descEntity : descList) {
+                CodeValue cv = new CodeValue(descEntity.getCode(), descEntity.getValue());
+                cvList.add(cv);
+            }
+        } catch (DbException e) {
+            Log.i(TAG, "系统字典查询异常-queryListForCV >> " + e.getMessage());
+        }
+        return cvList;
+    }
+
+    /**
      * 根据代码类型与代码查找名称
      * @param type
      * @param code
@@ -111,6 +151,5 @@ public class DescEntityDao extends BaseDao {
         }
         return descList.get(0).getCode();
     }
-
 
 }

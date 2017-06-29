@@ -548,7 +548,7 @@ public class TaskListActivity extends AppCompatActivity {
         //处理时间
         happenTimeEdt = ButterKnife.findById(mView, R.id.happen_time_edt);
         //处理原因
-        reasonEdt = ButterKnife.findById(mView, R.id.reason_edt);
+        reasonEdt = ButterKnife.findById(mView, R.id.return_edt);
         fileAddBtn = ButterKnife.findById(mView, R.id.add_btn);
         //获取需要添加控件的L
         final LinearLayout linearlayout_dispatch = (LinearLayout) mView.findViewById(R.id.linearlayout_dispatch);

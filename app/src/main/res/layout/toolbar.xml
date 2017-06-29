@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/toolbar_layout"
+    android:layout_width="match_parent"
+    android:layout_height="44dp"
+    android:background="@color/light_blue" >
+
+    <ImageView
+        android:id="@+id/toolbar_back"
+        android:layout_width="44dp"
+        android:layout_height="fill_parent"
+        android:contentDescription="@string/app_name"
+        android:padding="10dp"
+        android:src="@mipmap/back" />
+
+    <TextView
+        android:id="@+id/toolbar_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textColor="@color/white"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/toolbar_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_toRightOf="@id/toolbar_title"
+        android:textColor="@color/white"
+        android:textSize="18sp" />
+
+    <FrameLayout
+        android:id="@+id/toolbar_right_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_alignParentRight="true"
+        android:paddingRight="10dp" >
+
+        <ImageView
+            android:id="@+id/toolbar_right_img"
+            android:layout_width="44dp"
+            android:layout_height="fill_parent"
+            android:contentDescription="@string/app_name"
+            android:padding="10dp" />
+
+        <TextView
+            android:id="@+id/toolbar_right_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+    </FrameLayout>
+
+</RelativeLayout>
