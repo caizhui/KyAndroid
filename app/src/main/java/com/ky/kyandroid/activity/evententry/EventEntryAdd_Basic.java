@@ -331,8 +331,12 @@ public class EventEntryAdd_Basic extends Fragment {
             happenTimeEdt.setText(tFtSjEntity.getFssj());
             happenAddressEdt.setText(tFtSjEntity.getFsdd());
             petitionGroupsEdt.setText(tFtSjEntity.getSfsqqt());
-            //fieldDepartmenEdt.setText(tFtSjEntity.getDcbm());
-            fieldsInvolvedEdt.setText(tFtSjEntity.getSjly());
+            fieldDepartmenEdt.setText(tFtSjEntity.getDcbm());
+            if(tFtSjEntity.getSjly()!=null && !"".equals(tFtSjEntity.getSjly())){
+                String sjlyName=descEntityDao.queryName("sjly",tFtSjEntity.getSjly());
+                fieldsInvolvedEdt.setText(sjlyName);
+            }
+
             belongStreetEdt.setText(tFtSjEntity.getSsjd());
             mainAppealsEdt.setText(tFtSjEntity.getZysq());
             eventSummaryEdt.setText(tFtSjEntity.getSjgyqk());
@@ -509,7 +513,6 @@ public class EventEntryAdd_Basic extends Fragment {
                 }*/
                 break;
             case R.id.fields_involved_linearlayout:
-                tabStateArr[1] = !tabStateArr[1];
                 int[] location1 = new int[2];
                 fieldsInvolvedLinearLayout.getLocationOnScreen(location1);// 获取控件在屏幕中的位置,方便展示Popupwindow
                 animation=null;
@@ -524,11 +527,7 @@ public class EventEntryAdd_Basic extends Fragment {
                         GroupNameArray[i]= codeValueList1.get(i).getValue();
                     }
                 }
-                if (tabStateArr[1]) {// 判断是否需要关闭弹出层
-                    showPupupWindow();
-                } else {
-                    mPopupWindow.dismiss();
-                }
+                showPupupWindow();
                 break;
         }
 
