@@ -15,7 +15,6 @@ import android.view.animation.BounceInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ky.kyandroid.Constants;
@@ -49,7 +48,7 @@ import okhttp3.Response;
  * 主界面
  */
 
-public class MainActivity extends AppCompatActivity {
+public class MainAllActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     /**
@@ -89,28 +88,6 @@ public class MainActivity extends AppCompatActivity {
     ImageView supervisionImageView;
 
     /**
-     * 我的事件LinearLayout
-     */
-    @BindView(R.id.event_linearlayout)
-    LinearLayout eventLinearlayout;
-    /**
-     * 我的任务LinearLayout
-     */
-    @BindView(R.id.task_linearlayout)
-    LinearLayout taskLinearlayout;
-    /**
-     * 督查督办LinearLayout
-     */
-    @BindView(R.id.supervision_linearlayout)
-    LinearLayout supervisionLinearlayout;
-    @BindView(R.id.event_text)
-    TextView eventText;
-    @BindView(R.id.task_text)
-    TextView taskText;
-    @BindView(R.id.supervision_text)
-    TextView supervisionText;
-
-    /**
      * 消息条目控制
      */
     BadgeView badge;
@@ -132,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main_all);
         ButterKnife.bind(this);
         centerText.setText("维稳办信息");
         rightBtn.setVisibility(View.INVISIBLE);
@@ -171,15 +148,6 @@ public class MainActivity extends AppCompatActivity {
         // 初始化网络工具 与 sp
         sp = SpUtil.getSharePerference(this);
         netWorkConnection = new NetWorkConnection(this);
-        String name = sp.getString("name", "");
-        if ("街道办工作人员".equals(name)) {
-            taskLinearlayout.setVisibility(View.GONE);
-            supervisionLinearlayout.setVisibility(View.GONE);
-        } else if ("街道职能部门".equals(name) || "区职能部门".equals(name)) {
-            eventLinearlayout.setVisibility(View.GONE);
-        } else if ("区维稳办".equals(name)) {
-            taskLinearlayout.setVisibility(View.GONE);
-        }
         // 初始化信息标识
         badge = new BadgeView(this, noticeIcon);
         badge.setBadgePosition(BadgeView.POSITION_TOP_RIGHT);
