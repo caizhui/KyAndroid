@@ -23,16 +23,27 @@ import android.widget.TextView;
 
 import com.ky.kyandroid.Constants;
 import com.ky.kyandroid.R;
+import com.ky.kyandroid.adapter.DisplayDepartmentListAdapter;
+import com.ky.kyandroid.bean.AckMessage;
 import com.ky.kyandroid.bean.NetWorkConnection;
+import com.ky.kyandroid.entity.DispatchEntity;
+import com.ky.kyandroid.entity.KpqbmEntity;
+import com.ky.kyandroid.entity.OrgsEntity;
 import com.ky.kyandroid.entity.TFtSjEntity;
+import com.ky.kyandroid.entity.YpqbmEntity;
+import com.ky.kyandroid.util.JsonUtil;
 import com.ky.kyandroid.util.OkHttpUtil;
 import com.ky.kyandroid.util.SpUtil;
+import com.ky.kyandroid.util.StringUtils;
+import com.ky.kyandroid.util.SweetAlertDialogUtil;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -134,6 +145,23 @@ public class DispatchActivity extends AppCompatActivity {
 
     private  String userId;
 
+    /**
+     * 可派遣部门
+     */
+    private List<KpqbmEntity> kpqbmList  ;
+
+    /**
+     * 已派遣部门
+     */
+    private List<YpqbmEntity> ypqbmList;
+
+    private DisplayDepartmentListAdapter adpater;
+
+    /**
+     * 弹出框工具类
+     */
+    private SweetAlertDialogUtil sweetAlertDialogUtil;
+
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
         @Override
@@ -144,9 +172,12 @@ public class DispatchActivity extends AppCompatActivity {
             switch (msg.what) {
                 // 失败
                 case 0:
+                    sweetAlertDialogUtil.dismissAlertDialog();
                     break;
                 // 成功跳转
                 case 1:
+                    sweetAlertDialogUtil.dismissAlertDialog();
+                    handleTransation(message);
                     break;
             }
         }
@@ -165,6 +196,10 @@ public class DispatchActivity extends AppCompatActivity {
         if(tFtSjEntity!=null){
             uuid = tFtSjEntity.getId();
         }
+        kpqbmList = new ArrayList<KpqbmEntity>();
+        ypqbmList = new ArrayList<YpqbmEntity>();
+        adpater = new DisplayDepartmentListAdapter(ypqbmList,this);
+        departmentList.setAdapter(adpater);
         initEvent();
         initData();
     }
@@ -178,6 +213,8 @@ public class DispatchActivity extends AppCompatActivity {
         // 初始化网络工具
         netWorkConnection = new NetWorkConnection(this);
         userId = sp.getString(USER_ID, "");
+        sweetAlertDialogUtil = new SweetAlertDialogUtil(this);
+        sweetAlertDialogUtil.loadAlertDialog();
     }
 
     /**
@@ -225,6 +262,35 @@ public class DispatchActivity extends AppCompatActivity {
             case R.id.add_department:
                 addDepartmentInfo();
                 break;
+        }
+    }
+
+    /**
+     * 处理后续流程
+     *
+     * @param
+     */
+    private void handleTransation(String body) {
+        if (!StringUtils.isBlank(body)) {
+            // 处理响应信息
+            AckMessage ackMsg = JsonUtil.fromJson(body, AckMessage.class);
+            if (ackMsg != null) {
+                if (AckMessage.SUCCESS.equals(ackMsg.getAckCode())) {
+                    Object object = ackMsg.getEntity();
+                    //先将获取的Object对象转成String
+                    String entityStr = JsonUtil.toJson(object);
+                    //先将获取的json象转成实体
+                    DispatchEntity dispatchEntity = JsonUtil.fromJson(entityStr, DispatchEntity.class);
+                    OrgsEntity orgsEntity = dispatchEntity.getOrgs();
+                    if(orgsEntity!=null){
+                        kpqbmList = orgsEntity.getKpqbmList();
+                        ypqbmList =orgsEntity.getYpqbmList();
+                    }
+                    if(ypqbmList!=null && ypqbmList.size()>0){
+                        adpater.notifyDataSetChanged(ypqbmList);
+                    }
+                }
+            }
         }
     }
 
