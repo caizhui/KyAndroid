@@ -73,6 +73,11 @@
             android:screenOrientation="portrait"
             android:launchMode="singleTask"/>
 
+        <!--事件草稿列表-->
+        <activity android:name=".activity.draft.EventDraftListActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"/>
+
         <!--事件日志Activity-->
         <activity android:name=".activity.evententry.EventLogListActivity"
             android:screenOrientation="portrait"

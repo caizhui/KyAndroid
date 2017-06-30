@@ -202,10 +202,6 @@ public class EventEntryListActivity extends AppCompatActivity {
 
     private List<TFtSjEntity> tempList;
 
-    /**
-     * 是否已经加载本地数据
-     */
-    private boolean isIfload = true;
 
     private String userId;
 
@@ -279,7 +275,6 @@ public class EventEntryListActivity extends AppCompatActivity {
                     tFtSjEntityList = new ArrayList<TFtSjEntity>();
                     // 判断是否刷新，刷新true,加载false
                     ifrefresh = true;
-                    isIfload = true;
                     //判断是否刷新成功
                     ifRefreshOK = true;
                     //判断是否最后加载到最后
@@ -473,14 +468,14 @@ public class EventEntryListActivity extends AppCompatActivity {
         if (StringUtils.isBlank(body)) {
         } else {
             //判断是否已经加载本地草稿数据，并且只添加一次
-            if (isIfload) {
+            /*if (isIfload) {
                 tempList = tFtSjEntityDao.queryList();
                 if (tempList != null && tempList.size() > 0) {
                     tFtSjEntityList.addAll(tempList);
                 }
                 isIfload = false;
                 total += tFtSjEntityList.size();
-            }
+            }*/
 
             // 处理响应信息
             AckMessage ackMsg = JsonUtil.fromJson(body, AckMessage.class);
@@ -560,18 +555,6 @@ public class EventEntryListActivity extends AppCompatActivity {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int pos) {
                     //事件刚刚录入
-                    if ("0".equals(tFtSjEntity.getZt())) {
-                        //删除
-                        if (pos == 0) {
-                            message = "";
-                            flag = tFtSjEntityDao.deleteEventEntry(tFtSjEntity.getUuid());
-                            if (flag) {
-                                Toast.makeText(EventEntryListActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(EventEntryListActivity.this, "删除失败", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    } else {
                         //根据点击的item项获取该item对应的实体，
                         TFtZtlzEntity tFtZtlzEntity = tFtZtlzEntities[pos];
                         //当3.退回和4.不予受理的时候，弹出自定义对话框
@@ -611,7 +594,6 @@ public class EventEntryListActivity extends AppCompatActivity {
                             OperatingProcess(tFtZtlzEntity);
                         }
 
-                    }
                 }
             });
             builder.create().show();
