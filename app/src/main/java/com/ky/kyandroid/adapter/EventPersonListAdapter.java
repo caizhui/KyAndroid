@@ -58,7 +58,12 @@ public class EventPersonListAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();// 取出ViewHolder对象
         }
         holder.personName.setText(list.get(position).getXm());
-        holder.personSex.setText(list.get(position).getXb());
+        if("1".equals(list.get(position).getXb())){
+            holder.personSex.setText("男");
+        }else{
+            holder.personSex.setText("女");
+        }
+
         holder.personIdcard.setText(list.get(position).getZjhm());
         return convertView;
     }

@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <LinearLayout
+                android:id="@+id/linear_evententry"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:id="@+id/linear_evententry">
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -32,13 +33,13 @@
                     <EditText
                         android:id="@+id/person_name_edt"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/border_edittext_bg"
+                        android:padding="5dp"
                         android:textSize="16sp" />
 
                 </LinearLayout>
 
-
-                <include layout="@layout/linearlayout_one" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -55,14 +56,12 @@
                     <Spinner
                         android:id="@+id/person_sex_edt"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/border_edittext_bg"
                         android:textSize="16sp" />
 
                 </LinearLayout>
 
-
-
-                <include layout="@layout/linearlayout_one" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -79,11 +78,11 @@
                     <Spinner
                         android:id="@+id/person_nation_edt"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textSize="16sp"/>
+                        android:layout_height="match_parent"
+                        android:background="@drawable/border_edittext_bg"
+                        android:textSize="16sp" />
                 </LinearLayout>
 
-                <include layout="@layout/linearlayout_one" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -100,12 +99,11 @@
                     <Spinner
                         android:id="@+id/person_idcard_type_edt"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textSize="16sp"/>
+                        android:layout_height="match_parent"
+                        android:background="@drawable/border_edittext_bg"
+                        android:textSize="16sp" />
                 </LinearLayout>
 
-
-                <include layout="@layout/linearlayout_one" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -122,12 +120,13 @@
                     <EditText
                         android:id="@+id/person_idcard_edt"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/border_edittext_bg"
+                        android:padding="5dp"
                         android:textSize="16sp" />
                 </LinearLayout>
 
 
-                <include layout="@layout/linearlayout_one" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -144,12 +143,13 @@
                     <EditText
                         android:id="@+id/person_address_edt"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/border_edittext_bg"
+                        android:padding="5dp"
                         android:textSize="16sp" />
 
                 </LinearLayout>
 
-                <include layout="@layout/linearlayout_one" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -166,13 +166,12 @@
                     <Spinner
                         android:id="@+id/person_party_edt"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textSize="16sp"/>
+                        android:layout_height="match_parent"
+                        android:background="@drawable/border_edittext_bg"
+                        android:textSize="16sp" />
 
                 </LinearLayout>
 
-
-                <include layout="@layout/linearlayout_one" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -189,12 +188,13 @@
                     <EditText
                         android:id="@+id/person_email_edt"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/border_edittext_bg"
+                        android:padding="5dp"
                         android:textSize="16sp" />
 
                 </LinearLayout>
 
-                <include layout="@layout/linearlayout_one" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -211,12 +211,12 @@
                     <EditText
                         android:id="@+id/person_telephone_edt"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/border_edittext_bg"
+                        android:padding="5dp"
                         android:textSize="16sp" />
 
                 </LinearLayout>
-
-                <include layout="@layout/linearlayout_one" />
 
 
                 <LinearLayout
@@ -234,12 +234,12 @@
                     <EditText
                         android:id="@+id/person_mobile_edt"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/border_edittext_bg"
+                        android:padding="5dp"
                         android:textSize="16sp" />
 
                 </LinearLayout>
-                <include layout="@layout/linearlayout_one" />
-
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -256,12 +256,13 @@
                     <EditText
                         android:id="@+id/person_cph_edt"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/border_edittext_bg"
+                        android:padding="5dp"
                         android:textSize="16sp" />
 
                 </LinearLayout>
 
-                <include layout="@layout/linearlayout_one" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -278,12 +279,13 @@
                     <EditText
                         android:id="@+id/person_jobaddress_edt"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/border_edittext_bg"
+                        android:padding="5dp"
                         android:textSize="16sp" />
 
                 </LinearLayout>
 
-                <include layout="@layout/linearlayout_one" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -300,12 +302,13 @@
                     <EditText
                         android:id="@+id/person_domilcile_edt"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/border_edittext_bg"
+                        android:padding="5dp"
                         android:textSize="16sp" />
 
                 </LinearLayout>
 
-                <include layout="@layout/linearlayout_one" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -322,12 +325,13 @@
                     <EditText
                         android:id="@+id/person_remark_edt"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/border_edittext_bg"
+                        android:padding="5dp"
                         android:textSize="16sp" />
 
                 </LinearLayout>
 
-                <include layout="@layout/linearlayout_one" />
             </LinearLayout>
         </ScrollView>
     </LinearLayout>
