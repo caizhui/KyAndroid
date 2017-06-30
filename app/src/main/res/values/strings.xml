@@ -51,6 +51,10 @@
     <string name="eventrelevance_lrr">录入人:</string>
     <string name="eventrelevance_lrbm">录入部门:</string>
     <string name="eventrelevance_lrsj">录入时间:</string>
+    <string name="department_type">部门类型:</string>
+    <string name="department_text">部门:</string>
+    <string name="handler_time">处理时限:</string>
+    <string name="handler_text">处理内容:</string>
     <!--事件录入end-->
 
 
