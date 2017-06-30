@@ -346,7 +346,7 @@ public class EventEntryAdd_Basic extends Fragment {
                 happenTimeEdt.setEnabled(false);
                 happenAddressEdt.setEnabled(false);
                 petitionGroupsEdt.setEnabled(false);
-                //fieldDepartmenEdt.setEnabled(false);
+                fieldDepartmenEdt.setEnabled(false);
                 fieldsInvolvedEdt.setEnabled(false);
                 belongStreetEdt.setEnabled(false);
                 mainAppealsEdt.setEnabled(false);
@@ -366,7 +366,10 @@ public class EventEntryAdd_Basic extends Fragment {
             happenTimeEdt.setText(tFtSjEntity.getFssj());
             happenAddressEdt.setText(tFtSjEntity.getFsdd());
             petitionGroupsEdt.setText(tFtSjEntity.getSfsqqt());
-            fieldDepartmenEdt.setText(tFtSjEntity.getDcbm());
+            if (tFtSjEntity.getDcbm() != null && !"".equals(tFtSjEntity.getDcbm())) {
+                String dcbmName = descEntityDao.queryName("dcbm", tFtSjEntity.getDcbm());
+                fieldDepartmenEdt.setText(dcbmName);
+            }
             if (tFtSjEntity.getSjly() != null && !"".equals(tFtSjEntity.getSjly())) {
                 String sjlyName = descEntityDao.queryName("sjly", tFtSjEntity.getSjly());
                 fieldsInvolvedEdt.setText(sjlyName);
@@ -639,7 +642,6 @@ public class EventEntryAdd_Basic extends Fragment {
                     if(isChildClick){
                         if(tempPosition == position){
                             String name = (String) parent.getItemAtPosition(position);
-                            Toast.makeText(EventEntryAdd_Basic.this.getActivity(), position + "", Toast.LENGTH_SHORT).show();
                             fieldsInvolvedEdt.setText(name);
                             fieldsInvolvedImg.setBackgroundResource(R.mipmap.down);
                             isChildClick= false;
@@ -667,7 +669,6 @@ public class EventEntryAdd_Basic extends Fragment {
                 if(isTwoChildClick){
                     if(tempPosition == position){
                         String name = (String) parent.getItemAtPosition(position);
-                        Toast.makeText(EventEntryAdd_Basic.this.getActivity(), position + "", Toast.LENGTH_SHORT).show();
                         fieldDepartmenEdt.setText(name);
                         fieldDepartmenImg.setBackgroundResource(R.mipmap.down);
                         isTwoChildClick= false;
@@ -704,7 +705,6 @@ public class EventEntryAdd_Basic extends Fragment {
                 if(tempPosition == position){
                     if(isGroupClick){
                         String name = (String) parent.getItemAtPosition(position);
-                        Toast.makeText(EventEntryAdd_Basic.this.getActivity(), position + "", Toast.LENGTH_SHORT).show();
                         if ("sjly".equals(spinnerType)) {
                             fieldsInvolvedEdt.setText(name);
                             fieldsInvolvedImg.setBackgroundResource(R.mipmap.down);
@@ -755,7 +755,6 @@ public class EventEntryAdd_Basic extends Fragment {
             if(tempPosition == position){
                 if(isChildClick){
                     String name = (String) parent.getItemAtPosition(position);
-                    Toast.makeText(EventEntryAdd_Basic.this.getActivity(), position + "", Toast.LENGTH_SHORT).show();
                     fieldDepartmenEdt.setText(name);
                     fieldDepartmenImg.setBackgroundResource(R.mipmap.down);
                     isGroupClick = false;
