@@ -139,10 +139,10 @@
               <EditText
                     android:id="@+id/field_departmen_edt"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:background="@null"
                     android:gravity="center_vertical"
-                  android:enabled="false"
+                    android:enabled="false"
                     android:textSize="16sp"
                     android:layout_weight="1" />
 
@@ -266,7 +266,7 @@
                 <EditText
                     android:id="@+id/fields_involved_edt"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:background="@null"
                     android:textSize="16sp"
                     android:enabled="false"
