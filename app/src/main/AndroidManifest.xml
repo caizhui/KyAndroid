@@ -78,6 +78,11 @@
             android:screenOrientation="portrait"
             android:launchMode="singleTask"/>
 
+        <!--事件派遣页面-->
+        <activity android:name=".activity.dispatch.DispatchActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"/>
+
         <!--事件日志Activity-->
         <activity android:name=".activity.evententry.EventLogListActivity"
             android:screenOrientation="portrait"

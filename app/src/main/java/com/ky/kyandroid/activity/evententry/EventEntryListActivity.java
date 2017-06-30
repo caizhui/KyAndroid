@@ -32,6 +32,7 @@ import android.widget.Toast;
 
 import com.ky.kyandroid.Constants;
 import com.ky.kyandroid.R;
+import com.ky.kyandroid.activity.dispatch.DispatchActivity;
 import com.ky.kyandroid.adapter.EventEntityListAdapter;
 import com.ky.kyandroid.bean.AckMessage;
 import com.ky.kyandroid.bean.NetWorkConnection;
@@ -586,7 +587,14 @@ public class EventEntryListActivity extends AppCompatActivity {
                             }*/
                             //当10回访核查通过或者7,8回访核查不通过的时候，弹出自定义对话框
                             ReturnOperation(tFtZtlzEntity, R.layout.dialog_verification_operation, tFtZtlzEntity.getActionname()+"原因",Constants.SERVICE_EDIT_EVENT);
-                        } else if ("10".equals(tFtZtlzEntity.getNextzt())) {
+                        }else if ("8".equals(tFtZtlzEntity.getNextzt())) {
+                            //当8街道派遣的时候，跳到街道派遣Activity
+                           Intent  intent =new Intent(EventEntryListActivity.this, DispatchActivity.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable("tFtSjEntity", tFtSjEntity);
+                            intent.putExtras(bundle);
+                            startActivity(intent);
+                        }else if ("10".equals(tFtZtlzEntity.getNextzt())) {
                             //当10回访核查，弹出自定义对话框
                             ReturnOperation(tFtZtlzEntity, R.layout.dialog_verification_operation, tFtZtlzEntity.getActionname()+"原因",Constants.SERVICE_EDIT_EVENT);
                         } else {
