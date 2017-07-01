@@ -34,6 +34,11 @@ public class FileEntity implements Serializable{
     @Column(name = "fileMs")
     public  String fileMs;
 
+    /**
+     * 是否显示描述
+     */
+    public boolean isHaveMs = true;
+
     public Bitmap getBitmap() {
         return bitmap;
     }
@@ -64,5 +69,13 @@ public class FileEntity implements Serializable{
 
     public void setFileUrl(String fileUrl) {
         this.fileUrl = fileUrl;
+    }
+
+    public boolean isHaveMs() {
+        return isHaveMs;
+    }
+
+    public void setHaveMs(boolean haveMs) {
+        isHaveMs = haveMs;
     }
 }

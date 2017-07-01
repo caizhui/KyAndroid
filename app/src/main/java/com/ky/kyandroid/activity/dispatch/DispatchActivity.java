@@ -22,9 +22,11 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ky.kyandroid.Constants;
 import com.ky.kyandroid.R;
+import com.ky.kyandroid.activity.evententry.EventEntryListActivity;
 import com.ky.kyandroid.adapter.DisplayDepartmentListAdapter;
 import com.ky.kyandroid.bean.AckMessage;
 import com.ky.kyandroid.bean.CodeValue;
@@ -204,6 +206,29 @@ public class DispatchActivity extends AppCompatActivity {
                     sweetAlertDialogUtil.dismissAlertDialog();
                     handleTransation(message);
                     break;
+                case 2:
+                    sweetAlertDialogUtil.dismissAlertDialog();
+                    Toast.makeText(DispatchActivity.this, "派遣成功", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(DispatchActivity.this, EventEntryListActivity.class);
+                    startActivity(intent);
+                    break;
+                case 3:
+                    sweetAlertDialogUtil.dismissAlertDialog();
+                    Toast.makeText(DispatchActivity.this, "派遣失败", Toast.LENGTH_SHORT).show();
+                    break;
+                case 4:
+                    sweetAlertDialogUtil.dismissAlertDialog();
+                    Toast.makeText(DispatchActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
+                    if(ypqbmList.get(tempPosition)!=null){
+                        ypqbmList.remove(tempPosition);
+                    }
+                    adapter.notifyDataSetChanged(ypqbmList);
+                    break;
+                case 5:
+                    sweetAlertDialogUtil.dismissAlertDialog();
+                    Toast.makeText(DispatchActivity.this, "删除失败", Toast.LENGTH_SHORT).show();
+                    break;
+
             }
         }
     };
@@ -228,7 +253,6 @@ public class DispatchActivity extends AppCompatActivity {
         initEvent();
         initData();
     }
-
 
     /**
      * 初始化事件
@@ -296,10 +320,36 @@ public class DispatchActivity extends AppCompatActivity {
         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                if(ypqbmList.get(tempPosition)!=null){
-                    ypqbmList.remove(tempPosition);
+                final Message msg = new Message();
+                if (netWorkConnection.isWIFIConnection()) {
+                    sweetAlertDialogUtil.loadAlertDialog();
+                    msg.what = 5;
+                    Map<String, String> paramsMap = new HashMap<String, String>();
+                    paramsMap.put("userId", userId);
+                    paramsMap.put("clbmId", ypqbmEntity.getId());
+                    // 发送请求
+                    OkHttpUtil.sendRequest(Constants.SERVICE_TASK_DISPATCH_DELETE, paramsMap, new Callback() {
+
+                        @Override
+                        public void onFailure(Call call, IOException e) {
+                            mHandler.sendEmptyMessage(0);
+                        }
+
+                        @Override
+                        public void onResponse(Call call, Response response) throws IOException {
+                            if (response.isSuccessful()) {
+                                msg.what = 4;
+                                msg.obj = response.body().string();
+                            } else {
+                                msg.obj = "网络异常,请确认网络情况";
+                            }
+                            mHandler.sendMessage(msg);
+                        }
+                    });
+                } else {
+                    msg.obj = "WIFI网络不可用,请检查网络连接情况";
+                    mHandler.sendMessage(msg);
                 }
-                adapter.notifyDataSetChanged(ypqbmList);
             }
         });
         builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -324,7 +374,7 @@ public class DispatchActivity extends AppCompatActivity {
                 final Message msg = new Message();
                 if (netWorkConnection.isWIFIConnection()) {
                     sweetAlertDialogUtil.loadAlertDialog();
-                    msg.what = 0;
+                    msg.what = 3;
                     Map<String, String> paramsMap = new HashMap<String, String>();
                     String ftSjClbmList = JsonUtil.toJson(ypqbmList);
                     paramsMap.put("userId", userId);
@@ -341,7 +391,7 @@ public class DispatchActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(Call call, Response response) throws IOException {
                             if (response.isSuccessful()) {
-                                msg.what = 1;
+                                msg.what = 2;
                                 msg.obj = response.body().string();
                             } else {
                                 msg.obj = "网络异常,请确认网络情况";
