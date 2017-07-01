@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.ky.kyandroid.Constants;
 import com.ky.kyandroid.R;
+import com.ky.kyandroid.activity.draft.EventDraftListActivity;
 import com.ky.kyandroid.adapter.FragmentAdapter;
 import com.ky.kyandroid.bean.AckMessage;
 import com.ky.kyandroid.bean.NetWorkConnection;
@@ -573,7 +574,7 @@ public class EventEntryAddActivity extends FragmentActivity {
                     }
                     if (flag) {
                         Toast.makeText(EventEntryAddActivity.this, message + "成功", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(EventEntryAddActivity.this, EventEntryListActivity.class);
+                        Intent intent = new Intent(EventEntryAddActivity.this, EventDraftListActivity.class);
                         startActivity(intent);
                     } else {
                         Toast.makeText(EventEntryAddActivity.this, message + "失败", Toast.LENGTH_SHORT).show();

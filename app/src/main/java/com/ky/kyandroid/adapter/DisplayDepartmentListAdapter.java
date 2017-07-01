@@ -7,7 +7,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.ky.kyandroid.R;
-import com.ky.kyandroid.entity.TFtSjRyEntity;
+import com.ky.kyandroid.entity.YpqbmEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,18 +15,18 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class EventPersonListAdapter extends BaseAdapter {
-    public List<TFtSjRyEntity> list;
+public class DisplayDepartmentListAdapter extends BaseAdapter {
+    public List<YpqbmEntity> list;
     public Context context;
 
 
-    public EventPersonListAdapter(Context context) {
+    public DisplayDepartmentListAdapter(Context context) {
         super();
-        list = new ArrayList<TFtSjRyEntity>();
+        list = new ArrayList<YpqbmEntity>();
         this.context = context;
     }
 
-    public EventPersonListAdapter(List<TFtSjRyEntity> list, Context context) {
+    public DisplayDepartmentListAdapter(List<YpqbmEntity> list, Context context) {
         super();
         this.list = list;
         this.context = context;
@@ -51,40 +51,41 @@ public class EventPersonListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         if (convertView == null) {
-            convertView = View.inflate(context, R.layout.activity_person_item, null);
+            convertView = View.inflate(context, R.layout.activity_ypqbm_item, null);
             holder = new ViewHolder(convertView);
             convertView.setTag(holder);// 绑定ViewHolder对象
         } else {
             holder = (ViewHolder) convertView.getTag();// 取出ViewHolder对象
         }
-        holder.personName.setText(list.get(position).getXm());
-        if("1".equals(list.get(position).getXb())){
-            holder.personSex.setText("男");
-        }else{
-            holder.personSex.setText("女");
-        }
-
-        holder.personIdcard.setText(list.get(position).getZjhm());
+        holder.departmentText.setText(list.get(position).getBmmc() + "(" + list.get(position).getBmlx() + ")");
+        holder.handlerTime.setText(list.get(position).getClsx());
+        holder.handlerText.setText(list.get(position).getRwnr());
         return convertView;
     }
-    /**
-     * 存放控件
-     */
-    class ViewHolder {
-        @BindView(R.id.person_name)
-        TextView personName;
-        @BindView(R.id.person_sex)
-        TextView personSex;
-        @BindView(R.id.person_idcard)
-        TextView personIdcard;
+    public void notifyDataSetChanged(List<YpqbmEntity> list) {
+        this.list = list;
+        super.notifyDataSetChanged();
+    }
+
+    static class ViewHolder {
+        /**
+         *  部门
+         */
+        @BindView(R.id.department_text)
+        TextView departmentText;
+        /**
+         *  处理时限
+         */
+        @BindView(R.id.handler_time)
+        TextView handlerTime;
+        /**
+         *  处理内容
+         */
+        @BindView(R.id.handler_text)
+        TextView handlerText;
 
         ViewHolder(View view) {
             ButterKnife.bind(this, view);
         }
-    }
-
-    public void notifyDataSetChanged(List<TFtSjRyEntity> list) {
-        this.list = list;
-        super.notifyDataSetChanged();
     }
 }

@@ -10,7 +10,9 @@ import org.xutils.db.annotation.Table;
 @Table(name = "t_desc")
 public class DescEntity {
 
-    @Column(name = "id",isId = true,autoGen = false)
+    @Column(name = "uuid",isId = true,autoGen = true)
+    private  int uuid;
+    @Column(name = "id")
     private  String id;
     @Column(name = "code")
     private String code;
@@ -72,5 +74,13 @@ public class DescEntity {
 
     public void setParentId(String parentId) {
         this.parentId = parentId;
+    }
+
+    public int getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(int uuid) {
+        this.uuid = uuid;
     }
 }

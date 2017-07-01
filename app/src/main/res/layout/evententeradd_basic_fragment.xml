@@ -8,10 +8,10 @@
         android:layout_height="match_parent">
 
         <LinearLayout
+            android:id="@+id/linear_evententry"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:id="@+id/linear_evententry">
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -25,22 +25,30 @@
                     android:layout_height="wrap_content"
                     android:text="@string/thing_name" />
 
-                <EditText
-                    android:id="@+id/thing_name_edt"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:textSize="16sp"
-                    android:layout_weight="1" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/border_edittext_bg">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="*"
-                    android:textColor="@color/red" />
+                    <EditText
+                        android:id="@+id/thing_name_edt"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:padding="5dp"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:text="*"
+                        android:textColor="@color/red" />
+                </LinearLayout>
+
             </LinearLayout>
 
-            <include layout="@layout/linearlayout_one" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -54,22 +62,29 @@
                     android:layout_height="wrap_content"
                     android:text="@string/happen_time" />
 
-                <EditText
-                    android:id="@+id/happen_time_edt"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:layout_weight="1"
-                    android:textSize="16sp"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/border_edittext_bg">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="*"
-                    android:textColor="@color/red" />
+                    <EditText
+                        android:id="@+id/happen_time_edt"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:padding="5dp"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:text="*"
+                        android:textColor="@color/red" />
+                </LinearLayout>
             </LinearLayout>
 
-            <include layout="@layout/linearlayout_one" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -83,22 +98,29 @@
                     android:layout_height="wrap_content"
                     android:text="@string/happen_address" />
 
-                <EditText
-                    android:id="@+id/happen_address_edt"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:textSize="16sp"
-                    android:layout_weight="1" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/border_edittext_bg">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="*"
-                    android:textColor="@color/red" />
+                    <EditText
+                        android:id="@+id/happen_address_edt"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:padding="5dp"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:text="*"
+                        android:textColor="@color/red" />
+                </LinearLayout>
             </LinearLayout>
 
-            <include layout="@layout/linearlayout_one" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -112,15 +134,22 @@
                     android:layout_height="wrap_content"
                     android:text="@string/petition_groups" />
 
-                <EditText
-                    android:id="@+id/petition_groups_edt"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="16sp"
-                    android:background="@null"/>
+                    android:layout_height="match_parent"
+                    android:background="@drawable/border_edittext_bg">
+
+                    <EditText
+                        android:id="@+id/petition_groups_edt"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:padding="5dp"
+                        android:textSize="16sp" />
+                </LinearLayout>
             </LinearLayout>
 
-            <include layout="@layout/linearlayout_one" />
 
             <LinearLayout
                 android:id="@+id/field_departmen_layout"
@@ -135,34 +164,35 @@
                     android:layout_height="wrap_content"
                     android:text="@string/field_departmen" />
 
-
-              <EditText
-                    android:id="@+id/field_departmen_edt"
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@null"
-                    android:gravity="center_vertical"
-                  android:enabled="false"
-                    android:textSize="16sp"
-                    android:layout_weight="1" />
+                    android:background="@drawable/border_edittext_bg">
 
-                <ImageView
-                    android:id="@+id/field_departmen_img"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:layout_gravity="center"
-                    android:layout_marginRight="4dp"
-                    android:background="@mipmap/down" />
+                    <EditText
+                        android:id="@+id/field_departmen_edt"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:enabled="false"
+                        android:gravity="center_vertical"
+                        android:padding="5dp"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        android:id="@+id/field_departmen_img"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="5dp"
+                        android:background="@mipmap/down" />
 
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="*"
-                    android:textColor="@color/red" />
+                </LinearLayout>
+
             </LinearLayout>
 
-            <include layout="@layout/linearlayout_one" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -176,22 +206,28 @@
                     android:layout_height="wrap_content"
                     android:text="@string/pattern_manifestation" />
 
-                <Spinner
-                    android:id="@+id/pattern_manifestation_spinner"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:textSize="16sp"
-                    android:background="@null"
-                    android:layout_weight="1" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/border_edittext_bg">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="*"
-                    android:textColor="@color/red" />
+                    <Spinner
+                        android:id="@+id/pattern_manifestation_spinner"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:text="*"
+                        android:textColor="@color/red" />
+                </LinearLayout>
             </LinearLayout>
 
-            <include layout="@layout/linearlayout_one" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -205,21 +241,28 @@
                     android:layout_height="wrap_content"
                     android:text="@string/field_morphology" />
 
-                <Spinner
-                    android:id="@+id/field_morphology_spinner"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:textSize="16sp"
-                    android:layout_weight="1" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/border_edittext_bg">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="*"
-                    android:textColor="@color/red" />
+                    <Spinner
+                        android:id="@+id/field_morphology_spinner"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:text="*"
+                        android:textColor="@color/red" />
+                </LinearLayout>
             </LinearLayout>
 
-            <include layout="@layout/linearlayout_one" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -231,24 +274,31 @@
                     style="@style/TextStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="35dp"
+                    android:layout_marginLeft="30dp"
                     android:text="@string/scope_text" />
 
-                <Spinner
-                    android:id="@+id/scope_text_spinner"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:textSize="16sp"
-                    android:layout_weight="1" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/border_edittext_bg">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="*"
-                    android:textColor="@color/red" />
+                    <Spinner
+                        android:id="@+id/scope_text_spinner"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:text="*"
+                        android:textColor="@color/red" />
+                </LinearLayout>
             </LinearLayout>
 
-            <include layout="@layout/linearlayout_one" />
 
             <LinearLayout
                 android:id="@+id/fields_involved_linearlayout"
@@ -263,33 +313,35 @@
                     android:layout_height="wrap_content"
                     android:text="@string/fields_involved" />
 
-                <EditText
-                    android:id="@+id/fields_involved_edt"
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@null"
-                    android:textSize="16sp"
-                    android:enabled="false"
-                    android:gravity="center_vertical"
-                    android:layout_weight="1" />
+                    android:background="@drawable/border_edittext_bg">
+
+                    <EditText
+                        android:id="@+id/fields_involved_edt"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:enabled="false"
+                        android:gravity="center_vertical"
+                        android:padding="5dp"
+                        android:textSize="16sp" />
 
 
-                <ImageView
-                    android:id="@+id/fields_involved_img"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:layout_gravity="center"
-                    android:layout_marginRight="4dp"
-                    android:background="@mipmap/down" />
+                    <ImageView
+                        android:id="@+id/fields_involved_img"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="5dp"
+                        android:background="@mipmap/down" />
+                </LinearLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="*"
-                    android:textColor="@color/red" />
+
             </LinearLayout>
 
-            <include layout="@layout/linearlayout_one" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -305,12 +357,13 @@
 
                 <Spinner
                     android:id="@+id/foreign_related_spinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="16sp"/>
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/border_edittext_bg"
+                    android:textSize="16sp" />
             </LinearLayout>
 
-            <include layout="@layout/linearlayout_one" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -326,12 +379,13 @@
 
                 <Spinner
                     android:id="@+id/involved_xinjiang_spinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="16sp"/>
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/border_edittext_bg"
+                    android:textSize="16sp" />
             </LinearLayout>
 
-            <include layout="@layout/linearlayout_one" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -347,12 +401,13 @@
 
                 <Spinner
                     android:id="@+id/involve_public_opinion_spinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="16sp"/>
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/border_edittext_bg"
+                    android:textSize="16sp" />
             </LinearLayout>
 
-            <include layout="@layout/linearlayout_one" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -363,17 +418,18 @@
                 <TextView
                     style="@style/TextStyle"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:text="@string/public_security_disposal" />
 
                 <Spinner
                     android:id="@+id/public_security_disposal_spinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="16sp"/>
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/border_edittext_bg"
+                    android:textSize="16sp" />
             </LinearLayout>
 
-            <include layout="@layout/linearlayout_one" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -389,14 +445,15 @@
 
                 <EditText
                     android:id="@+id/belong_street_edt"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:textSize="16sp"
-                    android:text="华强北街道" />
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/border_edittext_bg"
+                    android:padding="5dp"
+                    android:text="华强北街道"
+                    android:textSize="16sp" />
             </LinearLayout>
 
-            <include layout="@layout/linearlayout_one" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -412,46 +469,54 @@
 
                 <Spinner
                     android:id="@+id/belong_community_spinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="16sp"/>
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/border_edittext_bg"
+                    android:textSize="16sp" />
             </LinearLayout>
 
-            <include layout="@layout/linearlayout_one" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="100dp"
                 android:orientation="horizontal"
                 android:padding="10dp">
 
                 <TextView
                     style="@style/TextStyle"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:text="@string/main_appeals" />
 
-                <EditText
-                    android:id="@+id/main_appeals_edt"
-                    android:layout_width="0dp"
-                    android:layout_height="100dp"
-                    android:background="@null"
-                    android:gravity="start"
-                    android:textSize="16sp"
-                    android:layout_weight="1" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/border_edittext_bg">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="*"
-                    android:textColor="@color/red" />
+                    <EditText
+                        android:id="@+id/main_appeals_edt"
+                        android:layout_width="0dp"
+                        android:layout_height="100dp"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:gravity="start"
+                        android:padding="5dp"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:text="*"
+                        android:textColor="@color/red" />
+                </LinearLayout>
             </LinearLayout>
 
-            <include layout="@layout/linearlayout_one" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="100dp"
                 android:orientation="horizontal"
                 android:padding="10dp">
 
@@ -461,27 +526,34 @@
                     android:layout_height="wrap_content"
                     android:text="@string/event_summary" />
 
-                <EditText
-                    android:id="@+id/event_summary_edt"
-                    android:layout_width="0dp"
-                    android:layout_height="100dp"
-                    android:background="@null"
-                    android:gravity="start"
-                    android:textSize="16sp"
-                    android:layout_weight="1" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/border_edittext_bg">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="*"
-                    android:textColor="@color/red" />
+                    <EditText
+                        android:id="@+id/event_summary_edt"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:gravity="start"
+                        android:padding="5dp"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:text="*"
+                        android:textColor="@color/red" />
+                </LinearLayout>
             </LinearLayout>
 
-            <include layout="@layout/linearlayout_one" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="100dp"
                 android:orientation="horizontal"
                 android:padding="10dp">
 
@@ -491,16 +563,21 @@
                     android:layout_height="wrap_content"
                     android:text="@string/leadership_instructions" />
 
-                <EditText
-                    android:id="@+id/leadership_instructions_edt"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:background="@null"
-                    android:textSize="16sp"
-                    android:gravity="start"
-                    android:layout_height="100dp" />
-            </LinearLayout>
+                    android:layout_height="match_parent"
+                    android:background="@drawable/border_edittext_bg">
 
-            <include layout="@layout/linearlayout_one" />
+                    <EditText
+                        android:id="@+id/leadership_instructions_edt"
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:background="@drawable/border_edittext_bg"
+                        android:gravity="start"
+                        android:padding="5dp"
+                        android:textSize="16sp" />
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

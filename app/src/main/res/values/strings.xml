@@ -23,8 +23,8 @@
     <string name="fields_involved">涉及领域:</string>
     <string name="foreign_related">是否涉外:</string>
     <string name="involved_xinjiang">是否涉疆:</string>
-    <string name="involve_public_opinion">是否涉舆情:</string>
-    <string name="public_security_disposal">是否公安处置:</string>
+    <string name="involve_public_opinion">是否舆情:</string>
+    <string name="public_security_disposal">公安处置:</string>
     <string name="belong_street">所属街道:</string>
     <string name="belong_community">所属社区:</string>
     <string name="main_appeals">主要诉求:</string>
@@ -44,13 +44,17 @@
     <string name="person_jobaddress">工作单位</string>
     <string name="person_domilcile">现住地址</string>
     <string name="person_remark">备注</string>
-    <string name="field_morphology">现场态势</string>
+    <string name="field_morphology">现场态势:</string>
     <string name="eventlog_cz">操作:</string>
     <string name="eventlog_czsj">操作时间:</string>
     <string name="eventlog_czms">描述:</string>
     <string name="eventrelevance_lrr">录入人:</string>
     <string name="eventrelevance_lrbm">录入部门:</string>
     <string name="eventrelevance_lrsj">录入时间:</string>
+    <string name="department_type">部门类型:</string>
+    <string name="department_text">部门:</string>
+    <string name="handler_time">处理时限:</string>
+    <string name="handler_text">处理内容:</string>
     <!--事件录入end-->
 
 

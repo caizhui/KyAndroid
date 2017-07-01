@@ -241,7 +241,17 @@ public class LoginActivity extends AppCompatActivity {
             if (setUserMessage(ackMsg)) {
                 Log.i(TAG, "设置用户信息成功...");
                 startService(new Intent(this, SaveBDdescService.class));
-                Intent intent = new Intent(this, MainActivity.class);
+                String name = sp.getString("name", "");
+                Intent intent = new Intent();
+                if ("街道办工作人员".equals(name)) {
+                   intent.setClass(this,MainAddEventActivity.class);
+                } else if ("街道职能部门".equals(name) || "区职能部门".equals(name)) {
+                    intent.setClass(this,MainHandleEventActivity.class);
+                } else if ("区维稳办".equals(name)) {
+                    intent.setClass(this,MainOfficeActivity.class);
+                }else{
+                    intent.setClass(this,MainAllActivity.class);
+                }
                 startActivity(intent);
             } else {
                 Log.i(TAG, "设置用户信息失败...");

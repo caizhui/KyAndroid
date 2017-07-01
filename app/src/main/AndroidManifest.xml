@@ -30,54 +30,92 @@
         android:theme="@style/AppTheme">
 
         <activity android:name=".activity.LoginActivity"
-            android:windowSoftInputMode = "stateAlwaysHidden|adjustPan">
+            android:windowSoftInputMode = "stateAlwaysHidden|adjustPan"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
-        <!--主界面-->
-        <activity android:name=".activity.MainActivity"
-            android:windowSoftInputMode = "stateAlwaysHidden|adjustPan">
+        <!--所有功能主界面-->
+        <activity android:name=".activity.MainAllActivity"
+            android:windowSoftInputMode = "stateAlwaysHidden|adjustPan"
+            android:launchMode="singleTask">
+        </activity>
+
+        <!--街道办事人员主界面-->
+        <activity android:name=".activity.MainAddEventActivity"
+            android:windowSoftInputMode = "stateAlwaysHidden|adjustPan"
+            android:launchMode="singleTask">
+        </activity>
+
+        <!--街道职能部门或者区维稳办职能部门主界面-->
+        <activity android:name=".activity.MainHandleEventActivity"
+            android:windowSoftInputMode = "stateAlwaysHidden|adjustPan"
+            android:launchMode="singleTask">
+        </activity>
+
+        <!--区维稳办主界面-->
+        <activity android:name=".activity.MainOfficeActivity"
+            android:windowSoftInputMode = "stateAlwaysHidden|adjustPan"
+            android:launchMode="singleTask">
         </activity>
 
         <!--事件新增-->
         <activity android:name=".activity.evententry.EventEntryAddActivity"
-            android:windowSoftInputMode = "stateAlwaysHidden|adjustPan">
+            android:windowSoftInputMode = "stateAlwaysHidden|adjustPan"
+            android:launchMode="singleTask">
         </activity>
 
         <!--事件列表-->
         <activity android:name=".activity.evententry.EventEntryListActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"/>
+
+        <!--事件草稿列表-->
+        <activity android:name=".activity.draft.EventDraftListActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"/>
+
+        <!--事件派遣页面-->
+        <activity android:name=".activity.dispatch.DispatchActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"/>
 
         <!--事件日志Activity-->
         <activity android:name=".activity.evententry.EventLogListActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"/>
 
         <!--事件关联Activity-->
         <activity android:name=".activity.evententry.EventRelevanceListActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"/>
 
         <!--我的任务列表-->
         <activity android:name=".activity.task.TaskListActivity"
-            android:windowSoftInputMode = "stateAlwaysHidden|adjustPan">
+            android:windowSoftInputMode = "stateAlwaysHidden|adjustPan"
+            android:launchMode="singleTask">
         </activity>
 
         <!--我的任务新增-->
         <activity android:name=".activity.task.TaskAddActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode = "stateAlwaysHidden|adjustPan"/>
+            android:windowSoftInputMode = "stateAlwaysHidden|adjustPan"
+            android:launchMode="singleTask"/>
 
         <!--都督查办新增-->
         <activity android:name=".activity.supervision.SuperVisionAddActivity"
             android:windowSoftInputMode = "stateAlwaysHidden|adjustPan"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"/>
 
         <!--消息提醒Activity-->
         <activity android:name=".activity.msg.MsgNoticeActivity"
             android:windowSoftInputMode = "stateAlwaysHidden|adjustPan"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"/>
 
         <!-- 字典服务 -->
         <service android:name="com.ky.kyandroid.service.SaveBDdescService" >

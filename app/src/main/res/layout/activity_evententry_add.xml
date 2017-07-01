@@ -81,20 +81,24 @@
             <Button
                 android:id="@+id/reporting_leadership_btn"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:background="#44AB34"
+                android:layout_height="30dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:background="@drawable/border_sbldbutton_bg"
+                android:textColor="@color/white"
+                android:textSize="14sp"
                 android:text="上报领导" />
 
             <Button
                 android:id="@+id/save_draft_btn"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
                 android:layout_marginLeft="20dp"
-                android:background="#2196F3"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
+                android:background="@drawable/border_bccgbutton_bg"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:textColor="@color/white"
+                android:textSize="14sp"
                 android:text="保存草稿" />
 
         </LinearLayout>

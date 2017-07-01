@@ -32,6 +32,7 @@ import android.widget.Toast;
 
 import com.ky.kyandroid.Constants;
 import com.ky.kyandroid.R;
+import com.ky.kyandroid.activity.dispatch.DispatchActivity;
 import com.ky.kyandroid.adapter.EventEntityListAdapter;
 import com.ky.kyandroid.bean.AckMessage;
 import com.ky.kyandroid.bean.NetWorkConnection;
@@ -168,7 +169,7 @@ public class EventEntryListActivity extends AppCompatActivity {
     private int currentPage;
 
     //每页显示条数
-    private int pageSize = 5;
+    private int pageSize = 7;
 
     /**
      *
@@ -202,10 +203,6 @@ public class EventEntryListActivity extends AppCompatActivity {
 
     private List<TFtSjEntity> tempList;
 
-    /**
-     * 是否已经加载本地数据
-     */
-    private boolean isIfload = true;
 
     private String userId;
 
@@ -279,7 +276,6 @@ public class EventEntryListActivity extends AppCompatActivity {
                     tFtSjEntityList = new ArrayList<TFtSjEntity>();
                     // 判断是否刷新，刷新true,加载false
                     ifrefresh = true;
-                    isIfload = true;
                     //判断是否刷新成功
                     ifRefreshOK = true;
                     //判断是否最后加载到最后
@@ -473,14 +469,14 @@ public class EventEntryListActivity extends AppCompatActivity {
         if (StringUtils.isBlank(body)) {
         } else {
             //判断是否已经加载本地草稿数据，并且只添加一次
-            if (isIfload) {
+            /*if (isIfload) {
                 tempList = tFtSjEntityDao.queryList();
                 if (tempList != null && tempList.size() > 0) {
                     tFtSjEntityList.addAll(tempList);
                 }
                 isIfload = false;
                 total += tFtSjEntityList.size();
-            }
+            }*/
 
             // 处理响应信息
             AckMessage ackMsg = JsonUtil.fromJson(body, AckMessage.class);
@@ -560,18 +556,6 @@ public class EventEntryListActivity extends AppCompatActivity {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int pos) {
                     //事件刚刚录入
-                    if ("0".equals(tFtSjEntity.getZt())) {
-                        //删除
-                        if (pos == 0) {
-                            message = "";
-                            flag = tFtSjEntityDao.deleteEventEntry(tFtSjEntity.getUuid());
-                            if (flag) {
-                                Toast.makeText(EventEntryListActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(EventEntryListActivity.this, "删除失败", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    } else {
                         //根据点击的item项获取该item对应的实体，
                         TFtZtlzEntity tFtZtlzEntity = tFtZtlzEntities[pos];
                         //当3.退回和4.不予受理的时候，弹出自定义对话框
@@ -603,7 +587,14 @@ public class EventEntryListActivity extends AppCompatActivity {
                             }*/
                             //当10回访核查通过或者7,8回访核查不通过的时候，弹出自定义对话框
                             ReturnOperation(tFtZtlzEntity, R.layout.dialog_verification_operation, tFtZtlzEntity.getActionname()+"原因",Constants.SERVICE_EDIT_EVENT);
-                        } else if ("10".equals(tFtZtlzEntity.getNextzt())) {
+                        }else if ("8".equals(tFtZtlzEntity.getNextzt())) {
+                            //当8街道派遣的时候，跳到街道派遣Activity
+                           Intent  intent =new Intent(EventEntryListActivity.this, DispatchActivity.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable("tFtSjEntity", tFtSjEntity);
+                            intent.putExtras(bundle);
+                            startActivity(intent);
+                        }else if ("10".equals(tFtZtlzEntity.getNextzt())) {
                             //当10回访核查，弹出自定义对话框
                             ReturnOperation(tFtZtlzEntity, R.layout.dialog_verification_operation, tFtZtlzEntity.getActionname()+"原因",Constants.SERVICE_EDIT_EVENT);
                         } else {
@@ -611,7 +602,6 @@ public class EventEntryListActivity extends AppCompatActivity {
                             OperatingProcess(tFtZtlzEntity);
                         }
 
-                    }
                 }
             });
             builder.create().show();

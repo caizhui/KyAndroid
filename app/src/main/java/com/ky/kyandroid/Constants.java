@@ -57,4 +57,7 @@ public class Constants {
 	//街道自行处理接口
 	public final static String SERVICE_ZXCL= "ft/kyAndroid/zxclDispatch.action";
 
+	//街道派遣处理接口
+	public final static String SERVICE_TASK_DISPATCH= "ft/kyAndroid/taskDispatch.action";
+
 }
