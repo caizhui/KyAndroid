@@ -378,11 +378,11 @@ public class EventEntryAdd_Basic extends Fragment {
             happenAddressEdt.setText(tFtSjEntity.getFsdd());
             petitionGroupsEdt.setText(tFtSjEntity.getSfsqqt());
             if (tFtSjEntity.getDcbm() != null && !"".equals(tFtSjEntity.getDcbm())) {
-                String dcbmName = descEntityDao.queryName("dcbm", tFtSjEntity.getDcbm());
+                String dcbmName = descEntityDao.queryName("dcbm", tFtSjEntity.getDcbm().split(",")[0]);
                 fieldDepartmenEdt.setText(dcbmName);
             }
             if (tFtSjEntity.getSjly() != null && !"".equals(tFtSjEntity.getSjly())) {
-                String sjlyName = descEntityDao.queryName("sjly", tFtSjEntity.getSjly());
+                String sjlyName = descEntityDao.queryName("sjly", tFtSjEntity.getSjly().split(",")[0]);
                 fieldsInvolvedEdt.setText(sjlyName);
             }
 
