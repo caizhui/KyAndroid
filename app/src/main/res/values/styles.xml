@@ -9,16 +9,26 @@
         <item name="android:windowTranslucentStatus">true</item>
     </style>
 
+    <style name="menu_item_padding">
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">6dp</item>
+    </style>
 
     <style name="TextStyle">
         <item name="android:textSize">16sp</item>
         <item name="android:padding">5dp</item>
     </style>
 
-    <!-- pop 菜单 -->
+    <!-- pop 菜单2 -->
     <style name="pop_menu2">
         <item name="android:windowEnterAnimation">@anim/fade_in</item>
         <item name="android:windowExitAnimation">@anim/fade_out</item>
+    </style>
+
+    <!-- pop 菜单 -->
+    <style name="pop_menu">
+        <item name="android:windowEnterAnimation">@anim/pop_up</item>
+        <item name="android:windowExitAnimation">@anim/pop_down</item>
     </style>
 
 </resources>

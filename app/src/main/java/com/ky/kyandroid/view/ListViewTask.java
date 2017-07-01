@@ -74,6 +74,7 @@ public class ListViewTask extends ListView {
 			flag = mFocusedItemView.onRequireTouchEvent(event);
 		}
 		if (flag == 0) {
+			Log.e(TAG, "已经返回ture");
 			return true;
 		}else{
 			return super.onTouchEvent(event);
