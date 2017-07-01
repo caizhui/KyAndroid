@@ -57,7 +57,17 @@ public class DisplayDepartmentListAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();// 取出ViewHolder对象
         }
-        holder.departmentText.setText(list.get(position).getBmmc() + "(" + list.get(position).getBmlx() + ")");
+        String bmlx="";
+        if("1".equals(list.get(position).getBmlx())){
+            bmlx = "事权单位";
+        }else if("2".equals(list.get(position).getBmlx())){
+            bmlx = "稳控单位";
+        }else if("3".equals(list.get(position).getBmlx())){
+            bmlx = "协办单位";
+        }else if("4".equals(list.get(position).getBmlx())){
+            bmlx = "责任单位";
+        }
+        holder.departmentText.setText(list.get(position).getBmmc() + "(" + bmlx + ")");
         holder.handlerTime.setText(list.get(position).getClsx());
         holder.handlerText.setText(list.get(position).getRwnr());
         return convertView;

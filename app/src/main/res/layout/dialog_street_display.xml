@@ -31,8 +31,8 @@
                     android:layout_height="match_parent"
                     android:background="@drawable/border_edittext_bg">
 
-                    <EditText
-                        android:id="@+id/department_type_edt"
+                    <Spinner
+                        android:id="@+id/department_type_spinner"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -49,8 +49,6 @@
                         android:layout_gravity="center"
                         android:layout_marginRight="5dp"
                         android:background="@mipmap/down" />
-
-
                 </LinearLayout>
 
             </LinearLayout>
@@ -74,8 +72,8 @@
                     android:layout_height="match_parent"
                     android:background="@drawable/border_edittext_bg">
 
-                    <EditText
-                        android:id="@+id/department_text_edt"
+                    <Spinner
+                        android:id="@+id/department_text_spinner"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"

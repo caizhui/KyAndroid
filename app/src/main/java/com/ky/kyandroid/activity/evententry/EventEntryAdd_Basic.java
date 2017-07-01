@@ -378,12 +378,27 @@ public class EventEntryAdd_Basic extends Fragment {
             happenAddressEdt.setText(tFtSjEntity.getFsdd());
             petitionGroupsEdt.setText(tFtSjEntity.getSfsqqt());
             if (tFtSjEntity.getDcbm() != null && !"".equals(tFtSjEntity.getDcbm())) {
-                String dcbmName = descEntityDao.queryName("dcbm", tFtSjEntity.getDcbm().split(",")[0]);
-                fieldDepartmenEdt.setText(dcbmName);
+                String []dcbms = tFtSjEntity.getDcbm().split(",");
+                String dcbm = "";
+                if(dcbms.length>0){
+                    for(int i = 0 ;i<dcbms.length;i++){
+                        dcbm += descEntityDao.queryName("dcbm", dcbms[i])+",";
+                    }
+                    dcbm=dcbm.substring(0,dcbm.length()-1);
+                }
+                fieldDepartmenEdt.setText(dcbm);
             }
             if (tFtSjEntity.getSjly() != null && !"".equals(tFtSjEntity.getSjly())) {
-                String sjlyName = descEntityDao.queryName("sjly", tFtSjEntity.getSjly().split(",")[0]);
-                fieldsInvolvedEdt.setText(sjlyName);
+                String []sjlys = tFtSjEntity.getSjly().split(",");
+                String sjly = "";
+                if(sjlys.length>0){
+                    for(int i = 0 ;i<sjlys.length;i++){
+                        sjly += descEntityDao.queryName("sjly", sjlys[i])+",";
+                    }
+                    sjly=sjly.substring(0,sjly.length()-1);
+                }
+                //String sjlyName = descEntityDao.queryName("sjly", tFtSjEntity.getSjly().split(",")[0]);
+                fieldsInvolvedEdt.setText(sjly);
             }
 
             belongStreetEdt.setText(tFtSjEntity.getSsjd());

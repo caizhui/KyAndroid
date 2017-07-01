@@ -146,6 +146,9 @@ public class DescEntityDao extends BaseDao {
         List<DescEntity> descList = null;
         try {
             descList = db.selector(DescEntity.class).where("type", "==", type).and("code", "==", code).findAll();
+            if(descList.size()==0){
+                return "";
+            }
         } catch (DbException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -163,6 +166,9 @@ public class DescEntityDao extends BaseDao {
         List<DescEntity> descList = null;
         try {
             descList = db.selector(DescEntity.class).where("type", "==", type).and("value", "==", value).findAll();
+            if(descList.size()==0){
+                return "";
+            }
         } catch (DbException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

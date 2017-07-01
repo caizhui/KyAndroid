@@ -60,4 +60,7 @@ public class Constants {
 	//街道派遣处理接口
 	public final static String SERVICE_TASK_DISPATCH= "ft/kyAndroid/taskDispatch.action";
 
+	//街道派遣保存处理接口
+	public final static String SERVICE_TASK_DISPATCH_SAVE= "ft/kyAndroid/taskDispatchSave.action";
+
 }
