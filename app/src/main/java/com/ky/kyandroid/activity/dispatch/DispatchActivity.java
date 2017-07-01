@@ -514,8 +514,10 @@ public class DispatchActivity extends AppCompatActivity {
                 ypqbmEntity.setClsx(handlerTime);
                 ypqbmEntity.setRwnr(handlerText);
                 //如果在list的item已经存在数据，则表示是修改，将之前的数据去掉，重新加载
-                if(ypqbmList.get(tempPosition)!=null && isDetail){
-                    ypqbmList.remove(tempPosition);
+                if(ypqbmList!=null && ypqbmList.size()>0){
+                    if(ypqbmList.get(tempPosition)!=null &&  isDetail){
+                        ypqbmList.remove(tempPosition);
+                    }
                 }
                 ypqbmList.add(ypqbmEntity);
                 if(ypqbmList!=null && ypqbmList.size()>0){
