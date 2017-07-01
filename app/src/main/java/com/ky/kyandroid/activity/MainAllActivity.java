@@ -3,18 +3,24 @@ package com.ky.kyandroid.activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.BounceInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.ky.kyandroid.Constants;
@@ -27,9 +33,12 @@ import com.ky.kyandroid.bean.AckMessage;
 import com.ky.kyandroid.bean.NetWorkConnection;
 import com.ky.kyandroid.bean.PageBean;
 import com.ky.kyandroid.util.JsonUtil;
+import com.ky.kyandroid.util.MsgThreadUtil;
 import com.ky.kyandroid.util.OkHttpUtil;
 import com.ky.kyandroid.util.SpUtil;
 import com.ky.kyandroid.util.StringUtils;
+import com.ky.kyandroid.util.SweetAlertDialogUtil;
+import com.ky.kyandroid.util.ViewUtil;
 import com.ky.kyandroid.view.BadgeView;
 
 import java.io.IOException;
@@ -39,6 +48,7 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -69,8 +79,8 @@ public class MainAllActivity extends AppCompatActivity {
     /**
      * 消息提醒铃铛
      */
-    @BindView(R.id.notice_icon)
-    ImageView noticeIcon;
+    @BindView(R.id.message_img)
+    ImageView message_img;
     /**
      * 我的事件
      */
@@ -88,6 +98,12 @@ public class MainAllActivity extends AppCompatActivity {
     ImageView supervisionImageView;
 
     /**
+     * 主布局id
+     */
+    @BindView(R.id.main_layout)
+    LinearLayout main_layout;
+
+    /**
      * 消息条目控制
      */
     BadgeView badge;
@@ -102,19 +118,35 @@ public class MainAllActivity extends AppCompatActivity {
     private NetWorkConnection netWorkConnection;
 
     /**
+     * 提示框工具
+     */
+    private SweetAlertDialogUtil sweetAlertDialogs;
+
+    /**
      * SharedPreferences
      */
     private SharedPreferences sp;
+
+    /**
+     * 登出菜单项 - view
+     */
+    private View mPopView;
+    /**
+     * 登出菜单项 - PopupWindow
+     */
+    private PopupWindow mPopupWindow;
+    /**
+     * 登出菜单项 - 按钮列
+     */
+    private TextView pop_change_user, pop_exit, pop_cancle;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_all);
         ButterKnife.bind(this);
-        centerText.setText("维稳办信息");
-        rightBtn.setVisibility(View.INVISIBLE);
         initEvent();
-        initInfoRunable();
+        initPopMenuView();
     }
 
     /**
@@ -148,68 +180,19 @@ public class MainAllActivity extends AppCompatActivity {
         // 初始化网络工具 与 sp
         sp = SpUtil.getSharePerference(this);
         netWorkConnection = new NetWorkConnection(this);
+        sweetAlertDialogs = new SweetAlertDialogUtil(this);
+        centerText.setText("维稳办信息");
+        rightBtn.setVisibility(View.INVISIBLE);
         // 初始化信息标识
-        badge = new BadgeView(this, noticeIcon);
-        badge.setBadgePosition(BadgeView.POSITION_TOP_RIGHT);
-        badge.setBadgeBackgroundColor(Color.parseColor("#FF0033"));
-        badge.setVisibility(View.GONE);
+        badge = ViewUtil.createBeView(this,message_img);
         anim = new TranslateAnimation(-100, 0, 0, 0);
         anim.setInterpolator(new BounceInterpolator());
         anim.setDuration(1000);
+        // 启动任务消息访问runable
+        String userId = SpUtil.getSharePerference(this).getString(LoginActivity.USER_ID,"userId");
+        MsgThreadUtil.initInfoRunable(userId,mHandler,netWorkConnection);
     }
 
-    /**
-     * 启动任务消息访问runable
-     */
-    private void initInfoRunable() {
-        Thread xiaoxiT = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (true) {
-                    try {
-                        Log.i(TAG, "消息线程开启开始...");
-                        handleXiaoxiThread();
-                        Thread.sleep(30 * 1000);
-                    } catch (InterruptedException e) {
-                        mHandler.sendEmptyMessage(0);
-                    }
-                }
-            }
-        });
-        xiaoxiT.start();
-    }
-
-    private void handleXiaoxiThread() {
-        if (netWorkConnection.isWIFIConnection()) {
-            Map<String, String> paramsMap = new HashMap<String, String>();
-            String userId = SpUtil.getSharePerference(this).getString(LoginActivity.USER_ID,"userId");
-            // 设置用户ID
-            paramsMap.put("userId", userId);
-            // 发送请求
-            OkHttpUtil.sendRequest(Constants.SERVICE_NOTICE_NUM_HADLE, paramsMap, new Callback() {
-                @Override
-                public void onResponse(Call arg0, Response response)
-                        throws IOException {
-                    Message msg = new Message();
-                    if (response.isSuccessful()) {
-                        msg.what = 1;
-                        msg.obj = response.body().string();
-                    } else {
-                        msg.what = 0;
-                    }
-                    mHandler.sendMessage(msg);
-                }
-
-                @Override
-                public void onFailure(Call arg0, IOException arg1) {
-                    mHandler.sendEmptyMessage(0);
-                }
-            });
-        } else {
-            Log.i(TAG, "检测到无法WIFI连接,消息接收失败");
-        }
-
-    }
 
     /**
      * 处理消息后续流程
@@ -243,8 +226,70 @@ public class MainAllActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * 初始化登出菜单
+     */
+    private void initPopMenuView() {
+        /**************** 登出菜单项 ******************/
+        mPopView = LayoutInflater.from(this).inflate(R.layout.app_exit, null);
+        pop_change_user = (TextView) mPopView.findViewById(R.id.pop_change_user);
+        pop_exit = (TextView) mPopView.findViewById(R.id.pop_exit);
+        pop_cancle = (TextView) mPopView.findViewById(R.id.pop_cancle);
+        // 初始popupWindow对象
+        mPopupWindow = new PopupWindow(mPopView, ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT, true);
+        // 取消操作
+        pop_cancle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPopupWindow.dismiss();
+            }
+        });
+        // 用户注销
+        pop_change_user.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sweetAlertDialogs.showAlertDialogConfirm("信息提示", "是否确定注销用户?", new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        Intent intent = new Intent(MainAllActivity.this, LoginActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                });
+            }
+        });
+        // 退出系统
+        pop_exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sweetAlertDialogs.showAlertDialogConfirm("信息提示", "是否退出程序?", new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        System.exit(0);
+                    }
+                });
+            }
+        });
 
-    @OnClick({R.id.left_btn, R.id.event_img, R.id.task_img, R.id.supervision_img,R.id.notice_icon})
+    }
+
+    /**
+     * 显示pop菜单
+     *
+     * @param
+     */
+    private void showPopMenu(View parent) {
+        mPopupWindow.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#b0000000")));
+        mPopupWindow.showAtLocation(parent, Gravity.BOTTOM, 0, 0);
+        mPopupWindow.setAnimationStyle(R.style.pop_menu);
+        mPopupWindow.setOutsideTouchable(true);
+        mPopupWindow.setFocusable(true);
+        mPopupWindow.update();
+    }
+
+
+    @OnClick({R.id.left_btn, R.id.event_img, R.id.task_img, R.id.supervision_img,R.id.message_img})
     public void onClick(View v) {
         Intent intent = new Intent();
         switch (v.getId()) {
@@ -263,15 +308,21 @@ public class MainAllActivity extends AppCompatActivity {
                 startActivity(intent);
                 break;
             /** 信息提醒 **/
-            case R.id.notice_icon:
-                intent.setClass(this, MsgNoticeActivity.class);
-                startActivity(intent);
-                break;
+             case R.id.message_img:
+             intent.setClass(this, MsgNoticeActivity.class);
+             startActivity(intent);
+             break;
             /**督查督办*/
             case R.id.supervision_img:
                 intent.setClass(this, SuperVisionAddActivity.class);
                 startActivity(intent);
                 break;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Log.i(TAG,"MAIN 按下了back键 onBackPressed()");
+        showPopMenu((View) main_layout.getParent());
     }
 }

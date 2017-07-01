@@ -283,7 +283,7 @@ public class MsgNoticeActivity extends AppCompatActivity implements View.OnClick
     }
 
     /**
-     * 初始化登出菜单
+     * 初始化信息提示
      */
     void initPopMenuView() {
         /**************** 消息提醒菜单项 ******************/
@@ -324,7 +324,9 @@ public class MsgNoticeActivity extends AppCompatActivity implements View.OnClick
                 MsgNoticeEntity entity = (MsgNoticeEntity) adapter.getItemAtPosition(position);
                 if (entity != null) {
                     View childView = adapter.getChildAt(position);
-
+                    TextView falgView = (TextView)childView.findViewById(R.id.tv_right_name2);
+                    falgView.setText("已读");
+                    falgView.setBackground(getResources().getDrawable(R.drawable.meg_bg_shape_gray));
                     // 发送人,保存所在部门,发送时间,事件名称,消息类型,内容
                     tv_msg_fsr_mc.setText(entity.getFsr());
                     tv_msg_fsr_bm.setText(entity.getFsbmmc());
@@ -338,9 +340,7 @@ public class MsgNoticeActivity extends AppCompatActivity implements View.OnClick
                     tv_msg_type.setText("1".equals(entity.getLx()) ? "事件处理" : "督办处理");
                     tv_msg_content.setText("     " + entity.getNr());
                     showPopMenu();
-                    if (StringUtils.isBlank(entity.getYdsj())) {
-                        updateTaskState(entity.getId(), "czlx", "readed");
-                    }
+                    updateTaskState(entity.getId(), "czlx", "readed");
                 }
             }
         });

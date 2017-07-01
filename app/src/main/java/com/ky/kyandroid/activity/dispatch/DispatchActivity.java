@@ -92,11 +92,6 @@ public class DispatchActivity extends AppCompatActivity {
     @BindView(R.id.center_text)
     TextView centerText;
     /**
-     *
-     */
-    @BindView(R.id.notice_icon)
-    ImageView noticeIcon;
-    /**
      * 导航栏右边的按钮
      */
     @BindView(R.id.right_btn)
@@ -219,7 +214,6 @@ public class DispatchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_street_display);
         ButterKnife.bind(this);
         centerText.setText("事件派遣");
-        noticeIcon.setVisibility(View.INVISIBLE);
         rightBtn.setVisibility(View.INVISIBLE);
         intent = getIntent();
         tFtSjEntity = (TFtSjEntity) intent.getSerializableExtra("tFtSjEntity");

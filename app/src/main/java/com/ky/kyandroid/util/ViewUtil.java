@@ -1,9 +1,14 @@
 package com.ky.kyandroid.util;
 
+import android.content.Context;
+import android.graphics.Color;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.ky.kyandroid.view.BadgeView;
 
 /**
  * Created by Administrator on 2017-3-3.
@@ -41,5 +46,13 @@ public class ViewUtil {
             return checkBox.isChecked();
         }
         return false;
+    }
+
+    public static BadgeView createBeView(Context context, ImageView containerView){
+        BadgeView badge = new BadgeView(context, containerView);
+        badge.setBadgePosition(BadgeView.POSITION_TOP_RIGHT);
+        badge.setBadgeBackgroundColor(Color.parseColor("#FF0033"));
+        badge.setVisibility(View.GONE);
+        return badge;
     }
 }
