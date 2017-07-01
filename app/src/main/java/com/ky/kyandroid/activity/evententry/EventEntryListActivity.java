@@ -33,6 +33,7 @@ import android.widget.Toast;
 import com.ky.kyandroid.Constants;
 import com.ky.kyandroid.R;
 import com.ky.kyandroid.activity.dispatch.DispatchActivity;
+import com.ky.kyandroid.activity.dispatch.StreetHandleActivity;
 import com.ky.kyandroid.adapter.EventEntityListAdapter;
 import com.ky.kyandroid.bean.AckMessage;
 import com.ky.kyandroid.bean.NetWorkConnection;
@@ -65,8 +66,6 @@ import butterknife.OnItemLongClick;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
-
-import static com.ky.kyandroid.R.layout.dialog_streethandle_operation;
 
 /**
  * Created by Caizhui on 2017-6-9.
@@ -373,6 +372,11 @@ public class EventEntryListActivity extends AppCompatActivity {
         searchEvententryList.setAdapter(adapter);
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        initData();
+    }
 
     /**
      * 初始化事件
@@ -574,7 +578,13 @@ public class EventEntryListActivity extends AppCompatActivity {
                             ReturnOperation(tFtZtlzEntity, R.layout.dialog_cancel_operation, tFtZtlzEntity.getActionname()+"原因",Constants.SERVICE_EDIT_EVENT);
                         } else if ("7".equals(tFtZtlzEntity.getNextzt())) {
                             //当7街道自行处理的时候，弹出自定义对话框
-                            ReturnOperation(tFtZtlzEntity, dialog_streethandle_operation, tFtZtlzEntity.getActionname(),Constants.SERVICE_ZXCL );
+                            Intent intent = new Intent(EventEntryListActivity.this, StreetHandleActivity.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable("tFtSjEntity", tFtSjEntity);
+                            bundle.putSerializable("tFtZtlzEntity", tFtZtlzEntity);
+                            intent.putExtras(bundle);
+                            startActivity(intent);
+                           // ReturnOperation(tFtZtlzEntity, dialog_streethandle_operation, tFtZtlzEntity.getActionname(),Constants.SERVICE_ZXCL );
                         }else if ("7.2".equals(tFtZtlzEntity.getNextzt())) {
                             //当7.2事件街道自行处理反馈的时候，弹出自定义对话框
                             ReturnOperation(tFtZtlzEntity, R.layout.dialog_streetfeedback_operation, tFtZtlzEntity.getActionname(),Constants.SERVICE_EDIT_EVENT );

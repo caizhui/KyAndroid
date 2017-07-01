@@ -28,6 +28,7 @@
                         style="@style/TextStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="30dp"
                         android:text="@string/person_name" />
 
                     <EditText
@@ -51,6 +52,7 @@
                         style="@style/TextStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="30dp"
                         android:text="@string/person_sex" />
 
                     <Spinner
@@ -73,6 +75,7 @@
                         style="@style/TextStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="30dp"
                         android:text="@string/person_nation" />
 
                     <Spinner
@@ -138,6 +141,7 @@
                         style="@style/TextStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
                         android:text="@string/person_address" />
 
                     <EditText
@@ -161,6 +165,7 @@
                         style="@style/TextStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="30dp"
                         android:text="@string/person_party" />
 
                     <Spinner
@@ -251,6 +256,7 @@
                         style="@style/TextStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
                         android:text="@string/person_cph" />
 
                     <EditText
@@ -320,6 +326,7 @@
                         style="@style/TextStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="30dp"
                         android:text="@string/person_remark" />
 
                     <EditText

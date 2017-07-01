@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/main">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include layout="@layout/linearlayout_head"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/add_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:background="@drawable/border_sbldbutton_bg"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:text="添加"/>
+
+            <Button
+                android:id="@+id/add_handler"
+                android:layout_width="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:layout_height="30dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:background="@drawable/border_sbldbutton_bg"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:text="处理"/>
+            </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <TextView
+                style="@style/TextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/happen_time" />
+
+            <EditText
+                android:id="@+id/happen_time_edt"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="#ECECEC"
+                android:gravity="start" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <TextView
+                style="@style/TextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/event_summary" />
+
+            <EditText
+                android:id="@+id/return_edt"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:background="#ECECEC"
+                android:gravity="start" />
+
+        </LinearLayout>
+
+        </LinearLayout>
+        <ListView
+            android:id="@+id/file_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
+</LinearLayout>
