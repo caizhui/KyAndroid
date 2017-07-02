@@ -182,9 +182,13 @@ public class EventEntryAdd_Attachment extends Fragment {
         ButterKnife.bind(this, view);
         type = intent.getStringExtra("type");
         tFtSjEntity = (TFtSjEntity) intent.getSerializableExtra("tFtSjEntity");
-        fileEntityList =new ArrayList<FileEntity>();
+        if(fileEntityList==null){
+            fileEntityList =new ArrayList<FileEntity>();
+        }
         //初始化imageList
-        adapter = new EventImageListAdapter(fileEntityList, EventEntryAdd_Attachment.this.getActivity());
+        if(adapter==null){
+            adapter = new EventImageListAdapter(fileEntityList, EventEntryAdd_Attachment.this.getActivity());
+        }
         imageList.setAdapter(adapter);
         if(tFtSjEntity!=null){
             uuid = tFtSjEntity.getId();
@@ -274,8 +278,10 @@ public class EventEntryAdd_Attachment extends Fragment {
                 fileRoute.mkdirs();
             } else {
                 fileEntityDao = new FileEntityDao();
-                //访问本地图片信息
-                fileEntityList = fileEntityDao.queryList(uuid);
+                //当切换页签的时候不查询数据库，只有保存草稿之后才查询数据库
+                if(fileEntityList!=null && fileEntityList.size()==0){
+                    fileEntityList = fileEntityDao.queryList(uuid);
+                }
                 if (uuid != null && !"".equals(uuid)) {
                     //判断是否切换页签，如果切换页签，我们的fileEntityList = fileEntityDao.queryList();查询为null，所以我们需要在后面将fileEntity加入到我们的fileEntityList中
                     boolean isTap= false;
@@ -290,7 +296,9 @@ public class EventEntryAdd_Attachment extends Fragment {
                                 if(fileEntityList!=null && fileEntityList.size()>i){
                                     fileEntity = fileEntityList.get(i);
                                 }else{
-                                    fileEntity = new FileEntity();
+                                    if(fileEntity== null){
+                                        fileEntity = new FileEntity();
+                                    }
                                     isTap= true;
                                 }
                                 if(fileEntityList==null){
