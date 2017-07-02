@@ -266,6 +266,12 @@ public class EventEntryListActivity extends AppCompatActivity {
                 // 失败
                 case 0:
                     sweetAlertDialogUtil.dismissAlertDialog();
+                    swipeContainer.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            swipeContainer.setRefreshing(false);
+                        }
+                    });
                     Toast.makeText(EventEntryListActivity.this, message, Toast.LENGTH_SHORT).show();
                     break;
                 // 刷新成功

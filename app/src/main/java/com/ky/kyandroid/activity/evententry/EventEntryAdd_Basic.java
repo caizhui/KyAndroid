@@ -596,6 +596,15 @@ public class EventEntryAdd_Basic extends Fragment {
                     for (int i = 0; i < codeValueList1.size(); i++) {
                         GroupNameArray[i] = codeValueList1.get(i).getValue();
                     }
+                    /** 二级菜单名称数组 **/
+                    String pidCode = descEntityDao.queryCodeByName(spinnerType, codeValueList1.get(0).getValue());
+                    List<CodeValue> childCodeValueList = descEntityDao.queryValueListByPid(spinnerType, pidCode);
+                    childNameArray = new String[childCodeValueList.size()];
+                    if (childCodeValueList != null && childCodeValueList.size() > 0) {
+                        for (int i = 0; i < childCodeValueList.size(); i++) {
+                            childNameArray[i] = childCodeValueList.get(i).getValue();
+                        }
+                    }
                 }
                 showPupupWindow();
                 break;

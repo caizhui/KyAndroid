@@ -16,6 +16,10 @@ public class FileEntity implements Serializable{
     @Column(name = "uuid",isId = true,autoGen = true)
     private int uuid;
 
+
+    @Column(name = "sjId")
+    private String  sjId;
+
     /**
      * 图片
      */
@@ -29,6 +33,12 @@ public class FileEntity implements Serializable{
     public String fileUrl;
 
     /**
+     * 文件名字
+     */
+    @Column(name = "fileName")
+    public String fileName;
+
+    /**
      * 文件描述
      */
     @Column(name = "fileMs")
@@ -38,6 +48,8 @@ public class FileEntity implements Serializable{
      * 是否显示描述
      */
     public boolean isHaveMs = true;
+
+    public FileEntity(){}
 
     public Bitmap getBitmap() {
         return bitmap;
@@ -77,5 +89,21 @@ public class FileEntity implements Serializable{
 
     public void setHaveMs(boolean haveMs) {
         isHaveMs = haveMs;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public String getSjId() {
+        return sjId;
+    }
+
+    public void setSjId(String sjId) {
+        this.sjId = sjId;
     }
 }

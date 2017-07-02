@@ -376,6 +376,7 @@ public class EventEntryAdd_Person extends Fragment {
                     message="修改";
                 }else{
                     flag = tFtSjRyEntityDao.saveTFtSjRyEntity(tFtSjRyEntity);
+                    tFtSjRyEntity = null;
                     message="新增";
                 }
                 if(flag){
@@ -393,6 +394,7 @@ public class EventEntryAdd_Person extends Fragment {
         builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                tFtSjRyEntity = null;
             }
         });
         builder.create().show();
