@@ -1,6 +1,7 @@
 package com.ky.kyandroid.adapter;
 
 import android.content.Context;
+import android.os.Handler;
 import android.support.v7.widget.DrawableUtils;
 import android.util.Log;
 import android.view.View;
@@ -38,11 +39,13 @@ import okhttp3.Response;
 public class MsgNoticeListAdapter extends BaseAdapter {
 	private List<MsgNoticeEntity> list;
 	private Context context;
+	private Handler mHandler;
 	private SlideView.OnSlideListener onSlideListener;
 
-	public MsgNoticeListAdapter(Context context, SlideView.OnSlideListener onSlideListener) {
+	public MsgNoticeListAdapter(Context context,Handler mHandler, SlideView.OnSlideListener onSlideListener) {
 		super();
 		list= new ArrayList<MsgNoticeEntity>();
+		this.mHandler = mHandler;
 		this.context = context;
 		this.onSlideListener = onSlideListener;
 	}
@@ -52,6 +55,10 @@ public class MsgNoticeListAdapter extends BaseAdapter {
 		this.list = list;
 		this.context = context;
 		this.onSlideListener = onSlideListener;
+	}
+
+	public List<MsgNoticeEntity> getList() {
+		return list;
 	}
 
 	@Override
@@ -160,6 +167,9 @@ public class MsgNoticeListAdapter extends BaseAdapter {
 				@Override
 				public void onResponse(Call arg0, Response response) throws IOException {
 					Log.i("MsgNoticeListAdapter", response.isSuccessful() ? "成功" : "失败");
+					if (response.isSuccessful()){
+						mHandler.sendEmptyMessage(9);
+					}
 				}
 				@Override
 				public void onFailure(Call arg0, IOException arg1) {}

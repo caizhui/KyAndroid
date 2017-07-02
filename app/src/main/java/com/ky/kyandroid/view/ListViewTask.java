@@ -69,7 +69,7 @@ public class ListViewTask extends ListView {
 				}
 			}
 		}
-		
+
 		if (mFocusedItemView != null) {
 			flag = mFocusedItemView.onRequireTouchEvent(event);
 		}

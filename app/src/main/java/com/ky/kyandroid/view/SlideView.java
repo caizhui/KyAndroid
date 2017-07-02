@@ -124,7 +124,7 @@ public class SlideView extends LinearLayout {
 				this.scrollTo(newScrollX, 0);
 			}
 			break;
-			
+
 		}
 		case MotionEvent.ACTION_UP: {
 			Log.i(TAG, "ACTION_UP..................放开.");
@@ -138,8 +138,8 @@ public class SlideView extends LinearLayout {
 						newScrollX == 0 ? OnSlideListener.SLIDE_STATUS_OFF
 								: OnSlideListener.SLIDE_STATUS_ON);
 			}
-			if (scrollX == 0) {
-				return 1;
+			if (scrollX > 0) {
+				return 0;
 			}
 			break;
 		}
@@ -164,7 +164,7 @@ public class SlideView extends LinearLayout {
 		mLastX = x;
 		mLastY = y;
 		Log.i(TAG, "mLastX:" + mLastX + ",mLastY:" + mLastY);
-		return 0;
+		return 1;
 	}
 
 	private void smoothScrollTo(int destX, int destY) {

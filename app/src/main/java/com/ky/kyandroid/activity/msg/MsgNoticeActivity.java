@@ -217,6 +217,12 @@ public class MsgNoticeActivity extends AppCompatActivity implements View.OnClick
                         Toast.makeText(MsgNoticeActivity.this, "查询不到符合条件记录", Toast.LENGTH_SHORT).show();
                     }
                     break;
+                // 刷新阅读状态
+                case 9:
+                    Log.i(TAG, "刷新阅读状态操作...");
+                    toolbar_count.setText("(共" + msgAdapter.getList().size() + "条)");
+                    msgAdapter.notifyDataSetChanged();
+                    break;
             }
         }
     };
@@ -319,14 +325,9 @@ public class MsgNoticeActivity extends AppCompatActivity implements View.OnClick
         list_view.setSelector(getResources().getDrawable(R.drawable.item_selector_default));
         list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapter, View view,
-                                    int position, long arg3) {
+            public void onItemClick(AdapterView<?> adapter, View view, int position, long arg3) {
                 MsgNoticeEntity entity = (MsgNoticeEntity) adapter.getItemAtPosition(position);
                 if (entity != null) {
-                    View childView = adapter.getChildAt(position);
-                    TextView falgView = (TextView)childView.findViewById(R.id.tv_right_name2);
-                    falgView.setText("已读");
-                    falgView.setBackground(getResources().getDrawable(R.drawable.meg_bg_shape_gray));
                     // 发送人,保存所在部门,发送时间,事件名称,消息类型,内容
                     tv_msg_fsr_mc.setText(entity.getFsr());
                     tv_msg_fsr_bm.setText(entity.getFsbmmc());
@@ -340,7 +341,15 @@ public class MsgNoticeActivity extends AppCompatActivity implements View.OnClick
                     tv_msg_type.setText("1".equals(entity.getLx()) ? "事件处理" : "督办处理");
                     tv_msg_content.setText("     " + entity.getNr());
                     showPopMenu();
-                    updateTaskState(entity.getId(), "czlx", "readed");
+                    try {
+                        Object up_entity = msgAdapter.getList().get(position);
+                        if (up_entity != null){
+                            ((MsgNoticeEntity)up_entity).setYdsj("readed");
+                            updateTaskState(entity.getId(), "czlx", "readed");
+                        }
+                    } catch (Exception e) {
+                        Log.i(TAG,"滑动未停止,修改失效...");
+                    }
                 }
             }
         });
@@ -374,7 +383,7 @@ public class MsgNoticeActivity extends AppCompatActivity implements View.OnClick
             }
         });
         // 设值适配器
-        msgAdapter = new MsgNoticeListAdapter(this, onSlideListener);
+        msgAdapter = new MsgNoticeListAdapter(this,mHandler,onSlideListener);
         list_view.setAdapter(msgAdapter);
     }
 
@@ -430,6 +439,10 @@ public class MsgNoticeActivity extends AppCompatActivity implements View.OnClick
                 @Override
                 public void onResponse(Call arg0, Response response) throws IOException {
                     Log.i("MsgNoticeListAdapter", response.isSuccessful() ? "成功" : "失败");
+                    if (response.isSuccessful()){
+                        // 刷新阅读状态
+                        mHandler.sendEmptyMessage(9);
+                    }
                 }
 
                 @Override
@@ -467,7 +480,6 @@ public class MsgNoticeActivity extends AppCompatActivity implements View.OnClick
                     pageBean = ackMsg.getPageBean();
                     if(null != pageBean){
                         List<?> dataL = pageBean.getDataList();
-                        toolbar_count.setText("(共" + pageBean.getTotal() + "条)");
                         if (dataL != null && dataL.size() > 0) {
                             // 响应字符串
                             String resultList = JsonUtil.toJson(dataL);
@@ -498,6 +510,7 @@ public class MsgNoticeActivity extends AppCompatActivity implements View.OnClick
             // 刷新列表
             msgAdapter.notifyDataSetChanged(entityList);
         }
+        toolbar_count.setText("(共" + msgAdapter.getList().size() + "条)");
     }
 
     @Override
