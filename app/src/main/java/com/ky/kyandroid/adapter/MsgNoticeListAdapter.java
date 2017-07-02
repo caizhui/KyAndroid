@@ -87,6 +87,7 @@ public class MsgNoticeListAdapter extends BaseAdapter {
             holder = new ViewHolder();
         	holder.tv_center_name = (TextView) slideView.findViewById(R.id.tv_center_name);
 			holder.tv_center_name2 = (TextView) slideView.findViewById(R.id.tv_center_name2);
+			holder.tv_center_name3 = (TextView) slideView.findViewById(R.id.tv_center_name3);
 			holder.tv_right_name = (TextView) slideView.findViewById(R.id.tv_right_name);
 			holder.tv_right_name2 = (TextView) slideView.findViewById(R.id.tv_right_name2);
 			holder.deleteHolder = (ViewGroup)slideView.findViewById(R.id.holder);
@@ -103,6 +104,8 @@ public class MsgNoticeListAdapter extends BaseAdapter {
 		holder.tv_center_name.setText("发送人:" + entity.getFsr());
 		// 消息类型
 		holder.tv_center_name2.setText("消息类型:" + ("1".equals(entity.getLx())?"事件处理" : "督办处理"));
+		// 内容
+		holder.tv_center_name3.setText("内容信息:" + entity.getNr());
 		// 时间
 		holder.tv_right_name.setText(entity.getFssj());
 		// 已读与未读 根据阅读时间判断
@@ -131,6 +134,7 @@ public class MsgNoticeListAdapter extends BaseAdapter {
 		public TextView tv_left_name2;
 		public TextView tv_center_name;
 		public TextView tv_center_name2;
+		public TextView tv_center_name3;
 		public TextView tv_right_name;
 		public TextView tv_right_name2;
 		public ViewGroup deleteHolder;

@@ -40,8 +40,8 @@
 
                         <ImageView
                             android:id="@+id/event_img"
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
                             android:src="@mipmap/wdsj" />
 
                         <TextView
@@ -49,8 +49,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
+                            android:padding="3dp"
                             android:text="我的事件"
-                            android:textSize="16sp" />
+                            android:textSize="14sp" />
                     </LinearLayout>
 
 
@@ -64,8 +65,8 @@
 
                         <ImageView
                             android:id="@+id/sjgz_img"
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
                             android:src="@mipmap/sjgz" />
 
                         <TextView
@@ -73,8 +74,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
+                            android:padding="3dp"
                             android:text="事件跟踪"
-                            android:textSize="16sp" />
+                            android:textSize="14sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -87,8 +89,8 @@
 
                         <ImageView
                             android:id="@+id/message_img"
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
                             android:src="@mipmap/message" />
 
                         <TextView
@@ -97,7 +99,8 @@
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:text="消息"
-                            android:textSize="16sp" />
+                            android:padding="3dp"
+                            android:textSize="14sp" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -108,7 +111,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.2"
+                    android:layout_weight="0.15"
+                    android:paddingTop="5dp"
                     android:gravity="center_horizontal">
 
                     <LinearLayout
@@ -121,8 +125,8 @@
 
                         <ImageView
                             android:id="@+id/jdpj_img"
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
                             android:src="@mipmap/jdpj" />
 
                         <TextView
@@ -130,8 +134,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
+                            android:padding="3dp"
                             android:text="监督评价"
-                            android:textSize="16sp" />
+                            android:textSize="14sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -144,8 +149,8 @@
 
                         <ImageView
                             android:id="@+id/zsk_img"
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
                             android:src="@mipmap/zsk" />
 
                         <TextView
@@ -153,8 +158,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
+                            android:padding="3dp"
                             android:text="知识库"
-                            android:textSize="16sp" />
+                            android:textSize="14sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -167,8 +173,8 @@
 
                         <ImageView
                             android:id="@+id/flfg_img"
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
                             android:src="@mipmap/flfg" />
 
                         <TextView
@@ -176,8 +182,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
+                            android:padding="3dp"
                             android:text="法律法规"
-                            android:textSize="16sp" />
+                            android:textSize="14sp" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -187,7 +194,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.2"
+                    android:layout_weight="0.1"
+                    android:paddingTop="5dp"
                     android:gravity="center_horizontal">
 
                     <LinearLayout
@@ -200,8 +208,8 @@
 
                         <ImageView
                             android:id="@+id/ya_img"
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
                             android:src="@mipmap/ya" />
 
                         <TextView
@@ -209,8 +217,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
+                            android:padding="3dp"
                             android:text="预案"
-                            android:textSize="16sp" />
+                            android:textSize="14sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -223,8 +232,8 @@
 
                         <ImageView
                             android:id="@+id/cgx_img"
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
                             android:src="@mipmap/cgx" />
 
                         <TextView
@@ -232,8 +241,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
+                            android:padding="3dp"
                             android:text="草稿箱"
-                            android:textSize="16sp" />
+                            android:textSize="14sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -246,8 +256,8 @@
 
                         <ImageView
                             android:id="@+id/gzjb_img"
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
                             android:src="@mipmap/gzjb" />
 
                         <TextView
@@ -255,8 +265,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
+                            android:padding="3dp"
                             android:text="工作简报"
-                            android:textSize="16sp" />
+                            android:textSize="14sp" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -266,7 +277,7 @@
                 <!-- start group -->
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_weight="0.05"
+                    android:layout_weight="0.01"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal">
 
@@ -280,8 +291,8 @@
 
                         <ImageView
                             android:id="@+id/sjtj_img"
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
                             android:src="@mipmap/sjtj" />
 
                         <TextView
@@ -290,7 +301,8 @@
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:text="事件统计"
-                            android:textSize="16sp" />
+                            android:padding="3dp"
+                            android:textSize="14sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -302,14 +314,14 @@
                         android:orientation="vertical">
 
                         <ImageView
-                            android:layout_width="60dp"
-                            android:layout_height="60dp" />
+                            android:layout_width="50dp"
+                            android:layout_height="50dp" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:textSize="16sp" />
+                            android:textSize="14sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -321,14 +333,14 @@
                         android:orientation="vertical">
 
                         <ImageView
-                            android:layout_width="60dp"
-                            android:layout_height="60dp" />
+                            android:layout_width="50dp"
+                            android:layout_height="50dp" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:textSize="16sp" />
+                            android:textSize="14sp" />
                     </LinearLayout>
 
                 </LinearLayout>

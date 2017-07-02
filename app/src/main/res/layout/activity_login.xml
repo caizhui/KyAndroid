@@ -57,6 +57,7 @@
                 android:textColor="@color/white"
                 android:background="@color/transparent"
                 android:hint="@string/login_hint_account"
+                android:textSize="16sp"
                 android:textColorHint="@color/white"
                 android:inputType="text" />
         </LinearLayout>
@@ -85,6 +86,7 @@
                 android:layout_height="match_parent"
                 android:background="@color/transparent"
                 android:hint="@string/login_hint_password"
+                android:textSize="16sp"
                 android:textColor="@color/white"
                 android:textColorHint="@color/white"
                 android:inputType="textPassword" />
@@ -113,7 +115,7 @@
                 android:text="设置IP"
                 android:layout_gravity="center"
                 android:textColor="@color/white"
-                android:textSize="16sp" />
+                android:textSize="15sp" />
         </LinearLayout>
 
 
@@ -123,11 +125,12 @@
         android:id="@+id/btn_login"
         android:layout_width="match_parent"
         android:layout_height="43dp"
-        android:layout_below="@id/rlay_login_and_password"
         android:layout_marginLeft="22dp"
         android:layout_marginRight="22dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="21dp"
         android:background="@mipmap/login_ok"
-        android:textColor="@color/white" />
+        android:textColor="@color/white"
+        android:layout_below="@+id/rlay_login_and_password"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

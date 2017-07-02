@@ -134,6 +134,7 @@ public class LoginActivity extends AppCompatActivity {
                 case 1:
                     sweetAlertDialogUtil.dismissAlertDialog();
                     Log.i(TAG, "登录成功...");
+                    Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
                     handleTransation(message);
                     break;
             }
@@ -191,7 +192,7 @@ public class LoginActivity extends AppCompatActivity {
                     //拼凑IP和端口
                     Constants.SERVICE_BASE_URL="http://"+ip+":"+port+"/";
                     if (netWorkConnection.isWIFIConnection()) {
-                        sweetAlertDialogUtil.loadAlertDialog();
+                        sweetAlertDialogUtil.loadAlertDialog("正在登录,请稍后...");
                         msg.what = 0;
                         // 参数列表 - 账号、密码（加密）
                         Map<String, String> paramsMap = new HashMap<String, String>();
