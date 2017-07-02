@@ -17,12 +17,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.ky.kyandroid.R;
 import com.ky.kyandroid.adapter.EventImageListAdapter;
+import com.ky.kyandroid.db.dao.FileEntityDao;
 import com.ky.kyandroid.entity.FileEntity;
 import com.ky.kyandroid.entity.TFtSjDetailEntity;
 import com.ky.kyandroid.entity.TFtSjEntity;
@@ -164,6 +166,12 @@ public class EventEntryAdd_Attachment extends Fragment {
      */
     private EventImageListAdapter adapter;
 
+    /**
+     * 返回图片信息List
+     */
+    private List<FileEntity>   returnFileList;
+
+    FileEntityDao fileEntityDao;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -209,6 +217,7 @@ public class EventEntryAdd_Attachment extends Fragment {
                     fileEntity = new FileEntity();
                     if(sjfjList.get(i).getUrl()!=null){
                         fileEntity.setFileUrl(sjfjList.get(i).getUrl());
+                        fileEntity.setFileMs(sjfjList.get(i).getWjms());
                     }
                     if(fileEntityList==null){
                         fileEntityList =new ArrayList<FileEntity>();
@@ -225,8 +234,12 @@ public class EventEntryAdd_Attachment extends Fragment {
         if (!fileRoute.exists()) {
             fileRoute.mkdirs();
         } else {
+            fileEntityDao = new FileEntityDao();
             //访问本地图片信息
+            fileEntityList = fileEntityDao.queryList(uuid);
             if (uuid != null && !"".equals(uuid)) {
+                //判断是否切换页签，如果切换页签，我们的fileEntityList = fileEntityDao.queryList();查询为null，所以我们需要在后面将fileEntity加入到我们的fileEntityList中
+                boolean isTap= false;
                 File files[] = fileRoute.listFiles();
                 if (files != null && files.length > 0) {
                     FileInputStream fis = null;
@@ -234,14 +247,31 @@ public class EventEntryAdd_Attachment extends Fragment {
                         for(int i=0;i<files.length;i++){
                             fis = new FileInputStream(files[i]);
                             tupbitmap = BitmapFactory.decodeStream(fis);
-                            fileEntity = new FileEntity();
-                            if(tupbitmap!=null){
-                                fileEntity.setBitmap(tupbitmap);
+                            //如果fileEntityList有值，则表示fileEntity是有对象的，否则据创建对象
+                            if(fileEntityList==null){
+                                fileEntity = new FileEntity();
+                                isTap= true;
+                            }else{
+                                fileEntity = fileEntityList.get(i);
                             }
                             if(fileEntityList==null){
                                 fileEntityList =new ArrayList<FileEntity>();
                             }
-                            fileEntityList.add(fileEntity);
+                            if(tupbitmap!=null){
+                                //这里循环遍历存放文件信息的List，如果在本地获取的文件名跟我们从数据库中获取的一致，则表示是同一条记录
+                                for(int j=0;j<fileEntityList.size();j++){
+                                    String fileName =files[i].getName();
+                                    if(fileEntityList.get(j).getFileName().equals(fileName)){
+                                        fileEntity.setBitmap(tupbitmap);
+                                    }
+                                }
+                                if(isTap){
+                                    fileEntity.setBitmap(tupbitmap);
+                                    fileEntityList.add(fileEntity);
+                                }
+                               // fileEntity.setFileMs(fileEntityList.get(i).getFileMs());
+                            }
+
                             if (fileEntityList != null && fileEntityList.size() > 0) {
                                 adapter.notifyDataSetChanged(fileEntityList);
                             }
@@ -352,6 +382,7 @@ public class EventEntryAdd_Attachment extends Fragment {
                                 tupbitmap = BitmapFactory.decodeStream(fis);
                                 fileEntity = new FileEntity();
                                 if(tupbitmap!=null){
+                                    fileEntity.setFileName(photoName);
                                     fileEntity.setBitmap(tupbitmap);
                                 }
                                 if(fileEntityList==null){
@@ -472,5 +503,19 @@ public class EventEntryAdd_Attachment extends Fragment {
         this.tFtSjDetailEntity = tFtSjDetailEntity;
     }
 
+    public List<FileEntity> PackageData(){
+        returnFileList = new ArrayList<FileEntity>();
+        int count =adapter.getCount();
+        if(count>0){
+            for(int i = 0 ;i<count;i++){
+                FileEntity fileEntity = (FileEntity) adapter.getItem(i);
+                View view = imageList.getChildAt(i);
+                EditText editText = (EditText) view.findViewById(R.id.image_ms);
+                fileEntity.setFileMs(editText.getText().toString());
+                returnFileList.add(fileEntity);
+            }
+        }
+    return returnFileList;
+    }
 
 }

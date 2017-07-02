@@ -16,6 +16,8 @@
         <EditText
             android:id="@+id/image_ms"
             android:layout_width="match_parent"
+            android:background="@drawable/border_edittext_bg"
+            android:padding="3dp"
             android:layout_height="100dp"
             android:layout_marginLeft="10dp"
             android:gravity="start"/>

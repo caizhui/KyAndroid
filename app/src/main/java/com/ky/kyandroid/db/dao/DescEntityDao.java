@@ -67,9 +67,11 @@ public class DescEntityDao extends BaseDao {
         List<CodeValue> cvList = new ArrayList<CodeValue>();
         try {
             List<DescEntity> descList = db.selector(DescEntity.class).where("type", "==", type).findAll();
-            for (DescEntity descEntity : descList) {
-                CodeValue cv = new CodeValue(descEntity.getCode(), descEntity.getValue());
-                cvList.add(cv);
+            if(descList!=null &&descList.size()>0){
+                for (DescEntity descEntity : descList) {
+                    CodeValue cv = new CodeValue(descEntity.getCode(), descEntity.getValue());
+                    cvList.add(cv);
+                }
             }
         } catch (DbException e) {
             Log.i(TAG, "系统字典查询异常-queryListForCV >> " + e.getMessage());
@@ -86,9 +88,11 @@ public class DescEntityDao extends BaseDao {
         List<CodeValue> cvList = new ArrayList<CodeValue>();
         try {
             List<DescEntity> descList = db.selector(DescEntity.class).where("type", "==", type).findAll();
-            for (DescEntity descEntity : descList) {
-                CodeValue cv = new CodeValue(descEntity.getCode(), descEntity.getValue());
-                cvList.add(cv);
+            if(descList!=null && descList.size()>0){
+                for (DescEntity descEntity : descList) {
+                    CodeValue cv = new CodeValue(descEntity.getCode(), descEntity.getValue());
+                    cvList.add(cv);
+                }
             }
         } catch (DbException e) {
             Log.i(TAG, "系统字典查询异常-queryListForCV >> " + e.getMessage());
@@ -106,9 +110,11 @@ public class DescEntityDao extends BaseDao {
         List<CodeValue> cvList = new ArrayList<CodeValue>();
         try {
             List<DescEntity> descList = db.selector(DescEntity.class).where("parentId", "==", "0").and("type","==",type).findAll();
-            for (DescEntity descEntity : descList) {
-                CodeValue cv = new CodeValue(descEntity.getCode(), descEntity.getValue());
-                cvList.add(cv);
+            if(descList!=null && descList.size()>0) {
+                for (DescEntity descEntity : descList) {
+                    CodeValue cv = new CodeValue(descEntity.getCode(), descEntity.getValue());
+                    cvList.add(cv);
+                }
             }
         } catch (DbException e) {
             Log.i(TAG, "系统字典查询异常-queryListForCV >> " + e.getMessage());
@@ -126,9 +132,11 @@ public class DescEntityDao extends BaseDao {
         List<CodeValue> cvList = new ArrayList<CodeValue>();
         try {
             List<DescEntity> descList = db.selector(DescEntity.class).where("type", "==", type).and("parentId", "==", parentId).findAll();
-            for (DescEntity descEntity : descList) {
-                CodeValue cv = new CodeValue(descEntity.getCode(), descEntity.getValue());
-                cvList.add(cv);
+            if(descList!=null && descList.size()>0) {
+                for (DescEntity descEntity : descList) {
+                    CodeValue cv = new CodeValue(descEntity.getCode(), descEntity.getValue());
+                    cvList.add(cv);
+                }
             }
         } catch (DbException e) {
             Log.i(TAG, "系统字典查询异常-queryListForCV >> " + e.getMessage());

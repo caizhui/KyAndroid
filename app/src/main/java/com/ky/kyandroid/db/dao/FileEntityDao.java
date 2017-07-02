@@ -43,9 +43,9 @@ public class FileEntityDao extends BaseDao {
      * @param
      * @return
      */
-    public List<FileEntity> queryList() {
+    public List<FileEntity> queryList(String sjId) {
         try {
-            List<FileEntity> eventEntryList = db.selector(FileEntity.class).findAll();
+            List<FileEntity> eventEntryList = db.selector(FileEntity.class).where("sjId","==",sjId).findAll();
             if (eventEntryList != null && eventEntryList.size() > 0) {
                 return eventEntryList;
             }
@@ -67,6 +67,17 @@ public class FileEntityDao extends BaseDao {
         return flag;
     }
 
+    public boolean  deleteEventEntryBySjId(String sjId) {
+        boolean flag =false;
+        try {
+            db.delete(TFtSjEntity.class, WhereBuilder.b("sjId","==",sjId ));
+            flag=true;
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+        return flag;
+    }
+
     /**
      * 修改
      * @param entity
@@ -75,7 +86,7 @@ public class FileEntityDao extends BaseDao {
     public boolean updateFileEntity(FileEntity entity){
         boolean flag =false;
         try {
-            db.update(entity, String.valueOf(WhereBuilder.b("uuid","=", entity.getUuid())),"fileUrl","fileMs");
+            db.update(entity, String.valueOf(WhereBuilder.b("uuid","==", entity.getUuid())),"fileUrl","fileMs");
             flag = true;
         } catch (DbException e) {
             e.printStackTrace();

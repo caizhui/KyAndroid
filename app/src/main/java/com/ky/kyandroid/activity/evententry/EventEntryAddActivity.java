@@ -25,8 +25,10 @@ import com.ky.kyandroid.activity.draft.EventDraftListActivity;
 import com.ky.kyandroid.adapter.FragmentAdapter;
 import com.ky.kyandroid.bean.AckMessage;
 import com.ky.kyandroid.bean.NetWorkConnection;
+import com.ky.kyandroid.db.dao.FileEntityDao;
 import com.ky.kyandroid.db.dao.TFtSjEntityDao;
 import com.ky.kyandroid.db.dao.TFtSjRyEntityDao;
+import com.ky.kyandroid.entity.FileEntity;
 import com.ky.kyandroid.entity.TFtSjDetailEntity;
 import com.ky.kyandroid.entity.TFtSjEntity;
 import com.ky.kyandroid.entity.TFtSjFjEntity;
@@ -177,6 +179,8 @@ public class EventEntryAddActivity extends FragmentActivity {
 
     public TFtSjRyEntityDao tFtSjRyEntityDao;
 
+    private FileEntityDao fileEntityDao;
+
     /**
      * type 0：新增 1：修改
      **/
@@ -202,6 +206,11 @@ public class EventEntryAddActivity extends FragmentActivity {
      */
     String czlx;
 
+    /**
+     * 存放图片List
+     */
+    private List<FileEntity>   fileEntityList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -213,6 +222,7 @@ public class EventEntryAddActivity extends FragmentActivity {
         intent = getIntent();
         type = intent.getStringExtra("type");
         tFtSjEntity = (TFtSjEntity) intent.getSerializableExtra("tFtSjEntity");
+        fileEntityDao= new FileEntityDao();
         tFtSjEntityDao = new TFtSjEntityDao();
         tFtSjRyEntityDao = new TFtSjRyEntityDao();
         //1表示草稿修改或者查看已经上报的事件信息，则获取传过来的uuid，否则新建
@@ -520,6 +530,16 @@ public class EventEntryAddActivity extends FragmentActivity {
             /** 上报领导按钮*/
             case R.id.reporting_leadership_btn:
                 eventEntity = eventEntryAdd_basic.PackageData();
+                fileEntityList = eventEntryAdd_attachment.PackageData();
+                //先将数据库中的改事件的数据删除，然后保存到数据库中
+                fileEntityDao.deleteEventEntryBySjId(uuid);
+                if(fileEntityList!=null && fileEntityList.size()>0){
+                    for(int i=0;i<fileEntityList.size();i++){
+                        FileEntity fileEntity = fileEntityList.get(i);
+                        fileEntity.setSjId(uuid);
+                        fileEntityDao.saveFileEntity(fileEntity);
+                    }
+                }
                 if (eventEntity != null) {
                     //当上报领导时，如果id为空，表示状态为0，表示是通过草稿去上报的，否则就是直接上报的
                     if ("0".equals(eventEntity.getZt())) {
@@ -544,12 +564,23 @@ public class EventEntryAddActivity extends FragmentActivity {
                     if (tFtSjRyEntityList != null) {
                         map.put("tFtSjRyEntityList", tFtSjRyEntityList);
                     }
+                    fileEntityList = fileEntityDao.queryList(uuid);
                     if (files != null && files.length > 0) {
                         String[] filesName = new String[files.length];
+                        String[] filesMs = new String[files.length];
                         for (int i = 0; i < files.length; i++) {
-                            filesName[i] = files[i].getName();
+                            if(fileEntityList!=null&& fileEntityList.size()>0){
+                                //这里循环遍历存放文件信息的List，如果在本地获取的文件名跟我们从数据库中获取的一致，则表示是同一条记录,就将数据库中的描述信息变成文件名称
+                                for(int j=0;j<fileEntityList.size();j++){
+                                    if(fileEntityList.get(j).getFileName().equals(files[i].getName())){
+                                        filesMs[i] =fileEntityList.get(j).getFileMs();
+                                    }
+                                }
+                            }
+                            filesName[i]=files[i].getName();
                         }
                         map.put("filesName", filesName);
+                        map.put("filesMs", filesMs);
                     }
                     String paramMap = JsonUtil.map2Json(map);
                     sweetAlertDialogUtil.loadAlertDialog();
@@ -559,6 +590,16 @@ public class EventEntryAddActivity extends FragmentActivity {
             /**保存草稿按钮*/
             case R.id.save_draft_btn:
                 TFtSjEntity tempenenEntity = eventEntryAdd_basic.PackageData();
+                fileEntityList = eventEntryAdd_attachment.PackageData();
+                //先将数据库中的改事件的数据删除，然后保存到数据库中
+                fileEntityDao.deleteEventEntryBySjId(uuid);
+                if(fileEntityList!=null && fileEntityList.size()>0){
+                    for(int i=0;i<fileEntityList.size();i++){
+                        FileEntity fileEntity = fileEntityList.get(i);
+                        fileEntity.setSjId(uuid);
+                        fileEntityDao.saveFileEntity(fileEntity);
+                    }
+                }
                 if (tempenenEntity != null) {
                     boolean flag = false;
                     String message = "";
