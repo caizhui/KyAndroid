@@ -2,6 +2,7 @@ package com.ky.kyandroid.activity.evententry;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,6 +12,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -50,6 +52,7 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnItemLongClick;
 
 /**
  * Created by Caizhui on 2017-6-9.
@@ -205,6 +208,42 @@ public class EventEntryAdd_Attachment extends Fragment {
     }
 
 
+    @OnItemLongClick(R.id.image_list)
+    public boolean OnItemLongClick(final int position){
+        final FileEntity fileEntity = (FileEntity) adapter.getItem(position);
+        View view = imageList.getChildAt(position);
+        EditText editText = (EditText) view.findViewById(R.id.image_ms);
+        editText.clearFocus();
+        //只有当flag为false，表示事件还是草稿状态，图片还在本地的时候
+        if(!flag){
+            AlertDialog.Builder builder = new AlertDialog.Builder(EventEntryAdd_Attachment.this.getActivity());
+            builder.setTitle("信息");
+            builder.setMessage("确定要删除该条记录吗？");
+            builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    if(fileEntityList!=null && fileEntityList.size()>0){
+                        //删除保存在本地的图片
+                        FileManager.delFile(fileRoute + "/" +fileEntity.getFileName());
+                        if(fileEntityList.get(position)!=null){
+                            fileEntityList.remove(position);
+                        }
+                        adapter.notifyDataSetChanged(fileEntityList);
+                    }
+                }
+            });
+            builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                }
+            });
+            builder.create().show();
+        }
+       return false;
+    }
+
+
+
     /**
      * 显示图片或者创建文件路径
      */
@@ -248,21 +287,26 @@ public class EventEntryAdd_Attachment extends Fragment {
                                 fis = new FileInputStream(files[i]);
                                 tupbitmap = BitmapFactory.decodeStream(fis);
                                 //如果fileEntityList有值，则表示fileEntity是有对象的，否则据创建对象
-                                if(fileEntityList==null){
+                                if(fileEntityList!=null && fileEntityList.size()>i){
+                                    fileEntity = fileEntityList.get(i);
+                                }else{
                                     fileEntity = new FileEntity();
                                     isTap= true;
-                                }else{
-                                    fileEntity = fileEntityList.get(i);
                                 }
                                 if(fileEntityList==null){
                                     fileEntityList =new ArrayList<FileEntity>();
                                 }
                                 if(tupbitmap!=null){
                                     //这里循环遍历存放文件信息的List，如果在本地获取的文件名跟我们从数据库中获取的一致，则表示是同一条记录
-                                    for(int j=0;j<fileEntityList.size();j++){
-                                        String fileName =files[i].getName();
-                                        if(fileEntityList.get(j).getFileName().equals(fileName)){
-                                            fileEntity.setBitmap(tupbitmap);
+                                    if(fileEntityList!=null &&fileEntityList.size()>i){
+                                        for(int j=0;j<fileEntityList.size();j++){
+                                            String fileName =files[i].getName();
+                                            if(fileEntityList.get(j).getFileName()!=null && fileEntityList.get(j).getFileName().equals(fileName)){
+                                                fileEntity.setBitmap(tupbitmap);
+                                                fileEntity.setFileMs(fileEntityList.get(j).getFileMs());
+                                            }else{
+                                                fileEntity.setBitmap(tupbitmap);
+                                            }
                                         }
                                     }
                                     if(isTap){

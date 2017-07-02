@@ -23,6 +23,7 @@ public class EventImageListAdapter extends BaseAdapter {
     public List<FileEntity> list;
     public Context context;
 
+
     public EventImageListAdapter(Context context) {
         super();
         list = new ArrayList<FileEntity>();
@@ -75,7 +76,6 @@ public class EventImageListAdapter extends BaseAdapter {
         holder.imageMs.setText(list.get(position).getFileMs());
         return convertView;
     }
-
 
     public void notifyDataSetChanged(List<FileEntity> list) {
         this.list = list;
