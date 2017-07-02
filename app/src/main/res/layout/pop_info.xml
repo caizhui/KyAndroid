@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:alpha="0.97"
+    android:alpha="0.95"
     android:background="@drawable/pop_bg_1" >
 
     <LinearLayout
@@ -43,7 +43,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginTop="2dp"
                 android:text="发送人部门"
-                android:textColor="@color/grey"
+                android:textColor="@color/red"
                 android:textSize="12dp" />
         </RelativeLayout>
     </LinearLayout>
@@ -87,7 +87,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginTop="2dp"
                 android:text="消息类型"
-                android:textColor="@color/grey"
+                android:textColor="@color/green"
                 android:textSize="12dp" />
         </RelativeLayout>
     </LinearLayout>

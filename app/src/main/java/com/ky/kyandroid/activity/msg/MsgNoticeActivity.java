@@ -339,7 +339,7 @@ public class MsgNoticeActivity extends AppCompatActivity implements View.OnClick
                     }
                     tv_msg_sj_mc.setText(entity.getSjmc());
                     tv_msg_type.setText("1".equals(entity.getLx()) ? "事件处理" : "督办处理");
-                    tv_msg_content.setText("     " + entity.getNr());
+                    tv_msg_content.setText("          " + entity.getNr());
                     showPopMenu();
                     try {
                         Object up_entity = msgAdapter.getList().get(position);
