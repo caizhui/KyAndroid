@@ -339,7 +339,6 @@ public class EventEntryAdd_Basic extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         scopeTextSpinner.setAdapter(adapter);//将adapter 添加到规模spinner中
 
-
         spinnerList = new ArrayList<CodeValue>();
         spinnerList.add(new CodeValue("0", "社区1"));
         spinnerList.add(new CodeValue("1", "社区2"));
@@ -350,6 +349,7 @@ public class EventEntryAdd_Basic extends Fragment {
         //设置下拉列表的风格
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         belongCommunitySpinner.setAdapter(adapter);//将adapter 添加到所属社区spinner中
+
         if (tFtSjEntity != null) {
             //当状态等于1的时候，表示为草稿，可以修改，其他的时候只能查看信息
             if (!"0".equals(tFtSjEntity.getZt()) && !"3".equals(tFtSjEntity.getZt())) {
@@ -377,6 +377,7 @@ public class EventEntryAdd_Basic extends Fragment {
             happenTimeEdt.setText(tFtSjEntity.getFssj());
             happenAddressEdt.setText(tFtSjEntity.getFsdd());
             petitionGroupsEdt.setText(tFtSjEntity.getSfsqqt());
+
             if (tFtSjEntity.getDcbm() != null && !"".equals(tFtSjEntity.getDcbm())) {
                 String []dcbms = tFtSjEntity.getDcbm().split(",");
                 String dcbm = "";
@@ -401,6 +402,7 @@ public class EventEntryAdd_Basic extends Fragment {
                 fieldsInvolvedEdt.setText(sjly);
             }
 
+
             belongStreetEdt.setText(tFtSjEntity.getSsjd());
             mainAppealsEdt.setText(tFtSjEntity.getZysq());
             eventSummaryEdt.setText(tFtSjEntity.getSjgyqk());
@@ -409,6 +411,7 @@ public class EventEntryAdd_Basic extends Fragment {
             if (tFtSjEntity.getBxxs() != null) {
                 patternManifestationSpinner.setSelection(Integer.valueOf(tFtSjEntity.getBxxs().split(",")[0]) - 1);
             }
+
             if (tFtSjEntity.getXcts() != null) {
                 fieldMorpholoySpinner.setSelection(Integer.valueOf(tFtSjEntity.getXcts()));
             }
@@ -429,7 +432,6 @@ public class EventEntryAdd_Basic extends Fragment {
             }
 
         }
-
     }
 
     @OnTouch({R.id.happen_time_edt})

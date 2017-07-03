@@ -13,8 +13,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -71,6 +75,11 @@ public class LoginActivity extends AppCompatActivity {
      * 标识
      */
     private static final String TAG = "LoginActivity";
+    /**
+     * 登录层布局
+     */
+    @BindView(R.id.rlay_login_and_password)
+    RelativeLayout rlay_login_and_password;
     /**
      * 用户名
      */
@@ -149,6 +158,7 @@ public class LoginActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         sweetAlertDialogUtil = new SweetAlertDialogUtil(LoginActivity.this);
         initEvent();
+        initLoginAnim();
     }
 
     /**
@@ -163,11 +173,21 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
+     * 登录动画
+     */
+    private void initLoginAnim() {
+        Animation loginAnima = AnimationUtils.loadAnimation(LoginActivity.this, R.anim.login_anim);
+        // 动画执行后保留
+        loginAnima.setFillAfter(true);
+        rlay_login_and_password.setAnimation(loginAnima);
+    }
+
+    /**
      * 登陆请求
      *
      * @param v
      */
-    @OnClick({R.id.btn_login,R.id.setting_ip})
+    @OnClick({R.id.btn_login, R.id.setting_ip})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.setting_ip:
@@ -179,20 +199,20 @@ public class LoginActivity extends AppCompatActivity {
                 String password = String.valueOf(etPassword.getText());
                 final Message msg = new Message();
                 //IP
-                String ip=sp.getString("ip", "").trim();
+                String ip = sp.getString("ip", "").trim();
                 //端口
-                String port=sp.getString("port", "").trim();
+                String port = sp.getString("port", "").trim();
                 if (StringUtils.isBlank(account) || StringUtils.isBlank(password)) {
                     msg.obj = "登录名或密码不能为空";
                     mHandler.sendMessage(msg);
-                }else if(StringUtils.isBlank(ip)|| StringUtils.isBlank(port)){
-                    Toast.makeText(this,"服务器IP和端口不能为空，请设置IP和端口",Toast.LENGTH_SHORT).show();
+                } else if (StringUtils.isBlank(ip) || StringUtils.isBlank(port)) {
+                    Toast.makeText(this, "服务器IP和端口不能为空，请设置IP和端口", Toast.LENGTH_SHORT).show();
                     return;
                 } else {
                     //拼凑IP和端口
-                    Constants.SERVICE_BASE_URL="http://"+ip+":"+port+"/";
+                    Constants.SERVICE_BASE_URL = "http://" + ip + ":" + port + "/";
                     if (netWorkConnection.isWIFIConnection()) {
-                        sweetAlertDialogUtil.loadAlertDialog("正在登录,请稍后...");
+                        sweetAlertDialogUtil.loadAlertDialog("Loading...");
                         msg.what = 0;
                         // 参数列表 - 账号、密码（加密）
                         Map<String, String> paramsMap = new HashMap<String, String>();
@@ -245,13 +265,13 @@ public class LoginActivity extends AppCompatActivity {
                 String name = sp.getString("name", "");
                 Intent intent = new Intent();
                 if ("街道办工作人员".equals(name)) {
-                   intent.setClass(this,MainAddEventActivity.class);
+                    intent.setClass(this, MainAddEventActivity.class);
                 } else if ("街道职能部门".equals(name) || "区职能部门".equals(name)) {
-                    intent.setClass(this,MainHandleEventActivity.class);
+                    intent.setClass(this, MainHandleEventActivity.class);
                 } else if ("区维稳办".equals(name)) {
-                    intent.setClass(this,MainOfficeActivity.class);
-                }else{
-                    intent.setClass(this,MainAllActivity.class);
+                    intent.setClass(this, MainOfficeActivity.class);
+                } else {
+                    intent.setClass(this, MainAllActivity.class);
                 }
                 startActivity(intent);
             } else {
@@ -290,18 +310,18 @@ public class LoginActivity extends AppCompatActivity {
     /**
      * 弹出自定义对话框设置IP和端口
      */
-    public void settingIp(){
+    public void settingIp() {
         final View mView = LayoutInflater.from(this).inflate(R.layout.activity_settingip, null);
-        etIp = ButterKnife.findById(mView,R.id.et_ip);
-        etPort = ButterKnife.findById(mView,R.id.et_port);
+        etIp = ButterKnife.findById(mView, R.id.et_ip);
+        etPort = ButterKnife.findById(mView, R.id.et_port);
         //IP
-        String ip=sp.getString("ip", "");
+        String ip = sp.getString("ip", "");
         //端口
-        String port=sp.getString("port", "");
-        if(!"".equals(ip)){
+        String port = sp.getString("port", "");
+        if (!"".equals(ip)) {
             etIp.setText(ip);
         }
-        if(!"".equals(port)){
+        if (!"".equals(port)) {
             etPort.setText(port);
         }
         final AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
@@ -328,7 +348,7 @@ public class LoginActivity extends AppCompatActivity {
                     builder.setCancelable(false);
                     //canCloseDialog(dialogInterface, false);//不关闭对话框
                     return;
-                }else{
+                } else {
                     Toast.makeText(LoginActivity.this, "设置IP成功", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -343,6 +363,7 @@ public class LoginActivity extends AppCompatActivity {
 
     /**
      * 不关闭对话框
+     *
      * @param dialogInterface
      * @param close
      */
