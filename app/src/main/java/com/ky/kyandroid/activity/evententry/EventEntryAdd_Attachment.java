@@ -559,17 +559,19 @@ public class EventEntryAdd_Attachment extends Fragment {
 
     public List<FileEntity> PackageData(){
         returnFileList = new ArrayList<FileEntity>();
-        int count =adapter.getCount();
-        if(count>0){
-            for(int i = 0 ;i<count;i++){
-                FileEntity fileEntity = (FileEntity) adapter.getItem(i);
-                View view = imageList.getChildAt(i);
-                EditText editText = (EditText) view.findViewById(R.id.image_ms);
-                fileEntity.setFileMs(editText.getText().toString());
-                returnFileList.add(fileEntity);
+        if(adapter!=null){
+            int count =adapter.getCount();
+            if(count>0){
+                for(int i = 0 ;i<count;i++){
+                    FileEntity fileEntity = (FileEntity) adapter.getItem(i);
+                    View view = imageList.getChildAt(i);
+                    EditText editText = (EditText) view.findViewById(R.id.image_ms);
+                    fileEntity.setFileMs(editText.getText().toString());
+                    returnFileList.add(fileEntity);
+                }
             }
         }
-    return returnFileList;
+     return returnFileList;
     }
 
 }
