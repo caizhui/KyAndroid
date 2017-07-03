@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/toolbar_layout"
     android:layout_width="match_parent"
-    android:layout_height="44dp"
+    android:layout_height="54dp"
+    android:paddingTop="10dp"
     android:background="@color/light_blue" >
 
     <ImageView
@@ -10,7 +11,7 @@
         android:layout_width="44dp"
         android:layout_height="fill_parent"
         android:contentDescription="@string/app_name"
-        android:padding="10dp"
+        android:padding="12dp"
         android:src="@mipmap/back" />
 
     <TextView
@@ -19,6 +20,8 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:textColor="@color/white"
+        android:paddingTop="12dp"
+        android:text="12312312"
         android:textSize="18sp" />
 
     <TextView
@@ -26,6 +29,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:paddingTop="12dp"
         android:layout_toRightOf="@id/toolbar_title"
         android:textColor="@color/white"
         android:textSize="18sp" />
@@ -49,6 +53,7 @@
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:gravity="center"
+            android:paddingTop="12dp"
             android:textColor="@color/white"
             android:textSize="18sp" />
     </FrameLayout>

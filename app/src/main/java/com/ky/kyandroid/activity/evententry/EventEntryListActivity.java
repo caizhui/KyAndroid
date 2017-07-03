@@ -374,8 +374,10 @@ public class EventEntryListActivity extends AppCompatActivity {
         // List列表设置初始化数据
         initData();
         userId = sp.getString(USER_ID, "");
+        searchEvententryList.setSelector(getResources().getDrawable(R.drawable.item_selector_grey));
         adapter = new EventEntityListAdapter(tFtSjEntityList, EventEntryListActivity.this);
         searchEvententryList.setAdapter(adapter);
+
     }
 
     @Override
@@ -622,7 +624,7 @@ public class EventEntryListActivity extends AppCompatActivity {
             });
             builder.create().show();
         }else{
-            Toast.makeText(this, "不能做下一步操作！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "权限不足,不支持该操作", Toast.LENGTH_SHORT).show();
         }
         return true;
     }
