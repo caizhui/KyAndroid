@@ -416,7 +416,7 @@ public class EventEntryAdd_Basic extends Fragment {
                 fieldMorpholoySpinner.setSelection(Integer.valueOf(tFtSjEntity.getXcts()));
             }
             if (tFtSjEntity.getGm() != null) {
-                scopeTextSpinner.setSelection(Integer.valueOf(tFtSjEntity.getGm()));
+                scopeTextSpinner.setSelection(Integer.valueOf(tFtSjEntity.getGm())-1);
             }
             if (tFtSjEntity.getSfsw() != null) {
                 foreignRelatedSpinner.setSelection(Integer.valueOf(tFtSjEntity.getSfsw()));
