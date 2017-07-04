@@ -30,7 +30,7 @@ public class CommonUtil {
 	 * @return
 	 */
 	public static boolean isEmail(String strEmail) {
-		String strPattern = "^[a-zA-Z][\\w\\.-]*[a-zA-Z0-9]@[a-zA-Z0-9][\\w\\.-]*[a-zA-Z0-9]\\.[a-zA-Z][a-zA-Z\\.]*[a-zA-Z]$";
+		String strPattern = "^[a-zA-Z0-9][\\w\\.-]*[a-zA-Z0-9]@[a-zA-Z0-9][\\w\\.-]*[a-zA-Z0-9]\\.[a-zA-Z][a-zA-Z\\.]*[a-zA-Z]$";
 		Pattern p = Pattern.compile(strPattern);
 		Matcher m = p.matcher(strEmail);
 		return m.matches();
