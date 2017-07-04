@@ -318,7 +318,7 @@ public class EventEntryAdd_Person extends Fragment {
             if("56".equals(tFtSjRyEntity.getMz())){
                 personNationSpinner.setSelection(0);
             }else{
-                personNationSpinner.setSelection(Integer.parseInt(tFtSjRyEntity.getMz())-1);
+                personNationSpinner.setSelection(Integer.parseInt(tFtSjRyEntity.getMz()));
             }
             personIdcardTypeSpinner.setSelection(Integer.parseInt(tFtSjRyEntity.getZjlx())-1);
             personIdcardEdt.setText(tFtSjRyEntity.getZjhm());
