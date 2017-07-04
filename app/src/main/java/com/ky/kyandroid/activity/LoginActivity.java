@@ -143,7 +143,6 @@ public class LoginActivity extends AppCompatActivity {
                 case 1:
                     sweetAlertDialogUtil.dismissAlertDialog();
                     Log.i(TAG, "登录成功...");
-                    Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
                     handleTransation(message);
                     break;
             }
@@ -261,6 +260,7 @@ public class LoginActivity extends AppCompatActivity {
             AckMessage ackMsg = JsonUtil.fromJson(body, AckMessage.class);
             if (setUserMessage(ackMsg)) {
                 Log.i(TAG, "设置用户信息成功...");
+                Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
                 startService(new Intent(this, SaveBDdescService.class));
                 String name = sp.getString("name", "");
                 Intent intent = new Intent();
