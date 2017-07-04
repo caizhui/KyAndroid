@@ -450,6 +450,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/border_edittext_bg"
                     android:padding="5dp"
+                    android:enabled="false"
                     android:text="华强北街道"
                     android:textSize="16sp" />
             </LinearLayout>

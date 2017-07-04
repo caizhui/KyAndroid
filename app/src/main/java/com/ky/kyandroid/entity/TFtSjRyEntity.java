@@ -67,7 +67,7 @@ public class TFtSjRyEntity {
 	/**
 	 * 移动电话
 	 */
-	@Column(name = "sjid")
+	@Column(name = "yddh")
 	private String yddh;
 	
 	/**
