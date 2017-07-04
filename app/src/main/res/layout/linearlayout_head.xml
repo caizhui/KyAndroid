@@ -59,7 +59,7 @@
                 android:background="@null"
                 android:gravity="right|center_vertical"
                 android:paddingRight="10dp"
-                android:text="@string/evententry_add_text"
+                android:drawableRight="@mipmap/add_icon_1"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
         </LinearLayout>
