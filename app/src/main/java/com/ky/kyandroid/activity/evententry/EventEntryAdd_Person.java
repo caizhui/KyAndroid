@@ -24,7 +24,9 @@ import com.ky.kyandroid.db.dao.DescEntityDao;
 import com.ky.kyandroid.db.dao.TFtSjRyEntityDao;
 import com.ky.kyandroid.entity.TFtSjEntity;
 import com.ky.kyandroid.entity.TFtSjRyEntity;
+import com.ky.kyandroid.util.CommonUtil;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -96,7 +98,7 @@ public class EventEntryAdd_Person extends Fragment {
     EditText personMobileEdt;
 
     /**
-     * 移动电话
+     * 车牌号码
      */
     EditText personCphEdt;
     /**
@@ -313,7 +315,11 @@ public class EventEntryAdd_Person extends Fragment {
         if(isDetail){
             personNameEdt.setText(tFtSjRyEntity.getXm());
             personSexSpinner.setSelection(Integer.parseInt(tFtSjRyEntity.getXb())-1);
-            personNationSpinner.setSelection(Integer.parseInt(tFtSjRyEntity.getMz())-1);
+            if("56".equals(tFtSjRyEntity.getMz())){
+                personNationSpinner.setSelection(0);
+            }else{
+                personNationSpinner.setSelection(Integer.parseInt(tFtSjRyEntity.getMz())-1);
+            }
             personIdcardTypeSpinner.setSelection(Integer.parseInt(tFtSjRyEntity.getZjlx())-1);
             personIdcardEdt.setText(tFtSjRyEntity.getZjhm());
             personAddressEdt.setText(tFtSjRyEntity.getHjd());
@@ -345,50 +351,92 @@ public class EventEntryAdd_Person extends Fragment {
             personDomilcileEdt.setEnabled(false);
             personRemarkEdt.setEnabled(false);
         }
-        AlertDialog.Builder builder = new AlertDialog.Builder(EventEntryAdd_Person.this.getActivity());
+        final AlertDialog.Builder builder = new AlertDialog.Builder(EventEntryAdd_Person.this.getActivity());
         builder.setTitle("当事人基本信息");
         builder.setView(dialogView);
         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                String message="";
                 if(tFtSjRyEntity==null){
                     tFtSjRyEntity = new TFtSjRyEntity();
                 }
-                tFtSjRyEntity.setXm(personNameEdt.getText().toString());
+                if("".equals(personNameEdt.getText().toString())){
+                    message += "姓名不能为空\n";
+                }else{
+                    tFtSjRyEntity.setXm(personNameEdt.getText().toString());
+                }
                 tFtSjRyEntity.setXb(descEntityDao.queryCodeByName("sex", personSexSpinner.getSelectedItem().toString()));
                 tFtSjRyEntity.setMz(descEntityDao.queryCodeByName("nation", personNationSpinner.getSelectedItem().toString()));
                 tFtSjRyEntity.setZjlx(descEntityDao.queryCodeByName("crd", personIdcardTypeSpinner.getSelectedItem().toString()));
-                tFtSjRyEntity.setZjhm(personIdcardEdt.getText().toString());
+                if("".equals(personIdcardEdt.getText().toString())){
+                    message += "证件号码不能为空\n";
+                }else if(!"".equals(personIdcardEdt.getText().toString())&& !CommonUtil.isIDNumber(personIdcardEdt.getText().toString())){
+                    message += "请输入正确的证件号码\n";
+                }else{
+                    tFtSjRyEntity.setZjhm(personIdcardEdt.getText().toString());
+                }
                 tFtSjRyEntity.setHjd(personAddressEdt.getText().toString());
                 tFtSjRyEntity.setGzdw(personJobaddressEdt.getText().toString());
                 tFtSjRyEntity.setSfdy(descEntityDao.queryCodeByName("dy", personPartySpinner.getSelectedItem().toString()));
-                tFtSjRyEntity.setEmail(personEmailEdt.getText().toString());
-                tFtSjRyEntity.setGddh(personTelephoneEdt.getText().toString());
-                tFtSjRyEntity.setYddh(personMobileEdt.getText().toString());
+               /* if(!"".equals(personEmailEdt.getText().toString())&& !CommonUtil.isEmail(personEmailEdt.getText().toString())){
+                    message += "请输入正确的邮箱\n";
+                }else{*/
+                    tFtSjRyEntity.setEmail(personEmailEdt.getText().toString());
+                //}
+
+                if(!"".equals(personTelephoneEdt.getText().toString())&& !CommonUtil.isFixedPhone(personTelephoneEdt.getText().toString())){
+                    message += "请输入正确的固定电话\n";
+                }else{
+                    tFtSjRyEntity.setGddh(personTelephoneEdt.getText().toString());
+
+                }
                 tFtSjRyEntity.setXzdz(personDomilcileEdt.getText().toString());
+                if(!"".equals(personMobileEdt.getText().toString())&& !CommonUtil.isMobileNO(personMobileEdt.getText().toString())){
+                    message += "请输入正确的移动电话\n";
+                }else{
+                    tFtSjRyEntity.setYddh(personMobileEdt.getText().toString());
+
+                }
                 tFtSjRyEntity.setCphm(personCphEdt.getText().toString());
                 tFtSjRyEntity.setComments(personRemarkEdt.getText().toString());
                 tFtSjRyEntity.setSjId(uuid);
-                String message="";
-                if(tFtSjRyEntity.getUuid()!=0){
-                    flag = tFtSjRyEntityDao.updateTFtSjRyEntity(tFtSjRyEntity);
-                    tFtSjRyEntity = null;
-                    message="修改";
-                }else{
-                    flag = tFtSjRyEntityDao.saveTFtSjRyEntity(tFtSjRyEntity);
-                    tFtSjRyEntity = null;
-                    message="新增";
-                }
-                if(flag){
-                    sjryList  = tFtSjRyEntityDao.queryListBySjId(uuid);
-                    if (sjryList != null && sjryList.size() > 0) {
-                        adapter = new EventPersonListAdapter(sjryList, EventEntryAdd_Person.this.getActivity());
-                        personList.setAdapter(adapter);
+                if(!"".equals(message)){
+                    try{
+                        Field field = dialogInterface.getClass()
+                                .getSuperclass().getDeclaredField(
+                                        "mShowing" );
+                        field.setAccessible( true );
+                        // 将mShowing变量设为false，表示对话框已关闭
+                        field.set(dialogInterface, false );
+                        dialogInterface.dismiss();
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
                     }
-                    Toast.makeText(EventEntryAdd_Person.this.getActivity(),message+"成功",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EventEntryAdd_Person.this.getActivity(),message,Toast.LENGTH_SHORT).show();
                 }else{
-                    Toast.makeText(EventEntryAdd_Person.this.getActivity(),message+"失败",Toast.LENGTH_SHORT).show();
+                    if(tFtSjRyEntity.getUuid()!=0){
+                        flag = tFtSjRyEntityDao.updateTFtSjRyEntity(tFtSjRyEntity);
+                        tFtSjRyEntity = null;
+                        message="修改";
+                    }else{
+                        flag = tFtSjRyEntityDao.saveTFtSjRyEntity(tFtSjRyEntity);
+                        tFtSjRyEntity = null;
+                        message="新增";
+                    }
+                    if(flag){
+                        sjryList  = tFtSjRyEntityDao.queryListBySjId(uuid);
+                        if (sjryList != null && sjryList.size() > 0) {
+                            adapter = new EventPersonListAdapter(sjryList, EventEntryAdd_Person.this.getActivity());
+                            personList.setAdapter(adapter);
+                        }
+                        Toast.makeText(EventEntryAdd_Person.this.getActivity(),message+"成功",Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(EventEntryAdd_Person.this.getActivity(),message+"失败",Toast.LENGTH_SHORT).show();
+                    }
                 }
+
             }
         });
         builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
