@@ -32,7 +32,7 @@
                 android:background="@drawable/border_sbldbutton_bg"
                 android:textColor="@color/white"
                 android:textSize="14sp"
-                android:text="添加"/>
+                android:text="添加附件"/>
 
             <Button
                 android:id="@+id/add_handler"
@@ -57,7 +57,7 @@
                 style="@style/TextStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/happen_time" />
+                android:text="处理时间:" />
 
             <EditText
                 android:id="@+id/happen_time_edt"
@@ -79,7 +79,7 @@
                 style="@style/TextStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/event_summary" />
+                android:text="处理情况:" />
 
             <EditText
                 android:id="@+id/return_edt"

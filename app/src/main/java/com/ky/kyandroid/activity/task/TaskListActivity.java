@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 import com.ky.kyandroid.Constants;
 import com.ky.kyandroid.R;
+import com.ky.kyandroid.activity.dispatch.DepartmentHandleActivity;
 import com.ky.kyandroid.adapter.TaskEntityListAdapter;
 import com.ky.kyandroid.bean.AckMessage;
 import com.ky.kyandroid.bean.NetWorkConnection;
@@ -63,7 +64,6 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 import static com.ky.kyandroid.R.layout.dialog_streethandle_item;
-import static com.ky.kyandroid.R.layout.dialog_streethandle_operation;
 
 /**
  * Created by Caizhui on 2017-6-9.
@@ -527,7 +527,13 @@ public class TaskListActivity extends AppCompatActivity {
                     TFtZtlzEntity tFtZtlzEntity = tFtZtlzEntities[pos];
                     if ("8.2".equals(tFtZtlzEntity.getNextzt())) {
                         //当7街道自行处理的时候，弹出自定义对话框
-                        streetHandleOperation(tFtZtlzEntity, dialog_streethandle_operation, tFtZtlzEntity.getActionname());
+                        Intent intent = new Intent(TaskListActivity.this, DepartmentHandleActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("taskEntity", taskEntity);
+                        bundle.putSerializable("tFtZtlzEntity", tFtZtlzEntity);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                        //streetHandleOperation(tFtZtlzEntity, dialog_streethandle_operation, tFtZtlzEntity.getActionname());
                     }else{
                         //其他的弹出确定对话框
                         OperatingProcess(tFtZtlzEntity,Constants.SERVICE_QUERY_TASKRECV);

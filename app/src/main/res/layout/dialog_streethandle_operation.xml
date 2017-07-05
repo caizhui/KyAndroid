@@ -19,7 +19,7 @@
                 style="@style/TextStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/happen_time" />
+                android:text="处理时间:" />
 
             <EditText
                 android:id="@+id/happen_time_edt"
@@ -41,7 +41,7 @@
                 style="@style/TextStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/event_summary" />
+                android:text="处理情况:" />
 
             <EditText
                 android:id="@+id/return_edt"
