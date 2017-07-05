@@ -30,7 +30,7 @@ import android.widget.Toast;
 
 import com.ky.kyandroid.Constants;
 import com.ky.kyandroid.R;
-import com.ky.kyandroid.activity.evententry.EventEntryListActivity;
+import com.ky.kyandroid.activity.task.TaskListActivity;
 import com.ky.kyandroid.adapter.EventImageListAdapter;
 import com.ky.kyandroid.bean.NetWorkConnection;
 import com.ky.kyandroid.entity.FileEntity;
@@ -209,7 +209,7 @@ public class DepartmentHandleActivity extends AppCompatActivity {
                     //处理完成之后，将手机的附件删除
                     FileManager.delFile(imageUrl);
                     Toast.makeText(DepartmentHandleActivity.this, "处理成功", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(DepartmentHandleActivity.this, EventEntryListActivity.class);
+                    Intent intent = new Intent(DepartmentHandleActivity.this, TaskListActivity.class);
                     startActivity(intent);
                     break;
             }

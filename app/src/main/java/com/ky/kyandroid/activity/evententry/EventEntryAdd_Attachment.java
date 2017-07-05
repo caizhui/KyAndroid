@@ -549,13 +549,13 @@ public class EventEntryAdd_Attachment extends Fragment {
         this.flag = flag;
     }
 
+
     /**
      * 当查看已经上报事件详情时初始化数据,显示文件
      */
     public void settFtSjDetailEntityList(TFtSjDetailEntity tFtSjDetailEntity) {
         this.tFtSjDetailEntity = tFtSjDetailEntity;
     }
-
     public List<FileEntity> PackageData(){
         returnFileList = new ArrayList<FileEntity>();
         if(adapter!=null){

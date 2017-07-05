@@ -164,7 +164,7 @@ public class TaskListActivity extends AppCompatActivity {
     private int currentPage;
 
     //每页显示条数
-    private int pageSize = 5;
+    private int pageSize = 10;
 
     /**
      *
@@ -365,6 +365,12 @@ public class TaskListActivity extends AppCompatActivity {
         searchEvententryList.setSelector(new ColorDrawable(Color.TRANSPARENT));
         centerText.setText("我的任务");
         rightBtn.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initData();
     }
 
     @OnClick({R.id.left_btn})
