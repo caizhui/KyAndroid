@@ -615,6 +615,9 @@ public class EventEntryListActivity extends AppCompatActivity {
                         }else if ("10".equals(tFtZtlzEntity.getNextzt())) {
                             //当10回访核查，弹出自定义对话框
                             ReturnOperation(tFtZtlzEntity, R.layout.dialog_verification_operation, tFtZtlzEntity.getActionname()+"原因",Constants.SERVICE_EDIT_EVENT);
+                        }else if ("18".equals(tFtZtlzEntity.getNextzt())) {
+                            //当18合并，因为手机上不支持该操作，所以给出提示
+                            Toast.makeText(EventEntryListActivity.this, "移动设备不支持该操作", Toast.LENGTH_SHORT).show();
                         } else {
                             //其他的弹出确定对话框
                             OperatingProcess(tFtZtlzEntity);
