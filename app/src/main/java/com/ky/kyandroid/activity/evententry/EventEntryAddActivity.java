@@ -362,11 +362,16 @@ public class EventEntryAddActivity extends FragmentActivity {
                 //上传数据成功
                 case 2:
                     //将本地的草稿数据删除
-                    tFtSjEntityDao.deleteEventEntry(eventEntity.getId());
+                    boolean flag = tFtSjEntityDao.deleteEventEntry(eventEntity.getId());
                     sweetAlertDialogUtil.dismissAlertDialog();
-                    Toast.makeText(EventEntryAddActivity.this, "上报成功", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(EventEntryAddActivity.this, EventEntryListActivity.class);
-                    startActivity(intent);
+                    if(flag){
+                        Toast.makeText(EventEntryAddActivity.this, "上报成功", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(EventEntryAddActivity.this, EventEntryListActivity.class);
+                        startActivity(intent);
+                    }else{
+                        Toast.makeText(EventEntryAddActivity.this, "上报失败", Toast.LENGTH_SHORT).show();
+                    }
+
                     break;
             }
         }
