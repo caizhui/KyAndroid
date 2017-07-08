@@ -4,7 +4,6 @@ import android.util.Log;
 
 import com.ky.kyandroid.db.BaseDao;
 import com.ky.kyandroid.entity.FileEntity;
-import com.ky.kyandroid.entity.TFtSjEntity;
 
 import org.xutils.db.sqlite.WhereBuilder;
 import org.xutils.ex.DbException;
@@ -55,11 +54,29 @@ public class FileEntityDao extends BaseDao {
         return null;
     }
 
+    /**
+     * 查找列表
+     *
+     * @param
+     * @return
+     */
+    public FileEntity queryFileEntity(int uuid) {
+        try {
+            List<FileEntity> eventEntryList = db.selector(FileEntity.class).where("uuid","==",uuid).findAll();
+            if (eventEntryList != null && eventEntryList.size() > 0) {
+                return eventEntryList.get(0);
+            }
+        } catch (DbException e) {
+            Log.i(TAG, "信息查询异常-queryList >> " + e.getMessage());
+        }
+        return null;
+    }
 
-    public boolean  deleteEventEntry(String uuid) {
+
+    public boolean  deleteEventEntry(int uuid) {
         boolean flag =false;
         try {
-            db.delete(TFtSjEntity.class, WhereBuilder.b("uuid","=",uuid ));
+            db.delete(FileEntity.class, WhereBuilder.b("uuid","=",uuid ));
             flag=true;
         } catch (DbException e) {
             e.printStackTrace();
@@ -70,7 +87,7 @@ public class FileEntityDao extends BaseDao {
     public boolean  deleteEventEntryBySjId(String sjId) {
         boolean flag =false;
         try {
-            db.delete(TFtSjEntity.class, WhereBuilder.b("sjId","==",sjId ));
+            db.delete(FileEntity.class, WhereBuilder.b("sjId","==",sjId ));
             flag=true;
         } catch (DbException e) {
             e.printStackTrace();

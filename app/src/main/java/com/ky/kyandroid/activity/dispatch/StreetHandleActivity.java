@@ -3,6 +3,7 @@ package com.ky.kyandroid.activity.dispatch;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -14,6 +15,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
@@ -33,6 +35,7 @@ import com.ky.kyandroid.R;
 import com.ky.kyandroid.activity.evententry.EventEntryListActivity;
 import com.ky.kyandroid.adapter.EventImageListAdapter;
 import com.ky.kyandroid.bean.NetWorkConnection;
+import com.ky.kyandroid.db.dao.FileEntityDao;
 import com.ky.kyandroid.entity.FileEntity;
 import com.ky.kyandroid.entity.TFtSjEntity;
 import com.ky.kyandroid.entity.TFtZtlzEntity;
@@ -59,6 +62,7 @@ import java.util.concurrent.TimeUnit;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnItemLongClick;
 import okhttp3.Cache;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -190,6 +194,8 @@ public class StreetHandleActivity extends AppCompatActivity {
      */
     private String isPhoto;
 
+    FileEntityDao fileEntityDao;
+
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -227,6 +233,7 @@ public class StreetHandleActivity extends AppCompatActivity {
         intent = getIntent();
         tFtSjEntity = (TFtSjEntity) intent.getSerializableExtra("tFtSjEntity");
         tFtZtlzEntity = (TFtZtlzEntity) intent.getSerializableExtra("tFtZtlzEntity");
+        fileEntityDao = new FileEntityDao();
         if(tFtSjEntity!=null){
             uuid = tFtSjEntity.getId();
         }
@@ -277,6 +284,42 @@ public class StreetHandleActivity extends AppCompatActivity {
                 return false;
             }
         });
+    }
+
+    @OnItemLongClick(R.id.file_list)
+    public boolean OnItemLongClick(final int position){
+        final FileEntity fileEntity = (FileEntity) adapter.getItem(position);
+        View view = fileList.getChildAt(position);
+        EditText editText = (EditText) view.findViewById(R.id.image_ms);
+        editText.clearFocus();
+        AlertDialog.Builder builder = new AlertDialog.Builder(StreetHandleActivity.this);
+        builder.setTitle("信息");
+        builder.setMessage("确定要删除该条记录吗？");
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if(fileEntityList!=null && fileEntityList.size()>0){
+                    //删除保存在本地的图片
+                    FileManager.delFile(fileRoute + "/" +fileEntity.getFileName());
+                    boolean flag = fileEntityDao.deleteEventEntry(fileEntity.getUuid());
+                    if(flag){
+                        if(fileEntityList.get(position)!=null){
+                            fileEntityList.remove(position);
+                        }
+                        adapter.notifyDataSetChanged(fileEntityList);
+                    }else{
+                        Toast.makeText(StreetHandleActivity.this,"删除失败",Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+            }
+        });
+        builder.create().show();
+        return false;
     }
 
     @OnClick({R.id.add_btn,R.id.add_handler,R.id.left_btn})
@@ -444,6 +487,9 @@ public class StreetHandleActivity extends AppCompatActivity {
                                 if(tupbitmap!=null){
                                     fileEntity.setHaveMs(false);
                                     fileEntity.setBitmap(tupbitmap);
+                                    fileEntity.setSjId(uuid);
+                                    fileEntity.setFileName(photoName);
+                                    fileEntityDao.saveFileEntity(fileEntity);
                                 }
                                 if(fileEntityList==null){
                                     fileEntityList =new ArrayList<FileEntity>();

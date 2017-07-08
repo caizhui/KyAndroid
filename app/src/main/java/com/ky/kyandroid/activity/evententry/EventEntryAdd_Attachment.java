@@ -54,6 +54,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemLongClick;
 
+import static com.ky.kyandroid.util.FileManager.delFile;
+
 /**
  * Created by Caizhui on 2017-6-9.
  * 事件录入附件界面
@@ -224,10 +226,15 @@ public class EventEntryAdd_Attachment extends Fragment {
                     if(fileEntityList!=null && fileEntityList.size()>0){
                         //删除保存在本地的图片
                         FileManager.delFile(fileRoute + "/" +fileEntity.getFileName());
-                        if(fileEntityList.get(position)!=null){
-                            fileEntityList.remove(position);
+                        boolean flag = fileEntityDao.deleteEventEntry(fileEntity.getUuid());
+                        if(flag){
+                            if(fileEntityList.get(position)!=null){
+                                fileEntityList.remove(position);
+                            }
+                            adapter.notifyDataSetChanged(fileEntityList);
+                        }else{
+                            Toast.makeText(EventEntryAdd_Attachment.this.getActivity(),"删除失败",Toast.LENGTH_SHORT).show();
                         }
-                        adapter.notifyDataSetChanged(fileEntityList);
                     }
                 }
             });
@@ -401,7 +408,7 @@ public class EventEntryAdd_Attachment extends Fragment {
                             if (bitmapFromUri != null) {
                                 //先把拍照之后保存在本地的原图删掉。
                                 if ("1".equals(isPhoto)) {
-                                    boolean flag = FileManager.delFile(fileRoute + "/" + photoName);
+                                    boolean flag = delFile(fileRoute + "/" + photoName);
                                 }
                                 File file = SavePicInLocal(bitmapFromUri);
                                 FileInputStream fis = new FileInputStream(file);
