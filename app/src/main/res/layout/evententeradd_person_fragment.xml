@@ -34,7 +34,7 @@
                 android:drawableLeft="@mipmap/button_add_01"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
-                android:text=" 添加当事人"
+                android:text=" 当事人"
                 android:textColor="@color/white"
                 android:textSize="14sp" />
 

@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import com.ky.kyandroid.R;
@@ -31,7 +33,6 @@ import butterknife.ButterKnife;
 @SuppressLint("ValidFragment")
 public class TaskFragment_Basic extends Fragment {
 
-
     /**
      * 事件名称
      */
@@ -52,11 +53,22 @@ public class TaskFragment_Basic extends Fragment {
      */
     @BindView(R.id.petition_groups_edt)
     EditText petitionGroupsEdt;
-  /*  *//**
+    /**
+     * 到场部门LinearLayout
+     */
+    @BindView(R.id.field_departmen_layout)
+    LinearLayout fieldDepartmenLayout;
+    /**
      * 到场部门
-     *//*
+     */
     @BindView(R.id.field_departmen_edt)
-    EditText fieldDepartmenEdt;*/
+    EditText fieldDepartmenEdt;
+
+    /**
+     * 到场部门图标
+     */
+    @BindView(R.id.field_departmen_img)
+    ImageView fieldDepartmenImg;
     /**
      * 表现形式
      */
@@ -64,20 +76,36 @@ public class TaskFragment_Basic extends Fragment {
     Spinner patternManifestationSpinner;
 
     /**
-     * 表现形式
+     * 现场态势
      */
     @BindView(R.id.field_morphology_spinner)
     Spinner fieldMorpholoySpinner;
+
+    /**
+     * 现场态势LinearLayout
+     */
+    @BindView(R.id.xcts_linear)
+    LinearLayout xctsLinear;
     /**
      * 规模
      */
     @BindView(R.id.scope_text_spinner)
     Spinner scopeTextSpinner;
     /**
+     * 涉及领域LinearLayout
+     */
+    @BindView(R.id.fields_involved_linearlayout)
+    LinearLayout fieldsInvolvedLinearLayout;
+    /**
      * 涉及领域
      */
     @BindView(R.id.fields_involved_edt)
     EditText fieldsInvolvedEdt;
+    /**
+     * 涉及领域img
+     */
+    @BindView(R.id.fields_involved_img)
+    ImageView fieldsInvolvedImg;
     /**
      * 是否涉外
      */
@@ -135,26 +163,14 @@ public class TaskFragment_Basic extends Fragment {
      */
     ArrayAdapter<CodeValue> adapter;
 
-
-    /**
-     * 提示信息
-     */
-    private String message = "";
-
-    private Intent intent;
-
-    /**
-     * type 0：新增 1：修改
-     */
-    public String type;
-
     public TaskEntity taskEntity;
 
 
     public DescEntityDao descEntityDao;
 
-    @SuppressLint("ValidFragment")
-    public TaskFragment_Basic(Intent intent) {
+    private Intent intent;
+
+    public  TaskFragment_Basic(Intent intent){
         this.intent = intent;
     }
 
@@ -164,7 +180,6 @@ public class TaskFragment_Basic extends Fragment {
         View view = inflater.inflate(R.layout.evententeradd_basic_fragment, container, false);
         ButterKnife.bind(this, view);
         descEntityDao = new DescEntityDao();
-        type = intent.getStringExtra("type");
         taskEntity = (TaskEntity) intent.getSerializableExtra("taskEntity");
         initData();
         return view;
@@ -221,7 +236,6 @@ public class TaskFragment_Basic extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         scopeTextSpinner.setAdapter(adapter);//将adapter 添加到规模spinner中
 
-
         spinnerList = new ArrayList<CodeValue>();
         spinnerList.add(new CodeValue("0", "社区1"));
         spinnerList.add(new CodeValue("1", "社区2"));
@@ -232,13 +246,13 @@ public class TaskFragment_Basic extends Fragment {
         //设置下拉列表的风格
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         belongCommunitySpinner.setAdapter(adapter);//将adapter 添加到所属社区spinner中
+
         if (taskEntity != null) {
-           //只能查看信息
             thingNameEdt.setEnabled(false);
             happenTimeEdt.setEnabled(false);
             happenAddressEdt.setEnabled(false);
             petitionGroupsEdt.setEnabled(false);
-           // fieldDepartmenEdt.setEnabled(false);
+            fieldDepartmenEdt.setEnabled(false);
             fieldsInvolvedEdt.setEnabled(false);
             belongStreetEdt.setEnabled(false);
             mainAppealsEdt.setEnabled(false);
@@ -253,39 +267,69 @@ public class TaskFragment_Basic extends Fragment {
             involvePublicOpinionSpinner.setEnabled(false);
             publicSecurityDisposalSpinner.setEnabled(false);
             belongCommunitySpinner.setEnabled(false);
+
+
             thingNameEdt.setText(taskEntity.getSjmc());
             happenTimeEdt.setText(taskEntity.getFssj());
             happenAddressEdt.setText(taskEntity.getFsdd());
             petitionGroupsEdt.setText(taskEntity.getSfsqqt());
-           // fieldDepartmenEdt.setText(taskEntity.getDcbm());
-            fieldsInvolvedEdt.setText(taskEntity.getSjly());
+
+            if (taskEntity.getDcbm() != null && !"".equals(taskEntity.getDcbm())) {
+                String []dcbms = taskEntity.getDcbm().split(",");
+                String dcbm = "";
+                if(dcbms.length>0){
+                    for(int i = 0 ;i<dcbms.length;i++){
+                        dcbm += descEntityDao.queryName("dcbm", dcbms[i])+",";
+                    }
+                    dcbm=dcbm.substring(0,dcbm.length()-1);
+                }
+                fieldDepartmenEdt.setText(dcbm);
+            }
+            if (taskEntity.getSjly() != null && !"".equals(taskEntity.getSjly())) {
+                String []sjlys = taskEntity.getSjly().split(",");
+                String sjly = "";
+                if(sjlys.length>0){
+                    for(int i = 0 ;i<sjlys.length;i++){
+                        sjly += descEntityDao.queryName("sjly", sjlys[i])+",";
+                    }
+                    sjly=sjly.substring(0,sjly.length()-1);
+                }
+                //String sjlyName = descEntityDao.queryName("sjly", taskEntity.getSjly().split(",")[0]);
+                fieldsInvolvedEdt.setText(sjly);
+            }
+
+
             belongStreetEdt.setText(taskEntity.getSsjd());
             mainAppealsEdt.setText(taskEntity.getZysq());
             eventSummaryEdt.setText(taskEntity.getSjgyqk());
             leadershipInstructionsEdt.setText(taskEntity.getLdps());
             //以下为下拉控件设置默认值
-            if(taskEntity.getBxxs()!=null) {
+            if (taskEntity.getBxxs() != null) {
                 patternManifestationSpinner.setSelection(Integer.valueOf(taskEntity.getBxxs().split(",")[0]) - 1);
             }
-            /*if(taskEntity.get()!=null){
-                fieldMorpholoySpinner.setSelection(Integer.valueOf(taskEntity.getXcts()));
-            }*/
-            if(taskEntity.getGm()!=null){
-                scopeTextSpinner.setSelection(Integer.valueOf(taskEntity.getGm()));
+
+            //if (taskEntity.getXcts() != null) {
+            //    fieldMorpholoySpinner.setSelection(Integer.valueOf(taskEntity.getXcts())-1);
+            //}
+            xctsLinear.setVisibility(View.GONE);
+            if (taskEntity.getGm() != null) {
+                scopeTextSpinner.setSelection(Integer.valueOf(taskEntity.getGm())-1);
             }
-            if(taskEntity.getSfsw()!=null){
+            if (taskEntity.getSfsw() != null) {
                 foreignRelatedSpinner.setSelection(Integer.valueOf(taskEntity.getSfsw()));
             }
-            if(taskEntity.getSfsj()!=null){
+            if (taskEntity.getSfsj() != null) {
                 involvedXinjiangSpinner.setSelection(Integer.valueOf(taskEntity.getSfsj()));
             }
-            if(taskEntity.getSfsyq()!=null){
+            if (taskEntity.getSfsyq() != null) {
                 involvePublicOpinionSpinner.setSelection(Integer.valueOf(taskEntity.getSfsyq()));
             }
-            if(taskEntity.getSfgacz()!=null) {
+            if (taskEntity.getSfgacz() != null) {
                 publicSecurityDisposalSpinner.setSelection(Integer.valueOf(taskEntity.getSfgacz()));
             }
+
         }
 
     }
+
 }

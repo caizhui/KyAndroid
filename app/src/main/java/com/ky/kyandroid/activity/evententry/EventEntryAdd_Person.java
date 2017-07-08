@@ -318,7 +318,7 @@ public class EventEntryAdd_Person extends Fragment {
             if("56".equals(tFtSjRyEntity.getMz())){
                 personNationSpinner.setSelection(0);
             }else{
-                personNationSpinner.setSelection(Integer.parseInt(tFtSjRyEntity.getMz())-1);
+                personNationSpinner.setSelection(Integer.parseInt(tFtSjRyEntity.getMz()));
             }
             personIdcardTypeSpinner.setSelection(Integer.parseInt(tFtSjRyEntity.getZjlx())-1);
             personIdcardEdt.setText(tFtSjRyEntity.getZjhm());
@@ -379,11 +379,11 @@ public class EventEntryAdd_Person extends Fragment {
                 tFtSjRyEntity.setHjd(personAddressEdt.getText().toString());
                 tFtSjRyEntity.setGzdw(personJobaddressEdt.getText().toString());
                 tFtSjRyEntity.setSfdy(descEntityDao.queryCodeByName("dy", personPartySpinner.getSelectedItem().toString()));
-               /* if(!"".equals(personEmailEdt.getText().toString())&& !CommonUtil.isEmail(personEmailEdt.getText().toString())){
+                if(!"".equals(personEmailEdt.getText().toString()) && !CommonUtil.isEmail(personEmailEdt.getText().toString())) {
                     message += "请输入正确的邮箱\n";
-                }else{*/
+                }else{
                     tFtSjRyEntity.setEmail(personEmailEdt.getText().toString());
-                //}
+                }
 
                 if(!"".equals(personTelephoneEdt.getText().toString())&& !CommonUtil.isFixedPhone(personTelephoneEdt.getText().toString())){
                     message += "请输入正确的固定电话\n";

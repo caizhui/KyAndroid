@@ -605,7 +605,7 @@ public class EventEntryListActivity extends AppCompatActivity {
                             }*/
                             //当10回访核查通过或者7,8回访核查不通过的时候，弹出自定义对话框
                             ReturnOperation(tFtZtlzEntity, R.layout.dialog_verification_operation, tFtZtlzEntity.getActionname()+"原因",Constants.SERVICE_EDIT_EVENT);
-                        }else if ("8".equals(tFtZtlzEntity.getNextzt())) {
+                        }else if ("8".equals(tFtZtlzEntity.getNextzt()) || "13".equals(tFtZtlzEntity.getNextzt())) {
                             //当8街道派遣的时候，跳到街道派遣Activity
                            Intent  intent =new Intent(EventEntryListActivity.this, DispatchActivity.class);
                             Bundle bundle = new Bundle();
@@ -615,6 +615,9 @@ public class EventEntryListActivity extends AppCompatActivity {
                         }else if ("10".equals(tFtZtlzEntity.getNextzt())) {
                             //当10回访核查，弹出自定义对话框
                             ReturnOperation(tFtZtlzEntity, R.layout.dialog_verification_operation, tFtZtlzEntity.getActionname()+"原因",Constants.SERVICE_EDIT_EVENT);
+                        }else if ("18".equals(tFtZtlzEntity.getNextzt())) {
+                            //当18合并，因为手机上不支持该操作，所以给出提示
+                            Toast.makeText(EventEntryListActivity.this, "移动设备不支持该操作", Toast.LENGTH_SHORT).show();
                         } else {
                             //其他的弹出确定对话框
                             OperatingProcess(tFtZtlzEntity);
@@ -701,6 +704,11 @@ public class EventEntryListActivity extends AppCompatActivity {
         radioButton01 = ButterKnife.findById(mView, R.id.radioButton01);
         radioButton02 = ButterKnife.findById(mView, R.id.radioButton02);
         radioButton03 = ButterKnife.findById(mView, R.id.radioButton03);
+        //不予立案退回备选原因
+        if("4".equals(tFtZtlzEntity.getNextzt())){
+            radioButton01.setText("未达到立案标准");
+            radioButton02.setVisibility(View.INVISIBLE);
+        }
         if(radioGroup!=null){
             radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override

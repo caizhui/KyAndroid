@@ -84,6 +84,12 @@
             android:windowSoftInputMode = "stateAlwaysHidden|adjustPan"
             android:launchMode="singleTask"/>
 
+        <!--职能部门自行处理页面-->
+        <activity android:name=".activity.dispatch.DepartmentHandleActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode = "stateAlwaysHidden|adjustPan"
+            android:launchMode="singleTask"/>
+
         <!--事件派遣页面-->
         <activity android:name=".activity.dispatch.DispatchActivity"
             android:screenOrientation="portrait"

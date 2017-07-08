@@ -182,6 +182,7 @@ public class TaskAddActivity extends FragmentActivity {
         sp = SpUtil.getSharePerference(this);
         // 初始化网络工具
         netWorkConnection = new NetWorkConnection(this);
+        radiobtn_attachment.setText("其他");
     }
 
     /**
@@ -191,7 +192,7 @@ public class TaskAddActivity extends FragmentActivity {
     private void initPageView() {
         eventEntryAdd_basic = new TaskFragment_Basic(intent);
         eventEntryAdd_person = new TaskFragment_Person();
-        eventEntryAdd_attachment = new TaskFragment_Attachment(uuid);
+        eventEntryAdd_attachment = new TaskFragment_Attachment();
         // 设置Fragment集合
         List<Fragment> fragmList = new ArrayList<Fragment>();
         fragmList.add(eventEntryAdd_basic);
@@ -244,12 +245,10 @@ public class TaskAddActivity extends FragmentActivity {
      */
     private void initToolbar() {
 
-        /** 设置toolbar标题 **/
-        centerText.setText("事件录入信息");
-
         /** 将右边按钮隐藏*/
         rightBtn.setVisibility(View.INVISIBLE);
 
+        /** 设置toolbar标题 **/
         centerText.setText("任务详细信息");
     }
 
@@ -328,6 +327,8 @@ public class TaskAddActivity extends FragmentActivity {
                         eventEntryAdd_person.setTFtSjRyEntityList(sjryList);
                         //将附件信息放在附件页面
                         eventEntryAdd_attachment.setTFtSjFjEntityList(sjfjList, true);
+                        //将其他信息放在附件页面
+                        eventEntryAdd_attachment.settFtSjDetailEntityList(tFtSjDetailEntity);
                     }
                 }
             }
