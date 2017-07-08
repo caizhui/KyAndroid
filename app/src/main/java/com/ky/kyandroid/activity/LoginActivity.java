@@ -55,6 +55,10 @@ import okhttp3.Response;
 public class LoginActivity extends AppCompatActivity {
 
     /**
+     * 是否已经登录
+     */
+    public static final String IS_LOGIN = "isLogin";
+    /**
      * 用户ID
      */
     public static final String USER_ID = "userId";
@@ -160,6 +164,12 @@ public class LoginActivity extends AppCompatActivity {
         initLoginAnim();
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        initDispatchMain();
+    }
+
     /**
      * 初始化事件
      */
@@ -247,6 +257,27 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
+     * 跳转界面
+     */
+    private void initDispatchMain(){
+        boolean logined = sp.getBoolean(IS_LOGIN,false);
+        if(logined){
+            String name = sp.getString("name", "");
+            Intent intent = new Intent();
+            if ("街道办工作人员".equals(name)) {
+                intent.setClass(this, MainAddEventActivity.class);
+            } else if ("街道职能部门".equals(name) || "区职能部门".equals(name)) {
+                intent.setClass(this, MainHandleEventActivity.class);
+            } else if ("区维稳办".equals(name)) {
+                intent.setClass(this, MainOfficeActivity.class);
+            } else {
+                intent.setClass(this, MainAllActivity.class);
+            }
+            startActivity(intent);
+        }
+    }
+
+    /**
      * 处理后续流程
      *
      * @param
@@ -262,18 +293,7 @@ public class LoginActivity extends AppCompatActivity {
                 Log.i(TAG, "设置用户信息成功...");
                 Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
                 startService(new Intent(this, SaveBDdescService.class));
-                String name = sp.getString("name", "");
-                Intent intent = new Intent();
-                if ("街道办工作人员".equals(name)) {
-                    intent.setClass(this, MainAddEventActivity.class);
-                } else if ("街道职能部门".equals(name) || "区职能部门".equals(name)) {
-                    intent.setClass(this, MainHandleEventActivity.class);
-                } else if ("区维稳办".equals(name)) {
-                    intent.setClass(this, MainOfficeActivity.class);
-                } else {
-                    intent.setClass(this, MainAllActivity.class);
-                }
-                startActivity(intent);
+                initDispatchMain();
             } else {
                 Log.i(TAG, "设置用户信息失败...");
                 Toast.makeText(this, "登录名或密码错误", Toast.LENGTH_SHORT).show();
@@ -296,6 +316,7 @@ public class LoginActivity extends AppCompatActivity {
                 //先将获取的json象转成实体
                 UserEntity user = JsonUtil.fromJson(entityStr, UserEntity.class);
                 if (user != null) {
+                    SpUtil.setBooleanSharedPerference(sp, IS_LOGIN, true);
                     SpUtil.setStringSharedPerference(sp, USER_ID, user.getId());
                     SpUtil.setStringSharedPerference(sp, USER_NAME, user.getUserName());
                     SpUtil.setStringSharedPerference(sp, NAME, user.getName());

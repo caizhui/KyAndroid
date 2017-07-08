@@ -248,6 +248,7 @@ public class MainOfficeActivity extends AppCompatActivity {
                 sweetAlertDialogs.showAlertDialogConfirm("信息提示", "是否确定注销用户?", new SweetAlertDialog.OnSweetClickListener() {
                     @Override
                     public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        SpUtil.setBooleanSharedPerference(sp, LoginActivity.IS_LOGIN, false);
                         Intent intent = new Intent(MainOfficeActivity.this, LoginActivity.class);
                         startActivity(intent);
                         finish();

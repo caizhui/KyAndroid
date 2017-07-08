@@ -220,7 +220,7 @@ public class MsgNoticeActivity extends AppCompatActivity implements View.OnClick
                 // 刷新阅读状态
                 case 9:
                     Log.i(TAG, "刷新阅读状态操作...");
-                    toolbar_count.setText("(共" + msgAdapter.getList().size() + "条)");
+                    //toolbar_count.setText("(共" + msgAdapter.getList().size() + "条)");
                     msgAdapter.notifyDataSetChanged();
                     break;
             }
@@ -265,7 +265,7 @@ public class MsgNoticeActivity extends AppCompatActivity implements View.OnClick
         paramsMap.put("userId", sp.getString(LoginActivity.USER_ID, ""));
         // 设置标题及颜色
         toolbar_title.setText("消息列表");
-        toolbar_layout.setBackgroundColor(Color.parseColor("#A4C639"));
+        //toolbar_layout.setBackgroundColor(Color.parseColor("#A4C639"));
         swipeRefreshUtil = new SwipeRefreshUtil(swipeRefreshLayout, Constants.SERVICE_NOTICE_LIST_HADLE, mHandler);
         // 上拉刷新初始化
         swipeRefreshUtil.setRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -344,8 +344,12 @@ public class MsgNoticeActivity extends AppCompatActivity implements View.OnClick
                     try {
                         Object up_entity = msgAdapter.getList().get(position);
                         if (up_entity != null){
-                            ((MsgNoticeEntity)up_entity).setYdsj("readed");
-                            updateTaskState(entity.getId(), "czlx", "readed");
+                            MsgNoticeEntity msg = (MsgNoticeEntity)up_entity;
+                            if (StringUtils.isBlank(msg.getYdsj())){
+                                updateTaskState(entity.getId(), "czlx", "readed");
+                            }
+                            // 临时改阅读状态使用设置与否真更新状态无关
+                            msg.setYdsj("readed");
                         }
                     } catch (Exception e) {
                         Log.i(TAG,"滑动未停止,修改失效...");
@@ -510,7 +514,7 @@ public class MsgNoticeActivity extends AppCompatActivity implements View.OnClick
             // 刷新列表
             msgAdapter.notifyDataSetChanged(entityList);
         }
-        toolbar_count.setText("(共" + msgAdapter.getList().size() + "条)");
+        //toolbar_count.setText("(共" + msgAdapter.getList().size() + "条)");
     }
 
     @Override
