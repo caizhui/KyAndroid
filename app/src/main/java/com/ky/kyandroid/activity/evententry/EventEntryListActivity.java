@@ -536,11 +536,17 @@ public class EventEntryListActivity extends AppCompatActivity {
     @OnItemClick(R.id.search_evententry_list)
     public void OnItemClick(int position) {
         tFtSjEntity = (TFtSjEntity) adapter.getItem(position);
-        Intent intent = new Intent(this, EventEntryAddActivity.class);
+        Intent intent = new Intent();
         Bundle bundle = new Bundle();
         bundle.putSerializable("tFtSjEntity", tFtSjEntity);
-        /**type 0：新增 1：修改**/
-        intent.putExtra("type", "1");
+        /**zt 0：修改   否则看详情**/
+        if("0".equals(tFtSjEntity.getZt())){
+            /**0:新增  1:修改 **/
+            intent.putExtra("type", "1");
+            intent.setClass(this, EventEntryAddActivity.class);
+        }else{
+            intent.setClass(this, EventEntryDetailActivity.class);
+        }
         intent.putExtras(bundle);
         startActivity(intent);
     }

@@ -23,20 +23,16 @@ import com.ky.kyandroid.Constants;
 import com.ky.kyandroid.R;
 import com.ky.kyandroid.activity.draft.EventDraftListActivity;
 import com.ky.kyandroid.adapter.FragmentAdapter;
-import com.ky.kyandroid.bean.AckMessage;
 import com.ky.kyandroid.bean.NetWorkConnection;
 import com.ky.kyandroid.db.dao.FileEntityDao;
 import com.ky.kyandroid.db.dao.TFtSjEntityDao;
 import com.ky.kyandroid.db.dao.TFtSjRyEntityDao;
 import com.ky.kyandroid.entity.FileEntity;
-import com.ky.kyandroid.entity.TFtSjDetailEntity;
 import com.ky.kyandroid.entity.TFtSjEntity;
 import com.ky.kyandroid.entity.TFtSjFjEntity;
 import com.ky.kyandroid.entity.TFtSjRyEntity;
 import com.ky.kyandroid.util.JsonUtil;
-import com.ky.kyandroid.util.OkHttpUtil;
 import com.ky.kyandroid.util.SpUtil;
-import com.ky.kyandroid.util.StringUtils;
 import com.ky.kyandroid.util.SweetAlertDialogUtil;
 
 import java.io.File;
@@ -44,7 +40,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -239,16 +234,7 @@ public class EventEntryAddActivity extends FragmentActivity {
             if ("0".equals(tFtSjEntity.getZt())) {
                 //查询保存在本地的详细信息
                 initData();
-            } else {
-                //查询已经上报的详细信息,如果当前状态为3表示街道退回，录入人是可以修改之后重新上报的。
-                if(!"3".equals(tFtSjEntity.getZt())){
-                    btnLinearlayout.setVisibility(View.GONE);
-                }
-                //当查看详情时，会有很多页签，所以将附件页面变成其他，进去可以看到进入其他页面的按钮
-                radiobtn_attachment.setText("其他");
-                initOnLineData();
             }
-
         }
     }
 
@@ -373,89 +359,24 @@ public class EventEntryAddActivity extends FragmentActivity {
                     sweetAlertDialogUtil.dismissAlertDialog();
                     Toast.makeText(EventEntryAddActivity.this, message, Toast.LENGTH_SHORT).show();
                     break;
-                // 获取详细信息数据成功
-                case 1:
-                    handleTransation(message);
-                    break;
                 //上传数据成功
                 case 2:
                     //将本地的草稿数据删除
-                    tFtSjEntityDao.deleteEventEntry(eventEntity.getId());
+                    boolean flag = tFtSjEntityDao.deleteEventEntry(eventEntity.getId());
                     sweetAlertDialogUtil.dismissAlertDialog();
-                    Toast.makeText(EventEntryAddActivity.this, "上报成功", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(EventEntryAddActivity.this, EventEntryListActivity.class);
-                    startActivity(intent);
+                    if(flag){
+                        Toast.makeText(EventEntryAddActivity.this, "上报成功", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(EventEntryAddActivity.this, EventEntryListActivity.class);
+                        startActivity(intent);
+                    }else{
+                        Toast.makeText(EventEntryAddActivity.this, "上报失败", Toast.LENGTH_SHORT).show();
+                    }
+
                     break;
             }
         }
     };
 
-    /**
-     * 获取详细信息之后，将信息分别放入基本信息，当事人，附件页面中
-     *
-     * @param
-     */
-    private void handleTransation(String body) {
-        if (StringUtils.isBlank(body)) {
-        } else {
-            // 处理响应信息
-            AckMessage ackMsg = JsonUtil.fromJson(body, AckMessage.class);
-            if (ackMsg != null) {
-                if (AckMessage.SUCCESS.equals(ackMsg.getAckCode())) {
-                    Object object = ackMsg.getEntity();
-                    //先将获取的Object对象转成String
-                    String entityStr = JsonUtil.toJson(object);
-                    //先将获取的json象转成实体
-                    TFtSjDetailEntity tFtSjDetailEntity = JsonUtil.fromJson(entityStr, TFtSjDetailEntity.class);
-                    if (tFtSjDetailEntity != null) {
-                        sjryList = tFtSjDetailEntity.getSjryList();
-                        sjfjList = tFtSjDetailEntity.getSjfjList();
-                        //将当事人信息放在当事人页面
-                        eventEntryAdd_person.setTFtSjRyEntityList(sjryList);
-                        //将附件信息放在附件页面
-                        eventEntryAdd_attachment.setTFtSjFjEntityList(sjfjList, true);
-                        //将其他信息放在附件页面
-                        eventEntryAdd_attachment.settFtSjDetailEntityList(tFtSjDetailEntity);
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * //查询已经上报详情数据
-     */
-    public void initOnLineData() {
-        final Message msg = new Message();
-        msg.what = 0;
-        if (netWorkConnection.isWIFIConnection()) {
-            Map<String, String> paramsMap = new HashMap<String, String>();
-            paramsMap.put("userId", userId);
-            paramsMap.put("id", tFtSjEntity.getId());
-            // 发送请求
-            OkHttpUtil.sendRequest(Constants.SERVICE_DETAIL_EVENT, paramsMap, new Callback() {
-
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    mHandler.sendEmptyMessage(0);
-                }
-
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    if (response.isSuccessful()) {
-                        msg.what = 1;
-                        msg.obj = response.body().string();
-                    } else {
-                        msg.obj = "网络异常,请确认网络情况";
-                    }
-                    mHandler.sendMessage(msg);
-                }
-            });
-        } else {
-            msg.obj = "WIFI网络不可用,请检查网络连接情况";
-            mHandler.sendMessage(msg);
-        }
-    }
 
     /**
      * 查看保存在我本地的详细信息
@@ -617,6 +538,7 @@ public class EventEntryAddActivity extends FragmentActivity {
                         Toast.makeText(EventEntryAddActivity.this, message + "成功", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(EventEntryAddActivity.this, EventDraftListActivity.class);
                         startActivity(intent);
+                        finish();
                     } else {
                         Toast.makeText(EventEntryAddActivity.this, message + "失败", Toast.LENGTH_SHORT).show();
                     }

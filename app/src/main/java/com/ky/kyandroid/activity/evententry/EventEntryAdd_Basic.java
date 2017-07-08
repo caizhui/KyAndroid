@@ -296,6 +296,7 @@ public class EventEntryAdd_Basic extends Fragment {
         if (spinnerList == null) {
             //设置Spinner控件的初始值
             spinnerList = new ArrayList<CodeValue>();
+            Toast.makeText(EventEntryAdd_Basic.this.getActivity(),"字典项加载不完全,请重新加载",Toast.LENGTH_SHORT).show();
         }
         //将可选内容与ArrayAdapter连接起来
         adapter = new ArrayAdapter<CodeValue>(EventEntryAdd_Basic.this.getActivity(), android.R.layout.simple_spinner_item, spinnerList);
@@ -660,6 +661,7 @@ public class EventEntryAdd_Basic extends Fragment {
         childAdapter.setChildData(childNameArray);
         childAdapter.notifyDataSetChanged();
         groupAdapter.notifyDataSetChanged();
+
 
         groupListView.setOnItemClickListener(new MyItemClick());
 
