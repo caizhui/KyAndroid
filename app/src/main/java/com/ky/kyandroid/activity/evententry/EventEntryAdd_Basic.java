@@ -646,13 +646,11 @@ public class EventEntryAdd_Basic extends Fragment {
         showPupWindow = LayoutInflater.from(EventEntryAdd_Basic.this.getActivity()).inflate(
                 R.layout.bottom_layout, null);
         initPopuWindow(showPupWindow);
+        // 初始化三个ListView
+        groupListView = (ListView) showPupWindow.findViewById(R.id.listView1);
+        childListView = (ListView) showPupWindow.findViewById(R.id.listView2);
+        childListView2 = (ListView) showPupWindow.findViewById(R.id.listView3);
 
-        groupListView = (ListView) showPupWindow
-                .findViewById(R.id.listView1);
-        childListView = (ListView) showPupWindow
-                .findViewById(R.id.listView2);
-        childListView2 = (ListView) showPupWindow
-                .findViewById(R.id.listView3);
 
         groupAdapter = new GroupAdapter(EventEntryAdd_Basic.this.getActivity(), GroupNameArray);
         groupListView.setAdapter(groupAdapter);
