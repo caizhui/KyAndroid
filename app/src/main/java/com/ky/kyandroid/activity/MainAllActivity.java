@@ -265,8 +265,10 @@ public class MainAllActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 sweetAlertDialogs.showAlertDialogConfirm("信息提示", "是否退出程序?", new SweetAlertDialog.OnSweetClickListener() {
+
                     @Override
                     public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        SpUtil.setBooleanSharedPerference(sp, LoginActivity.IS_LOGIN, false);
                         System.exit(0);
                     }
                 });
