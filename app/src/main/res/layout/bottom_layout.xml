@@ -14,8 +14,7 @@
         android:background="@color/group_item_bg"
         android:cacheColorHint="@android:color/transparent"
         android:divider="@color/child_item_diveder"
-        android:dividerHeight="1dp"
-        android:scrollbars="vertical" />
+        android:dividerHeight="1dp" />
 
     <View
         android:layout_width="1dp"
@@ -30,10 +29,9 @@
         android:background="@color/child_item_bg"
         android:cacheColorHint="@android:color/transparent"
         android:divider="@color/child_item_diveder"
-        android:dividerHeight="1dp"
-        android:scrollbars="vertical" />
+        android:dividerHeight="1dp" />
 
-        <View
+    <View
             android:layout_width="1dp"
             android:layout_height="fill_parent"
             android:background="@color/child_item_diveder" />
@@ -47,8 +45,7 @@
             android:background="@color/child_item_bg"
             android:cacheColorHint="@android:color/transparent"
             android:divider="@color/child_item_diveder"
-            android:dividerHeight="1dp"
-            android:scrollbars="vertical" />
+            android:dividerHeight="1dp"/>
 
 
 </LinearLayout>

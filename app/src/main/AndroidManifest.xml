@@ -68,6 +68,12 @@
             android:launchMode="singleTask">
         </activity>
 
+        <!--事件详情-->
+        <activity android:name=".activity.evententry.EventEntryDetailActivity"
+            android:windowSoftInputMode = "stateAlwaysHidden|adjustPan"
+            android:launchMode="singleTask">
+        </activity>
+
         <!--事件列表-->
         <activity android:name=".activity.evententry.EventEntryListActivity"
             android:screenOrientation="portrait"

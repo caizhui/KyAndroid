@@ -661,6 +661,7 @@ public class EventEntryAdd_Basic extends Fragment {
         childAdapter.notifyDataSetChanged();
         groupAdapter.notifyDataSetChanged();
 
+
         groupListView.setOnItemClickListener(new MyItemClick());
 
         //因为到场部门有3层结构，而涉及领域只有2层
