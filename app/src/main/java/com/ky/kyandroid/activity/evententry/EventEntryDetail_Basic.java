@@ -8,22 +8,15 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.TranslateAnimation;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.PopupWindow;
 
 import com.ky.kyandroid.R;
-import com.ky.kyandroid.adapter.ChildAdapter;
-import com.ky.kyandroid.adapter.GroupAdapter;
 import com.ky.kyandroid.bean.CodeValue;
 import com.ky.kyandroid.db.dao.DescEntityDao;
 import com.ky.kyandroid.entity.TFtSjEntity;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -150,103 +143,20 @@ public class EventEntryDetail_Basic extends Fragment {
     @BindView(R.id.leadership_instructions_edt)
     EditText leadershipInstructionsEdt;
 
-
-    /**
-     * 设置Spinner控件的初始值
-     */
-    public List<CodeValue> spinnerList;
-
     /**
      * 数组 配置器 下拉菜单赋值用
      */
     ArrayAdapter<CodeValue> adapter;
 
-
-    /**
-     * 提示信息
-     */
-    private String message = "";
-
     private Intent intent;
 
     public TFtSjEntity tFtSjEntity;
-
-    View showPupWindow = null; // 选择区域的view
-
-    /**
-     * 一级菜单名称数组
-     **/
-    String[] GroupNameArray;
-    /**
-     * 二级菜单名称数组
-     **/
-    String[] childNameArray;
-
-    ListView groupListView = null;
-    ListView childListView = null;
-    /**
-     * 稻城部门的第二层子节点ListView
-     */
-    ListView childListView2 = null;
-    GroupAdapter groupAdapter = null;
-
-    /**
-     * 到场部门第二层adapter
-     */
-    ChildAdapter childTwoAdapter = null;
-
-
-    ChildAdapter childAdapter = null;
-
-    TranslateAnimation animation;// 出现的动画效果
-    // 屏幕的宽高
-    public static int screen_width = 0;
-    public static int screen_height = 0;
-
-    private boolean[] tabStateArr = new boolean[4];// 标记tab的选中状态，方便设置
-
-    PopupWindow mPopupWindow = null;
 
     @SuppressLint("ValidFragment")
     public EventEntryDetail_Basic(Intent intent) {
         this.intent = intent;
     }
 
-    /**
-     * 判断是那个树 dcbm(到场部门),sjly(涉及领域)
-     */
-    private String spinnerType;
-
-    /**
-     * 子列表是否已经点击
-     */
-    private boolean isChildClick;
-
-    /**
-     * 第二个子列表是否已经点击
-     */
-    private boolean isTwoChildClick;
-
-    /**
-     * 父列表是否已经点击
-     */
-    private boolean isGroupClick;
-
-
-    /**
-     * 父节点临时Position
-     */
-    private int oneTempPosition;
-
-    /**
-     * 第二层节点临时Position
-     */
-    private int twoTempPosition;
-
-    /**
-     * 第三层节点临时Position
-     */
-    private int threeTempPosition;
 
     private DescEntityDao descEntityDao;
 
