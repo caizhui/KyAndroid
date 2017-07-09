@@ -261,7 +261,7 @@ public class EventEntryListActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             // 提示信息
-            String message = String.valueOf(msg.obj == null ? "系统繁忙,请稍后再试" : msg.obj);
+            String message = String.valueOf((msg.obj == null || "".equals(msg.obj) )? "系统繁忙,请稍后再试" : msg.obj);
             switch (msg.what) {
                 // 失败
                 case 0:

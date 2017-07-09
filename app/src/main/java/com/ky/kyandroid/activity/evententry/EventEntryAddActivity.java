@@ -452,13 +452,15 @@ public class EventEntryAddActivity extends FragmentActivity {
             case R.id.reporting_leadership_btn:
                 eventEntity = eventEntryAdd_basic.PackageData();
                 fileEntityList = eventEntryAdd_attachment.PackageData();
-                //先将数据库中的改事件的数据删除，然后保存到数据库中
-                fileEntityDao.deleteEventEntryBySjId(uuid);
                 if(fileEntityList!=null && fileEntityList.size()>0){
                     for(int i=0;i<fileEntityList.size();i++){
                         FileEntity fileEntity = fileEntityList.get(i);
-                        fileEntity.setSjId(uuid);
-                        fileEntityDao.saveFileEntity(fileEntity);
+                        if(fileEntity.getUuid() == 0){
+                            fileEntity.setSjId(uuid);
+                            fileEntityDao.saveFileEntity(fileEntity);
+                        }else{
+                            fileEntityDao.updateFileEntity(fileEntity);
+                        }
                     }
                 }
                 if (eventEntity != null) {
@@ -512,13 +514,16 @@ public class EventEntryAddActivity extends FragmentActivity {
             case R.id.save_draft_btn:
                 TFtSjEntity tempenenEntity = eventEntryAdd_basic.PackageData();
                 fileEntityList = eventEntryAdd_attachment.PackageData();
-                //先将数据库中的改事件的数据删除，然后保存到数据库中
-                fileEntityDao.deleteEventEntryBySjId(uuid);
                 if(fileEntityList!=null && fileEntityList.size()>0){
                     for(int i=0;i<fileEntityList.size();i++){
                         FileEntity fileEntity = fileEntityList.get(i);
-                        fileEntity.setSjId(uuid);
-                        fileEntityDao.saveFileEntity(fileEntity);
+                        if(fileEntity.getUuid() == 0){
+                            fileEntity.setSjId(uuid);
+                            fileEntityDao.saveFileEntity(fileEntity);
+                        }else{
+                            fileEntityDao.updateFileEntity(fileEntity);
+                        }
+
                     }
                 }
                 if (tempenenEntity != null) {

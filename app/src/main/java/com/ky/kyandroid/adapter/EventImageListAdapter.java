@@ -68,7 +68,6 @@ public class EventImageListAdapter extends BaseAdapter {
         }else{
             holder.attachmentImg.setImageBitmap(list.get(position).getBitmap());
         }
-
         //判断是否显示描述控件
         if(!list.get(position).isHaveMs()){
             holder.imageMs.setVisibility(View.GONE);

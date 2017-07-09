@@ -126,7 +126,7 @@ public class EventDraftListActivity extends AppCompatActivity {
 
 
     @OnItemLongClick(R.id.search_evententry_list)
-    public boolean OnItemLongClick(int position){
+    public boolean OnItemLongClick(final int position){
         final TFtSjEntity tFtSjEntity = (TFtSjEntity) adapter.getItem(position);
         AlertDialog.Builder builder = new AlertDialog.Builder(EventDraftListActivity.this);
         builder.setTitle("信息");
@@ -136,6 +136,10 @@ public class EventDraftListActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialogInterface, int i) {
                 boolean  flag = tFtSjEntityDao.deleteEventEntry(tFtSjEntity.getId());
                 if (flag) {
+                    if(tFtSjEntityList.get(position)!=null){
+                        tFtSjEntityList.remove(position);
+                    }
+                    adapter.notifyDataSetChanged(tFtSjEntityList);
                     Toast.makeText(EventDraftListActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(EventDraftListActivity.this, "删除失败", Toast.LENGTH_SHORT).show();

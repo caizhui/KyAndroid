@@ -30,6 +30,12 @@ public class Constants {
 	//修改事件状态接口
 	public final static String SERVICE_EDIT_EVENT= "ft/kyAndroid/sjEdit.action";
 
+	//任务申请延期状态接口
+	public final static String SERVICE_EDIT_YANQI= "ft/kyAndroid/taskYanqi.action";
+
+	//任务申请办结状态接口
+	public final static String SERVICE_EDIT_BANJI= "ft/kyAndroid/taskBanj.action";
+
     //保存字典项接口
     public final static String SERVICE_QUERY_DESC= "ft/kyAndroid/getDictAll.action";
 
