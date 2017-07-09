@@ -184,9 +184,6 @@ public class EventEntryAdd_Attachment extends Fragment {
         ButterKnife.bind(this, view);
         type = intent.getStringExtra("type");
         tFtSjEntity = (TFtSjEntity) intent.getSerializableExtra("tFtSjEntity");
-        if(savedInstanceState!=null){
-            fileEntityList = (List<FileEntity>) savedInstanceState.getSerializable("fileEntityList");
-        }
         //,判断是否为空，是为了防止切换页签的时候将实例重新初始化
         if(fileEntityList==null){
             fileEntityList =new ArrayList<FileEntity>();
@@ -209,25 +206,6 @@ public class EventEntryAdd_Attachment extends Fragment {
             Toast.makeText(EventEntryAdd_Attachment.this.getActivity(), "没有SD卡", Toast.LENGTH_LONG).show();
         }
         return view;
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        fileEntityList = new ArrayList<FileEntity>();
-        if(adapter!=null){
-            int count =adapter.getCount();
-            if(count>0){
-                for(int i = 0 ;i<count;i++){
-                    FileEntity fileEntity = (FileEntity) adapter.getItem(i);
-                    View view = imageList.getChildAt(i);
-                    EditText editText = (EditText) view.findViewById(R.id.image_ms);
-                    fileEntity.setFileMs(editText.getText().toString());
-                    fileEntityList.add(fileEntity);
-                }
-            }
-        }
-        outState.putSerializable("fileEntityList", (Serializable) fileEntityList);
     }
 
     @OnItemLongClick(R.id.image_list)

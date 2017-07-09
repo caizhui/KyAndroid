@@ -1,6 +1,8 @@
 package com.ky.kyandroid.adapter;
 
 import android.content.Context;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -53,7 +55,7 @@ public class EventImageListAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
+        final ViewHolder holder;
         if (convertView == null) {
             convertView = View.inflate(context, R.layout.activity_image_item, null);
             holder = new ViewHolder(convertView);
@@ -73,6 +75,22 @@ public class EventImageListAdapter extends BaseAdapter {
             holder.imageMs.setVisibility(View.GONE);
         }
         holder.imageMs.setText(list.get(position).getFileMs());
+        holder.imageMs.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                list.get(position).setFileMs(holder.imageMs.getText().toString());
+            }
+        });
         return convertView;
     }
 

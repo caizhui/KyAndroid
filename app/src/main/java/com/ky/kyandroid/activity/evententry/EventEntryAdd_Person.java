@@ -26,7 +26,6 @@ import com.ky.kyandroid.entity.TFtSjEntity;
 import com.ky.kyandroid.entity.TFtSjRyEntity;
 import com.ky.kyandroid.util.CommonUtil;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -115,6 +114,8 @@ public class EventEntryAdd_Person extends Fragment {
     EditText personRemarkEdt;
 
     TFtSjRyEntity tFtSjRyEntity;
+
+    TFtSjRyEntity temptFtSjRyEntity;
 
     public List<TFtSjRyEntity> sjryList;
 
@@ -307,6 +308,27 @@ public class EventEntryAdd_Person extends Fragment {
         //设置下拉列表的风格
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         personNationSpinner.setAdapter(arrayAdapter);//将adapter 添加到spinner中
+        if(temptFtSjRyEntity!=null){
+            personNameEdt.setText(temptFtSjRyEntity.getXm());
+            personSexSpinner.setSelection(Integer.parseInt(temptFtSjRyEntity.getXb())-1);
+            if("56".equals(temptFtSjRyEntity.getMz())){
+                personNationSpinner.setSelection(0);
+            }else{
+                personNationSpinner.setSelection(Integer.parseInt(temptFtSjRyEntity.getMz()));
+            }
+            personIdcardTypeSpinner.setSelection(Integer.parseInt(temptFtSjRyEntity.getZjlx())-1);
+            personIdcardEdt.setText(temptFtSjRyEntity.getZjhm());
+            personAddressEdt.setText(temptFtSjRyEntity.getHjd());
+            personJobaddressEdt.setText(temptFtSjRyEntity.getGzdw());
+            personPartySpinner.setSelection(Integer.parseInt(temptFtSjRyEntity.getSfdy()));
+            personEmailEdt.setText(temptFtSjRyEntity.getEmail());
+            personTelephoneEdt.setText(temptFtSjRyEntity.getGddh());
+            personMobileEdt.setText(temptFtSjRyEntity.getYddh());
+            personCphEdt.setText(temptFtSjRyEntity.getCphm());
+            personDomilcileEdt.setText(temptFtSjRyEntity.getXzdz());
+            personRemarkEdt.setText(temptFtSjRyEntity.getComments());
+            temptFtSjRyEntity = null;
+        }
         if(isDetail){
             personNameEdt.setText(tFtSjRyEntity.getXm());
             personSexSpinner.setSelection(Integer.parseInt(tFtSjRyEntity.getXb())-1);
@@ -380,18 +402,8 @@ public class EventEntryAdd_Person extends Fragment {
                 tFtSjRyEntity.setComments(personRemarkEdt.getText().toString());
                 tFtSjRyEntity.setSjId(uuid);
                 if(!"".equals(message)){
-                    try{
-                        Field field = dialogInterface.getClass()
-                                .getSuperclass().getDeclaredField(
-                                        "mShowing" );
-                        field.setAccessible( true );
-                        // 将mShowing变量设为false，表示对话框已关闭
-                        field.set(dialogInterface, false );
-                        dialogInterface.dismiss();
-                    }catch (Exception e)
-                    {
-                        e.printStackTrace();
-                    }
+                    temptFtSjRyEntity = new TFtSjRyEntity();
+                    temptFtSjRyEntity= tFtSjRyEntity;
                     Toast.makeText(EventEntryAdd_Person.this.getActivity(),message,Toast.LENGTH_SHORT).show();
                 }else{
                     if(tFtSjRyEntity.getUuid()!=0){
