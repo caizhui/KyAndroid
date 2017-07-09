@@ -66,4 +66,7 @@ public class Constants {
 	//街道派遣保存处理接口
 	public final static String SERVICE_TASK_DISPATCH_DELETE= "ft/kyAndroid/taskDispatchDelete.action";
 
+	//坐标点保存接口
+	public final static String SERVICE_LOCATION_SAVE = "ft/kyAndroid/jwSave.action";
+
 }

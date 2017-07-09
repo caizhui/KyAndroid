@@ -1,13 +1,17 @@
 package com.ky.kyandroid.activity;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -17,7 +21,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -54,6 +57,10 @@ import okhttp3.Response;
  */
 public class LoginActivity extends AppCompatActivity {
 
+    /**
+     * 权限请求码
+     */
+    final private int REQUEST_CODE_ASK_PERMISSIONS = 123;
     /**
      * 是否已经登录
      */
@@ -162,6 +169,11 @@ public class LoginActivity extends AppCompatActivity {
         sweetAlertDialogUtil = new SweetAlertDialogUtil(LoginActivity.this);
         initEvent();
         initLoginAnim();
+        // 询问定位权限
+        int location_permission = ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION);
+        if (location_permission != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_CODE_ASK_PERMISSIONS);
+        }
     }
 
     @Override

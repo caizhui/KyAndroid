@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import android.graphics.Bitmap;
 
+import com.ky.kyandroid.service.LocationService;
+import com.ky.kyandroid.util.ServiceUtil;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -31,6 +33,8 @@ public class AppContext extends Application {
 		// 设置debug模式
 		x.Ext.setDebug(true);
 		initImageLoader(this);
+		//启动定位服务
+		ServiceUtil.invokeAlarmService(this, LocationService.class, LocationService.LOCATION_SERVICE_NAME, LocationService.START_INTERVAL);
 	}
 	
 	/**
