@@ -251,7 +251,7 @@ public class StreetHandleActivity extends AppCompatActivity {
             Toast.makeText(StreetHandleActivity.this, "没有SD卡", Toast.LENGTH_LONG).show();
         }
         //初始化imageList
-        adapter = new EventImageListAdapter(fileEntityList, StreetHandleActivity.this);
+        adapter = new EventImageListAdapter(fileEntityList, StreetHandleActivity.this,false);
         fileList.setAdapter(adapter);
     }
 

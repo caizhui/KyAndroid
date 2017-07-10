@@ -24,6 +24,7 @@ import butterknife.ButterKnife;
 public class EventImageListAdapter extends BaseAdapter {
     public List<FileEntity> list;
     public Context context;
+    private boolean isDetail;
 
 
     public EventImageListAdapter(Context context) {
@@ -32,10 +33,11 @@ public class EventImageListAdapter extends BaseAdapter {
         this.context = context;
     }
 
-    public EventImageListAdapter(List<FileEntity> list, Context context) {
+    public EventImageListAdapter(List<FileEntity> list, Context context,boolean isDetail) {
         super();
         this.list = list;
         this.context = context;
+        this.isDetail = isDetail;
     }
 
     @Override
@@ -73,6 +75,9 @@ public class EventImageListAdapter extends BaseAdapter {
         //判断是否显示描述控件
         if(!list.get(position).isHaveMs()){
             holder.imageMs.setVisibility(View.GONE);
+        }
+        if(isDetail){
+            holder.imageMs.setEnabled(false);
         }
         holder.imageMs.setText(list.get(position).getFileMs());
         holder.imageMs.addTextChangedListener(new TextWatcher() {

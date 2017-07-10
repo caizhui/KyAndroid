@@ -299,6 +299,9 @@ public class EventEntryListActivity extends AppCompatActivity {
                                     list_jiazai.setVisibility(View.GONE);
                                 }
                             }
+                        }else{
+                            ifload = false;
+                            list_jiazai.setVisibility(View.GONE);
                         }
                     }
                     swipeContainer.post(new Runnable() {
@@ -318,6 +321,7 @@ public class EventEntryListActivity extends AppCompatActivity {
                     currentPage = currentPage + 1;
                     //当加载的 条数小鱼每页显示条数时，加载完成
                     if (pList.size() < pageSize) {
+                        totalMumber = pList.size();
                         ifDateEnd = true;
                         if (pageBean != null) {
                             progressBar.setVisibility(View.GONE);
@@ -460,6 +464,8 @@ public class EventEntryListActivity extends AppCompatActivity {
                             ifload = true;
                             paramsMap.put("currentPage", currentPage + "");
                             list_jiazai.setVisibility(View.VISIBLE);
+                            progressBar.setVisibility(View.VISIBLE);
+                            foot_title.setText("正在加载");
                             //1.表示刷新，2表示加载
                             swipeRefreshUtil.setSwipeRefresh(paramsMap, 2);
                         }
@@ -539,8 +545,8 @@ public class EventEntryListActivity extends AppCompatActivity {
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
         bundle.putSerializable("tFtSjEntity", tFtSjEntity);
-        /**zt 0：修改   否则看详情**/
-        if("0".equals(tFtSjEntity.getZt())){
+        /**zt 0：修改 3,街道退回  否则看详情**/
+        if("0".equals(tFtSjEntity.getZt()) || "3".equals(tFtSjEntity.getZt())){
             /**0:新增  1:修改 **/
             intent.putExtra("type", "1");
             intent.setClass(this, EventEntryAddActivity.class);
@@ -715,6 +721,21 @@ public class EventEntryListActivity extends AppCompatActivity {
             radioButton01.setText("未达到立案标准");
             radioButton02.setVisibility(View.INVISIBLE);
         }
+        //回放核查不通过
+        if("7,8".equals(tFtZtlzEntity.getNextzt())){
+            radioButton03.setVisibility(View.VISIBLE);
+            radioButton01.setText("不通过原因1");
+            radioButton02.setText("不通过原因2");
+            radioButton03.setText("不通过原因3");
+
+        }
+        //回放核查通过
+        if("10".equals(tFtZtlzEntity.getNextzt())){
+            radioButton03.setVisibility(View.VISIBLE);
+            radioButton01.setText("人手不足");
+            radioButton02.setText("权限不足");
+            radioButton03.setText("脱离可控范围");
+        }
         if(radioGroup!=null){
             radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
@@ -772,7 +793,7 @@ public class EventEntryListActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (netWorkConnection.isWIFIConnection()) {
-                    sweetAlertDialogUtil.loadAlertDialog();
+                    String message="";
                     Map<String, String> paramsMap = new HashMap<String, String>();
                     paramsMap.put("userId", userId);
                     paramsMap.put("sjId", tFtSjEntity.getId());
@@ -784,33 +805,62 @@ public class EventEntryListActivity extends AppCompatActivity {
                         paramsMap.put("lrclsj", happendTImeEdt.getText().toString());
                     }
                     if(returnEdt!=null){
-                        paramsMap.put("czyy", returnEdt.getText().toString());
+                        //7.2自行处理反馈时，处理人和处理结果为必填项
+                        if("7.2".equals(tFtZtlzEntity.getNextzt())){
+                            if("".equals(returnEdt.getText().toString())){
+                                message +="处理结果不能为空\n";
+                            }else{
+                                paramsMap.put("czyy", returnEdt.getText().toString());
+                            }
+                            //回访核查和回访核查不通过原因必填
+                        }else if("7,8".equals(tFtZtlzEntity.getNextzt()) || "10".equals(tFtZtlzEntity.getNextzt())){
+                            if("".equals(returnEdt.getText().toString())){
+                                message += tFtZtlzEntity.getActionname()+"原因不能为空\n";
+                            }else{
+                                paramsMap.put("czyy", returnEdt.getText().toString());
+                            }
+                        }else{
+                            paramsMap.put("czyy", returnEdt.getText().toString());
+                        }
                     }
                     if(handlePersonEdt!=null){
-                        paramsMap.put("clr", handlePersonEdt.getText().toString());
-                    }
-
-                    // 发送请求
-                    OkHttpUtil.sendRequest(url,paramsMap, new Callback() {
-
-                        @Override
-                        public void onFailure(Call call, IOException e) {
-                            msg.what=6;
-                            mHandler.sendEmptyMessage(0);
-                        }
-
-                        @Override
-                        public void onResponse(Call call, Response response) throws IOException {
-                            if (response.isSuccessful()) {
-                                msg.what = 5;
-                                msg.obj = response.body().string();
-                            } else {
-                                msg.obj = "网络异常,请确认网络情况";
+                        if("7.2".equals(tFtZtlzEntity.getNextzt())){
+                            if("".equals(handlePersonEdt.getText().toString())){
+                                message +="处理人不能为空\n";
+                            }else{
+                                paramsMap.put("clr", handlePersonEdt.getText().toString());
                             }
-                            mHandler.sendMessage(msg);
+                        }else{
+                            paramsMap.put("clr", handlePersonEdt.getText().toString());
                         }
-                    });
-                } else {
+
+                    }
+                  if(!"".equals(message)){
+                      Toast.makeText(EventEntryListActivity.this,message,Toast.LENGTH_SHORT).show();;
+                  }else{
+                      sweetAlertDialogUtil.loadAlertDialog();
+                      // 发送请求
+                      OkHttpUtil.sendRequest(url,paramsMap, new Callback() {
+
+                          @Override
+                          public void onFailure(Call call, IOException e) {
+                              msg.what=6;
+                              mHandler.sendEmptyMessage(0);
+                          }
+
+                          @Override
+                          public void onResponse(Call call, Response response) throws IOException {
+                              if (response.isSuccessful()) {
+                                  msg.what = 5;
+                                  msg.obj = response.body().string();
+                              } else {
+                                  msg.obj = "网络异常,请确认网络情况";
+                              }
+                              mHandler.sendMessage(msg);
+                          }
+                      });
+                  }
+                  }else {
                     msg.obj = "WIFI网络不可用,请检查网络连接情况";
                     mHandler.sendMessage(msg);
                 }

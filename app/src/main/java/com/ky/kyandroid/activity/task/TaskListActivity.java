@@ -255,6 +255,7 @@ public class TaskListActivity extends AppCompatActivity {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+            sweetAlertDialogUtil.dismissAlertDialog();
             // 提示信息
             String message = String.valueOf(msg.obj == null ? "系统繁忙,请稍后再试" : msg.obj);
             switch (msg.what) {
@@ -287,6 +288,9 @@ public class TaskListActivity extends AppCompatActivity {
                                     list_jiazai.setVisibility(View.GONE);
                                 }
                             }
+                        }else{
+                            ifload = false;
+                            list_jiazai.setVisibility(View.GONE);
                         }
                     }
                     swipeContainer.post(new Runnable() {
@@ -305,6 +309,7 @@ public class TaskListActivity extends AppCompatActivity {
                     currentPage = currentPage + 1;
                     //当加载的 条数小鱼每页显示条数时，加载完成
                     if (pList.size() < pageSize) {
+                        totalMumber = pList.size();
                         ifDateEnd = true;
                         if (pageBean != null) {
                             progressBar.setVisibility(View.GONE);
@@ -443,6 +448,8 @@ public class TaskListActivity extends AppCompatActivity {
                             ifload = true;
                             paramsMap.put("currentPage", currentPage + "");
                             list_jiazai.setVisibility(View.VISIBLE);
+                            progressBar.setVisibility(View.VISIBLE);
+                            foot_title.setText("正在加载");
                             //1.表示刷新，2表示加载
                             swipeRefreshUtil.setSwipeRefresh(paramsMap, 2);
                         }
@@ -548,8 +555,12 @@ public class TaskListActivity extends AppCompatActivity {
                     //根据点击的item项获取该item对应的实体，
                     TFtZtlzEntity tFtZtlzEntity = tFtZtlzEntities[pos];
                     if ("8.1".equals(tFtZtlzEntity.getNextzt())) {
-                        //当8.1申请的时候，弹出自定义对话框
-                        yanQiOperation(tFtZtlzEntity, R.layout.dialog_return_operation, tFtZtlzEntity.getActionname(),Constants.SERVICE_EDIT_YANQI );
+                        //当8.1申请延期的时候，并且上一个状态为8,13，表示接收，否则表示申请延期，弹出自定义对话框
+                        if("8,13".equals(tFtZtlzEntity.getPrevzt())){
+                            OperatingProcess(tFtZtlzEntity,Constants.SERVICE_QUERY_TASKRECV);
+                        }else if("8,8.1".equals(tFtZtlzEntity.getPrevzt())){
+                            yanQiOperation(tFtZtlzEntity, R.layout.dialog_return_operation, tFtZtlzEntity.getActionname(),Constants.SERVICE_EDIT_YANQI );
+                        }
                     }else if ("8.2".equals(tFtZtlzEntity.getNextzt())) {
                         //当8.2办结处理的时候，弹出自定义对话框
                         banJiOperation(tFtZtlzEntity, R.layout.dialog_over_operation, tFtZtlzEntity.getActionname(),Constants.SERVICE_EDIT_BANJI );

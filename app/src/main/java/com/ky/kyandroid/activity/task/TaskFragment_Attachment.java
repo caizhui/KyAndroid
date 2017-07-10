@@ -106,7 +106,7 @@ public class TaskFragment_Attachment extends Fragment {
             fileEntityList =new ArrayList<FileEntity>();
         }
         if(adapter==null){
-            adapter = new EventImageListAdapter(fileEntityList, TaskFragment_Attachment.this.getActivity());
+            adapter = new EventImageListAdapter(fileEntityList, TaskFragment_Attachment.this.getActivity(),true);
         }
         imageList.setAdapter(adapter);
         //显示图片或者创建文件路径

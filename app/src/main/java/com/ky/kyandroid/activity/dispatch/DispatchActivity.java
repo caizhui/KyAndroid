@@ -372,37 +372,42 @@ public class DispatchActivity extends AppCompatActivity {
                 break;
             case R.id.add_dispatch:
                 final Message msg = new Message();
-                if (netWorkConnection.isWIFIConnection()) {
-                    sweetAlertDialogUtil.loadAlertDialog();
-                    msg.what = 3;
-                    Map<String, String> paramsMap = new HashMap<String, String>();
-                    String ftSjClbmList = JsonUtil.toJson(ypqbmList);
-                    paramsMap.put("userId", userId);
-                    paramsMap.put("sjId", uuid);
-                    paramsMap.put("ftSjClbmList", ftSjClbmList);
-                    // 发送请求
-                    OkHttpUtil.sendRequest(Constants.SERVICE_TASK_DISPATCH_SAVE, paramsMap, new Callback() {
+                if(ypqbmList!=null && ypqbmList.size()>0){
+                    if (netWorkConnection.isWIFIConnection()) {
+                        sweetAlertDialogUtil.loadAlertDialog();
+                        msg.what = 3;
+                        Map<String, String> paramsMap = new HashMap<String, String>();
+                        String ftSjClbmList = JsonUtil.toJson(ypqbmList);
+                        paramsMap.put("userId", userId);
+                        paramsMap.put("sjId", uuid);
+                        paramsMap.put("ftSjClbmList", ftSjClbmList);
+                        // 发送请求
+                        OkHttpUtil.sendRequest(Constants.SERVICE_TASK_DISPATCH_SAVE, paramsMap, new Callback() {
 
-                        @Override
-                        public void onFailure(Call call, IOException e) {
-                            mHandler.sendEmptyMessage(0);
-                        }
-
-                        @Override
-                        public void onResponse(Call call, Response response) throws IOException {
-                            if (response.isSuccessful()) {
-                                msg.what = 2;
-                                msg.obj = response.body().string();
-                            } else {
-                                msg.obj = "网络异常,请确认网络情况";
+                            @Override
+                            public void onFailure(Call call, IOException e) {
+                                mHandler.sendEmptyMessage(0);
                             }
-                            mHandler.sendMessage(msg);
-                        }
-                    });
-                } else {
-                    msg.obj = "WIFI网络不可用,请检查网络连接情况";
-                    mHandler.sendMessage(msg);
+
+                            @Override
+                            public void onResponse(Call call, Response response) throws IOException {
+                                if (response.isSuccessful()) {
+                                    msg.what = 2;
+                                    msg.obj = response.body().string();
+                                } else {
+                                    msg.obj = "网络异常,请确认网络情况";
+                                }
+                                mHandler.sendMessage(msg);
+                            }
+                        });
+                    } else {
+                        msg.obj = "WIFI网络不可用,请检查网络连接情况";
+                        mHandler.sendMessage(msg);
+                    }
+                }else{
+                    Toast.makeText(DispatchActivity.this,"没有可派遣的部门！",Toast.LENGTH_SHORT).show();
                 }
+
                 break;
         }
     }
@@ -511,17 +516,30 @@ public class DispatchActivity extends AppCompatActivity {
                 ypqbmEntity.setBmmc(departmentCodeValue.getValue());
                 ypqbmEntity.setBm_id(departmentCodeValue.getCode());
                 ypqbmEntity.setSjId(tFtSjEntity.getId());
-                ypqbmEntity.setClsx(handlerTime);
-                ypqbmEntity.setRwnr(handlerText);
-                //如果在list的item已经存在数据，则表示是修改，将之前的数据去掉，重新加载
-                if(ypqbmList!=null && ypqbmList.size()>0){
-                    if(ypqbmList.get(tempPosition)!=null &&  isDetail){
-                        ypqbmList.remove(tempPosition);
-                    }
+                String message ="";
+                if("".equals(handlerTime)){
+                    message+= "处理时限不能为空\n";
+                }else{
+                    ypqbmEntity.setClsx(handlerTime);
                 }
-                ypqbmList.add(ypqbmEntity);
-                if(ypqbmList!=null && ypqbmList.size()>0){
-                    adapter.notifyDataSetChanged(ypqbmList);
+                if("".equals(handlerText)){
+                    message+= "处理内容不能为空\n";
+                }else{
+                    ypqbmEntity.setRwnr(handlerText);
+                }
+                if("".equals(message)){
+                    //如果在list的item已经存在数据，则表示是修改，将之前的数据去掉，重新加载
+                    if(ypqbmList!=null && ypqbmList.size()>0){
+                        if(ypqbmList.get(tempPosition)!=null &&  isDetail){
+                            ypqbmList.remove(tempPosition);
+                        }
+                    }
+                    ypqbmList.add(ypqbmEntity);
+                    if(ypqbmList!=null && ypqbmList.size()>0){
+                        adapter.notifyDataSetChanged(ypqbmList);
+                    }
+                }else{
+                    Toast.makeText(DispatchActivity.this,message,Toast.LENGTH_SHORT).show();
                 }
             }
         });
