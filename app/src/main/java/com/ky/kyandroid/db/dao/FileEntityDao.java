@@ -87,7 +87,7 @@ public class FileEntityDao extends BaseDao {
     public boolean  deleteEventEntryBySjId(String sjId) {
         boolean flag =false;
         try {
-            db.delete(FileEntity.class, WhereBuilder.b("sjId","==",sjId ));
+            db.delete(FileEntity.class, WhereBuilder.b("sjId","=",sjId ));
             flag=true;
         } catch (DbException e) {
             e.printStackTrace();
@@ -103,7 +103,7 @@ public class FileEntityDao extends BaseDao {
     public boolean updateFileEntity(FileEntity entity){
         boolean flag =false;
         try {
-            db.update(entity, String.valueOf(WhereBuilder.b("uuid","==", entity.getUuid())),"fileUrl","fileMs");
+            db.update(entity, String.valueOf(WhereBuilder.b("uuid","==", entity.getUuid())),"fileUrl","fileMs","fileName");
             flag = true;
         } catch (DbException e) {
             e.printStackTrace();

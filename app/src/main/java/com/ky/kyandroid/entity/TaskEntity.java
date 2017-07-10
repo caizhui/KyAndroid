@@ -74,6 +74,8 @@ public class TaskEntity implements Serializable{
     private String gm;
     private String fsdd;
     private String sjly;
+    private String jsr;
+    private  String jssj;
     private List<TFtZtlzEntity> anlist;
 
     public String getRwnr() {
@@ -322,5 +324,21 @@ public class TaskEntity implements Serializable{
 
     public void setAnlist(List<TFtZtlzEntity> anlist) {
         this.anlist = anlist;
+    }
+
+    public String getJsr() {
+        return jsr;
+    }
+
+    public void setJsr(String jsr) {
+        this.jsr = jsr;
+    }
+
+    public String getJssj() {
+        return jssj;
+    }
+
+    public void setJssj(String jssj) {
+        this.jssj = jssj;
     }
 }

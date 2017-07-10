@@ -208,7 +208,6 @@ public class EventEntryAdd_Attachment extends Fragment {
         return view;
     }
 
-
     @OnItemLongClick(R.id.image_list)
     public boolean OnItemLongClick(final int position){
         final FileEntity fileEntity = (FileEntity) adapter.getItem(position);

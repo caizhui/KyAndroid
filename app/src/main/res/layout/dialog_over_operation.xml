@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginTop="5dp"
+            android:padding="10dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="接收人:"/>
+
+            <TextView
+                android:id="@+id/jsr_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="5dp"
+            android:padding="10dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="接收时间:"/>
+
+            <TextView
+                android:id="@+id/jssj_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"/>
+            </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp"
+        android:padding="10dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="处理人:"/>
+
+        <EditText
+            android:id="@+id/clr_edit"
+            android:layout_width="match_parent"
+            android:background="#ECECEC"
+            android:layout_height="40dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/radioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:layout_marginTop="12dp"
+        android:orientation="horizontal">
+
+
+        <CheckBox
+            android:id="@+id/checkbox01"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="已平息"/>
+
+        <CheckBox
+            android:id="@+id/checkbox02"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="已完成"/>
+
+        <CheckBox
+            android:id="@+id/checkbox03"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="已立案侦查"/>
+    </LinearLayout>
+    
+    <EditText
+        android:id="@+id/czyy_edt"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:gravity="start"
+        android:background="#ECECEC"/>
+</LinearLayout>

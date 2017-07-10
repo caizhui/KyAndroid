@@ -1,7 +1,6 @@
 package com.ky.kyandroid.activity.task;
 
 import android.annotation.SuppressLint;
-import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,18 +17,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.Button;
-import android.widget.DatePicker;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ky.kyandroid.Constants;
 import com.ky.kyandroid.R;
-import com.ky.kyandroid.activity.dispatch.DepartmentHandleActivity;
 import com.ky.kyandroid.adapter.TaskEntityListAdapter;
 import com.ky.kyandroid.bean.AckMessage;
 import com.ky.kyandroid.bean.NetWorkConnection;
@@ -46,10 +46,7 @@ import com.ky.kyandroid.util.SwipeRefreshUtil;
 import com.solidfire.gson.JsonObject;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,8 +59,6 @@ import butterknife.OnItemLongClick;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
-
-import static com.ky.kyandroid.R.layout.dialog_streethandle_item;
 
 /**
  * Created by Caizhui on 2017-6-9.
@@ -232,6 +227,27 @@ public class TaskListActivity extends AppCompatActivity {
      */
     private SweetAlertDialogUtil sweetAlertDialogUtil;
 
+    RadioGroup radioGroup;
+    RadioButton radioButton01;
+    RadioButton radioButton02;
+    RadioButton radioButton03;
+
+    /**
+     * 操作原因输入框
+     */
+    private EditText czyyEdt;
+
+    private TextView jsr_edit;
+
+    private TextView jssj_edit;
+
+    private EditText clr_edit;
+
+    private CheckBox checkBox01;
+
+    private CheckBox checkBox02;
+
+    private CheckBox checkBox03;
 
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
@@ -531,15 +547,12 @@ public class TaskListActivity extends AppCompatActivity {
                 public void onClick(DialogInterface dialogInterface, int pos) {
                     //根据点击的item项获取该item对应的实体，
                     TFtZtlzEntity tFtZtlzEntity = tFtZtlzEntities[pos];
-                    if ("8.2".equals(tFtZtlzEntity.getNextzt())) {
-                        //当7街道自行处理的时候，弹出自定义对话框
-                        Intent intent = new Intent(TaskListActivity.this, DepartmentHandleActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("taskEntity", taskEntity);
-                        bundle.putSerializable("tFtZtlzEntity", tFtZtlzEntity);
-                        intent.putExtras(bundle);
-                        startActivity(intent);
-                        //streetHandleOperation(tFtZtlzEntity, dialog_streethandle_operation, tFtZtlzEntity.getActionname());
+                    if ("8.1".equals(tFtZtlzEntity.getNextzt())) {
+                        //当8.1申请的时候，弹出自定义对话框
+                        yanQiOperation(tFtZtlzEntity, R.layout.dialog_return_operation, tFtZtlzEntity.getActionname(),Constants.SERVICE_EDIT_YANQI );
+                    }else if ("8.2".equals(tFtZtlzEntity.getNextzt())) {
+                        //当8.2办结处理的时候，弹出自定义对话框
+                        banJiOperation(tFtZtlzEntity, R.layout.dialog_over_operation, tFtZtlzEntity.getActionname(),Constants.SERVICE_EDIT_BANJI );
                     }else{
                         //其他的弹出确定对话框
                         OperatingProcess(tFtZtlzEntity,Constants.SERVICE_QUERY_TASKRECV);
@@ -553,46 +566,93 @@ public class TaskListActivity extends AppCompatActivity {
 
 
     /**
-     * 街道自行处理操作
+     * 申请延期操作
      */
-    public void streetHandleOperation(final TFtZtlzEntity tFtZtlzEntity, int layout, String title) {
+    public void yanQiOperation(final TFtZtlzEntity tFtZtlzEntity, int layout, String title,String url) {
         final View mView = LayoutInflater.from(TaskListActivity.this).inflate(layout, null);
-        //处理时间
-        happenTimeEdt = ButterKnife.findById(mView, R.id.happen_time_edt);
-        //处理原因
-        reasonEdt = ButterKnife.findById(mView, R.id.return_edt);
-        fileAddBtn = ButterKnife.findById(mView, R.id.add_btn);
-        //获取需要添加控件的L
-        final LinearLayout linearlayout_dispatch = (LinearLayout) mView.findViewById(R.id.linearlayout_dispatch);
-        fileAddBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                linearlayout_dispatch.setOrientation(LinearLayout.VERTICAL);
-                //获取自定义文件
-                View view2 = LayoutInflater.from(TaskListActivity.this).inflate(dialog_streethandle_item, null);
-                linearlayout_dispatch.addView(view2);
-                fileName = (TextView) view2.findViewById(R.id.file_name);
-            }
-        });
-        happenTimeEdt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Calendar c = Calendar.getInstance();
-                new DatePickerDialog(TaskListActivity.this, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        Date date = new Date(System.currentTimeMillis());
-                        SimpleDateFormat dateFormat = new SimpleDateFormat(" HH:mm:ss");
-                        String time = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
-                        time += dateFormat.format(date);
-                        happenTimeEdt.setText(time);
+        //获取弹出框的属性
+        czyyEdt = ButterKnife.findById(mView, R.id.return_edt);
+        radioGroup = ButterKnife.findById(mView, R.id.radioGroup);
+        radioButton01 = ButterKnife.findById(mView, R.id.radioButton01);
+        radioButton02 = ButterKnife.findById(mView, R.id.radioButton02);
+        radioButton03 = ButterKnife.findById(mView, R.id.radioButton03);
+        //申请延期原因
+        if("8.1".equals(tFtZtlzEntity.getNextzt())){
+            radioButton03.setVisibility(View.VISIBLE);
+            radioButton01.setText("人手不足");
+            radioButton02.setText("权限不足");
+            radioButton03.setText("脱离可控范围");
+        }
+        if(radioGroup!=null){
+            radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(RadioGroup group, int checkedId) {
+                    if (radioButton01.getId() == checkedId) {
+                        czyyEdt.setText(radioButton01.getText().toString());
+                    } else if (radioButton02.getId() == checkedId) {
+                        czyyEdt.setText(radioButton02.getText().toString());
+                    } else if (radioButton03.getId() == checkedId) {
+                        czyyEdt.setText(radioButton03.getText().toString());
                     }
-                }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
+                }
+            });
+        }
+        //将修改状态的数据上传到后台
+        sendOperation(mView,tFtZtlzEntity,title,url);
+    }
+
+
+    /**
+     * 申请办结操作
+     */
+    public void banJiOperation(final TFtZtlzEntity tFtZtlzEntity, int layout, String title,String url) {
+        final View mView = LayoutInflater.from(TaskListActivity.this).inflate(layout, null);
+        final String[] czyy = {""};
+        //获取弹出框的属性
+        jsr_edit = ButterKnife.findById(mView, R.id.jsr_edit);
+        jssj_edit = ButterKnife.findById(mView, R.id.jssj_edit);
+        clr_edit = ButterKnife.findById(mView, R.id.clr_edit);
+        checkBox01 = ButterKnife.findById(mView, R.id.checkbox01);
+        checkBox02 = ButterKnife.findById(mView, R.id.checkbox02);
+        checkBox03 = ButterKnife.findById(mView, R.id.checkbox03);
+        czyyEdt = ButterKnife.findById(mView, R.id.czyy_edt);
+        jsr_edit.setText(taskEntity.getJsr());
+        jssj_edit.setText(taskEntity.getJssj());
+        checkBox01.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (checkBox01.isChecked()) {
+                    czyy[0] +=checkBox01.getText().toString();
+                }else{
+                    czyy[0]=czyy[0].replace(checkBox01.getText().toString(),"");
+                }
+                czyyEdt.setText(czyy[0]);
             }
         });
-
+        checkBox02.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (checkBox02.isChecked()) {
+                    czyy[0] +=checkBox02.getText().toString();
+                }else{
+                    czyy[0]=czyy[0].replace(checkBox02.getText().toString(),"");
+                }
+                czyyEdt.setText(czyy[0]);
+            }
+        });
+        checkBox03.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (checkBox03.isChecked()) {
+                    czyy[0] +=checkBox03.getText().toString();
+                }else{
+                    czyy[0]= czyy[0].replace(checkBox03.getText().toString(),"");
+                }
+                czyyEdt.setText(czyy[0]);
+            }
+        });
         //将修改状态的数据上传到后台
-        sendOperation(mView,tFtZtlzEntity,title);
+        sendOperation(mView,tFtZtlzEntity,title,url);
     }
 
 
@@ -661,12 +721,12 @@ public class TaskListActivity extends AppCompatActivity {
     /**
      * 将修改状态的数据上传到后台
      */
-    public void sendOperation(final View mView, final TFtZtlzEntity tFtZtlzEntity, String title) {
+    public void sendOperation(final View mView, final TFtZtlzEntity tFtZtlzEntity, String title, final String url) {
         final Message msg = new Message();
         //初始状态为6，表示状态修改不成功
         msg.what = 6;
         AlertDialog.Builder builder = new AlertDialog.Builder(TaskListActivity.this);
-        builder.setTitle(title + "原因");
+        builder.setTitle(title);
         builder.setView(mView);
         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
@@ -676,20 +736,18 @@ public class TaskListActivity extends AppCompatActivity {
                     Map<String, String> paramsMap = new HashMap<String, String>();
                     paramsMap.put("userId", userId);
                     paramsMap.put("sjId", taskEntity.getId());
-                    paramsMap.put("zt", taskEntity.getZt());
-                    paramsMap.put("nextZt", tFtZtlzEntity.getNextzt());
-                    paramsMap.put("clId", taskEntity.getClid());
-                    if(happenTimeEdt!=null){
-                        paramsMap.put("lrclsj", happenTimeEdt.getText().toString());
+                    paramsMap.put("clbmId", taskEntity.getClid());
+                    if(clr_edit!=null){
+                        paramsMap.put("clr", clr_edit.getText().toString());
                     }
-                    if(reasonEdt!=null){
-                        paramsMap.put("lrclqk", reasonEdt.getText().toString());
-                    }
+                    paramsMap.put("czyy", czyyEdt.getText().toString());
+
                     // 发送请求
-                    OkHttpUtil.sendRequest(Constants.SERVICE_TASK_HADLE,paramsMap, new Callback() {
+                    OkHttpUtil.sendRequest(url,paramsMap, new Callback() {
 
                         @Override
                         public void onFailure(Call call, IOException e) {
+                            msg.what=6;
                             mHandler.sendEmptyMessage(0);
                         }
 
@@ -708,13 +766,13 @@ public class TaskListActivity extends AppCompatActivity {
                     msg.obj = "WIFI网络不可用,请检查网络连接情况";
                     mHandler.sendMessage(msg);
                 }
-                }
-            });
+            }
+        });
         builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                }
-            });
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+            }
+        });
         builder.create().show();
     }
 
