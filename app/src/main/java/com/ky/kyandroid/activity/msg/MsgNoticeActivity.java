@@ -369,7 +369,7 @@ public class MsgNoticeActivity extends AppCompatActivity implements View.OnClick
                         // 判断滚动到底部
                         if (view.getLastVisiblePosition() == (view.getCount() - 1)) {
                             list_view_foot.setVisibility(View.VISIBLE);
-                            if (pageBean.getTotal() < pageBean.getPageSize()) {
+                            if (pageBean.getTotalCount() < pageBean.getPageSize()) {
                                 initListFoot("没有更多内容了", View.GONE);
                             } else {
                                 initListFoot("正在加载,请稍后...", View.VISIBLE);
@@ -409,7 +409,7 @@ public class MsgNoticeActivity extends AppCompatActivity implements View.OnClick
     /**
      * 初始化页脚
      */
-    void initListFoot(String message, int display) {
+    private void initListFoot(String message, int display) {
         ProgressBar foot_bar = (ProgressBar) list_view_foot.findViewById(R.id.progressBar);
         TextView foot_title = (TextView) list_view_foot.findViewById(R.id.foot_title);
         if (StringUtils.isNotBlank(message)) {
@@ -504,7 +504,7 @@ public class MsgNoticeActivity extends AppCompatActivity implements View.OnClick
     /**
      * 加载数据
      */
-    void notifyListViewData(boolean isAdd) {
+    private void notifyListViewData(boolean isAdd) {
         List<MsgNoticeEntity> entityList = (List<MsgNoticeEntity>) dataList;
         // 房屋栋
         if (isAdd) {

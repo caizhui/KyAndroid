@@ -64,8 +64,10 @@ public class ListViewTask extends ListView {
 				Log.e(TAG, "postion=" + position + ",x=" + x + ",y=" + y);
 				if (position != INVALID_POSITION) {
 					MsgNoticeEntity task = (MsgNoticeEntity) getItemAtPosition(position);
-					mFocusedItemView = task.slideView;
-					Log.e(TAG, "FocusedItemView=" + mFocusedItemView);
+					if(task != null){
+						mFocusedItemView = task.slideView;
+						Log.e(TAG, "FocusedItemView=" + mFocusedItemView);
+					}
 				}
 			}
 		}
