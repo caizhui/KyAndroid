@@ -725,9 +725,9 @@ public class EventEntryListActivity extends AppCompatActivity {
         if("7,8".equals(tFtZtlzEntity.getNextzt())){
             radioButton03.setVisibility(View.VISIBLE);
             radioGroup.setOrientation(LinearLayout.VERTICAL);
-            radioButton01.setText("不通过原因1");
-            radioButton02.setText("不通过原因2");
-            radioButton03.setText("不通过原因3");
+            radioButton01.setText("街道回访核查不通过原因1");
+            radioButton02.setText("街道回访核查不通过原因2");
+            radioButton03.setText("街道回访核查不通过原因3");
 
         }
         //回放核查通过

@@ -768,31 +768,47 @@ public class TaskListActivity extends AppCompatActivity {
                     paramsMap.put("userId", userId);
                     paramsMap.put("sjId", taskEntity.getId());
                     paramsMap.put("clbmId", taskEntity.getClid());
+                    String message="";
                     if(clr_edit!=null){
-                        paramsMap.put("clr", clr_edit.getText().toString());
+                        if("".equals(clr_edit.getText().toString())){
+                            message+="处理人不能为空\n";
+                        }else{
+                            paramsMap.put("clr", clr_edit.getText().toString());
+                        }
                     }
-                    paramsMap.put("czyy", czyyEdt.getText().toString());
-
-                    // 发送请求
-                    OkHttpUtil.sendRequest(url,paramsMap, new Callback() {
-
-                        @Override
-                        public void onFailure(Call call, IOException e) {
-                            msg.what=6;
-                            mHandler.sendEmptyMessage(0);
+                    if(czyyEdt!=null){
+                        if("".equals(czyyEdt.getText().toString())){
+                            message+="处理原因不能为空\n";
+                        }else{
+                            paramsMap.put("czyy", czyyEdt.getText().toString());
                         }
+                    }
+                    if("".equals(message)){
+                        // 发送请求
+                        OkHttpUtil.sendRequest(url,paramsMap, new Callback() {
 
-                        @Override
-                        public void onResponse(Call call, Response response) throws IOException {
-                            if (response.isSuccessful()) {
-                                msg.what = 5;
-                                msg.obj = response.body().string();
-                            } else {
-                                msg.obj = "网络异常,请确认网络情况";
+                            @Override
+                            public void onFailure(Call call, IOException e) {
+                                msg.what=6;
+                                mHandler.sendEmptyMessage(0);
                             }
-                            mHandler.sendMessage(msg);
-                        }
-                    });
+
+                            @Override
+                            public void onResponse(Call call, Response response) throws IOException {
+                                if (response.isSuccessful()) {
+                                    msg.what = 5;
+                                    msg.obj = response.body().string();
+                                } else {
+                                    msg.obj = "网络异常,请确认网络情况";
+                                }
+                                mHandler.sendMessage(msg);
+                            }
+                        });
+                    }else{
+                        Toast.makeText(TaskListActivity.this,message,Toast.LENGTH_SHORT).show();
+                    }
+
+
                 } else {
                     msg.obj = "WIFI网络不可用,请检查网络连接情况";
                     mHandler.sendMessage(msg);

@@ -361,7 +361,7 @@ public class StreetHandleActivity extends AppCompatActivity {
                     }
                 }
                 if(returnEdt!=null){
-                    if("".equals(happenTimeEdt.getText().toString())){
+                    if("".equals(returnEdt.getText().toString())){
                         message+="处理情况不能为空\n";
                     }else{
                         paramsMap.put("lrclqk", returnEdt.getText().toString());
