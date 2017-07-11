@@ -155,6 +155,7 @@ public class EventEntryDetail_Attachment extends Fragment {
                     if(sjfjList.get(i).getUrl()!=null){
                         fileEntity.setFileUrl(sjfjList.get(i).getUrl());
                         fileEntity.setFileMs(sjfjList.get(i).getWjms());
+                        fileEntity.setFjlx(sjfjList.get(i).getFjlx());
                     }
                     fileEntityList.add(fileEntity);
                     //加载完一次就把文件实体清空一次

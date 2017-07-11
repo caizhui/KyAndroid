@@ -253,68 +253,89 @@ public class EventEntryAdd_Attachment extends Fragment {
      * 显示图片或者创建文件路径
      */
     public void appendImage() {
-        //如果文件夹不存在，表示第一次进来，需要创建文件夹，否则表示已经进来过，我们需要获取图片显示
-        if (!fileRoute.exists()) {
-            fileRoute.mkdirs();
-        } else {
-            fileEntityDao = new FileEntityDao();
-            //当切换页签的时候不查询数据库，只有保存草稿之后才查询数据库
-            if(fileEntityList!=null && fileEntityList.size()==0){
-                fileEntityList = fileEntityDao.queryList(uuid);
+        if (flag) {
+            if (sjfjList != null && sjfjList.size() > 0) {
+                //每次进来都给fileEntityList重新初始化一次
+                fileEntityList =new ArrayList<FileEntity>();
+                for(int i=0;i<sjfjList.size();i++){
+                    fileEntity = new FileEntity();
+                    if(sjfjList.get(i).getUrl()!=null){
+                        fileEntity.setFileUrl(sjfjList.get(i).getUrl());
+                        fileEntity.setFileMs(sjfjList.get(i).getWjms());
+                    }
+                    fileEntityList.add(fileEntity);
+                    //加载完一次就把文件实体清空一次
+                }
+                if (fileEntityList != null && fileEntityList.size() > 0) {
+                    adapter.notifyDataSetChanged(fileEntityList);
+                }
+
             }
-            if (uuid != null && !"".equals(uuid)) {
-                //判断是否切换页签，如果切换页签，我们的fileEntityList = fileEntityDao.queryList();查询为null，所以我们需要在后面将fileEntity加入到我们的fileEntityList中
-                boolean isTap= false;
-                File files[] = fileRoute.listFiles();
-                if (files != null && files.length > 0) {
-                    FileInputStream fis = null;
-                    try {
-                        for(int i=0;i<files.length;i++){
-                            fis = new FileInputStream(files[i]);
-                            tupbitmap = BitmapFactory.decodeStream(fis);
-                            //如果fileEntityList有值，则表示fileEntity是有对象的，否则据创建对象
-                            if(fileEntityList!=null && fileEntityList.size()>i){
-                                fileEntity = fileEntityList.get(i);
-                            }else{
-                                if(fileEntity== null){
-                                    fileEntity = new FileEntity();
+        }else{
+            //如果文件夹不存在，表示第一次进来，需要创建文件夹，否则表示已经进来过，我们需要获取图片显示
+            if (!fileRoute.exists()) {
+                fileRoute.mkdirs();
+            } else {
+                fileEntityDao = new FileEntityDao();
+                //当切换页签的时候不查询数据库，只有保存草稿之后才查询数据库
+                if(fileEntityList!=null && fileEntityList.size()==0){
+                    fileEntityList = fileEntityDao.queryList(uuid);
+                }
+                if (uuid != null && !"".equals(uuid)) {
+                    //判断是否切换页签，如果切换页签，我们的fileEntityList = fileEntityDao.queryList();查询为null，所以我们需要在后面将fileEntity加入到我们的fileEntityList中
+                    boolean isTap= false;
+                    File files[] = fileRoute.listFiles();
+                    if (files != null && files.length > 0) {
+                        FileInputStream fis = null;
+                        try {
+                            for(int i=0;i<files.length;i++){
+                                fis = new FileInputStream(files[i]);
+                                tupbitmap = BitmapFactory.decodeStream(fis);
+                                //如果fileEntityList有值，则表示fileEntity是有对象的，否则据创建对象
+                                if(fileEntityList!=null && fileEntityList.size()>i){
+                                    fileEntity = fileEntityList.get(i);
+                                }else{
+                                    if(fileEntity== null){
+                                        fileEntity = new FileEntity();
+                                    }
+                                    isTap= true;
                                 }
-                                isTap= true;
-                            }
-                            if(fileEntityList==null){
-                                fileEntityList =new ArrayList<FileEntity>();
-                            }
-                            if(tupbitmap!=null){
-                                //这里循环遍历存放文件信息的List，如果在本地获取的文件名跟我们从数据库中获取的一致，则表示是同一条记录
-                                if(fileEntityList!=null &&fileEntityList.size()>i){
-                                    for(int j=0;j<fileEntityList.size();j++){
-                                        String fileName =files[i].getName();
-                                        if(fileEntityList.get(j).getFileName()!=null && fileEntityList.get(j).getFileName().equals(fileName)){
-                                            fileEntity.setBitmap(tupbitmap);
-                                            fileEntity.setFileMs(fileEntityList.get(j).getFileMs());
-                                        }else{
-                                            fileEntity.setBitmap(tupbitmap);
+                                if(fileEntityList==null){
+                                    fileEntityList =new ArrayList<FileEntity>();
+                                }
+                                if(tupbitmap!=null){
+                                    //这里循环遍历存放文件信息的List，如果在本地获取的文件名跟我们从数据库中获取的一致，则表示是同一条记录
+                                    if(fileEntityList!=null &&fileEntityList.size()>i){
+                                        for(int j=0;j<fileEntityList.size();j++){
+                                            String fileName =files[i].getName();
+                                            if(fileEntityList.get(j).getFileName()!=null && fileEntityList.get(j).getFileName().equals(fileName)){
+                                                fileEntity.setBitmap(tupbitmap);
+                                                fileEntity.setFileMs(fileEntityList.get(j).getFileMs());
+                                            }else{
+                                                fileEntity.setBitmap(tupbitmap);
+                                            }
                                         }
                                     }
+                                    if(isTap){
+                                        fileEntity.setBitmap(tupbitmap);
+                                        fileEntityList.add(fileEntity);
+                                    }
+                                    // fileEntity.setFileMs(fileEntityList.get(i).getFileMs());
                                 }
-                                if(isTap){
-                                    fileEntity.setBitmap(tupbitmap);
-                                    fileEntityList.add(fileEntity);
+
+                                if (fileEntityList != null && fileEntityList.size() > 0) {
+                                    adapter.notifyDataSetChanged(fileEntityList);
                                 }
-                                // fileEntity.setFileMs(fileEntityList.get(i).getFileMs());
                             }
 
-                            if (fileEntityList != null && fileEntityList.size() > 0) {
-                                adapter.notifyDataSetChanged(fileEntityList);
-                            }
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
                         }
-
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
                     }
                 }
             }
         }
+
     }
 
     @OnClick({R.id.add_attachment,R.id.event_log,R.id.event_relevance})
@@ -520,6 +541,14 @@ public class EventEntryAdd_Attachment extends Fragment {
         return photoName;
     }
 
+
+    /**
+     * 当查看已经上报事件详情时初始化数据,显示文件
+     */
+    public void setTFtSjFjEntityList(List<TFtSjFjEntity> sjfjList, boolean flag) {
+        this.sjfjList = sjfjList;
+        this.flag = flag;
+    }
 
     /**
      * 当查看已经上报事件详情时初始化数据,显示文件

@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.ky.kyandroid.AppContext;
 import com.ky.kyandroid.Constants;
@@ -78,6 +79,12 @@ public class EventImageListAdapter extends BaseAdapter {
         }
         if(isDetail){
             holder.imageMs.setEnabled(false);
+            holder.fjlx_text.setVisibility(View.VISIBLE);
+            if("1".equals(list.get(position).getFjlx())){
+                holder.fjlx_text.setText("事件上传附件");
+            }else if("2".equals(list.get(position).getFjlx())){
+                holder.fjlx_text.setText("事件处理附件");
+            }
         }
         holder.imageMs.setText(list.get(position).getFileMs());
         holder.imageMs.addTextChangedListener(new TextWatcher() {
@@ -110,6 +117,9 @@ public class EventImageListAdapter extends BaseAdapter {
 
         @BindView(R.id.image_ms)
         EditText imageMs;
+
+       @BindView(R.id.fjlx_text)
+       TextView fjlx_text;
 
         ViewHolder(View view) {
             ButterKnife.bind(this, view);

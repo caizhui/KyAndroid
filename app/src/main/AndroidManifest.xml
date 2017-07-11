@@ -135,6 +135,13 @@
             android:launchMode="singleTask"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
 
+
+        <!--区任务办理列表-->
+        <activity
+            android:name=".activity.dispatch.QuHandleActivity"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
+
         <!--我的任务新增-->
         <activity
             android:name=".activity.task.TaskAddActivity"

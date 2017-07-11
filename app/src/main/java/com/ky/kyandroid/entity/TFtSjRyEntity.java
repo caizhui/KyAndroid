@@ -13,8 +13,10 @@ import java.util.Date;
 @Table(name = "t_tftsjry")
 public class TFtSjRyEntity {
 
+	@Column(name = "id")
+	private String  id;
 
-	@Column(name = "id",isId = true,autoGen = true)
+	@Column(name = "uuid",isId = true,autoGen = true)
 	private int uuid;
 	/**
 	 * 外键
@@ -452,5 +454,13 @@ public class TFtSjRyEntity {
 
 	public void setCphm(String cphm) {
 		this.cphm = cphm;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 }

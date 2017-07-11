@@ -489,4 +489,37 @@ public class EventEntryAdd_Person extends Fragment {
         this.flag = flag;
     }
 
+    /**
+     * 当查看已经上报事件详情时初始化数据
+     */
+    public void setTFtSjRyEntityList(List<TFtSjRyEntity> sjryList) {
+        this.sjryList = sjryList;
+        if (sjryList != null && sjryList.size() > 0) {
+            //当状态为3退回状态时，需要将人员信息存到数据库。
+            if(tFtSjEntity!=null && "3".equals(tFtSjEntity.getZt())){
+                for(int i=0;i<sjryList.size();i++){
+                    TFtSjRyEntity tFtSjRyEntity  = sjryList.get(i);
+                    if(tFtSjRyEntityDao!=null){
+                        //判断是否已经将数据加载到本地数据库
+                        List<TFtSjRyEntity> tFtSjRyEntities = tFtSjRyEntityDao.queryListBId(tFtSjRyEntity.getId());
+                        if(tFtSjRyEntities!=null && tFtSjRyEntities.size()>0){
+                            tFtSjRyEntityDao.updateTFtSjRyEntity(tFtSjRyEntity);
+                        }else{
+                            tFtSjRyEntityDao.saveTFtSjRyEntity(tFtSjRyEntity);
+                        }
+
+                    }
+                }
+            }
+            for(int i=0;i<sjryList.size();i++){
+
+            }
+            adapter = new EventPersonListAdapter(sjryList, EventEntryAdd_Person.this.getActivity());
+            if (personList != null) {
+                personList.setAdapter(adapter);
+            }
+
+        }
+    }
+
 }

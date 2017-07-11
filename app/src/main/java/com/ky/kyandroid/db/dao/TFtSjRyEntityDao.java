@@ -60,6 +60,25 @@ public class TFtSjRyEntityDao extends BaseDao {
         return null;
     }
 
+
+    /**
+     * 查找列表
+     *
+     * @param
+     * @return
+     */
+    public List<TFtSjRyEntity> queryListBId(String id) {
+        try {
+            List<TFtSjRyEntity> eventEntryList = db.selector(TFtSjRyEntity.class).where("id","=",id).findAll();
+            if (eventEntryList != null && eventEntryList.size() > 0) {
+                return eventEntryList;
+            }
+        } catch (DbException e) {
+            Log.i(TAG, "信息查询异常-queryList >> " + e.getMessage());
+        }
+        return null;
+    }
+
     public boolean deleteEventEntryByuuid(String sjid) {
         boolean flag =false;
         try {
@@ -71,10 +90,10 @@ public class TFtSjRyEntityDao extends BaseDao {
         return flag;
     }
 
-    public boolean deleteEventEntry(int id) {
+    public boolean deleteEventEntry(int uuid) {
         boolean flag =false;
         try {
-            db.delete(TFtSjRyEntity.class, WhereBuilder.b("id","=", id));
+            db.delete(TFtSjRyEntity.class, WhereBuilder.b("uuid","=", uuid));
             flag=true;
         } catch (DbException e) {
             e.printStackTrace();
@@ -90,7 +109,7 @@ public class TFtSjRyEntityDao extends BaseDao {
     public boolean updateTFtSjRyEntity(TFtSjRyEntity entity){
         boolean flag =false;
         try {
-            db.update(entity, String.valueOf(WhereBuilder.b("id","=", entity.getUuid())),"sjid","xm","xb","mz","zjlx",
+            db.update(entity, String.valueOf(WhereBuilder.b("uuid","=", entity.getUuid())),"id","sjid","xm","xb","mz","zjlx",
                     "zjhm","email","gddh","sjid","hjd","sfdy","gzdw","cphm","yddh",
                     "xzdz","lrr","lrbm","lrsj","comments","cfsjID");
             flag = true;
