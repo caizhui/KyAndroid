@@ -75,7 +75,7 @@ import okhttp3.Response;
 
 /**
  * Created by Caizhui on 2017/7/1.
- * 街道自行处理
+ * 区自行处理
  */
 
 public class QuHandleActivity extends AppCompatActivity {
