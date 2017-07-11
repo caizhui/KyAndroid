@@ -342,6 +342,7 @@ public class QuHandleActivity extends AppCompatActivity {
                 paramsMap.put("userId", userId);
                 paramsMap.put("sjId", taskEntity.getId());
                 paramsMap.put("action", tFtZtlzEntity.getAction());
+                paramsMap.put("CLID", taskEntity.getClid());
                 paramsMap.put("actionName", tFtZtlzEntity.getActionname());
                 paramsMap.put("zt", taskEntity.getZt());
                 paramsMap.put("nextZt", tFtZtlzEntity.getNextzt());
