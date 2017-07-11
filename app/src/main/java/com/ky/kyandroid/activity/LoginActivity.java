@@ -75,6 +75,16 @@ public class LoginActivity extends AppCompatActivity {
     public static final String USER_NAME = "userName";
 
     /**
+     * 所属orgName
+     */
+    public static final String ORG_NAME = "orgName";
+
+    /**
+     * 街道代码
+     */
+    public static final String ORG_CODE = "ORG_CODE";
+
+    /**
      * 用户职能名称
      */
     public static final String NAME = "name";
@@ -304,6 +314,7 @@ public class LoginActivity extends AppCompatActivity {
             if (setUserMessage(ackMsg)) {
                 Log.i(TAG, "设置用户信息成功...");
                 Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
+                // 静态数据加载
                 startService(new Intent(this, SaveBDdescService.class));
                 initDispatchMain();
             } else {
@@ -331,6 +342,8 @@ public class LoginActivity extends AppCompatActivity {
                     SpUtil.setBooleanSharedPerference(sp, IS_LOGIN, true);
                     SpUtil.setStringSharedPerference(sp, USER_ID, user.getId());
                     SpUtil.setStringSharedPerference(sp, USER_NAME, user.getUserName());
+                    SpUtil.setStringSharedPerference(sp, ORG_NAME, user.getOrgName());
+                    SpUtil.setStringSharedPerference(sp, ORG_CODE, user.getOrgCode());
                     SpUtil.setStringSharedPerference(sp, NAME, user.getName());
                     SpUtil.setStringSharedPerference(sp, USER_SFZHM, user.getGmsfhm());
                     return true;

@@ -36,8 +36,11 @@ public class Constants {
 	//任务申请办结状态接口
 	public final static String SERVICE_EDIT_BANJI= "ft/kyAndroid/taskBanj.action";
 
-    //保存字典项接口
+    //获取字典项接口
     public final static String SERVICE_QUERY_DESC= "ft/kyAndroid/getDictAll.action";
+
+    //获取区域列表接口
+    public final static String SERVICE_QUERY_QH= "ft/kyAndroid/ftQhList.action";
 
 	//查询我的任务接口
 	public final static String SERVICE_QUERY_TASK= "ft/kyAndroid/myTasks.action";

@@ -19,6 +19,11 @@ public class TFtSjRyEntityDao extends BaseDao {
     /** 标识 */
     private static final String TAG = "TFtSjRyEntityDao";
 
+    @Override
+    public boolean ifExist() {
+        return false;
+    }
+
     /**
      * 保存系统字典项
      *

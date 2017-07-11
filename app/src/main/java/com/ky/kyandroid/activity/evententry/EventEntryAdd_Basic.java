@@ -3,6 +3,7 @@ package com.ky.kyandroid.activity.evententry;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -26,11 +27,15 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.ky.kyandroid.R;
+import com.ky.kyandroid.activity.LoginActivity;
 import com.ky.kyandroid.adapter.ChildAdapter;
 import com.ky.kyandroid.adapter.GroupAdapter;
 import com.ky.kyandroid.bean.CodeValue;
 import com.ky.kyandroid.db.dao.DescEntityDao;
+import com.ky.kyandroid.db.dao.TFtQhEntityDao;
+import com.ky.kyandroid.entity.TFtQhEntity;
 import com.ky.kyandroid.entity.TFtSjEntity;
+import com.ky.kyandroid.util.SpUtil;
 import com.ky.kyandroid.util.StringUtils;
 
 import java.text.SimpleDateFormat;
@@ -191,9 +196,20 @@ public class EventEntryAdd_Basic extends Fragment {
     public String type;
 
     public TFtSjEntity tFtSjEntity;
+    /**
+     * SharedPreferences
+     */
+    private SharedPreferences sp;
 
-
+    /**
+     * 字典DAO
+     */
     public DescEntityDao descEntityDao;
+
+    /**
+     * 字典DAO
+     */
+    public TFtQhEntityDao tFtQhEntityDao;
 
     View showPupWindow = null; // 选择区域的view
 
@@ -278,6 +294,8 @@ public class EventEntryAdd_Basic extends Fragment {
         View view = inflater.inflate(R.layout.evententeradd_basic_fragment, container, false);
         ButterKnife.bind(this, view);
         descEntityDao = new DescEntityDao();
+        tFtQhEntityDao = new TFtQhEntityDao();
+        sp = SpUtil.getSharePerference(getActivity());
         type = intent.getStringExtra("type");
         tFtSjEntity = (TFtSjEntity) intent.getSerializableExtra("tFtSjEntity");
         DisplayMetrics dm = new DisplayMetrics();
@@ -340,10 +358,18 @@ public class EventEntryAdd_Basic extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         scopeTextSpinner.setAdapter(adapter);//将adapter 添加到规模spinner中
 
+        // 根据用户ORG_CODE确定所属街道
+        String jddm = sp.getString(LoginActivity.ORG_CODE,"");
+        List<TFtQhEntity> qhList = tFtQhEntityDao.queryList(jddm);
         spinnerList = new ArrayList<CodeValue>();
-        spinnerList.add(new CodeValue("0", "社区1"));
-        spinnerList.add(new CodeValue("1", "社区2"));
-
+        if (qhList != null && qhList.size() > 0){
+            belongStreetEdt.setText(qhList.get(0).getJdmc());
+            for(TFtQhEntity entity : qhList){
+                if(StringUtils.isNotBlank(entity.getSqgzz())){
+                    spinnerList.add(new CodeValue(entity.getId(), entity.getSqgzz()));
+                }
+            }
+        }
 
         //将可选内容与ArrayAdapter连接起来
         adapter = new ArrayAdapter<CodeValue>(EventEntryAdd_Basic.this.getActivity(), android.R.layout.simple_spinner_item, spinnerList);
@@ -351,6 +377,7 @@ public class EventEntryAdd_Basic extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         belongCommunitySpinner.setAdapter(adapter);//将adapter 添加到所属社区spinner中
 
+        // 编辑下
         if (tFtSjEntity != null) {
             //当状态等于1的时候，表示为草稿，可以修改，其他的时候只能查看信息
             if (!"0".equals(tFtSjEntity.getZt()) && !"3".equals(tFtSjEntity.getZt())) {
@@ -484,7 +511,7 @@ public class EventEntryAdd_Basic extends Fragment {
         String involvePublicOpinionString = descEntityDao.queryCodeByName("sfsw", involvePublicOpinionSpinner.getSelectedItem().toString());
         String publicSecurityDisposalString = descEntityDao.queryCodeByName("sfsw", publicSecurityDisposalSpinner.getSelectedItem().toString());
         String belongStreetString = belongStreetEdt.getText().toString();
-        String belongCommunityString = belongCommunitySpinner.getSelectedItem().toString();
+        String belongCommunityString = ((CodeValue)belongCommunitySpinner.getSelectedItem()).getCode();
         String mainAppealsString = mainAppealsEdt.getText().toString();
         String eventSummaryString = eventSummaryEdt.getText().toString();
         String leadershipInstructionsString = leadershipInstructionsEdt.getText().toString();

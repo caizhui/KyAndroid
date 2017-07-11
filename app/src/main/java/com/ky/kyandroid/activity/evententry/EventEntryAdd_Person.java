@@ -10,9 +10,11 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -75,6 +77,11 @@ public class EventEntryAdd_Person extends Fragment {
      * 证件号码
      */
     EditText personIdcardEdt;
+
+    /**
+     * 证件类型号码层
+     */
+    LinearLayout layout_idcard;
     /**
      * 户籍地
      */
@@ -253,6 +260,9 @@ public class EventEntryAdd_Person extends Fragment {
         personSexSpinner = ButterKnife.findById(dialogView, R.id.person_sex_edt);
         personNationSpinner = ButterKnife.findById(dialogView, R.id.person_nation_edt);
         personIdcardEdt = ButterKnife.findById(dialogView, R.id.person_idcard_edt);
+        layout_idcard = ButterKnife.findById(dialogView,R.id.layout_idcard);
+        // 默认情况下隐藏
+        layout_idcard.setVisibility(View.GONE);
         personIdcardTypeSpinner= ButterKnife.findById(dialogView, R.id.person_idcard_type_edt);
         personAddressEdt = ButterKnife.findById(dialogView, R.id.person_address_edt);
         personPartySpinner = ButterKnife.findById(dialogView, R.id.person_party_edt);
@@ -277,13 +287,30 @@ public class EventEntryAdd_Person extends Fragment {
 
         //设置Spinner控件的初始值
         spinnerList = new ArrayList<CodeValue>();
-        spinnerList.add(new CodeValue("0","--请选择--"));
+        spinnerList.add(new CodeValue("0","无"));
         spinnerList.addAll(descEntityDao.queryListForCV("crd"));
         //将可选内容与ArrayAdapter连接起来
         arrayAdapter = new ArrayAdapter<CodeValue>(EventEntryAdd_Person.this.getActivity(), android.R.layout.simple_spinner_item, spinnerList);
         //设置下拉列表的风格
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         personIdcardTypeSpinner.setAdapter(arrayAdapter);//将adapter 添加到证件类型spinner中
+        // 设置证件类型选择监听
+        personIdcardTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                CodeValue cv = (CodeValue)adapterView.getSelectedItem();
+                if (cv.getCode().equals("0")){
+                    layout_idcard.setVisibility(View.GONE);
+                }else{
+                    layout_idcard.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
 
 
         spinnerList = descEntityDao.queryListForCV("dy");
@@ -364,47 +391,47 @@ public class EventEntryAdd_Person extends Fragment {
         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                String message="";
+                StringBuffer message = new StringBuffer();
                 if(tFtSjRyEntity==null){
                     tFtSjRyEntity = new TFtSjRyEntity();
                 }
                 if("".equals(personNameEdt.getText().toString())){
-                    message += "姓名不能为空\n";
+                    message.append("姓名不能为空\n");
                 }else{
                     tFtSjRyEntity.setXm(personNameEdt.getText().toString());
                 }
                 tFtSjRyEntity.setXb(descEntityDao.queryCodeByName("sex", personSexSpinner.getSelectedItem().toString()));
                 tFtSjRyEntity.setMz(descEntityDao.queryCodeByName("nation", personNationSpinner.getSelectedItem().toString()));
                 tFtSjRyEntity.setZjlx(descEntityDao.queryCodeByName("crd", personIdcardTypeSpinner.getSelectedItem().toString()));
-                if(!("--请选择--".equals(personIdcardTypeSpinner.getSelectedItem().toString()))){
-                    if("".equals(personIdcardEdt.getText().toString())){
-                        message += "证件号码不能为空\n";
-                    }else if(!"".equals(personIdcardEdt.getText().toString())&&"1".equals(tFtSjRyEntity.getZjlx())
-                            &&!CommonUtil.isIDNumber(personIdcardEdt.getText().toString())){
-                        //只有当证件类型选择为居民身份证才需要验证
-                        message += "请输入正确的证件号码\n";
+                // 证件类型
+                if(!("无".equals(personIdcardTypeSpinner.getSelectedItem().toString()))){
+                    CodeValue cv = (CodeValue)personIdcardTypeSpinner.getSelectedItem();
+                    String value = personIdcardEdt.getText().toString();
+                    if(!CommonUtil.validateZjhm(cv.getCode(),value)){
+                        message.append("请输入正确的证件号码\n");
                     }else{
-                        tFtSjRyEntity.setZjhm(personIdcardEdt.getText().toString());
+                        tFtSjRyEntity.setZjhm(value);
                     }
+
                 }
                 tFtSjRyEntity.setHjd(personAddressEdt.getText().toString());
                 tFtSjRyEntity.setGzdw(personJobaddressEdt.getText().toString());
                 tFtSjRyEntity.setSfdy(descEntityDao.queryCodeByName("dy", personPartySpinner.getSelectedItem().toString()));
                 if(!"".equals(personEmailEdt.getText().toString()) && !CommonUtil.isEmail(personEmailEdt.getText().toString())) {
-                    message += "请输入正确的邮箱\n";
+                    message.append("请输入正确的邮箱\n");
                 }else{
                     tFtSjRyEntity.setEmail(personEmailEdt.getText().toString());
                 }
 
                 if(!"".equals(personTelephoneEdt.getText().toString())&& !CommonUtil.isFixedPhone(personTelephoneEdt.getText().toString())){
-                    message += "请输入正确的固定电话\n";
+                    message.append("请输入正确的固定电话\n");
                 }else{
                     tFtSjRyEntity.setGddh(personTelephoneEdt.getText().toString());
 
                 }
                 tFtSjRyEntity.setXzdz(personDomilcileEdt.getText().toString());
                 if(!"".equals(personMobileEdt.getText().toString())&& !CommonUtil.isMobileNO(personMobileEdt.getText().toString())){
-                    message += "请输入正确的移动电话\n";
+                    message.append("请输入正确的移动电话\n");
                 }else{
                     tFtSjRyEntity.setYddh(personMobileEdt.getText().toString());
 
@@ -412,19 +439,19 @@ public class EventEntryAdd_Person extends Fragment {
                 tFtSjRyEntity.setCphm(personCphEdt.getText().toString());
                 tFtSjRyEntity.setComments(personRemarkEdt.getText().toString());
                 tFtSjRyEntity.setSjId(uuid);
-                if(!"".equals(message)){
+                if(!"".equals(message.toString())){
                     temptFtSjRyEntity = new TFtSjRyEntity();
                     temptFtSjRyEntity= tFtSjRyEntity;
-                    Toast.makeText(EventEntryAdd_Person.this.getActivity(),message,Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EventEntryAdd_Person.this.getActivity(),message.toString(),Toast.LENGTH_SHORT).show();
                 }else{
                     if(tFtSjRyEntity.getUuid()!=0){
                         flag = tFtSjRyEntityDao.updateTFtSjRyEntity(tFtSjRyEntity);
                         tFtSjRyEntity = null;
-                        message="修改";
+                        message.append("修改");
                     }else{
                         flag = tFtSjRyEntityDao.saveTFtSjRyEntity(tFtSjRyEntity);
                         tFtSjRyEntity = null;
-                        message="新增";
+                        message.append("新增");
                     }
                     if(flag){
                         sjryList  = tFtSjRyEntityDao.queryListBySjId(uuid);
@@ -432,9 +459,9 @@ public class EventEntryAdd_Person extends Fragment {
                             adapter = new EventPersonListAdapter(sjryList, EventEntryAdd_Person.this.getActivity());
                             personList.setAdapter(adapter);
                         }
-                        Toast.makeText(EventEntryAdd_Person.this.getActivity(),message+"成功",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(EventEntryAdd_Person.this.getActivity(),message.append("成功").toString(),Toast.LENGTH_SHORT).show();
                     }else{
-                        Toast.makeText(EventEntryAdd_Person.this.getActivity(),message+"失败",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(EventEntryAdd_Person.this.getActivity(),message.append("失败").toString(),Toast.LENGTH_SHORT).show();
                     }
                 }
 

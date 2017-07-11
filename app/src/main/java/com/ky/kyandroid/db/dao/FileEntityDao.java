@@ -19,6 +19,12 @@ public class FileEntityDao extends BaseDao {
     /** 标识 */
     private static final String TAG = "FileEntityDao";
 
+
+    @Override
+    public boolean ifExist() {
+        return false;
+    }
+
     /**
      * 保存文件信息
      *
