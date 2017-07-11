@@ -560,11 +560,22 @@ public class TaskListActivity extends AppCompatActivity {
                         if("8,13".equals(tFtZtlzEntity.getPrevzt())){
                             OperatingProcess(tFtZtlzEntity,Constants.SERVICE_QUERY_TASKRECV);
                         }else if("8,8.1".equals(tFtZtlzEntity.getPrevzt())){
-                            yanQiOperation(tFtZtlzEntity, R.layout.dialog_return_operation, tFtZtlzEntity.getActionname(),Constants.SERVICE_EDIT_YANQI );
+                            yanQiOperation(tFtZtlzEntity, R.layout.dialog_return_operation, tFtZtlzEntity.getName(),Constants.SERVICE_EDIT_YANQI );
                         }
                     }else if ("8.2".equals(tFtZtlzEntity.getNextzt())) {
-                        //当8.2办结处理的时候，弹出自定义对话框
-                        banJiOperation(tFtZtlzEntity, R.layout.dialog_over_operation, tFtZtlzEntity.getActionname(),Constants.SERVICE_EDIT_BANJI );
+                        //街道职能版处理
+                        if("13,8,8.1".equals(tFtZtlzEntity.getPrevzt())){
+                            Intent intent = new Intent(TaskListActivity.this, QuHandleActivity.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable("taskEntity", taskEntity);
+                            bundle.putSerializable("tFtZtlzEntity", tFtZtlzEntity);
+                            intent.putExtras(bundle);
+                            startActivity(intent);
+                        }else{
+                            //当8.2申请办结处理的时候，弹出自定义对话框
+                            banJiOperation(tFtZtlzEntity, R.layout.dialog_over_operation, "申请办结",Constants.SERVICE_EDIT_BANJI );
+                        }
+
                     }else if ("13.2".equals(tFtZtlzEntity.getNextzt())) {
                         //当13.3区处理的时候，弹出自定义对话框
                         Intent intent = new Intent(TaskListActivity.this, QuHandleActivity.class);
@@ -642,9 +653,9 @@ public class TaskListActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (checkBox01.isChecked()) {
-                    czyy[0] +=checkBox01.getText().toString();
+                    czyy[0] +=checkBox01.getText().toString()+",";
                 }else{
-                    czyy[0]=czyy[0].replace(checkBox01.getText().toString(),"");
+                    czyy[0]=czyy[0].replace(checkBox01.getText().toString()+",","");
                 }
                 czyyEdt.setText(czyy[0]);
             }
@@ -653,9 +664,9 @@ public class TaskListActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (checkBox02.isChecked()) {
-                    czyy[0] +=checkBox02.getText().toString();
+                    czyy[0] +=checkBox02.getText().toString()+",";
                 }else{
-                    czyy[0]=czyy[0].replace(checkBox02.getText().toString(),"");
+                    czyy[0]=czyy[0].replace(checkBox02.getText().toString()+",","");
                 }
                 czyyEdt.setText(czyy[0]);
             }
@@ -664,9 +675,9 @@ public class TaskListActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (checkBox03.isChecked()) {
-                    czyy[0] +=checkBox03.getText().toString();
+                    czyy[0] +=checkBox03.getText().toString()+",";
                 }else{
-                    czyy[0]= czyy[0].replace(checkBox03.getText().toString(),"");
+                    czyy[0]= czyy[0].replace(checkBox03.getText().toString()+",","");
                 }
                 czyyEdt.setText(czyy[0]);
             }
@@ -757,31 +768,47 @@ public class TaskListActivity extends AppCompatActivity {
                     paramsMap.put("userId", userId);
                     paramsMap.put("sjId", taskEntity.getId());
                     paramsMap.put("clbmId", taskEntity.getClid());
+                    String message="";
                     if(clr_edit!=null){
-                        paramsMap.put("clr", clr_edit.getText().toString());
+                        if("".equals(clr_edit.getText().toString())){
+                            message+="处理人不能为空\n";
+                        }else{
+                            paramsMap.put("clr", clr_edit.getText().toString());
+                        }
                     }
-                    paramsMap.put("czyy", czyyEdt.getText().toString());
-
-                    // 发送请求
-                    OkHttpUtil.sendRequest(url,paramsMap, new Callback() {
-
-                        @Override
-                        public void onFailure(Call call, IOException e) {
-                            msg.what=6;
-                            mHandler.sendEmptyMessage(0);
+                    if(czyyEdt!=null){
+                        if("".equals(czyyEdt.getText().toString())){
+                            message+="处理原因不能为空\n";
+                        }else{
+                            paramsMap.put("czyy", czyyEdt.getText().toString());
                         }
+                    }
+                    if("".equals(message)){
+                        // 发送请求
+                        OkHttpUtil.sendRequest(url,paramsMap, new Callback() {
 
-                        @Override
-                        public void onResponse(Call call, Response response) throws IOException {
-                            if (response.isSuccessful()) {
-                                msg.what = 5;
-                                msg.obj = response.body().string();
-                            } else {
-                                msg.obj = "网络异常,请确认网络情况";
+                            @Override
+                            public void onFailure(Call call, IOException e) {
+                                msg.what=6;
+                                mHandler.sendEmptyMessage(0);
                             }
-                            mHandler.sendMessage(msg);
-                        }
-                    });
+
+                            @Override
+                            public void onResponse(Call call, Response response) throws IOException {
+                                if (response.isSuccessful()) {
+                                    msg.what = 5;
+                                    msg.obj = response.body().string();
+                                } else {
+                                    msg.obj = "网络异常,请确认网络情况";
+                                }
+                                mHandler.sendMessage(msg);
+                            }
+                        });
+                    }else{
+                        Toast.makeText(TaskListActivity.this,message,Toast.LENGTH_SHORT).show();
+                    }
+
+
                 } else {
                     msg.obj = "WIFI网络不可用,请检查网络连接情况";
                     mHandler.sendMessage(msg);

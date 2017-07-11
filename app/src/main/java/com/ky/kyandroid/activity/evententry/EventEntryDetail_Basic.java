@@ -2,6 +2,7 @@ package com.ky.kyandroid.activity.evententry;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,7 +17,12 @@ import android.widget.LinearLayout;
 import com.ky.kyandroid.R;
 import com.ky.kyandroid.bean.CodeValue;
 import com.ky.kyandroid.db.dao.DescEntityDao;
+import com.ky.kyandroid.db.dao.TFtQhEntityDao;
+import com.ky.kyandroid.entity.TFtQhEntity;
 import com.ky.kyandroid.entity.TFtSjEntity;
+import com.ky.kyandroid.util.SpUtil;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -160,12 +166,24 @@ public class EventEntryDetail_Basic extends Fragment {
 
     private DescEntityDao descEntityDao;
 
+    /**
+     * SharedPreferences
+     */
+    private SharedPreferences sp;
+
+    /**
+     * 字典DAO
+     */
+    public TFtQhEntityDao tFtQhEntityDao;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.evententerdetail_basic_fragment, container, false);
         ButterKnife.bind(this, view);
+        sp = SpUtil.getSharePerference(getActivity());
         descEntityDao= new DescEntityDao();
+        tFtQhEntityDao = new TFtQhEntityDao();
         tFtSjEntity = (TFtSjEntity) intent.getSerializableExtra("tFtSjEntity");
         initData();
         return view;
@@ -206,7 +224,6 @@ public class EventEntryDetail_Basic extends Fragment {
                 fieldsInvolvedEdt.setText(sjly);
             }
 
-            belongStreetEdt.setText(tFtSjEntity.getSsjd());
             mainAppealsEdt.setText(tFtSjEntity.getZysq());
             eventSummaryEdt.setText(tFtSjEntity.getSjgyqk());
             leadershipInstructionsEdt.setText(tFtSjEntity.getLdps());
@@ -240,7 +257,12 @@ public class EventEntryDetail_Basic extends Fragment {
             if (tFtSjEntity.getSfgacz() != null) {
                 publicSecurityDisposalSpinner.setText(descEntityDao.queryName("sfsw", tFtSjEntity.getSfgacz()));
             }
-            belongCommunitySpinner.setText("社区一");
+            List<TFtQhEntity> qhList = tFtQhEntityDao.queryListById(tFtSjEntity.getSssq());
+            if(qhList!=null && qhList.size()>0){
+                belongStreetEdt.setText(qhList.get(0).getJdmc());
+                belongCommunitySpinner.setText(qhList.get(0).getSqgzz());
+            }
+
 
         }
     }

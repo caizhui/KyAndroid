@@ -75,7 +75,7 @@ import okhttp3.Response;
 
 /**
  * Created by Caizhui on 2017/7/1.
- * 街道自行处理
+ * 区自行处理
  */
 
 public class QuHandleActivity extends AppCompatActivity {
@@ -227,12 +227,12 @@ public class QuHandleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_streethandle_operation);
         ButterKnife.bind(this);
-        centerText.setText("事件自行处理");
         rightBtn.setVisibility(View.INVISIBLE);
         initEvent();
         intent = getIntent();
         taskEntity = (TaskEntity) intent.getSerializableExtra("taskEntity");
         tFtZtlzEntity = (TFtZtlzEntity) intent.getSerializableExtra("tFtZtlzEntity");
+
         fileEntityDao = new FileEntityDao();
         if(taskEntity!=null){
             uuid = taskEntity.getId();
@@ -352,14 +352,27 @@ public class QuHandleActivity extends AppCompatActivity {
                     }
                     paramsMap.put("filesName", filesName);
                 }
+                String message="";
                 if(happenTimeEdt!=null){
-                    paramsMap.put("lrclsj", happenTimeEdt.getText().toString());
+                    if("".equals(happenTimeEdt.getText().toString())){
+                        message+="处理时间不能为空\n";
+                    }else{
+                        paramsMap.put("lrclsj", happenTimeEdt.getText().toString());
+                    }
                 }
                 if(returnEdt!=null){
-                    paramsMap.put("lrclqk", returnEdt.getText().toString());
+                    if("".equals(happenTimeEdt.getText().toString())){
+                        message+="处理情况不能为空\n";
+                    }else{
+                        paramsMap.put("lrclqk", returnEdt.getText().toString());
+                    }
                 }
-                String map = JsonUtil.map2Json(paramsMap);
-                sendMultipart(userId, map, files);
+                if("".equals(message)){
+                    String map = JsonUtil.map2Json(paramsMap);
+                    sendMultipart(userId, map, files);
+                }else{
+                    Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+                }
                 break;
         }
     }
@@ -393,7 +406,7 @@ public class QuHandleActivity extends AppCompatActivity {
         }
         Request request = new Request.Builder()
                 .header("Authorization", "Client-ID " + "...")
-                .url(Constants.SERVICE_BASE_URL + Constants.SERVICE_ZXCL_HADLE)//请求的url
+                .url(Constants.SERVICE_BASE_URL + Constants.SERVICE_TASK_HADLE)//请求的url
                 .post(requestBody.build())
                 .build();
 

@@ -2,9 +2,7 @@ package com.ky.kyandroid.db.dao;
 
 import android.util.Log;
 
-import com.ky.kyandroid.bean.CodeValue;
 import com.ky.kyandroid.db.BaseDao;
-import com.ky.kyandroid.entity.DescEntity;
 import com.ky.kyandroid.entity.TFtQhEntity;
 import com.ky.kyandroid.util.StringUtils;
 
@@ -13,8 +11,6 @@ import org.xutils.ex.DbException;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static android.R.attr.type;
 
 /**
  * 区域DAO
@@ -73,6 +69,26 @@ public class TFtQhEntityDao extends BaseDao {
             Selector<TFtQhEntity> selector = db.selector(TFtQhEntity.class).where("1","==","1");
             if (StringUtils.isNotBlank(jddm)){
                 selector.and("jddm","==",jddm);
+            }
+            qhList = selector.findAll();
+        } catch (DbException e) {
+            Log.i(TAG, "系统字典查询异常-queryListForCV >> " + e.getMessage());
+        }
+        return qhList;
+    }
+
+    /**
+     * 根据类型查找区域列表
+     *
+     * @param id
+     * @return
+     */
+    public List<TFtQhEntity> queryListById(String id) {
+        List<TFtQhEntity> qhList = new ArrayList<TFtQhEntity>();
+        try {
+            Selector<TFtQhEntity> selector = db.selector(TFtQhEntity.class).where("1","==","1");
+            if (StringUtils.isNotBlank(id)){
+                selector.and("id","==",id);
             }
             qhList = selector.findAll();
         } catch (DbException e) {
