@@ -244,7 +244,7 @@ public class DepartmentHandleActivity extends AppCompatActivity {
             Toast.makeText(DepartmentHandleActivity.this, "没有SD卡", Toast.LENGTH_LONG).show();
         }
         //初始化imageList
-        adapter = new EventImageListAdapter(fileEntityList, DepartmentHandleActivity.this);
+        adapter = new EventImageListAdapter(fileEntityList, DepartmentHandleActivity.this,false);
         fileList.setAdapter(adapter);
     }
 

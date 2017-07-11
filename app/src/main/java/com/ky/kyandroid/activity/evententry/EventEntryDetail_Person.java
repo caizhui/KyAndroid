@@ -202,7 +202,10 @@ public class EventEntryDetail_Person extends Fragment {
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         personSexSpinner.setAdapter(arrayAdapter);//将adapter 添加到男女spinner中
 
-        spinnerList = descEntityDao.queryListForCV("crd");
+        //设置Spinner控件的初始值
+        spinnerList = new ArrayList<CodeValue>();
+        spinnerList.add(new CodeValue("0","--请选择--"));
+        spinnerList.addAll(descEntityDao.queryListForCV("crd"));
         if (spinnerList == null) {
             //设置Spinner控件的初始值
             spinnerList = new ArrayList<CodeValue>();
@@ -243,7 +246,11 @@ public class EventEntryDetail_Person extends Fragment {
             }else{
                 personNationSpinner.setSelection(Integer.parseInt(tFtSjRyEntity.getMz()));
             }
-            personIdcardTypeSpinner.setSelection(Integer.parseInt(tFtSjRyEntity.getZjlx())-1);
+            if("".equals(tFtSjRyEntity.getZjlx()) || tFtSjRyEntity.getZjlx()==null){
+                personIdcardTypeSpinner.setSelection(0);
+            }else{
+                personIdcardTypeSpinner.setSelection(Integer.parseInt(tFtSjRyEntity.getZjlx()));
+            }
             personIdcardEdt.setText(tFtSjRyEntity.getZjhm());
             personAddressEdt.setText(tFtSjRyEntity.getHjd());
             personJobaddressEdt.setText(tFtSjRyEntity.getGzdw());

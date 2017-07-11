@@ -190,7 +190,7 @@ public class EventEntryAdd_Attachment extends Fragment {
         }
         //初始化imageList,判断是否为空，是为了防止切换页签的时候将实例重新初始化
         if(adapter==null){
-            adapter = new EventImageListAdapter(fileEntityList, EventEntryAdd_Attachment.this.getActivity());
+            adapter = new EventImageListAdapter(fileEntityList, EventEntryAdd_Attachment.this.getActivity(),false);
         }
         imageList.setAdapter(adapter);
         if(tFtSjEntity!=null){

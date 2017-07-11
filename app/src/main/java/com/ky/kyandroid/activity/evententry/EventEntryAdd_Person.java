@@ -275,11 +275,10 @@ public class EventEntryAdd_Person extends Fragment {
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         personSexSpinner.setAdapter(arrayAdapter);//将adapter 添加到男女spinner中
 
-        spinnerList = descEntityDao.queryListForCV("crd");
-        if (spinnerList == null) {
-            //设置Spinner控件的初始值
-            spinnerList = new ArrayList<CodeValue>();
-        }
+        //设置Spinner控件的初始值
+        spinnerList = new ArrayList<CodeValue>();
+        spinnerList.add(new CodeValue("0","--请选择--"));
+        spinnerList.addAll(descEntityDao.queryListForCV("crd"));
         //将可选内容与ArrayAdapter连接起来
         arrayAdapter = new ArrayAdapter<CodeValue>(EventEntryAdd_Person.this.getActivity(), android.R.layout.simple_spinner_item, spinnerList);
         //设置下拉列表的风格
@@ -316,7 +315,11 @@ public class EventEntryAdd_Person extends Fragment {
             }else{
                 personNationSpinner.setSelection(Integer.parseInt(temptFtSjRyEntity.getMz()));
             }
-            personIdcardTypeSpinner.setSelection(Integer.parseInt(temptFtSjRyEntity.getZjlx())-1);
+            if("".equals(temptFtSjRyEntity.getZjlx()) || temptFtSjRyEntity.getZjlx()==null){
+                personIdcardTypeSpinner.setSelection(0);
+            }else{
+                personIdcardTypeSpinner.setSelection(Integer.parseInt(temptFtSjRyEntity.getZjlx()));
+            }
             personIdcardEdt.setText(temptFtSjRyEntity.getZjhm());
             personAddressEdt.setText(temptFtSjRyEntity.getHjd());
             personJobaddressEdt.setText(temptFtSjRyEntity.getGzdw());
@@ -337,7 +340,11 @@ public class EventEntryAdd_Person extends Fragment {
             }else{
                 personNationSpinner.setSelection(Integer.parseInt(tFtSjRyEntity.getMz()));
             }
-            personIdcardTypeSpinner.setSelection(Integer.parseInt(tFtSjRyEntity.getZjlx())-1);
+            if("".equals(tFtSjRyEntity.getZjlx()) || tFtSjRyEntity.getZjlx()==null){
+                personIdcardTypeSpinner.setSelection(0);
+            }else{
+                personIdcardTypeSpinner.setSelection(Integer.parseInt(tFtSjRyEntity.getZjlx()));
+            }
             personIdcardEdt.setText(tFtSjRyEntity.getZjhm());
             personAddressEdt.setText(tFtSjRyEntity.getHjd());
             personJobaddressEdt.setText(tFtSjRyEntity.getGzdw());
@@ -369,12 +376,16 @@ public class EventEntryAdd_Person extends Fragment {
                 tFtSjRyEntity.setXb(descEntityDao.queryCodeByName("sex", personSexSpinner.getSelectedItem().toString()));
                 tFtSjRyEntity.setMz(descEntityDao.queryCodeByName("nation", personNationSpinner.getSelectedItem().toString()));
                 tFtSjRyEntity.setZjlx(descEntityDao.queryCodeByName("crd", personIdcardTypeSpinner.getSelectedItem().toString()));
-                if("".equals(personIdcardEdt.getText().toString())){
-                    message += "证件号码不能为空\n";
-                }else if(!"".equals(personIdcardEdt.getText().toString())&& !CommonUtil.isIDNumber(personIdcardEdt.getText().toString())){
-                    message += "请输入正确的证件号码\n";
-                }else{
-                    tFtSjRyEntity.setZjhm(personIdcardEdt.getText().toString());
+                if(!("--请选择--".equals(personIdcardTypeSpinner.getSelectedItem().toString()))){
+                    if("".equals(personIdcardEdt.getText().toString())){
+                        message += "证件号码不能为空\n";
+                    }else if(!"".equals(personIdcardEdt.getText().toString())&&"1".equals(tFtSjRyEntity.getZjlx())
+                            &&!CommonUtil.isIDNumber(personIdcardEdt.getText().toString())){
+                        //只有当证件类型选择为居民身份证才需要验证
+                        message += "请输入正确的证件号码\n";
+                    }else{
+                        tFtSjRyEntity.setZjhm(personIdcardEdt.getText().toString());
+                    }
                 }
                 tFtSjRyEntity.setHjd(personAddressEdt.getText().toString());
                 tFtSjRyEntity.setGzdw(personJobaddressEdt.getText().toString());
