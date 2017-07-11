@@ -227,12 +227,12 @@ public class QuHandleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_streethandle_operation);
         ButterKnife.bind(this);
-        centerText.setText("事件自行处理");
         rightBtn.setVisibility(View.INVISIBLE);
         initEvent();
         intent = getIntent();
         taskEntity = (TaskEntity) intent.getSerializableExtra("taskEntity");
         tFtZtlzEntity = (TFtZtlzEntity) intent.getSerializableExtra("tFtZtlzEntity");
+        centerText.setText(tFtZtlzEntity.getName());
         fileEntityDao = new FileEntityDao();
         if(taskEntity!=null){
             uuid = taskEntity.getId();
@@ -352,14 +352,27 @@ public class QuHandleActivity extends AppCompatActivity {
                     }
                     paramsMap.put("filesName", filesName);
                 }
+                String message="";
                 if(happenTimeEdt!=null){
-                    paramsMap.put("lrclsj", happenTimeEdt.getText().toString());
+                    if("".equals(happenTimeEdt.getText().toString())){
+                        message+="处理时间不能为空\n";
+                    }else{
+                        paramsMap.put("lrclsj", happenTimeEdt.getText().toString());
+                    }
                 }
                 if(returnEdt!=null){
-                    paramsMap.put("lrclqk", returnEdt.getText().toString());
+                    if("".equals(happenTimeEdt.getText().toString())){
+                        message+="处理情况不能为空\n";
+                    }else{
+                        paramsMap.put("lrclqk", returnEdt.getText().toString());
+                    }
                 }
-                String map = JsonUtil.map2Json(paramsMap);
-                sendMultipart(userId, map, files);
+                if("".equals(message)){
+                    String map = JsonUtil.map2Json(paramsMap);
+                    sendMultipart(userId, map, files);
+                }else{
+                    Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+                }
                 break;
         }
     }

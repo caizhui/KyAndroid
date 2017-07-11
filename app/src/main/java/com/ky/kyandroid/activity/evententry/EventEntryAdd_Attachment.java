@@ -342,6 +342,14 @@ public class EventEntryAdd_Attachment extends Fragment {
     public void OnClick(View view) {
         switch (view.getId()) {
             case R.id.add_attachment:
+                // 询问拍照权限
+                /*int storagePermission = ActivityCompat.checkSelfPermission(EventEntryAdd_Attachment.this.getActivity(),
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                int cameraPermission = ContextCompat.checkSelfPermission(EventEntryAdd_Attachment.this.getActivity(), Manifest.permission.CAMERA);
+                if (storagePermission != PackageManager.PERMISSION_GRANTED || cameraPermission!= PackageManager.PERMISSION_GRANTED ) {
+                    ActivityCompat.requestPermissions(EventEntryAdd_Attachment.this.getActivity(), PERMISSIONS_CAMERA_AND_STORAGE,
+                            requestCode);
+                }*/
                 menuWindow = new SelectPicPopupWindow(EventEntryAdd_Attachment.this.getActivity(), itemsOnClick);
                 // 显示窗口
                 menuWindow.showAtLocation(main, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0); // 设置layout在PopupWindow中显示的位置
