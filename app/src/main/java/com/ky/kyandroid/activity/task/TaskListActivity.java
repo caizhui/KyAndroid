@@ -763,7 +763,6 @@ public class TaskListActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (netWorkConnection.isWIFIConnection()) {
-                    sweetAlertDialogUtil.loadAlertDialog();
                     Map<String, String> paramsMap = new HashMap<String, String>();
                     paramsMap.put("userId", userId);
                     paramsMap.put("sjId", taskEntity.getId());
@@ -784,6 +783,7 @@ public class TaskListActivity extends AppCompatActivity {
                         }
                     }
                     if("".equals(message)){
+                        sweetAlertDialogUtil.loadAlertDialog();
                         // 发送请求
                         OkHttpUtil.sendRequest(url,paramsMap, new Callback() {
 
