@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * 类名称：基础类
  */
-public class BaseDao {
+public abstract class BaseDao {
 
 	/** org.xutils.DbManager */
 	protected DbManager db;
@@ -16,6 +16,14 @@ public class BaseDao {
 	public BaseDao() {
 		db = DatabaseOpenHelper.getInstance();
 	}
+
+
+	/**
+	 * 是不存在表
+	 *
+	 * @return
+	 */
+	public abstract boolean ifExist();
 
 	/**
 	 * 保存方法，将BD_descDao实例存进数据库

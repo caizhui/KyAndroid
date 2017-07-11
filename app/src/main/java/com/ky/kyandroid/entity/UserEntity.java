@@ -75,9 +75,9 @@ public class UserEntity {
     private Object officeEmail;
     private Object officeTele;
     private String oldPassword;
-    private Object orgCode;
+    private String orgCode;
     private String orgId;
-    private Object orgName;
+    private String orgName;
     private String password;
     private PropertiesBean properties;
     private Object pwdChgDate;
@@ -272,11 +272,11 @@ public class UserEntity {
         this.oldPassword = oldPassword;
     }
 
-    public Object getOrgCode() {
+    public String getOrgCode() {
         return orgCode;
     }
 
-    public void setOrgCode(Object orgCode) {
+    public void setOrgCode(String orgCode) {
         this.orgCode = orgCode;
     }
 
@@ -288,11 +288,12 @@ public class UserEntity {
         this.orgId = orgId;
     }
 
-    public Object getOrgName() {
+
+    public String getOrgName() {
         return orgName;
     }
 
-    public void setOrgName(Object orgName) {
+    public void setOrgName(String orgName) {
         this.orgName = orgName;
     }
 

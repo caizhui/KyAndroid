@@ -91,4 +91,33 @@ public class CommonUtil {
 		return Pattern.matches(reg, postCode);
 	}
 
+	/**
+	 * 校验证件号码
+	 *
+	 * @param type
+	 * @param value
+	 * @return
+	 */
+	public static boolean validateZjhm(String type,String value){
+		String regex = "^\\d{15}(\\d{2}[xX0-9])?$";
+		if ("1".equals(type)){
+			// 居民身份证验证
+			regex = "^\\d{15}(\\d{2}[xX0-9])?$";
+		}else if("2".equals(type)){
+			// 香港身份证
+			regex = "^[a-zA-Z0-9]{1}\\d{6,7}[a-zA-Z0-9]{1}$";
+		}else if("3".equals(type)){
+			// 澳门身份证
+			regex = "^[157]{1}\\d{7}$";
+		}else if("4".equals(type)){
+			// 回乡证
+			regex = "^[HMhm]{1}([0-9]{10}|[0-9]{8})$";
+		}else if("5".equals(type)){
+			// 护照
+			regex = "^[a-zA-Z0-9]{3,21}$/i.test(value) || /^(P\\d{7})|(G\\d{8})$";
+		}
+		return Pattern.matches(regex, value);
+	}
+
+
 }

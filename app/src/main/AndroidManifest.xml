@@ -162,7 +162,7 @@
             android:process=":remote" />
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="3nrIavqOAocPmS8hYHGsL5BNgDhHSefX" />
+            android:value="NG8cRgocoz83xALqFapew76n3PQCAvmX" />
 
         <!-- 坐标服务 -->
         <service android:name="com.ky.kyandroid.service.LocationService" />

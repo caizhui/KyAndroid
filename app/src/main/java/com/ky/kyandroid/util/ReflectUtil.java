@@ -26,7 +26,7 @@ public class ReflectUtil {
 		String firstElemntOfAttribute = attribute.substring(0, 1).toUpperCase();
 		String restElementOfAttrute = attribute.substring(1);
 		return (flag ? "get" : "set") + firstElemntOfAttribute + restElementOfAttrute;
-	}
+ 	}
 
 	/**
 	 * 调用bean的get方法<br>
