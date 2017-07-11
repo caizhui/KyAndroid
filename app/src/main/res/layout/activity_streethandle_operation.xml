@@ -72,14 +72,36 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:padding="10dp">
 
-            <TextView
-                style="@style/TextStyle"
-                android:layout_width="wrap_content"
+            <RadioGroup
+                android:id="@+id/radioGroup"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="处理情况:" />
+                android:background="@null"
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal">
+
+
+                <RadioButton
+                    android:id="@+id/radioButton01"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="事件已成功处置"/>
+
+                <RadioButton
+                    android:id="@+id/radioButton02"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="处置情况二"/>
+
+                <RadioButton
+                    android:id="@+id/radioButton03"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="处置情况三"/>
+            </RadioGroup>
 
             <EditText
                 android:id="@+id/return_edt"

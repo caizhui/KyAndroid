@@ -27,6 +27,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -196,6 +198,18 @@ public class QuHandleActivity extends AppCompatActivity {
 
     FileEntityDao fileEntityDao;
 
+    @BindView(R.id.radioGroup)
+    RadioGroup radioGroup;
+
+    @BindView(R.id.radioButton01)
+    RadioButton radioButton01;
+
+    @BindView(R.id.radioButton02)
+    RadioButton radioButton02;
+
+    @BindView(R.id.radioButton03)
+    RadioButton radioButton03;
+
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -253,6 +267,20 @@ public class QuHandleActivity extends AppCompatActivity {
         //初始化imageList
         adapter = new EventImageListAdapter(fileEntityList, QuHandleActivity.this,false);
         fileList.setAdapter(adapter);
+        if(radioGroup!=null){
+            radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(RadioGroup group, int checkedId) {
+                    if (radioButton01.getId() == checkedId) {
+                        returnEdt.setText(radioButton01.getText().toString());
+                    } else if (radioButton02.getId() == checkedId) {
+                        returnEdt.setText(radioButton02.getText().toString());
+                    } else if (radioButton03.getId() == checkedId) {
+                        returnEdt.setText(radioButton03.getText().toString());
+                    }
+                }
+            });
+        }
     }
 
     /**
@@ -362,7 +390,7 @@ public class QuHandleActivity extends AppCompatActivity {
                     }
                 }
                 if(returnEdt!=null){
-                    if("".equals(happenTimeEdt.getText().toString())){
+                    if("".equals(returnEdt.getText().toString())){
                         message+="处理情况不能为空\n";
                     }else{
                         paramsMap.put("lrclqk", returnEdt.getText().toString());
