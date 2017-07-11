@@ -48,10 +48,10 @@ public class Constants {
 	//修改我的任务状态接口
 	public final static String SERVICE_QUERY_TASKRECV= "ft/kyAndroid/taskRecv.action";
 
-	//任务自行处理接口
+	//任务处理接口
 	public final static String SERVICE_TASK_HADLE= "ft/kyAndroid/taskHandle.action";
 
-	//街道自行处理接口
+	//街道处理接口
 	public final static String SERVICE_ZXCL_HADLE= "ft/kyAndroid/zxclHandle.action";
 
 	//消息最新条目数处理接口
@@ -62,9 +62,6 @@ public class Constants {
 
 	//消息最新查询处理接口
 	public final static String SERVICE_NOTICE_LIST_HADLE= "ft/kyAndroid/msgList.action";
-
-	//街道自行处理接口
-	public final static String SERVICE_ZXCL= "ft/kyAndroid/zxclDispatch.action";
 
 	//街道派遣处理接口
 	public final static String SERVICE_TASK_DISPATCH= "ft/kyAndroid/taskDispatch.action";

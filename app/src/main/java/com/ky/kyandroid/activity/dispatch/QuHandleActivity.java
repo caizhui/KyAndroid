@@ -232,7 +232,7 @@ public class QuHandleActivity extends AppCompatActivity {
         intent = getIntent();
         taskEntity = (TaskEntity) intent.getSerializableExtra("taskEntity");
         tFtZtlzEntity = (TFtZtlzEntity) intent.getSerializableExtra("tFtZtlzEntity");
-        centerText.setText(tFtZtlzEntity.getName());
+
         fileEntityDao = new FileEntityDao();
         if(taskEntity!=null){
             uuid = taskEntity.getId();
@@ -361,7 +361,7 @@ public class QuHandleActivity extends AppCompatActivity {
                     }
                 }
                 if(returnEdt!=null){
-                    if("".equals(returnEdt.getText().toString())){
+                    if("".equals(happenTimeEdt.getText().toString())){
                         message+="处理情况不能为空\n";
                     }else{
                         paramsMap.put("lrclqk", returnEdt.getText().toString());
@@ -406,7 +406,7 @@ public class QuHandleActivity extends AppCompatActivity {
         }
         Request request = new Request.Builder()
                 .header("Authorization", "Client-ID " + "...")
-                .url(Constants.SERVICE_BASE_URL + Constants.SERVICE_ZXCL_HADLE)//请求的url
+                .url(Constants.SERVICE_BASE_URL + Constants.SERVICE_TASK_HADLE)//请求的url
                 .post(requestBody.build())
                 .build();
 
