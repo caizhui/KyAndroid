@@ -49,6 +49,8 @@ public class FileEntity implements Serializable{
      */
     public boolean isHaveMs = true;
 
+    private String fjlx;
+
     public FileEntity(){}
 
     public Bitmap getBitmap() {
@@ -105,5 +107,13 @@ public class FileEntity implements Serializable{
 
     public void setSjId(String sjId) {
         this.sjId = sjId;
+    }
+
+    public String getFjlx() {
+        return fjlx;
+    }
+
+    public void setFjlx(String fjlx) {
+        this.fjlx = fjlx;
     }
 }

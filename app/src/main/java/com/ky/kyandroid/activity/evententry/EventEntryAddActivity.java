@@ -23,16 +23,20 @@ import com.ky.kyandroid.Constants;
 import com.ky.kyandroid.R;
 import com.ky.kyandroid.activity.draft.EventDraftListActivity;
 import com.ky.kyandroid.adapter.FragmentAdapter;
+import com.ky.kyandroid.bean.AckMessage;
 import com.ky.kyandroid.bean.NetWorkConnection;
 import com.ky.kyandroid.db.dao.FileEntityDao;
 import com.ky.kyandroid.db.dao.TFtSjEntityDao;
 import com.ky.kyandroid.db.dao.TFtSjRyEntityDao;
 import com.ky.kyandroid.entity.FileEntity;
+import com.ky.kyandroid.entity.TFtSjDetailEntity;
 import com.ky.kyandroid.entity.TFtSjEntity;
 import com.ky.kyandroid.entity.TFtSjFjEntity;
 import com.ky.kyandroid.entity.TFtSjRyEntity;
 import com.ky.kyandroid.util.JsonUtil;
+import com.ky.kyandroid.util.OkHttpUtil;
 import com.ky.kyandroid.util.SpUtil;
+import com.ky.kyandroid.util.StringUtils;
 import com.ky.kyandroid.util.SweetAlertDialogUtil;
 
 import java.io.File;
@@ -40,6 +44,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -236,6 +241,47 @@ public class EventEntryAddActivity extends FragmentActivity {
                 initData();
             }
         }
+        //3 街道退回
+        if(tFtSjEntity!=null){
+            if("3".equals(tFtSjEntity.getZt())){
+                initOnLineData();
+            }
+        }
+    }
+
+    /**
+     * //查询已经上报详情数据
+     */
+    public void initOnLineData() {
+        final Message msg = new Message();
+        msg.what = 0;
+        if (netWorkConnection.isWIFIConnection()) {
+            Map<String, String> paramsMap = new HashMap<String, String>();
+            paramsMap.put("userId", userId);
+            paramsMap.put("id", tFtSjEntity.getId());
+            // 发送请求
+            OkHttpUtil.sendRequest(Constants.SERVICE_DETAIL_EVENT, paramsMap, new Callback() {
+
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    mHandler.sendEmptyMessage(0);
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    if (response.isSuccessful()) {
+                        msg.what = 1;
+                        msg.obj = response.body().string();
+                    } else {
+                        msg.obj = "网络异常,请确认网络情况";
+                    }
+                    mHandler.sendMessage(msg);
+                }
+            });
+        } else {
+            msg.obj = "WIFI网络不可用,请检查网络连接情况";
+            mHandler.sendMessage(msg);
+        }
     }
 
     /**
@@ -359,6 +405,10 @@ public class EventEntryAddActivity extends FragmentActivity {
                     sweetAlertDialogUtil.dismissAlertDialog();
                     Toast.makeText(EventEntryAddActivity.this, message, Toast.LENGTH_SHORT).show();
                     break;
+                // 获取详细信息数据成功
+                case 1:
+                    handleTransation(message);
+                    break;
                 //上传数据成功
                 case 2:
                     //将本地的草稿数据删除
@@ -376,6 +426,38 @@ public class EventEntryAddActivity extends FragmentActivity {
             }
         }
     };
+
+    /**
+     * 获取详细信息之后，将信息分别放入基本信息，当事人，附件页面中
+     *
+     * @param
+     */
+    private void handleTransation(String body) {
+        if (StringUtils.isBlank(body)) {
+        } else {
+            // 处理响应信息
+            AckMessage ackMsg = JsonUtil.fromJson(body, AckMessage.class);
+            if (ackMsg != null) {
+                if (AckMessage.SUCCESS.equals(ackMsg.getAckCode())) {
+                    Object object = ackMsg.getEntity();
+                    //先将获取的Object对象转成String
+                    String entityStr = JsonUtil.toJson(object);
+                    //先将获取的json象转成实体
+                    TFtSjDetailEntity tFtSjDetailEntity = JsonUtil.fromJson(entityStr, TFtSjDetailEntity.class);
+                    if (tFtSjDetailEntity != null) {
+                        sjryList = tFtSjDetailEntity.getSjryList();
+                        sjfjList = tFtSjDetailEntity.getSjfjList();
+                        //将当事人信息放在当事人页面
+                        eventEntryAdd_person.setTFtSjRyEntityList(sjryList);
+                        //将附件信息放在附件页面
+                        eventEntryAdd_attachment.setTFtSjFjEntityList(sjfjList, true);
+                        //将其他信息放在附件页面
+                        eventEntryAdd_attachment.settFtSjDetailEntityList(tFtSjDetailEntity);
+                    }
+                }
+            }
+        }
+    }
 
 
     /**
@@ -469,7 +551,11 @@ public class EventEntryAddActivity extends FragmentActivity {
                         //如果是第一次上传，要设置一个uuid，如果是从草稿中上传，就直接拿草稿里面的uuid
                         eventEntity.setId(uuid);
                     }
+                    //当状态为3或uuid不为空时，表示是退回修改再上传的，uuid不为空是先保存了草稿
                     if ("3".equals(eventEntity.getZt())){
+                        czlx="edit";
+                    }else if(eventEntity.getUuid()!=null){
+                        eventEntity.setId(eventEntity.getUuid());
                         czlx="edit";
                     }else{
                         czlx="add";
@@ -513,6 +599,10 @@ public class EventEntryAddActivity extends FragmentActivity {
             /**保存草稿按钮*/
             case R.id.save_draft_btn:
                 TFtSjEntity tempenenEntity = eventEntryAdd_basic.PackageData();
+                if(tempenenEntity.getId()!=null){
+                    //做这一步操作是当时间退回，状态为3时，保存草稿的时候，在数据库添加一条记录，将本身的id放在uuid中，为了再上报领导时又重新去新增上报
+                    tempenenEntity.setUuid(tempenenEntity.getId());
+                }
                 fileEntityList = eventEntryAdd_attachment.PackageData();
                 if(fileEntityList!=null && fileEntityList.size()>0){
                     for(int i=0;i<fileEntityList.size();i++){

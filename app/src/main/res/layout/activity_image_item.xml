@@ -8,10 +8,22 @@
         android:layout_height="match_parent"
         android:padding="10dp">
 
-        <ImageView
-            android:id="@+id/attachment_img"
-            android:layout_width="100dp"
-            android:layout_height="100dp"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/attachment_img"
+                android:layout_width="100dp"
+                android:layout_height="100dp"/>
+            <TextView
+                android:id="@+id/fjlx_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:visibility="gone"/>
+        </LinearLayout>
+
 
         <EditText
             android:id="@+id/image_ms"

@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 import com.ky.kyandroid.Constants;
 import com.ky.kyandroid.R;
+import com.ky.kyandroid.activity.dispatch.QuHandleActivity;
 import com.ky.kyandroid.adapter.TaskEntityListAdapter;
 import com.ky.kyandroid.bean.AckMessage;
 import com.ky.kyandroid.bean.NetWorkConnection;
@@ -564,6 +565,14 @@ public class TaskListActivity extends AppCompatActivity {
                     }else if ("8.2".equals(tFtZtlzEntity.getNextzt())) {
                         //当8.2办结处理的时候，弹出自定义对话框
                         banJiOperation(tFtZtlzEntity, R.layout.dialog_over_operation, tFtZtlzEntity.getActionname(),Constants.SERVICE_EDIT_BANJI );
+                    }else if ("13.2".equals(tFtZtlzEntity.getNextzt())) {
+                        //当13.3区处理的时候，弹出自定义对话框
+                        Intent intent = new Intent(TaskListActivity.this, QuHandleActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("taskEntity", taskEntity);
+                        bundle.putSerializable("tFtZtlzEntity", tFtZtlzEntity);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
                     }else{
                         //其他的弹出确定对话框
                         OperatingProcess(tFtZtlzEntity,Constants.SERVICE_QUERY_TASKRECV);
