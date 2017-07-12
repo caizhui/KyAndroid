@@ -30,7 +30,7 @@
                         style="@style/TextStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/supervisor_name" />
+                        android:text="督办名称:"/>
 
                     <EditText
                         android:id="@+id/supervisor_name_edt"
@@ -57,40 +57,48 @@
                         style="@style/TextStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/supervisor_type" />
+                        android:text="@string/supervisor_glsj" />
 
-                    <RadioGroup
-                        android:id="@+id/radioGroup"
-                        android:layout_width="match_parent"
+                    <EditText
+                        android:id="@+id/supervisor_glsj_edt"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:background="@null"
-                        android:orientation="horizontal">
-
-
-                        <RadioButton
-                            android:id="@+id/radioButton01"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:enabled="false"
-                            android:text="超时"/>
-
-                        <RadioButton
-                            android:id="@+id/radioButton02"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:enabled="false"
-                            android:text="不落实"/>
-
-                        <RadioButton
-                            android:id="@+id/radioButton03"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:enabled="false"
-                            android:text="落实不彻底"/>
-                    </RadioGroup>
+                        android:enabled="false"
+                        android:textSize="16sp"
+                        android:layout_weight="1" />
 
                 </LinearLayout>
 
+
+                <include layout="@layout/linearlayout_one" />
+
+
+                <include layout="@layout/linearlayout_one" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="15dp"
+                    android:padding="10dp">
+
+                    <TextView
+                        style="@style/TextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/supervisor_type" />
+
+                    <EditText
+                        android:id="@+id/supervisor_dblx_edt"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:enabled="false"
+                        android:textSize="16sp"
+                        android:layout_weight="1" />
+
+                </LinearLayout>
 
 
                 <include layout="@layout/linearlayout_one" />
@@ -165,6 +173,134 @@
                         android:textSize="16sp" />
                 </LinearLayout>
 
+                <include layout="@layout/linearlayout_one" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="15dp"
+                    android:padding="10dp">
+
+                    <TextView
+                        style="@style/TextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/fk_time" />
+
+                    <TextView
+                        android:id="@+id/feedback_fksj_edt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:enabled="false"
+                        android:background="@null"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+
+                <include layout="@layout/linearlayout_one" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="15dp"
+                    android:padding="10dp">
+
+                    <TextView
+                        style="@style/TextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/zt_text" />
+
+                    <TextView
+                        android:id="@+id/zt_edt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:enabled="false"
+                        android:background="@null"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+
+                <include layout="@layout/linearlayout_one" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
+
+                    <TextView
+                        style="@style/TextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/supervisor_zpjsr" />
+
+                    <TextView
+                        android:id="@+id/feedback_zpjsr_edt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:enabled="false"
+                        android:background="@null"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+
+                <include layout="@layout/linearlayout_one" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="15dp"
+                    android:padding="10dp">
+
+                    <TextView
+                        style="@style/TextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/supervisor_zpyy" />
+
+                    <TextView
+                        android:id="@+id/feedback_zpyy_edt"
+                        android:layout_width="0dp"
+                        android:layout_height="100dp"
+                        android:background="@null"
+                        android:textSize="16sp"
+                        android:enabled="false"
+                        android:layout_weight="1" />
+                </LinearLayout>
+
+
+                <include layout="@layout/linearlayout_one" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="15dp"
+                    android:padding="10dp">
+
+                    <TextView
+                        style="@style/TextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/supervisor_thyy" />
+
+                    <TextView
+                        android:id="@+id/feedback_thyy_edt"
+                        android:layout_width="0dp"
+                        android:layout_height="100dp"
+                        android:background="@null"
+                        android:textSize="16sp"
+                        android:enabled="false"
+                        android:layout_weight="1" />
+                </LinearLayout>
+
 
                 <include layout="@layout/linearlayout_one" />
 
@@ -183,6 +319,31 @@
 
                     <EditText
                         android:id="@+id/supervisor_require_edt"
+                        android:layout_width="0dp"
+                        android:layout_height="100dp"
+                        android:background="@null"
+                        android:textSize="16sp"
+                        android:enabled="false"
+                        android:layout_weight="1" />
+                </LinearLayout>
+
+                <include layout="@layout/linearlayout_one" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="15dp"
+                    android:padding="10dp">
+
+                    <TextView
+                        style="@style/TextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/supervisor_fkjg" />
+
+                    <EditText
+                        android:id="@+id/supervisor_fkjg_edt"
                         android:layout_width="0dp"
                         android:layout_height="100dp"
                         android:background="@null"

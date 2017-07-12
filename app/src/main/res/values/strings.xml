@@ -64,8 +64,14 @@
     <string name="supervisor_type">督办类型:</string>
     <string name="be_supervisor_unit">被督办单位:</string>
     <string name="supervisor_glsj">关联事件:</string>
-    <string name="feedback_time">反馈时限:</string>
+    <string name="feedback_time">督办时限:</string>
+    <string name="fk_time">反馈时限:</string>
+    <string name="zt_text">状态:</string>
+    <string name="supervisor_zpjsr">转派接收人:</string>
+    <string name="supervisor_zpyy">转派原因:</string>
+    <string name="supervisor_thyy">退回原因:</string>
     <string name="supervisor_require">督办要求:</string>
+    <string name="supervisor_fkjg">反馈结果:</string>
     <string name="remark_text">备注:</string>
     <!--督察督办end-->
 </resources>

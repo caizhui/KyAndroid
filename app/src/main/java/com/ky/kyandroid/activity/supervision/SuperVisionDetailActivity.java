@@ -8,8 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ky.kyandroid.R;
@@ -41,51 +40,103 @@ public class SuperVisionDetailActivity extends AppCompatActivity {
      */
     @BindView(R.id.right_btn)
     Button rightBtn;
+
     /**
      * 督办名称
      */
     @BindView(R.id.supervisor_name_edt)
     EditText supervisorNameEdt;
+
+
+    /**
+     * 关联事件
+     */
+    @BindView(R.id.supervisor_glsj_edt)
+    EditText supervisorGlsjEdt;
+
+
     /**
      * 督办类型
      */
-    @BindView(R.id.radioGroup)
-    RadioGroup radioGroup;
+    @BindView(R.id.supervisor_dblx_edt)
+    EditText supervisorDblxEdt;
 
-    @BindView(R.id.radioButton01)
-    RadioButton radioButton01;
 
-    @BindView(R.id.radioButton02)
-    RadioButton radioButton02;
-
-    @BindView(R.id.radioButton03)
-    RadioButton radioButton03;
     /**
      * 被督办单位
      */
     @BindView(R.id.be_supervisor_unit_spinner)
     EditText beSupervisorUnitSpinner;
+
+
+    /**
+     *  督办时限
+     */
+    @BindView(R.id.feedback_time_edt)
+    EditText feedbackTimEdt;
+
+
     /**
      * 反馈时限
      */
-    @BindView(R.id.feedback_time_edt)
-    TextView feedbackTimeEdt;
+    @BindView(R.id.feedback_fksj_edt)
+    TextView fksjEdt;
+
 
     /**
-     * 关联事件
+     *  转派接收人
      */
-    @BindView(R.id.supervisor_glsj)
-    EditText supervisorGlsj;
+    @BindView(R.id.feedback_zpjsr_edt)
+    TextView feedbackZpjsrEdt;
+
+
+    /**
+     * 转拍原因
+     */
+    @BindView(R.id.feedback_zpyy_edt)
+    TextView feedbackZpyyEdt;
+
+
+    /**
+     * 退回原因
+     */
+    @BindView(R.id.feedback_thyy_edt)
+    TextView feedbackThyyEdt;
+
+
     /**
      * 督办要求
      */
     @BindView(R.id.supervisor_require_edt)
     EditText supervisorRequireEdt;
+
+
     /**
-     * 备注
+     * 反馈结果
+     */
+    @BindView(R.id.supervisor_fkjg_edt)
+    EditText supervisorFkjgEdt;
+
+
+    /**
+     *  备注
      */
     @BindView(R.id.remark_text_edt)
     EditText remarkTextEdt;
+
+    /**
+     *  状态
+     */
+    @BindView(R.id.zt_edt)
+    TextView ztEdt;
+
+
+    /**
+     *
+     */
+    @BindView(R.id.linear_evententry)
+    LinearLayout linearEvententry;
+
 
     private Intent intent;
 
@@ -97,7 +148,7 @@ public class SuperVisionDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_supervision_detail);
         ButterKnife.bind(this);
-        intent= getIntent();
+        intent = getIntent();
         tFtDbEntity = (TFtDbEntity) intent.getSerializableExtra("tFtDbEntity");
         initView();
         initData();
@@ -107,7 +158,7 @@ public class SuperVisionDetailActivity extends AppCompatActivity {
     /**
      * 控件赋初值
      */
-    public  void initView(){
+    public void initView() {
         /** 设置toolbar标题 **/
         centerText.setText("督察信息详情");
 
@@ -116,20 +167,27 @@ public class SuperVisionDetailActivity extends AppCompatActivity {
     }
 
 
-    public void initData(){
-        if(tFtDbEntity!=null){
+    public void initData() {
+        if (tFtDbEntity != null) {
             supervisorNameEdt.setText(tFtDbEntity.getDbmc());
-            if("1".equals(tFtDbEntity.getDblx())){
-                radioButton01.setChecked(true);
-            }else if("2".equals(tFtDbEntity.getDblx())){
-                radioButton02.setChecked(true);
-            }else if("3".equals(tFtDbEntity.getDblx())){
-                radioButton03.setChecked(true);
+            supervisorGlsjEdt.setText(tFtDbEntity.getSjmc());
+
+            if ("1".equals(tFtDbEntity.getDblx())) {
+                supervisorDblxEdt.setText("超时");
+            } else if ("2".equals(tFtDbEntity.getDblx())) {
+                supervisorDblxEdt.setText("不落实");
+            } else if ("3".equals(tFtDbEntity.getDblx())) {
+                supervisorDblxEdt.setText("落实不彻底");
             }
             beSupervisorUnitSpinner.setText(tFtDbEntity.getBdbdw());
-            supervisorGlsj.setText(tFtDbEntity.getSjmc());
-            feedbackTimeEdt.setText(tFtDbEntity.getDbsj());
+            feedbackTimEdt.setText(tFtDbEntity.getDbsj());
+            fksjEdt.setText(tFtDbEntity.getFksx());
+            feedbackZpjsrEdt.setText(tFtDbEntity.getZpjsr());
+            feedbackZpyyEdt.setText(tFtDbEntity.getZpyy());
+            feedbackThyyEdt.setText(tFtDbEntity.getThyy());
+           // supervisorFkjgEdt.setText(tFtDbEntity.get);
             supervisorRequireEdt.setText(tFtDbEntity.getDbyq());
+            ztEdt.setText(tFtDbEntity.getZt());
             remarkTextEdt.setText("");
         }
     }
