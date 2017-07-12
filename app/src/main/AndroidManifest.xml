@@ -156,6 +156,21 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
 
+        <!--都督查办列表-->
+        <activity
+            android:name=".activity.supervision.SuperVisionListActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
+
+
+        <!--都督查办详情-->
+        <activity
+            android:name=".activity.supervision.SuperVisionDetailActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
+
         <!--消息提醒Activity-->
         <activity
             android:name=".activity.msg.MsgNoticeActivity"

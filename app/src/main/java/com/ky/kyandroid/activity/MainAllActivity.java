@@ -23,35 +23,26 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import com.ky.kyandroid.Constants;
 import com.ky.kyandroid.R;
 import com.ky.kyandroid.activity.evententry.EventEntryListActivity;
 import com.ky.kyandroid.activity.msg.MsgNoticeActivity;
-import com.ky.kyandroid.activity.supervision.SuperVisionAddActivity;
+import com.ky.kyandroid.activity.supervision.SuperVisionListActivity;
 import com.ky.kyandroid.activity.task.TaskListActivity;
 import com.ky.kyandroid.bean.AckMessage;
 import com.ky.kyandroid.bean.NetWorkConnection;
 import com.ky.kyandroid.bean.PageBean;
 import com.ky.kyandroid.util.JsonUtil;
 import com.ky.kyandroid.util.MsgThreadUtil;
-import com.ky.kyandroid.util.OkHttpUtil;
 import com.ky.kyandroid.util.SpUtil;
 import com.ky.kyandroid.util.StringUtils;
 import com.ky.kyandroid.util.SweetAlertDialogUtil;
 import com.ky.kyandroid.util.ViewUtil;
 import com.ky.kyandroid.view.BadgeView;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.pedant.SweetAlert.SweetAlertDialog;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
 
 /**
  * Created by Caizhui on 2017-6-8.
@@ -317,7 +308,7 @@ public class MainAllActivity extends AppCompatActivity {
              break;
             /**督查督办*/
             case R.id.supervision_img:
-                intent.setClass(this, SuperVisionAddActivity.class);
+                intent.setClass(this, SuperVisionListActivity.class);
                 startActivity(intent);
                 break;
         }
