@@ -119,11 +119,11 @@ public class SuperVisionDetailActivity extends AppCompatActivity {
     public void initData(){
         if(tFtDbEntity!=null){
             supervisorNameEdt.setText(tFtDbEntity.getDbmc());
-            if("0".equals(tFtDbEntity.getDblx())){
+            if("1".equals(tFtDbEntity.getDblx())){
                 radioButton01.setChecked(true);
-            }else if("1".equals(tFtDbEntity.getDblx())){
-                radioButton02.setChecked(true);
             }else if("2".equals(tFtDbEntity.getDblx())){
+                radioButton02.setChecked(true);
+            }else if("3".equals(tFtDbEntity.getDblx())){
                 radioButton03.setChecked(true);
             }
             beSupervisorUnitSpinner.setText(tFtDbEntity.getBdbdw());

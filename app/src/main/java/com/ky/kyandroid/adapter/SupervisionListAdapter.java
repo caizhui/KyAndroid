@@ -60,12 +60,12 @@ public class SupervisionListAdapter extends BaseAdapter {
          holder.dbName.setText(list.get(position).getDbmc());
          holder.dbGlsj.setText(list.get(position).getSjmc());
          holder.dbTime.setText(list.get(position).getDbsj());
-        if ("1".equals(list.get(position).getZt())) {
-            holder.dbStatus.setText("录入");
-        } else if ("0".equals(list.get(position).getZt())) {
-            holder.dbStatus.setText("草稿");
+        if ("1".equals(list.get(position).getDblx())) {
+            holder.dbStatus.setText("超时");
+        } else if ("2".equals(list.get(position).getDblx())) {
+            holder.dbStatus.setText("不落实");
         } else {
-                holder.dbStatus.setText(list.get(position).getZt());
+                holder.dbStatus.setText("落实不彻底");
         }
         return convertView;
     }

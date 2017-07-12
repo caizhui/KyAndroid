@@ -128,15 +128,17 @@ public class SuperVisionAddActivity extends AppCompatActivity {
         rightBtn.setVisibility(View.INVISIBLE);
 
         if(radioGroup!=null){
+            radioButton01.setChecked(true);
+            dblx="1";
             radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(RadioGroup group, int checkedId) {
                     if (radioButton01.getId() == checkedId) {
-                        dblx="0";
-                    } else if (radioButton02.getId() == checkedId) {
                         dblx="1";
-                    } else if (radioButton03.getId() == checkedId) {
+                    } else if (radioButton02.getId() == checkedId) {
                         dblx="2";
+                    } else if (radioButton03.getId() == checkedId) {
+                        dblx="3";
                     }
                 }
             });
