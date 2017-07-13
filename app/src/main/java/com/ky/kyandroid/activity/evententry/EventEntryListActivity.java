@@ -1,7 +1,6 @@
 package com.ky.kyandroid.activity.evententry;
 
 import android.annotation.SuppressLint;
-import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,7 +18,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -41,6 +39,7 @@ import com.ky.kyandroid.bean.PageBean;
 import com.ky.kyandroid.db.dao.TFtSjEntityDao;
 import com.ky.kyandroid.entity.TFtSjEntity;
 import com.ky.kyandroid.entity.TFtZtlzEntity;
+import com.ky.kyandroid.util.DateTimePickDialogUtil;
 import com.ky.kyandroid.util.JsonUtil;
 import com.ky.kyandroid.util.OkHttpUtil;
 import com.ky.kyandroid.util.SpUtil;
@@ -50,10 +49,7 @@ import com.ky.kyandroid.util.SwipeRefreshUtil;
 import com.solidfire.gson.JsonObject;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -762,7 +758,7 @@ public class EventEntryListActivity extends AppCompatActivity {
                 @Override
                 public boolean onTouch(View view, MotionEvent motionEvent) {
                     if(motionEvent.getAction() == MotionEvent.ACTION_DOWN){
-                        Calendar c = Calendar.getInstance();
+                       /* Calendar c = Calendar.getInstance();
                         new DatePickerDialog(EventEntryListActivity.this, new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
@@ -772,7 +768,10 @@ public class EventEntryListActivity extends AppCompatActivity {
                                 time += dateFormat.format(date);
                                 happendTImeEdt.setText(time);
                             }
-                        }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
+                        }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();*/
+                        DateTimePickDialogUtil dateTimePicKDialog = new DateTimePickDialogUtil(
+                                EventEntryListActivity.this, "");
+                        dateTimePicKDialog.dateTimePicKDialog(happendTImeEdt);
                     }
                     return false;
                 }

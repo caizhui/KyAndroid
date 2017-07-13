@@ -1,7 +1,6 @@
 package com.ky.kyandroid.activity.dispatch;
 
 import android.annotation.SuppressLint;
-import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -22,7 +21,6 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -41,6 +39,7 @@ import com.ky.kyandroid.db.dao.FileEntityDao;
 import com.ky.kyandroid.entity.FileEntity;
 import com.ky.kyandroid.entity.TFtSjEntity;
 import com.ky.kyandroid.entity.TFtZtlzEntity;
+import com.ky.kyandroid.util.DateTimePickDialogUtil;
 import com.ky.kyandroid.util.FileManager;
 import com.ky.kyandroid.util.JsonUtil;
 import com.ky.kyandroid.util.SpUtil;
@@ -55,7 +54,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -297,7 +295,7 @@ public class StreetHandleActivity extends AppCompatActivity {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if(motionEvent.getAction() == MotionEvent.ACTION_DOWN){
                     happenTimeEdt.clearFocus();
-                    Calendar c = Calendar.getInstance();
+                   /* Calendar c = Calendar.getInstance();
                     new DatePickerDialog(StreetHandleActivity.this, new DatePickerDialog.OnDateSetListener() {
                         @Override
                         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
@@ -307,7 +305,10 @@ public class StreetHandleActivity extends AppCompatActivity {
                             //time += dateFormat.format(date);
                             happenTimeEdt.setText(time);
                         }
-                    }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
+                    }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();*/
+                    DateTimePickDialogUtil dateTimePicKDialog = new DateTimePickDialogUtil(
+                            StreetHandleActivity.this, "");
+                    dateTimePicKDialog.dateTimePicKDialog(happenTimeEdt);
                 }
                 return false;
             }
