@@ -301,10 +301,10 @@ public class StreetHandleActivity extends AppCompatActivity {
                     new DatePickerDialog(StreetHandleActivity.this, new DatePickerDialog.OnDateSetListener() {
                         @Override
                         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                            Date date = new Date(System.currentTimeMillis());
-                            SimpleDateFormat dateFormat = new SimpleDateFormat(" HH:mm:ss");
+                            //Date date = new Date(System.currentTimeMillis());
+                            //SimpleDateFormat dateFormat = new SimpleDateFormat(" HH:mm:ss");
                             String time = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
-                            time += dateFormat.format(date);
+                            //time += dateFormat.format(date);
                             happenTimeEdt.setText(time);
                         }
                     }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
