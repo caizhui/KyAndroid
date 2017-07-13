@@ -606,8 +606,8 @@ public class EventEntryListActivity extends AppCompatActivity {
                             startActivity(intent);
                            // ReturnOperation(tFtZtlzEntity, dialog_streethandle_operation, tFtZtlzEntity.getActionname(),Constants.SERVICE_ZXCL );
                         }else if ("7.2".equals(tFtZtlzEntity.getNextzt())) {
-                            //当7.2事件街道自行处理反馈的时候，弹出自定义对话框
-                            ReturnOperation(tFtZtlzEntity, R.layout.dialog_streetfeedback_operation, tFtZtlzEntity.getName(),Constants.SERVICE_EDIT_EVENT );
+                            //当7.2事件街道自行处理反馈的时候，弹出自定义对话框 修改为调用接口：Constants.SERVICE_ZXCLBANJ_EVENT
+                            ReturnOperation(tFtZtlzEntity, R.layout.dialog_streetfeedback_operation, tFtZtlzEntity.getName(),Constants.SERVICE_ZXCLBANJ_EVENT );
                         }else if("7,8".equals(tFtZtlzEntity.getNextzt())){
                             //当走街道自行处理这条线时，如果当前状态为9，则退回到7街道自行处理，否则退回8，弹出自定义对话框
                           /*  if("9".equals(tFtSjEntity.getZt())){
