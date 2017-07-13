@@ -75,4 +75,15 @@ public class Constants {
 	//坐标点保存接口
 	public final static String SERVICE_LOCATION_SAVE = "ft/kyAndroid/jwSave.action";
 
+
+	/**督查督办start**/
+
+	//督查督办查询接口
+	public final static String SERVICE_DBLIST = "ft/kyAndroid/dbList.action";
+
+	//督查督办操作接口
+	public final static String SERVICE_DBDBEXCEUTE= "ft/kyAndroid/dbdbExecute.action";
+
+	/**督查督办end**/
+
 }

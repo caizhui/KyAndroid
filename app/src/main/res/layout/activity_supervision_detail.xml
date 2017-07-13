@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <include layout="@layout/linearlayout_head" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:id="@+id/linear_evententry">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="15dp"
+                    android:padding="10dp">
+
+                    <TextView
+                        style="@style/TextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="督办名称:"/>
+
+                    <EditText
+                        android:id="@+id/supervisor_name_edt"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:enabled="false"
+                        android:textSize="16sp"
+                        android:layout_weight="1" />
+
+                </LinearLayout>
+
+
+                <include layout="@layout/linearlayout_one" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="15dp"
+                    android:padding="10dp">
+
+                    <TextView
+                        style="@style/TextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/supervisor_glsj" />
+
+                    <EditText
+                        android:id="@+id/supervisor_glsj_edt"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:enabled="false"
+                        android:textSize="16sp"
+                        android:layout_weight="1" />
+
+                </LinearLayout>
+
+
+                <include layout="@layout/linearlayout_one" />
+
+
+                <include layout="@layout/linearlayout_one" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="15dp"
+                    android:padding="10dp">
+
+                    <TextView
+                        style="@style/TextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/supervisor_type" />
+
+                    <EditText
+                        android:id="@+id/supervisor_dblx_edt"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:enabled="false"
+                        android:textSize="16sp"
+                        android:layout_weight="1" />
+
+                </LinearLayout>
+
+
+                <include layout="@layout/linearlayout_one" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
+
+                    <TextView
+                        style="@style/TextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/be_supervisor_unit" />
+
+                    <EditText
+                        android:id="@+id/be_supervisor_unit_spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:enabled="false"
+                        android:background="@null"
+                        android:textSize="16sp"/>
+                </LinearLayout>
+
+
+                <include layout="@layout/linearlayout_one" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="15dp"
+                    android:padding="10dp">
+
+                    <TextView
+                        style="@style/TextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/supervisor_glsj" />
+
+                    <EditText
+                        android:id="@+id/supervisor_glsj"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:enabled="false"
+                        android:background="@null"
+                        android:textSize="16sp"/>
+                </LinearLayout>
+
+                <include layout="@layout/linearlayout_one" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="15dp"
+                    android:padding="10dp">
+
+                    <TextView
+                        style="@style/TextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/feedback_time" />
+
+                    <TextView
+                        android:id="@+id/feedback_time_edt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:enabled="false"
+                        android:background="@null"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <include layout="@layout/linearlayout_one" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="15dp"
+                    android:padding="10dp">
+
+                    <TextView
+                        style="@style/TextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/fk_time" />
+
+                    <TextView
+                        android:id="@+id/feedback_fksj_edt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:enabled="false"
+                        android:background="@null"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+
+                <include layout="@layout/linearlayout_one" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="15dp"
+                    android:padding="10dp">
+
+                    <TextView
+                        style="@style/TextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/zt_text" />
+
+                    <TextView
+                        android:id="@+id/zt_edt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:enabled="false"
+                        android:background="@null"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+
+                <include layout="@layout/linearlayout_one" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
+
+                    <TextView
+                        style="@style/TextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/supervisor_zpjsr" />
+
+                    <TextView
+                        android:id="@+id/feedback_zpjsr_edt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:enabled="false"
+                        android:background="@null"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+
+                <include layout="@layout/linearlayout_one" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="15dp"
+                    android:padding="10dp">
+
+                    <TextView
+                        style="@style/TextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/supervisor_zpyy" />
+
+                    <TextView
+                        android:id="@+id/feedback_zpyy_edt"
+                        android:layout_width="0dp"
+                        android:layout_height="100dp"
+                        android:background="@null"
+                        android:textSize="16sp"
+                        android:enabled="false"
+                        android:layout_weight="1" />
+                </LinearLayout>
+
+
+                <include layout="@layout/linearlayout_one" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="15dp"
+                    android:padding="10dp">
+
+                    <TextView
+                        style="@style/TextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/supervisor_thyy" />
+
+                    <TextView
+                        android:id="@+id/feedback_thyy_edt"
+                        android:layout_width="0dp"
+                        android:layout_height="100dp"
+                        android:background="@null"
+                        android:textSize="16sp"
+                        android:enabled="false"
+                        android:layout_weight="1" />
+                </LinearLayout>
+
+
+                <include layout="@layout/linearlayout_one" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="15dp"
+                    android:padding="10dp">
+
+                    <TextView
+                        style="@style/TextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/supervisor_require" />
+
+                    <EditText
+                        android:id="@+id/supervisor_require_edt"
+                        android:layout_width="0dp"
+                        android:layout_height="100dp"
+                        android:background="@null"
+                        android:textSize="16sp"
+                        android:enabled="false"
+                        android:layout_weight="1" />
+                </LinearLayout>
+
+                <include layout="@layout/linearlayout_one" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="15dp"
+                    android:padding="10dp">
+
+                    <TextView
+                        style="@style/TextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/supervisor_fkjg" />
+
+                    <EditText
+                        android:id="@+id/supervisor_fkjg_edt"
+                        android:layout_width="0dp"
+                        android:layout_height="100dp"
+                        android:background="@null"
+                        android:textSize="16sp"
+                        android:enabled="false"
+                        android:layout_weight="1" />
+                </LinearLayout>
+
+                <include layout="@layout/linearlayout_one" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
+
+                    <TextView
+                        style="@style/TextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="35dp"
+                        android:text="@string/remark_text" />
+
+                    <EditText
+                        android:id="@+id/remark_text_edt"
+                        android:layout_width="0dp"
+                        android:layout_height="100dp"
+                        android:background="@null"
+                        android:enabled="false"
+                        android:textSize="16sp"
+                        android:layout_weight="1" />
+
+                </LinearLayout>
+
+
+                <include layout="@layout/linearlayout_one" />
+
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+</LinearLayout>

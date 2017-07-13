@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <include layout="@layout/linearlayout_head" />
 
@@ -14,14 +15,16 @@
             android:layout_height="match_parent">
 
             <LinearLayout
+                android:id="@+id/linear_evententry"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:id="@+id/linear_evententry">
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="60dp"
+                    android:layout_marginLeft="15dp"
+                    android:gravity="center"
                     android:orientation="horizontal"
                     android:padding="10dp">
 
@@ -34,19 +37,20 @@
                     <EditText
                         android:id="@+id/supervisor_name_edt"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:background="@null"
-                        android:textSize="16sp"
-                        android:layout_weight="1" />
+                        android:layout_height="30dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/border_edittext_bg"
+                        android:textSize="16sp" />
 
                 </LinearLayout>
-
 
                 <include layout="@layout/linearlayout_one" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="60dp"
+                    android:layout_marginLeft="15dp"
+                    android:gravity="center"
                     android:orientation="horizontal"
                     android:padding="10dp">
 
@@ -56,22 +60,42 @@
                         android:layout_height="wrap_content"
                         android:text="@string/supervisor_type" />
 
-                    <Spinner
-                        android:id="@+id/supervisor_type_spinner"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:textSize="16sp"
-                        android:layout_weight="1" />
+                    <RadioGroup
+                        android:id="@+id/radioGroup"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:background="@null"
+                        android:orientation="horizontal">
+
+
+                        <RadioButton
+                            android:id="@+id/radioButton01"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="超时" />
+
+                        <RadioButton
+                            android:id="@+id/radioButton02"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="不落实" />
+
+                        <RadioButton
+                            android:id="@+id/radioButton03"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="落实不彻底" />
+                    </RadioGroup>
 
                 </LinearLayout>
-
 
 
                 <include layout="@layout/linearlayout_one" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="60dp"
+                    android:gravity="center"
                     android:orientation="horizontal"
                     android:padding="10dp">
 
@@ -84,15 +108,43 @@
                     <Spinner
                         android:id="@+id/be_supervisor_unit_spinner"
                         android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:background="@drawable/border_edittext_bg"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+
+                <include layout="@layout/linearlayout_one" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginLeft="15dp"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
+
+                    <TextView
+                        style="@style/TextStyle"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="16sp"/>
+                        android:text="@string/supervisor_glsj" />
+
+                    <Spinner
+                        android:id="@+id/supervisor_glsj"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:background="@drawable/border_edittext_bg"
+                        android:textSize="16sp" />
                 </LinearLayout>
 
                 <include layout="@layout/linearlayout_one" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="60dp"
+                    android:layout_marginLeft="15dp"
+                    android:gravity="center"
                     android:orientation="horizontal"
                     android:padding="10dp">
 
@@ -102,10 +154,11 @@
                         android:layout_height="wrap_content"
                         android:text="@string/feedback_time" />
 
-                    <TextView
+                    <EditText
                         android:id="@+id/feedback_time_edt"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="30dp"
+                        android:background="@drawable/border_edittext_bg"
                         android:textSize="16sp" />
                 </LinearLayout>
 
@@ -114,80 +167,99 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="100dp"
+                    android:layout_marginLeft="15dp"
                     android:orientation="horizontal"
                     android:padding="10dp">
 
                     <TextView
                         style="@style/TextStyle"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:text="@string/supervisor_require" />
 
-                    <EditText
-                        android:id="@+id/supervisor_require_edt"
-                        android:layout_width="0dp"
-                        android:layout_height="100dp"
-                        android:background="@null"
-                        android:textSize="16sp"
-                        android:layout_weight="1" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/border_edittext_bg">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="*"
-                        android:textColor="@color/red" />
+                        <EditText
+                            android:id="@+id/supervisor_require_edt"
+                            android:layout_width="0dp"
+                            android:layout_height="100dp"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            android:gravity="start"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
                 </LinearLayout>
 
                 <include layout="@layout/linearlayout_one" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="100dp"
                     android:orientation="horizontal"
                     android:padding="10dp">
 
                     <TextView
                         style="@style/TextStyle"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="35dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="45dp"
                         android:text="@string/remark_text" />
 
-                    <EditText
-                        android:id="@+id/remark_text_edt"
-                        android:layout_width="0dp"
-                        android:layout_height="100dp"
-                        android:background="@null"
-                        android:textSize="16sp"
-                        android:layout_weight="1" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/border_edittext_bg">
+
+                        <EditText
+                            android:id="@+id/remark_text_edt"
+                            android:layout_width="0dp"
+                            android:layout_height="100dp"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            android:gravity="start"
+                            android:padding="5dp"
+                            android:textSize="16sp" />
+                    </LinearLayout>
 
                 </LinearLayout>
 
 
                 <include layout="@layout/linearlayout_one" />
+
                 <LinearLayout
+                    android:id="@+id/btn_linearlayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="35dp"
+                    android:layout_margin="10dp"
                     android:gravity="center">
 
                     <Button
                         android:id="@+id/supervision_add_btn"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="#44AB34"
-                        android:padding="5dp"
-                        android:text="保存" />
+                        android:layout_height="30dp"
+                        android:background="@drawable/border_sbldbutton_bg"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:text="保存"
+                        android:textColor="@color/white"
+                        android:textSize="14sp" />
 
                     <Button
                         android:id="@+id/supervision_cancel_btn"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="30dp"
                         android:layout_marginLeft="20dp"
-                        android:background="#2196F3"
-                        android:padding="5dp"
-                        android:text="取消" />
+                        android:background="@drawable/border_bccgbutton_bg"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:text="取消"
+                        android:textColor="@color/white"
+                        android:textSize="14sp" />
 
                 </LinearLayout>
             </LinearLayout>

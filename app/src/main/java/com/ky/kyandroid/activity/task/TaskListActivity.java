@@ -563,7 +563,7 @@ public class TaskListActivity extends AppCompatActivity {
                             yanQiOperation(tFtZtlzEntity, R.layout.dialog_return_operation, tFtZtlzEntity.getName(),Constants.SERVICE_EDIT_YANQI );
                         }
                     }else if ("8.2".equals(tFtZtlzEntity.getNextzt())) {
-                        //街道职能版处理
+                        //街道职能办处理
                         if("13,8,8.1".equals(tFtZtlzEntity.getPrevzt())){
                             Intent intent = new Intent(TaskListActivity.this, QuHandleActivity.class);
                             Bundle bundle = new Bundle();
@@ -763,7 +763,6 @@ public class TaskListActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (netWorkConnection.isWIFIConnection()) {
-                    sweetAlertDialogUtil.loadAlertDialog();
                     Map<String, String> paramsMap = new HashMap<String, String>();
                     paramsMap.put("userId", userId);
                     paramsMap.put("sjId", taskEntity.getId());
@@ -784,6 +783,7 @@ public class TaskListActivity extends AppCompatActivity {
                         }
                     }
                     if("".equals(message)){
+                        sweetAlertDialogUtil.loadAlertDialog();
                         // 发送请求
                         OkHttpUtil.sendRequest(url,paramsMap, new Callback() {
 

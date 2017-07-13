@@ -608,7 +608,7 @@ public class EventEntryListActivity extends AppCompatActivity {
                         }else if ("7.2".equals(tFtZtlzEntity.getNextzt())) {
                             //当7.2事件街道自行处理反馈的时候，弹出自定义对话框
                             ReturnOperation(tFtZtlzEntity, R.layout.dialog_streetfeedback_operation, tFtZtlzEntity.getName(),Constants.SERVICE_EDIT_EVENT );
-                        }else if("7,8".equals(tFtZtlzEntity.getNextzt()) ){
+                        }else if("7,8".equals(tFtZtlzEntity.getNextzt())){
                             //当走街道自行处理这条线时，如果当前状态为9，则退回到7街道自行处理，否则退回8，弹出自定义对话框
                           /*  if("9".equals(tFtSjEntity.getZt())){
                                 tFtZtlzEntity.setNextzt("7");
@@ -618,13 +618,18 @@ public class EventEntryListActivity extends AppCompatActivity {
                             //当10回访核查通过或者7,8回访核查不通过的时候，弹出自定义对话框
                             ReturnOperation(tFtZtlzEntity, R.layout.dialog_verification_operation, tFtZtlzEntity.getName()+"原因",Constants.SERVICE_EDIT_EVENT);
                         }else if ("8".equals(tFtZtlzEntity.getNextzt()) || "13".equals(tFtZtlzEntity.getNextzt())) {
-                            //当8街道派遣的时候，跳到街道派遣Activity
-                           Intent  intent =new Intent(EventEntryListActivity.this, DispatchActivity.class);
-                            Bundle bundle = new Bundle();
-                            bundle.putSerializable("tFtSjEntity", tFtSjEntity);
-                            intent.putExtras(bundle);
-                            startActivity(intent);
-                        }else if ("10".equals(tFtZtlzEntity.getNextzt())) {
+                            if("14".equals(tFtZtlzEntity.getPrevzt())){
+                                ReturnOperation(tFtZtlzEntity, R.layout.dialog_verification_operation, tFtZtlzEntity.getName()+"原因",Constants.SERVICE_EDIT_EVENT);
+                            }else{
+                                //当8街道派遣的时候，跳到街道派遣Activity
+                                Intent  intent =new Intent(EventEntryListActivity.this, DispatchActivity.class);
+                                Bundle bundle = new Bundle();
+                                bundle.putSerializable("tFtSjEntity", tFtSjEntity);
+                                intent.putExtras(bundle);
+                                startActivity(intent);
+                            }
+
+                        }else if ("10".equals(tFtZtlzEntity.getNextzt()) || "15".equals(tFtZtlzEntity.getNextzt())) {
                             //当10回访核查，弹出自定义对话框
                             ReturnOperation(tFtZtlzEntity, R.layout.dialog_verification_operation, tFtZtlzEntity.getName()+"原因",Constants.SERVICE_EDIT_EVENT);
                         }else if ("18".equals(tFtZtlzEntity.getNextzt())) {
@@ -722,7 +727,7 @@ public class EventEntryListActivity extends AppCompatActivity {
             radioButton02.setVisibility(View.INVISIBLE);
         }
         //回放核查不通过
-        if("7,8".equals(tFtZtlzEntity.getNextzt())){
+        if("7,8".equals(tFtZtlzEntity.getNextzt()) || ("13".equals(tFtZtlzEntity.getNextzt())&&"14".equals(tFtZtlzEntity.getPrevzt()))){
             radioButton03.setVisibility(View.VISIBLE);
             radioGroup.setOrientation(LinearLayout.VERTICAL);
             radioButton01.setText("街道回访核查不通过原因1");
@@ -731,7 +736,7 @@ public class EventEntryListActivity extends AppCompatActivity {
 
         }
         //回放核查通过
-        if("10".equals(tFtZtlzEntity.getNextzt())){
+        if("10".equals(tFtZtlzEntity.getNextzt()) || "15".equals(tFtZtlzEntity.getNextzt())){
             radioButton03.setVisibility(View.VISIBLE);
             radioButton01.setText("人手不足");
             radioButton02.setText("权限不足");

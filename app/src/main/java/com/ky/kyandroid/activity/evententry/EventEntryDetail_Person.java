@@ -204,7 +204,7 @@ public class EventEntryDetail_Person extends Fragment {
 
         //设置Spinner控件的初始值
         spinnerList = new ArrayList<CodeValue>();
-        spinnerList.add(new CodeValue("0","--请选择--"));
+        spinnerList.add(new CodeValue("0","无"));
         spinnerList.addAll(descEntityDao.queryListForCV("crd"));
         if (spinnerList == null) {
             //设置Spinner控件的初始值
