@@ -1,7 +1,6 @@
 package com.ky.kyandroid.activity.evententry;
 
 import android.annotation.SuppressLint;
-import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -17,7 +16,6 @@ import android.view.ViewGroup;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -35,13 +33,11 @@ import com.ky.kyandroid.db.dao.DescEntityDao;
 import com.ky.kyandroid.db.dao.TFtQhEntityDao;
 import com.ky.kyandroid.entity.TFtQhEntity;
 import com.ky.kyandroid.entity.TFtSjEntity;
+import com.ky.kyandroid.util.DateTimePickDialogUtil;
 import com.ky.kyandroid.util.SpUtil;
 import com.ky.kyandroid.util.StringUtils;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -469,7 +465,7 @@ public class EventEntryAdd_Basic extends Fragment {
             case R.id.happen_time_edt:
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     happenTimeEdt.clearFocus();
-                    Calendar c = Calendar.getInstance();
+                    /*Calendar c = Calendar.getInstance();
                     new DatePickerDialog(EventEntryAdd_Basic.this.getActivity(), new DatePickerDialog.OnDateSetListener() {
                         @Override
                         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
@@ -479,7 +475,10 @@ public class EventEntryAdd_Basic extends Fragment {
                             time += dateFormat.format(date);
                             happenTimeEdt.setText(time);
                         }
-                    }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
+                    }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();*/
+                    DateTimePickDialogUtil dateTimePicKDialog = new DateTimePickDialogUtil(
+                            EventEntryAdd_Basic.this.getActivity(), "");
+                    dateTimePicKDialog.dateTimePicKDialog(happenTimeEdt);
                     return false;
                 }
                 break;

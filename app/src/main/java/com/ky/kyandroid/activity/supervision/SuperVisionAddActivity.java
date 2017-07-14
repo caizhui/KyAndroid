@@ -1,12 +1,10 @@
 package com.ky.kyandroid.activity.supervision;
 
-import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -17,10 +15,7 @@ import android.widget.Toast;
 
 import com.ky.kyandroid.R;
 import com.ky.kyandroid.entity.TFtDbEntity;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import com.ky.kyandroid.util.DateTimePickDialogUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -76,7 +71,7 @@ public class SuperVisionAddActivity extends AppCompatActivity {
      * 反馈时限
      */
     @BindView(R.id.feedback_time_edt)
-    TextView feedbackTimeEdt;
+    EditText feedbackTimeEdt;
     /**
      * 督办要求
      */
@@ -156,7 +151,7 @@ public class SuperVisionAddActivity extends AppCompatActivity {
             /** 点击发生时间控件 **/
             case R.id.feedback_time_edt:
                 feedbackTimeEdt.clearFocus();
-                Calendar c = Calendar.getInstance();
+               /* Calendar c = Calendar.getInstance();
                 new DatePickerDialog(SuperVisionAddActivity.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
@@ -166,7 +161,10 @@ public class SuperVisionAddActivity extends AppCompatActivity {
                         time += dateFormat.format(date);
                         feedbackTimeEdt.setText(time);
                     }
-                }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
+                }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();*/
+                DateTimePickDialogUtil dateTimePicKDialog = new DateTimePickDialogUtil(
+                        SuperVisionAddActivity.this, "");
+                dateTimePicKDialog.dateTimePicKDialog(feedbackTimeEdt);
                 break;
             case R.id.supervision_add_btn:
                 if(tFtDbEntity==null){
