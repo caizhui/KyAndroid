@@ -186,7 +186,7 @@ public class EventEntryAdd_Person extends Fragment {
         //判断是否查看本地详细信息，如果是true就执行下面方法
         if (flag) {
             if (sjryList != null && sjryList.size() > 0) {
-                adapter = new EventPersonListAdapter(sjryList, EventEntryAdd_Person.this.getActivity());
+                adapter = new EventPersonListAdapter(sjryList,descEntityDao,tFtSjRyEntityDao,EventEntryAdd_Person.this.getActivity(),true);
                 if (personList != null) {
                     personList.setAdapter(adapter);
                 }
@@ -208,38 +208,6 @@ public class EventEntryAdd_Person extends Fragment {
         isDetail = true;
         addPersonInfo();
     }
-
-    @OnItemLongClick(R.id.person_list)
-    public boolean OnItemLongClick(int position){
-        final TFtSjRyEntity tFtSjRyEntity = (TFtSjRyEntity) adapter.getItem(position);
-        AlertDialog.Builder builder = new AlertDialog.Builder(EventEntryAdd_Person.this.getActivity());
-        builder.setTitle("信息");
-        builder.setMessage("确定要删除该条记录吗？");
-        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                boolean flag = tFtSjRyEntityDao.deleteEventEntry(tFtSjRyEntity.getUuid());
-                if(flag){
-                    Toast.makeText(EventEntryAdd_Person.this.getActivity(),"删除成功",Toast.LENGTH_SHORT).show();
-                }else{
-                    Toast.makeText(EventEntryAdd_Person.this.getActivity(),"删除失败",Toast.LENGTH_SHORT).show();
-                }
-                sjryList = tFtSjRyEntityDao.queryListBySjId(tFtSjRyEntity.getSjId());
-                if(sjryList!=null){
-                    adapter.notifyDataSetChanged(sjryList);
-                }
-            }
-        });
-        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-            }
-        });
-        builder.create().show();
-      return false;
-    }
-
-
 
     @OnClick({R.id.add_person})
     public void onClick(View view) {
@@ -456,7 +424,7 @@ public class EventEntryAdd_Person extends Fragment {
                     if(flag){
                         sjryList  = tFtSjRyEntityDao.queryListBySjId(uuid);
                         if (sjryList != null && sjryList.size() > 0) {
-                            adapter = new EventPersonListAdapter(sjryList, EventEntryAdd_Person.this.getActivity());
+                            adapter = new EventPersonListAdapter(sjryList,descEntityDao,tFtSjRyEntityDao,EventEntryAdd_Person.this.getActivity(),true);
                             personList.setAdapter(adapter);
                         }
                         Toast.makeText(EventEntryAdd_Person.this.getActivity(),message.append("成功").toString(),Toast.LENGTH_SHORT).show();
@@ -514,7 +482,7 @@ public class EventEntryAdd_Person extends Fragment {
             for(int i=0;i<sjryList.size();i++){
 
             }
-            adapter = new EventPersonListAdapter(sjryList, EventEntryAdd_Person.this.getActivity());
+            adapter = new EventPersonListAdapter(sjryList, descEntityDao,tFtSjRyEntityDao, EventEntryAdd_Person.this.getActivity(),true);
             if (personList != null) {
                 personList.setAdapter(adapter);
             }

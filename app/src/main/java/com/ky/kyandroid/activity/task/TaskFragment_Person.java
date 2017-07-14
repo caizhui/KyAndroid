@@ -20,6 +20,7 @@ import com.ky.kyandroid.R;
 import com.ky.kyandroid.adapter.EventPersonListAdapter;
 import com.ky.kyandroid.bean.CodeValue;
 import com.ky.kyandroid.db.dao.DescEntityDao;
+import com.ky.kyandroid.db.dao.TFtSjRyEntityDao;
 import com.ky.kyandroid.entity.TFtSjRyEntity;
 
 import java.util.ArrayList;
@@ -142,7 +143,7 @@ public class TaskFragment_Person extends Fragment {
      */
     private boolean isDetail =false;
 
-
+    private TFtSjRyEntityDao tFtSjRyEntityDao;
     public DescEntityDao descEntityDao;
 
 
@@ -152,6 +153,7 @@ public class TaskFragment_Person extends Fragment {
         View view = inflater.inflate(R.layout.evententeradd_person_fragment, container, false);
         ButterKnife.bind(this, view);
         descEntityDao = new DescEntityDao();
+        tFtSjRyEntityDao = new TFtSjRyEntityDao();
         addPerson.setVisibility(View.GONE);
         //tFtSjRyEntityList = new ArrayList<TFtSjRyEntity>();
         //判断是否查看本地详细信息，如果是true就执行下面方法
@@ -306,7 +308,7 @@ public class TaskFragment_Person extends Fragment {
     public void setTFtSjRyEntityList(List<TFtSjRyEntity> sjryList) {
         this.sjryList = sjryList;
         if (sjryList != null && sjryList.size() > 0) {
-            adapter = new EventPersonListAdapter(sjryList, TaskFragment_Person.this.getActivity());
+            adapter = new EventPersonListAdapter(sjryList,descEntityDao,tFtSjRyEntityDao,TaskFragment_Person.this.getActivity(),"1".equals(type) ? true : false);
             if (personList != null) {
                 personList.setAdapter(adapter);
             }

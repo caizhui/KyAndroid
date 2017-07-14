@@ -49,6 +49,15 @@ public class FileEntity implements Serializable{
      */
     public boolean isHaveMs = true;
 
+    /**
+     * 是否显示
+     */
+    @Column(name = "isShow")
+    private String isShow = "1";
+
+    /**
+     * 附件类型
+     */
     private String fjlx;
 
     public FileEntity(){}
@@ -115,5 +124,13 @@ public class FileEntity implements Serializable{
 
     public void setFjlx(String fjlx) {
         this.fjlx = fjlx;
+    }
+
+    public String getIsShow() {
+        return isShow;
+    }
+
+    public void setIsShow(String isShow) {
+        this.isShow = isShow;
     }
 }

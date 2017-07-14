@@ -1,8 +1,12 @@
 package com.ky.kyandroid.db;
 
+import android.os.Environment;
+
 import org.xutils.DbManager;
 import org.xutils.db.table.TableEntity;
 import org.xutils.x;
+
+import java.io.File;
 
 /**
  * 
@@ -21,6 +25,7 @@ public class DatabaseOpenHelper {
 	private final int VERSION = 1;
 
 	private DatabaseOpenHelper() {
+		String path = Environment.getExternalStorageDirectory().getPath() + "/db/";
 		daoConfig = new DbManager.DaoConfig()
 				.setDbName(DB_NAME)
 				.setDbVersion(VERSION)
@@ -39,7 +44,7 @@ public class DatabaseOpenHelper {
 					}
 				})
 				// 将数据库存储在你想存储的地方，如果不设置，那么数据库默认存储在/data/data/你的应用程序/database/xxx.db下
-				// .setDbDir(new File("/sdcard/download/"))
+				.setDbDir(new File(path))
 				// 设置是否开启事务
 				.setAllowTransaction(false)
 				.setTableCreateListener(new DbManager.TableCreateListener() {

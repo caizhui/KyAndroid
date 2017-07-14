@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.ky.kyandroid.AppContext;
 import com.ky.kyandroid.Constants;
 import com.ky.kyandroid.R;
+import com.ky.kyandroid.db.dao.FileEntityDao;
 import com.ky.kyandroid.entity.FileEntity;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -26,6 +27,7 @@ public class EventImageListAdapter extends BaseAdapter {
     public List<FileEntity> list;
     public Context context;
     private boolean isDetail;
+    private FileEntityDao fileEntityDao;
 
 
     public EventImageListAdapter(Context context) {
@@ -34,10 +36,11 @@ public class EventImageListAdapter extends BaseAdapter {
         this.context = context;
     }
 
-    public EventImageListAdapter(List<FileEntity> list, Context context,boolean isDetail) {
+    public EventImageListAdapter(List<FileEntity> list,FileEntityDao fileEntityDao, Context context,boolean isDetail) {
         super();
         this.list = list;
         this.context = context;
+        this.fileEntityDao = fileEntityDao;
         this.isDetail = isDetail;
     }
 
@@ -100,7 +103,11 @@ public class EventImageListAdapter extends BaseAdapter {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                list.get(position).setFileMs(holder.imageMs.getText().toString());
+                FileEntity selectEntity = list.get(position);
+                if (selectEntity != null){
+                    selectEntity.setFileMs(editable.toString());
+                    fileEntityDao.updateFileEntityByFileName(selectEntity,"fileMs");
+                }
             }
         });
         return convertView;

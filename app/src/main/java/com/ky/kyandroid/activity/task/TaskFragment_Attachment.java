@@ -13,9 +13,11 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.ky.kyandroid.R;
+import com.ky.kyandroid.activity.evententry.EventEntryAdd_Attachment;
 import com.ky.kyandroid.activity.evententry.EventLogListActivity;
 import com.ky.kyandroid.activity.evententry.EventRelevanceListActivity;
 import com.ky.kyandroid.adapter.EventImageListAdapter;
+import com.ky.kyandroid.db.dao.FileEntityDao;
 import com.ky.kyandroid.entity.FileEntity;
 import com.ky.kyandroid.entity.TFtSjDetailEntity;
 import com.ky.kyandroid.entity.TFtSjEntity;
@@ -43,13 +45,13 @@ public class TaskFragment_Attachment extends Fragment {
     Button addAttachment;
 
     /**
-     *  事件关联日志按钮
+     * 事件关联日志按钮
      */
     @BindView(R.id.event_log)
     Button eventLogBtn;
 
     /**
-     *  事件关联按钮
+     * 事件关联按钮
      */
     @BindView(R.id.event_relevance)
     Button eventRelevanceBtn;
@@ -70,7 +72,7 @@ public class TaskFragment_Attachment extends Fragment {
     /**
      * 存放图片List
      */
-    private List<FileEntity>   fileEntityList;
+    private List<FileEntity> fileEntityList;
 
     /**
      * 文件实体
@@ -90,8 +92,9 @@ public class TaskFragment_Attachment extends Fragment {
     /**
      * 事件关联Map信息
      */
-    private Map<String,TFtSjEntity> glsjListMap;
+    private Map<String, TFtSjEntity> glsjListMap;
 
+    FileEntityDao fileEntityDao;
 
     @Nullable
     @Override
@@ -101,13 +104,9 @@ public class TaskFragment_Attachment extends Fragment {
         addAttachment.setVisibility(View.GONE);
         eventLogBtn.setVisibility(View.VISIBLE);
         eventRelevanceBtn.setVisibility(View.VISIBLE);
-        //,判断是否为空，是为了防止切换页签的时候将实例重新初始化
-        if(fileEntityList==null){
-            fileEntityList =new ArrayList<FileEntity>();
-        }
-        if(adapter==null){
-            adapter = new EventImageListAdapter(fileEntityList, TaskFragment_Attachment.this.getActivity(),true);
-        }
+        fileEntityList = new ArrayList<FileEntity>();
+        fileEntityDao = new FileEntityDao();
+        adapter = new EventImageListAdapter(fileEntityList, fileEntityDao, TaskFragment_Attachment.this.getActivity(), true);
         imageList.setAdapter(adapter);
         //显示图片或者创建文件路径
         appendImage();
@@ -121,10 +120,10 @@ public class TaskFragment_Attachment extends Fragment {
     public void appendImage() {
         if (sjfjList != null && sjfjList.size() > 0) {
             //每次进来都给fileEntityList重新初始化一次
-            fileEntityList =new ArrayList<FileEntity>();
-            for(int i=0;i<sjfjList.size();i++){
+            fileEntityList = new ArrayList<FileEntity>();
+            for (int i = 0; i < sjfjList.size(); i++) {
                 fileEntity = new FileEntity();
-                if(sjfjList.get(i).getUrl()!=null){
+                if (sjfjList.get(i).getUrl() != null) {
                     fileEntity.setFileUrl(sjfjList.get(i).getUrl());
                     fileEntity.setFileMs(sjfjList.get(i).getWjms());
                 }
@@ -138,25 +137,25 @@ public class TaskFragment_Attachment extends Fragment {
         }
     }
 
-    @OnClick({R.id.add_attachment,R.id.event_log,R.id.event_relevance})
+    @OnClick({R.id.add_attachment, R.id.event_log, R.id.event_relevance})
     public void OnClick(View view) {
         switch (view.getId()) {
             case R.id.add_attachment:
                 break;
             case R.id.event_log:
-                Intent intent =new Intent(this.getActivity(),EventLogListActivity.class);
+                Intent intent = new Intent(this.getActivity(), EventLogListActivity.class);
                 List<TFtSjLogEntity> tFtSjLogEntityList = null;
-                if(tFtSjDetailEntity!=null){
-                    tFtSjLogEntityList =tFtSjDetailEntity.getSjlogList();
+                if (tFtSjDetailEntity != null) {
+                    tFtSjLogEntityList = tFtSjDetailEntity.getSjlogList();
                 }
                 intent.putExtra("tFtSjLogEntityList", (Serializable) tFtSjLogEntityList);
                 startActivity(intent);
                 break;
             case R.id.event_relevance:
-                Intent intent1 =new Intent(this.getActivity(),EventRelevanceListActivity.class);
+                Intent intent1 = new Intent(this.getActivity(), EventRelevanceListActivity.class);
                 List<TFtSjGlsjEntity> tFtSjGlsjEntityList = null;
-                if(tFtSjDetailEntity!=null){
-                    tFtSjGlsjEntityList =tFtSjDetailEntity.getGlsjList();
+                if (tFtSjDetailEntity != null) {
+                    tFtSjGlsjEntityList = tFtSjDetailEntity.getGlsjList();
                     glsjListMap = tFtSjDetailEntity.getGlsjListMap();
                 }
                 intent1.putExtra("tFtSjGlsjEntityList", (Serializable) tFtSjGlsjEntityList);

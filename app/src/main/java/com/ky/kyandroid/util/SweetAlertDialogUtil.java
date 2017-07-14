@@ -45,7 +45,9 @@ public class SweetAlertDialogUtil {
      * 取消弹出框
      */
     public void dismissAlertDialog() {
-        sweetAlertDialog.dismiss();
+        if (sweetAlertDialog.isShowing()){
+            sweetAlertDialog.dismiss();
+        }
     }
 
     /**

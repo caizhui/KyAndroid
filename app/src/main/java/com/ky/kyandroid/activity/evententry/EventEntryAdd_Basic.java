@@ -375,28 +375,7 @@ public class EventEntryAdd_Basic extends Fragment {
 
         // 编辑下
         if (tFtSjEntity != null) {
-            //当状态等于1的时候，表示为草稿，可以修改，其他的时候只能查看信息
-            if (!"0".equals(tFtSjEntity.getZt()) && !"3".equals(tFtSjEntity.getZt())) {
-                thingNameEdt.setEnabled(false);
-                happenTimeEdt.setEnabled(false);
-                happenAddressEdt.setEnabled(false);
-                petitionGroupsEdt.setEnabled(false);
-                fieldDepartmenEdt.setEnabled(false);
-                fieldsInvolvedEdt.setEnabled(false);
-                belongStreetEdt.setEnabled(false);
-                mainAppealsEdt.setEnabled(false);
-                eventSummaryEdt.setEnabled(false);
-                leadershipInstructionsEdt.setEnabled(false);
-                //以下为下拉框控件
-                patternManifestationSpinner.setEnabled(false);
-                fieldMorpholoySpinner.setEnabled(false);
-                scopeTextSpinner.setEnabled(false);
-                foreignRelatedSpinner.setEnabled(false);
-                involvedXinjiangSpinner.setEnabled(false);
-                involvePublicOpinionSpinner.setEnabled(false);
-                publicSecurityDisposalSpinner.setEnabled(false);
-                belongCommunitySpinner.setEnabled(false);
-            }
+
             thingNameEdt.setText(tFtSjEntity.getSjmc());
             happenTimeEdt.setText(tFtSjEntity.getFssj());
             happenAddressEdt.setText(tFtSjEntity.getFsdd());
@@ -529,7 +508,20 @@ public class EventEntryAdd_Basic extends Fragment {
         } else {
             tFtSjEntity.setFsdd(happenAddressString);
         }
+        // 上访群体
         tFtSjEntity.setSfsqqt(petitionGroupsString);
+        // 到场部门
+        tFtSjEntity.setDcbm(fieldDepartmenString);
+        // 表现形式
+        tFtSjEntity.setBxxs(patternManifestationString);
+        // 现场态势
+        tFtSjEntity.setXcts(fieldMorpholoySpinnerString);
+        // 规模
+        tFtSjEntity.setGm(scopeTextString);
+        // 涉及领域
+        tFtSjEntity.setSjly(fieldsInvolved);
+        // 以下必填项由于PC改变而去除
+        /*
         if (StringUtils.isBlank(fieldDepartmenString)) {
             message += "到场部门不能为空\n";
         } else {
@@ -555,12 +547,19 @@ public class EventEntryAdd_Basic extends Fragment {
         } else {
             tFtSjEntity.setSjly(fieldsInvolved);
         }
+         */
         tFtSjEntity.setSfsw(foreignRelatedString);
         tFtSjEntity.setSfsj(involvedXinjiangString);
         tFtSjEntity.setSfsyq(involvePublicOpinionString);
         tFtSjEntity.setSfgacz(publicSecurityDisposalString);
         tFtSjEntity.setSsjd(belongStreetString);
         tFtSjEntity.setSssq(belongCommunityString);
+
+        //主要诉求
+        tFtSjEntity.setZysq(mainAppealsString);
+        // 事件概要
+        tFtSjEntity.setSjgyqk(eventSummaryString);
+        /*
         if (StringUtils.isBlank(mainAppealsString)) {
             message += "主要诉求不能为空\n";
         } else {
@@ -571,13 +570,15 @@ public class EventEntryAdd_Basic extends Fragment {
         } else {
             tFtSjEntity.setSjgyqk(eventSummaryString);
         }
+
+        */
         tFtSjEntity.setLdps(leadershipInstructionsString);
         if (!"".equals(message)) {
             Toast.makeText(EventEntryAdd_Basic.this.getActivity(), message, Toast.LENGTH_SHORT).show();
+            return null;
         } else {
             return tFtSjEntity;
         }
-        return null;
     }
 
     @OnClick({R.id.field_departmen_layout, R.id.fields_involved_linearlayout})

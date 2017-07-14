@@ -7,7 +7,9 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.ky.kyandroid.R;
+import com.ky.kyandroid.entity.MsgNoticeEntity;
 import com.ky.kyandroid.entity.TFtSjEntity;
+import com.ky.kyandroid.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +24,7 @@ public class EventEntityListAdapter extends BaseAdapter {
 
     public EventEntityListAdapter(Context context) {
         super();
-        list = new ArrayList<TFtSjEntity>();
+        this.list = new ArrayList<TFtSjEntity>();
         this.context = context;
     }
 
@@ -65,7 +67,13 @@ public class EventEntityListAdapter extends BaseAdapter {
         }else if("0".equals(list.get(position).getZt())){
             holder.thingStatus.setText("草稿");
         }else{
-            holder.thingStatus.setText(list.get(position).getZtname());
+            String ztName = list.get(position).getZtname();
+            if (StringUtils.isBlank(ztName)){
+                holder.thingStatus.setText("未知状态");
+            }else{
+                holder.thingStatus.setText(list.get(position).getZtname());
+            }
+
         }
         return convertView;
     }
@@ -94,5 +102,15 @@ public class EventEntityListAdapter extends BaseAdapter {
         super.notifyDataSetChanged();
     }
 
+    /**
+     * @param addList
+     */
+    public void addDataSetChanged(List<TFtSjEntity> addList){
+        this.list.addAll(addList);
+        this.notifyDataSetChanged(list);
+    }
 
+    public List<TFtSjEntity> getList() {
+        return list;
+    }
 }

@@ -34,7 +34,7 @@ public class AppContext extends Application {
 		x.Ext.setDebug(true);
 		initImageLoader(this);
 		//启动定位服务
-		ServiceUtil.invokeAlarmService(this, LocationService.class, LocationService.LOCATION_SERVICE_NAME, LocationService.START_INTERVAL);
+		//ServiceUtil.invokeAlarmService(this, LocationService.class, LocationService.LOCATION_SERVICE_NAME, LocationService.START_INTERVAL);
 	}
 	
 	/**

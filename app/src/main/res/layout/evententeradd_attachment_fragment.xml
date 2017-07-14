@@ -9,22 +9,45 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-        <LinearLayout
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
             android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:gravity="center_vertical"
+                android:drawableLeft="@mipmap/library_icon"
+                android:text="附件信息列表 >>"
+                android:textSize="15dp" />
 
             <Button
                 android:id="@+id/add_attachment"
                 android:layout_width="wrap_content"
-                android:layout_height="30dp"
+                android:layout_height="28dp"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/border_sbldbutton_bg"
+                android:drawableLeft="@mipmap/button_add_01"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
-                android:background="@drawable/border_sbldbutton_bg"
+                android:text=" 附件"
                 android:textColor="@color/white"
-                android:textSize="14sp"
-                android:text="添加"/>
+                android:textSize="14sp" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
 
             <Button
                 android:id="@+id/event_log"
@@ -51,13 +74,20 @@
                 android:paddingRight="5dp"
                 android:visibility="gone"/>
 
-
-
         </LinearLayout>
+
+        <View
+            android:id="@+id/item_view"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="1dp"
+            android:background="#DDDDDD"
+            android:focusable="false" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="10dp">
+            android:padding="5dp">
 
            <ListView
                android:id="@+id/image_list"

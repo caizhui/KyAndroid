@@ -36,6 +36,9 @@ public class SjHandleParams {
 	
 	/** 变更状态 */
 	private String nextZt;
+
+	/** 状态名称- nextZt名称 */
+	private String ztname;
 	
 	/** 按钮列表 */
 	private List<TFtZtlzEntity> anlist;
@@ -153,5 +156,13 @@ public class SjHandleParams {
 
 	public void setCzyy(String czyy) {
 		this.czyy = czyy;
+	}
+
+	public String getZtname() {
+		return ztname;
+	}
+
+	public void setZtname(String ztname) {
+		this.ztname = ztname;
 	}
 }
