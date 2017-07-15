@@ -28,9 +28,11 @@ import android.widget.Toast;
 
 import com.ky.kyandroid.Constants;
 import com.ky.kyandroid.R;
+import com.ky.kyandroid.activity.evententry.EventEntryAdd_Attachment;
 import com.ky.kyandroid.activity.task.TaskListActivity;
 import com.ky.kyandroid.adapter.EventImageListAdapter;
 import com.ky.kyandroid.bean.NetWorkConnection;
+import com.ky.kyandroid.db.dao.FileEntityDao;
 import com.ky.kyandroid.entity.FileEntity;
 import com.ky.kyandroid.entity.TFtZtlzEntity;
 import com.ky.kyandroid.entity.TaskEntity;
@@ -242,7 +244,8 @@ public class DepartmentHandleActivity extends AppCompatActivity {
             Toast.makeText(DepartmentHandleActivity.this, "没有SD卡", Toast.LENGTH_LONG).show();
         }
         //初始化imageList
-        adapter = new EventImageListAdapter(fileEntityList, DepartmentHandleActivity.this,false);
+        FileEntityDao fileEntityDao = new FileEntityDao();
+        adapter = new EventImageListAdapter(fileEntityList,fileEntityDao,DepartmentHandleActivity.this,false);
         fileList.setAdapter(adapter);
     }
 
@@ -300,9 +303,9 @@ public class DepartmentHandleActivity extends AppCompatActivity {
                 paramsMap.put("userId", userId);
                 paramsMap.put("sjId", taskEntity.getId());
                 paramsMap.put("action", tFtZtlzEntity.getAction());
-                paramsMap.put("actionName", tFtZtlzEntity.getActionname());
+                paramsMap.put("actionName", tFtZtlzEntity.getActionName());
                 paramsMap.put("zt", taskEntity.getZt());
-                paramsMap.put("nextZt", tFtZtlzEntity.getNextzt());
+                paramsMap.put("nextZt", tFtZtlzEntity.getNextZt());
                 if (files != null && files.length > 0) {
                     String[] filesName = new String[files.length];
                     for (int i = 0; i < files.length; i++) {

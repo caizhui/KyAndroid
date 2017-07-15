@@ -301,7 +301,7 @@ public class EventEntryDetail_Person extends Fragment {
     public void setTFtSjRyEntityList(List<TFtSjRyEntity> sjryList) {
         this.sjryList = sjryList;
         if (sjryList != null && sjryList.size() > 0) {
-            adapter = new EventPersonListAdapter(sjryList, EventEntryDetail_Person.this.getActivity());
+            adapter = new EventPersonListAdapter(sjryList,descEntityDao,tFtSjRyEntityDao, EventEntryDetail_Person.this.getActivity(),false);
             if (personList != null) {
                 personList.setAdapter(adapter);
             }

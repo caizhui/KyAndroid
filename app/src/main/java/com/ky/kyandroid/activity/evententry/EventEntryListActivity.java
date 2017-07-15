@@ -13,6 +13,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -30,13 +31,17 @@ import android.widget.Toast;
 
 import com.ky.kyandroid.Constants;
 import com.ky.kyandroid.R;
+import com.ky.kyandroid.activity.LoginActivity;
 import com.ky.kyandroid.activity.dispatch.DispatchActivity;
 import com.ky.kyandroid.activity.dispatch.StreetHandleActivity;
+import com.ky.kyandroid.activity.msg.MsgNoticeActivity;
 import com.ky.kyandroid.adapter.EventEntityListAdapter;
 import com.ky.kyandroid.bean.AckMessage;
 import com.ky.kyandroid.bean.NetWorkConnection;
 import com.ky.kyandroid.bean.PageBean;
 import com.ky.kyandroid.db.dao.TFtSjEntityDao;
+import com.ky.kyandroid.entity.MsgNoticeEntity;
+import com.ky.kyandroid.entity.SjHandleParams;
 import com.ky.kyandroid.entity.TFtSjEntity;
 import com.ky.kyandroid.entity.TFtZtlzEntity;
 import com.ky.kyandroid.util.DateTimePickDialogUtil;
@@ -47,6 +52,7 @@ import com.ky.kyandroid.util.StringUtils;
 import com.ky.kyandroid.util.SweetAlertDialogUtil;
 import com.ky.kyandroid.util.SwipeRefreshUtil;
 import com.solidfire.gson.JsonObject;
+import com.solidfire.gson.reflect.TypeToken;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -69,6 +75,12 @@ import okhttp3.Response;
  */
 
 public class EventEntryListActivity extends AppCompatActivity {
+
+
+    /**
+     * TAG
+     */
+    static final String TAG = "EventEntryListActivity";
 
     /**
      * 标题左边按钮
@@ -109,6 +121,11 @@ public class EventEntryListActivity extends AppCompatActivity {
      * 每次加载信息List条数
      */
     private List<TFtSjEntity> pList;
+
+    /**
+     * 数据加载
+     */
+    private List<?> dataList;
 
 
     private EventEntityListAdapter adapter;
@@ -157,14 +174,10 @@ public class EventEntryListActivity extends AppCompatActivity {
 
     private LinearLayout list_jiazai;
 
-    boolean ifRefreshOK = false, ifrefresh = false;// 是否刷新完毕（防止第一次进入刷新跟加载同时进行）
-    boolean ifDateEnd = false, ifload = false;// 数据是否加载完
-
-    // 当前页
-    private int currentPage;
-
-    //每页显示条数
-    private int pageSize = 10;
+    /**
+     * 默认查询条目数/每页 -- 后台已经写死10条记录
+     */
+    private String pageSize = "10";
 
     /**
      *
@@ -179,7 +192,7 @@ public class EventEntryListActivity extends AppCompatActivity {
     /**
      * 总条数
      */
-    private int total;
+    private int total = 0;
 
     /**
      * 底部标题
@@ -241,7 +254,7 @@ public class EventEntryListActivity extends AppCompatActivity {
     /**
      * 文件名字
      */
-    TextView  fileName;
+    TextView fileName;
 
     /****弹出框用到的一些控件end**/
 
@@ -250,6 +263,11 @@ public class EventEntryListActivity extends AppCompatActivity {
      */
     private SweetAlertDialogUtil sweetAlertDialogUtil;
 
+    /**
+     * 查询参数
+     */
+    private Map<String, String> paramsMap = null;
+
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
 
@@ -257,108 +275,59 @@ public class EventEntryListActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             // 提示信息
-            String message = String.valueOf((msg.obj == null || "".equals(msg.obj) )? "系统繁忙,请稍后再试" : msg.obj);
+            String message = String.valueOf((msg.obj == null || "".equals(msg.obj)) ? "系统繁忙,请稍后再试" : msg.obj);
+            sweetAlertDialogUtil.dismissAlertDialog();
             switch (msg.what) {
-                // 失败
+                // 默认处理
                 case 0:
-                    sweetAlertDialogUtil.dismissAlertDialog();
-                    swipeContainer.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            swipeContainer.setRefreshing(false);
-                        }
-                    });
                     Toast.makeText(EventEntryListActivity.this, message, Toast.LENGTH_SHORT).show();
                     break;
-                // 刷新成功
+                // 加载失败
                 case 1:
-                    sweetAlertDialogUtil.dismissAlertDialog();
-                    //刷新重新初始List
-                    tFtSjEntityList = new ArrayList<TFtSjEntity>();
-                    // 判断是否刷新，刷新true,加载false
-                    ifrefresh = true;
-                    //判断是否刷新成功
-                    ifRefreshOK = true;
-                    //判断是否最后加载到最后
-                    ifDateEnd = false;
-                    currentPage = 2;
-                    //刷新时总条数从新设值
-                    total = 0;
-                    //解析数据
-                    handleTransation(message);
-                    if(pList!=null){
-                        totalMumber = pList.size();
-                        if (pList.size() < pageSize) {
-                            ifDateEnd = true;
-                            if (pageBean != null) {
-                                if (pageBean.getCurrentPage() == 1) {
-                                    list_jiazai.setVisibility(View.GONE);
-                                }
-                            }
-                        }else{
-                            ifload = false;
-                            list_jiazai.setVisibility(View.GONE);
-                        }
-                    }
-                    swipeContainer.post(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            swipeContainer.setRefreshing(false);
-                        }
-                    });
-                    adapter.notifyDataSetChanged(tFtSjEntityList);
-                    break;
-                // 加载更多
-                case 2:
-                    sweetAlertDialogUtil.dismissAlertDialog();
-                    //解析数据
-                    handleTransation(message);
-                    currentPage = currentPage + 1;
-                    //当加载的 条数小鱼每页显示条数时，加载完成
-                    if (pList.size() < pageSize) {
-                        totalMumber = pList.size();
-                        ifDateEnd = true;
-                        if (pageBean != null) {
-                            progressBar.setVisibility(View.GONE);
-                            foot_title.setText("已经没有更多数据了");
-                        }
+                    Log.i(TAG, "刷新操作...");
+                    swipeRefreshUtil.dismissRefreshing();
+                    if (handleResponseData(message)) {
+                        notifyListViewData(false);
+                        Toast.makeText(EventEntryListActivity.this, "刷新成功", Toast.LENGTH_SHORT).show();
                     } else {
-                        ifload = false;
-                        list_jiazai.setVisibility(View.GONE);
+                        Toast.makeText(EventEntryListActivity.this, "刷新失败", Toast.LENGTH_SHORT).show();
                     }
-                    adapter.notifyDataSetChanged(tFtSjEntityList);
                     break;
-                //刷新失败
-                case 3:
-                    swipeContainer.post(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            swipeContainer.setRefreshing(false);
-                        }
-                    });
+                // 加载操作
+                case 2:
+                    Log.i(TAG, "加载操作...");
+                    if (handleResponseData(message)) {
+                        notifyListViewData(true);
+                    }
                     break;
-                //加载失败
+                // 加载失败
                 case 4:
-                    list_jiazai.setVisibility(View.GONE);
+                    Log.i(TAG, "加载失败...");
+                    swipeRefreshUtil.dismissRefreshing();
+                    Toast.makeText(EventEntryListActivity.this, message, Toast.LENGTH_SHORT).show();
                     break;
-                //修改状态成功
-                case 5:
-                    sweetAlertDialogUtil.dismissAlertDialog();
-                    Toast.makeText(EventEntryListActivity.this, "操作成功", Toast.LENGTH_SHORT).show();
-                    initData();
+                // 初始化跳转
+                case 7:
+                    Log.i(TAG, "初始化成功...");
+                    swipeRefreshUtil.dismissRefreshing();
+                    if (handleResponseData(message)) {
+                        notifyListViewData(false);
+                    } else {
+                        Toast.makeText(EventEntryListActivity.this, "查询不到符合条件记录", Toast.LENGTH_SHORT).show();
+                    }
                     break;
-                //修改状态失败
-                case 6:
-                    sweetAlertDialogUtil.dismissAlertDialog();
-                    Toast.makeText(EventEntryListActivity.this, "操作失败", Toast.LENGTH_SHORT).show();
+                case 8:
+                    // 状态修改
+                    Log.i(TAG, "加载操作...");
+                    if (handleResponseDataState(message)) {
+                        Toast.makeText(EventEntryListActivity.this, "操作成功", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(EventEntryListActivity.this, "操作失败", Toast.LENGTH_SHORT).show();
+                    }
                     break;
 
             }
-            centerText.setText("事件列表(" + total + ")");
         }
-
     };
 
     @Override
@@ -366,40 +335,238 @@ public class EventEntryListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_evententry_list);
         ButterKnife.bind(this);
-        sweetAlertDialogUtil = new SweetAlertDialogUtil(this);
-        tFtSjEntityDao = new TFtSjEntityDao();
-        tFtSjEntityList = new ArrayList<TFtSjEntity>();
-        //初始化事件
-        initEvent();
-        // List列表设置初始化数据
-        initData();
-        userId = sp.getString(USER_ID, "");
-        searchEvententryList.setSelector(getResources().getDrawable(R.drawable.item_selector_grey));
-        adapter = new EventEntityListAdapter(tFtSjEntityList, EventEntryListActivity.this);
-        searchEvententryList.setAdapter(adapter);
-
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
+        // 初始化视图
+        initViewAndEvent();
+        // 设置参数
+        initBundle();
+        //初始化下拉列表
+        initListView();
+        // 初始化数据
         initData();
     }
 
     /**
-     * 初始化事件
+     * 初始化视图与事件
      */
-    private void initEvent() {
+    void initViewAndEvent() {
         sp = SpUtil.getSharePerference(this);
-        // 初始化网络工具
         netWorkConnection = new NetWorkConnection(this);
+        sweetAlertDialogUtil = new SweetAlertDialogUtil(EventEntryListActivity.this);
+        tFtSjEntityDao = new TFtSjEntityDao();
+        tFtSjEntityList = new ArrayList<TFtSjEntity>();
+        userId = sp.getString(USER_ID, "");
+    }
+
+
+    /**
+     * 获取参数Bundle
+     */
+    void initBundle() {
+        paramsMap = new HashMap<String, String>();
+        // 查询自己的消息
+        paramsMap.put("userId", sp.getString(LoginActivity.USER_ID, ""));
+        // 设置标题及颜色
+        centerText.setText("事件列表(" + total + ")");
+        //toolbar_layout.setBackgroundColor(Color.parseColor("#A4C639"));
+        swipeRefreshUtil = new SwipeRefreshUtil(swipeContainer, Constants.SERVICE_QUERY_EVENTENTRY, mHandler);
+        // 上拉刷新初始化
+        swipeRefreshUtil.setRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                paramsMap.put("currentPage", "1");
+                paramsMap.put("pageSize", pageSize);
+                // 打开圈圈
+                swipeContainer.setRefreshing(true);
+                swipeRefreshUtil.refreshSetDate(paramsMap, 1);
+            }
+        });
+    }
+
+
+    /**
+     * 初始化列表
+     */
+    private void initListView() {
         // 加载“正在加载”布局文件
         list_jiazai = (LinearLayout) getLayoutInflater().inflate(R.layout.lv_item_jiazai, null);
-        list_jiazai.setVisibility(View.GONE);
+        searchEvententryList.addFooterView(list_jiazai, null, false);
+        searchEvententryList.setSelector(getResources().getDrawable(R.drawable.item_selector_grey));
+        //滚动监听
+        searchEvententryList.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                switch (scrollState) {
+                    // 当不滚动时
+                    case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
+                        // 判断滚动到底部
+                        if (view.getLastVisiblePosition() == (view.getCount() - 1)) {
+                            list_jiazai.setVisibility(View.VISIBLE);
+                            if (pageBean.getTotalCount() < pageBean.getPageSize()) {
+                                initListFoot("没有更多内容了", View.GONE);
+                            } else {
+                                initListFoot("正在加载,请稍后...", View.VISIBLE);
+                                nextCurrentPage();
+                                swipeRefreshUtil.refreshSetDate(paramsMap, 2);
+                            }
+                        }
+                        break;
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+            }
+        });
+
+        adapter = new EventEntityListAdapter(tFtSjEntityList, EventEntryListActivity.this);
+        searchEvententryList.setAdapter(adapter);
+    }
+
+    /**
+     * 初始化页脚
+     */
+    private void initListFoot(String message, int display) {
         foot_title = (TextView) list_jiazai.findViewById(R.id.foot_title);
         progressBar = (ProgressBar) list_jiazai.findViewById(R.id.progressBar);
-        searchEvententryList.addFooterView(list_jiazai, null, false);
-        searchEvententryList.setSelector(new ColorDrawable(Color.TRANSPARENT));
+        if (StringUtils.isNotBlank(message)) {
+            foot_title.setText(message);
+        }
+        progressBar.setVisibility(display);
+    }
+
+    /**
+     * 下一页
+     */
+    void nextCurrentPage() {
+        int currentPage = 1;
+        if (pageBean != null) {
+            currentPage = pageBean.getCurrentPage() + 1;
+        }
+        paramsMap.put("currentPage", currentPage + "");
+        paramsMap.put("pageSize", pageSize);
+    }
+
+    /**
+     * 加载数据
+     */
+    private void notifyListViewData(boolean isAdd) {
+        List<TFtSjEntity> entityList = (List<TFtSjEntity>) dataList;
+        if (isAdd) {
+            // 追加列表
+            adapter.addDataSetChanged(entityList);
+        } else {
+            // hqb01才加载草稿 - 暂时这么定义
+            String userName = sp.getString(LoginActivity.USER_NAME, "");
+            if ("hqb01".equals(userName)) {
+                loadLocationSjList(entityList);
+            }
+            // 刷新列表
+            adapter.notifyDataSetChanged(entityList);
+        }
+
+        centerText.setText("事件列表(" + adapter.getCount() + ")");
+    }
+
+    /**
+     * 更新数据列表状态
+     *
+     * @param sjHandleParams
+     */
+    private void updateListDataStatie(SjHandleParams sjHandleParams) {
+        List<TFtSjEntity> tftsjList = adapter.getList();
+        if (tftsjList != null) {
+            for (int i = 0; i < tftsjList.size(); i++) {
+                TFtSjEntity entity = tftsjList.get(i);
+                if (entity.getId().equals(sjHandleParams.getSjId())) {
+                    entity.setZt(sjHandleParams.getNextZt());
+                    entity.setZtname(sjHandleParams.getZtname());
+                    entity.setAnlist(sjHandleParams.getAnlist());
+                    break;
+                }
+            }
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    /**
+     * 加载本地草稿数据
+     */
+    private void loadLocationSjList(List<TFtSjEntity> entityList) {
+        // 第一页时加载
+        if ("1".equals(String.valueOf(paramsMap.get("currentPage")))) {
+            List<TFtSjEntity> locationList = tFtSjEntityDao.queryList();
+            if (locationList != null && locationList.size() > 0) {
+                entityList.addAll(0, locationList);
+            }
+        }
+    }
+
+    /**
+     * 处理响应数据
+     */
+    public boolean handleResponseData(String body) {
+        boolean flag = false;
+        if (StringUtils.isBlank(body)) {
+            Log.i(TAG, "解释响应body失败...");
+        } else {
+            // 处理响应信息
+            AckMessage ackMsg = JsonUtil.fromJson(body, AckMessage.class);
+            if (ackMsg != null) {
+                if (AckMessage.SUCCESS.equals(ackMsg.getAckCode())) {
+                    Log.i(TAG, "消息通知解释成功...");
+                    pageBean = ackMsg.getPageBean();
+                    if (null != pageBean) {
+                        List<?> dataL = pageBean.getDataList();
+                        if (dataL != null && dataL.size() > 0) {
+                            // 响应字符串
+                            String resultList = JsonUtil.toJson(dataL);
+                            dataList = (List<TFtSjEntity>) JsonUtil.fromJson(resultList, new TypeToken<List<TFtSjEntity>>() {
+                            });
+                            flag = true;
+                        }
+                    }
+                }
+            } else {
+                Log.i(TAG, "解释列表信息失败...");
+            }
+
+        }
+        return flag;
+    }
+
+
+    /**
+     * 处理响应数据状态
+     */
+    public boolean handleResponseDataState(String body) {
+        boolean flag = false;
+        if (StringUtils.isBlank(body)) {
+            Log.i(TAG, "解释响应body失败...");
+        } else {
+            // 处理响应信息
+            AckMessage ackMsg = JsonUtil.fromJson(body, AckMessage.class);
+            if (ackMsg != null) {
+                if (AckMessage.SUCCESS.equals(ackMsg.getAckCode())) {
+                    Log.i(TAG, "数据解释成功...");
+                    Object entity = ackMsg.getEntity();
+                    if (entity != null) {
+                        String dataStr = JsonUtil.toJson(entity);
+                        SjHandleParams sjHandleParams = JsonUtil.fromJson(dataStr, SjHandleParams.class);
+                        if (sjHandleParams != null) {
+                            flag = true;
+                            // 更新数据列表状态
+                            updateListDataStatie(sjHandleParams);
+                        }
+
+                    }
+                }
+            } else {
+                Log.i(TAG, "解释列表信息失败...");
+            }
+
+        }
+        return flag;
     }
 
     @OnClick({R.id.left_btn, R.id.right_btn})
@@ -412,6 +579,7 @@ public class EventEntryListActivity extends AppCompatActivity {
                 break;
             case R.id.right_btn:
                 Intent intent = new Intent(this, EventEntryAddActivity.class);
+                intent.putExtra("czlx", "add");
                 startActivity(intent);
                 break;
         }
@@ -421,114 +589,17 @@ public class EventEntryListActivity extends AppCompatActivity {
      * List列表设置初始化数据
      */
     public void initData() {
-        final Message msg = new Message();
-        msg.what = 0;
         if (netWorkConnection.isWIFIConnection()) {
-            final Map<String, String> paramsMap = new HashMap<String, String>();
-            String userId = sp.getString(USER_ID, "");
-            paramsMap.put("userId", userId);
-            //1.表示刷新，2表示加载
-            swipeRefreshUtil = new SwipeRefreshUtil(swipeContainer, Constants.SERVICE_QUERY_EVENTENTRY, mHandler);
-            //刷新操作(1.表示刷新，2表示加载)
-            swipeRefreshUtil.setSwipeRefresh(paramsMap, 1);
-
-            //加载操作
-            searchEvententryList.setOnScrollListener(new AbsListView.OnScrollListener() {
-
-                @Override
-                public void onScrollStateChanged(AbsListView view, int scrollState) {
-                    // 判断是否滑动到最底层
-                    if (view.getLastVisiblePosition() == view.getCount() - 1) {
-                        // 判断返回的条数是否小于每页显示的 条数
-                        if (totalMumber < pageSize) {
-                            list_jiazai.setVisibility(View.VISIBLE);
-                            progressBar.setVisibility(View.GONE);
-                            foot_title.setText("已经没有更多数据了");
-                            return;
-                        }
-                    }
-                }
-
-                @Override
-                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                    if (firstVisibleItem + visibleItemCount == totalItemCount && list_jiazai.getVisibility() == View.GONE
-                            && tFtSjEntityList.size() != 0) {
-                        if (ifDateEnd) {
-                            return;
-                        }
-                        if (!ifload) {
-                            ifload = true;
-                            paramsMap.put("currentPage", currentPage + "");
-                            list_jiazai.setVisibility(View.VISIBLE);
-                            progressBar.setVisibility(View.VISIBLE);
-                            foot_title.setText("正在加载");
-                            //1.表示刷新，2表示加载
-                            swipeRefreshUtil.setSwipeRefresh(paramsMap, 2);
-                        }
-                    }
-                }
-            });
+            list_jiazai.setVisibility(View.GONE);
+            paramsMap.put("currentPage", "1");
+            paramsMap.put("pageSize", pageSize);
+            swipeRefreshUtil.showRefreshing();
+            swipeRefreshUtil.refreshSetDate(paramsMap, 7);
         } else {
-            Toast.makeText(this, "连接不上网络！", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "WIFI不可用,请确认网络连接", Toast.LENGTH_SHORT).show();
         }
     }
 
-
-    /**
-     * 当从后台查询到数据周，做相应的处理，并且会将本地的草稿信息显示出来
-     *
-     * @param body
-     */
-    public void handleTransation(String body) {
-        if (StringUtils.isBlank(body)) {
-        } else {
-            //判断是否已经加载本地草稿数据，并且只添加一次
-            /*if (isIfload) {
-                tempList = tFtSjEntityDao.queryList();
-                if (tempList != null && tempList.size() > 0) {
-                    tFtSjEntityList.addAll(tempList);
-                }
-                isIfload = false;
-                total += tFtSjEntityList.size();
-            }*/
-
-            // 处理响应信息
-            AckMessage ackMsg = JsonUtil.fromJson(body, AckMessage.class);
-            if (ifrefresh) {
-                //tFtSjEntityList = setMessage(ackMsg);
-                ifrefresh = false;
-            }
-            tFtSjEntityList.addAll(setMessage(ackMsg));
-        }
-    }
-
-    /**
-     * 设置事件信息
-     *
-     * @param ackMsg
-     * @return
-     */
-    private List<TFtSjEntity> setMessage(AckMessage ackMsg) {
-        pList = new ArrayList<TFtSjEntity>();
-        if (ackMsg != null) {
-            if (AckMessage.SUCCESS.equals(ackMsg.getAckCode())) {
-                pageBean = ackMsg.getPageBean();
-                if (pageBean != null) {
-                    List<JsonObject> list = pageBean.getDataList();
-                    if (list != null && list.size() > 0) {
-                        for (int i = 0; i < list.size(); i++) {
-                            //先将获取的Object对象转成String
-                            String entityStr = JsonUtil.toJson(list.get(i));
-                            TFtSjEntity tFtSjEntity = JsonUtil.fromJson(entityStr.toLowerCase(), TFtSjEntity.class);
-                            pList.add(tFtSjEntity);
-                        }
-                    }
-                }
-            }
-        }
-        total += pList.size();
-        return pList;
-    }
 
     /**
      * 点击List列表Item
@@ -542,11 +613,11 @@ public class EventEntryListActivity extends AppCompatActivity {
         Bundle bundle = new Bundle();
         bundle.putSerializable("tFtSjEntity", tFtSjEntity);
         /**zt 0：修改 3,街道退回  否则看详情**/
-        if("0".equals(tFtSjEntity.getZt()) || "3".equals(tFtSjEntity.getZt())){
+        if ("0".equals(tFtSjEntity.getZt()) || "3".equals(tFtSjEntity.getZt())) {
             /**0:新增  1:修改 **/
             intent.putExtra("type", "1");
             intent.setClass(this, EventEntryAddActivity.class);
-        }else{
+        } else {
             intent.setClass(this, EventEntryDetailActivity.class);
         }
         intent.putExtras(bundle);
@@ -576,70 +647,70 @@ public class EventEntryListActivity extends AppCompatActivity {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int pos) {
                     //事件刚刚录入
-                        //根据点击的item项获取该item对应的实体，
-                        TFtZtlzEntity tFtZtlzEntity = tFtZtlzEntities[pos];
-                        //当3.退回和4.不予受理的时候，弹出自定义对话框
-                        if ("3".equals(tFtZtlzEntity.getNextzt()) || "4".equals(tFtZtlzEntity.getNextzt())) {
-                            ReturnOperation(tFtZtlzEntity, R.layout.dialog_return_operation, tFtZtlzEntity.getName()+"原因",Constants.SERVICE_EDIT_EVENT);
-                        }  else if ("5".equals(tFtZtlzEntity.getNextzt())) {
-                            //当5街道自行退回的时候，弹出自定义对话框
-                            if("2".equals(tFtSjEntity.getZt())){
-                                //当前状态为2，受理。
-                                OperatingProcess(tFtZtlzEntity);
-                            }else{
-                                ReturnOperation(tFtZtlzEntity, R.layout.dialog_streetreturn_operation, tFtZtlzEntity.getName()+"原因",Constants.SERVICE_EDIT_EVENT);
-                            }
-                        } else if ("6".equals(tFtZtlzEntity.getNextzt())) {
-                            //当6事件作废的时候，弹出自定义对话框
-                            ReturnOperation(tFtZtlzEntity, R.layout.dialog_cancel_operation, tFtZtlzEntity.getName()+"原因",Constants.SERVICE_EDIT_EVENT);
-                        } else if ("7".equals(tFtZtlzEntity.getNextzt())) {
-                            //当7街道自行处理的时候，弹出自定义对话框
-                            Intent intent = new Intent(EventEntryListActivity.this, StreetHandleActivity.class);
-                            Bundle bundle = new Bundle();
-                            bundle.putSerializable("tFtSjEntity", tFtSjEntity);
-                            bundle.putSerializable("tFtZtlzEntity", tFtZtlzEntity);
-                            intent.putExtras(bundle);
-                            startActivity(intent);
-                           // ReturnOperation(tFtZtlzEntity, dialog_streethandle_operation, tFtZtlzEntity.getActionname(),Constants.SERVICE_ZXCL );
-                        }else if ("7.2".equals(tFtZtlzEntity.getNextzt())) {
-                            //当7.2事件街道自行处理反馈的时候，弹出自定义对话框 修改为调用接口：Constants.SERVICE_ZXCLBANJ_EVENT
-                            ReturnOperation(tFtZtlzEntity, R.layout.dialog_streetfeedback_operation, tFtZtlzEntity.getName(),Constants.SERVICE_ZXCLBANJ_EVENT );
-                        }else if("7,8".equals(tFtZtlzEntity.getNextzt())){
-                            //当走街道自行处理这条线时，如果当前状态为9，则退回到7街道自行处理，否则退回8，弹出自定义对话框
+                    //根据点击的item项获取该item对应的实体，
+                    TFtZtlzEntity tFtZtlzEntity = tFtZtlzEntities[pos];
+                    //当3.退回和4.不予受理的时候，弹出自定义对话框
+                    if ("3".equals(tFtZtlzEntity.getNextZt()) || "4".equals(tFtZtlzEntity.getNextZt())) {
+                        ReturnOperation(tFtZtlzEntity, R.layout.dialog_return_operation, tFtZtlzEntity.getName() + "原因", Constants.SERVICE_EDIT_EVENT);
+                    } else if ("5".equals(tFtZtlzEntity.getNextZt())) {
+                        //当5街道自行退回的时候，弹出自定义对话框
+                        if ("2".equals(tFtSjEntity.getZt())) {
+                            //当前状态为2，受理。
+                            OperatingProcess(tFtZtlzEntity);
+                        } else {
+                            ReturnOperation(tFtZtlzEntity, R.layout.dialog_streetreturn_operation, tFtZtlzEntity.getName() + "原因", Constants.SERVICE_EDIT_EVENT);
+                        }
+                    } else if ("6".equals(tFtZtlzEntity.getNextZt())) {
+                        //当6事件作废的时候，弹出自定义对话框
+                        ReturnOperation(tFtZtlzEntity, R.layout.dialog_cancel_operation, tFtZtlzEntity.getName() + "原因", Constants.SERVICE_EDIT_EVENT);
+                    } else if ("7".equals(tFtZtlzEntity.getNextZt())) {
+                        //当7街道自行处理的时候，弹出自定义对话框
+                        Intent intent = new Intent(EventEntryListActivity.this, StreetHandleActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("tFtSjEntity", tFtSjEntity);
+                        bundle.putSerializable("tFtZtlzEntity", tFtZtlzEntity);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                        // ReturnOperation(tFtZtlzEntity, dialog_streethandle_operation, tFtZtlzEntity.getActionname(),Constants.SERVICE_ZXCL );
+                    } else if ("7.2".equals(tFtZtlzEntity.getNextZt())) {
+                        //当7.2事件街道自行处理反馈的时候，弹出自定义对话框 修改为调用接口：Constants.SERVICE_ZXCLBANJ_EVENT
+                        ReturnOperation(tFtZtlzEntity, R.layout.dialog_streetfeedback_operation, tFtZtlzEntity.getName(), Constants.SERVICE_ZXCLBANJ_EVENT);
+                    } else if ("7,8".equals(tFtZtlzEntity.getNextZt())) {
+                        //当走街道自行处理这条线时，如果当前状态为9，则退回到7街道自行处理，否则退回8，弹出自定义对话框
                           /*  if("9".equals(tFtSjEntity.getZt())){
                                 tFtZtlzEntity.setNextzt("7");
                             }else{
                                 tFtZtlzEntity.setNextzt("8");
                             }*/
-                            //当10回访核查通过或者7,8回访核查不通过的时候，弹出自定义对话框
-                            ReturnOperation(tFtZtlzEntity, R.layout.dialog_verification_operation, tFtZtlzEntity.getName()+"原因",Constants.SERVICE_EDIT_EVENT);
-                        }else if ("8".equals(tFtZtlzEntity.getNextzt()) || "13".equals(tFtZtlzEntity.getNextzt())) {
-                            if("14".equals(tFtZtlzEntity.getPrevzt())){
-                                ReturnOperation(tFtZtlzEntity, R.layout.dialog_verification_operation, tFtZtlzEntity.getName()+"原因",Constants.SERVICE_EDIT_EVENT);
-                            }else{
-                                //当8街道派遣的时候，跳到街道派遣Activity
-                                Intent  intent =new Intent(EventEntryListActivity.this, DispatchActivity.class);
-                                Bundle bundle = new Bundle();
-                                bundle.putSerializable("tFtSjEntity", tFtSjEntity);
-                                intent.putExtras(bundle);
-                                startActivity(intent);
-                            }
-
-                        }else if ("10".equals(tFtZtlzEntity.getNextzt()) || "15".equals(tFtZtlzEntity.getNextzt())) {
-                            //当10回访核查，弹出自定义对话框
-                            ReturnOperation(tFtZtlzEntity, R.layout.dialog_verification_operation, tFtZtlzEntity.getName()+"原因",Constants.SERVICE_EDIT_EVENT);
-                        }else if ("18".equals(tFtZtlzEntity.getNextzt())) {
-                            //当18合并，因为手机上不支持该操作，所以给出提示
-                            Toast.makeText(EventEntryListActivity.this, "移动设备不支持该操作", Toast.LENGTH_SHORT).show();
+                        //当10回访核查通过或者7,8回访核查不通过的时候，弹出自定义对话框
+                        ReturnOperation(tFtZtlzEntity, R.layout.dialog_verification_operation, tFtZtlzEntity.getName() + "原因", Constants.SERVICE_EDIT_EVENT);
+                    } else if ("8".equals(tFtZtlzEntity.getNextZt()) || "13".equals(tFtZtlzEntity.getNextZt())) {
+                        if ("14".equals(tFtZtlzEntity.getPrevZt())) {
+                            ReturnOperation(tFtZtlzEntity, R.layout.dialog_verification_operation, tFtZtlzEntity.getName() + "原因", Constants.SERVICE_EDIT_EVENT);
                         } else {
-                            //其他的弹出确定对话框
-                            OperatingProcess(tFtZtlzEntity);
+                            //当8街道派遣的时候，跳到街道派遣Activity
+                            Intent intent = new Intent(EventEntryListActivity.this, DispatchActivity.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable("tFtSjEntity", tFtSjEntity);
+                            intent.putExtras(bundle);
+                            startActivity(intent);
                         }
+
+                    } else if ("10".equals(tFtZtlzEntity.getNextZt()) || "15".equals(tFtZtlzEntity.getNextZt())) {
+                        //当10回访核查，弹出自定义对话框
+                        ReturnOperation(tFtZtlzEntity, R.layout.dialog_verification_operation, tFtZtlzEntity.getName() + "原因", Constants.SERVICE_EDIT_EVENT);
+                    } else if ("18".equals(tFtZtlzEntity.getNextZt())) {
+                        //当18合并，因为手机上不支持该操作，所以给出提示
+                        Toast.makeText(EventEntryListActivity.this, "移动设备不支持该操作", Toast.LENGTH_SHORT).show();
+                    } else {
+                        //其他的弹出确定对话框
+                        OperatingProcess(tFtZtlzEntity);
+                    }
 
                 }
             });
             builder.create().show();
-        }else{
+        } else {
             Toast.makeText(this, "权限不足,不支持该操作", Toast.LENGTH_SHORT).show();
         }
         return true;
@@ -653,8 +724,6 @@ public class EventEntryListActivity extends AppCompatActivity {
      */
     public void OperatingProcess(final TFtZtlzEntity tFtZtlzEntity) {
         final Message msg = new Message();
-        //初始状态为6，表示状态修改不成功
-        msg.what = 6;
         AlertDialog.Builder builder = new AlertDialog.Builder(EventEntryListActivity.this);
         builder.setTitle("信息");
         builder.setMessage("确定要执行次操作吗？");
@@ -667,24 +736,24 @@ public class EventEntryListActivity extends AppCompatActivity {
                     paramsMap.put("userId", userId);
                     paramsMap.put("sjId", tFtSjEntity.getId());
                     paramsMap.put("action", tFtZtlzEntity.getAction());
-                    paramsMap.put("actionName", tFtZtlzEntity.getActionname());
+                    paramsMap.put("actionName", tFtZtlzEntity.getActionName());
                     paramsMap.put("zt", tFtSjEntity.getZt());
-                    paramsMap.put("nextZt", tFtZtlzEntity.getNextzt());
+                    paramsMap.put("nextZt", tFtZtlzEntity.getNextZt());
                     // 发送请求
                     OkHttpUtil.sendRequest(Constants.SERVICE_EDIT_EVENT, paramsMap, new Callback() {
 
                         @Override
                         public void onFailure(Call call, IOException e) {
-                            msg.what=6;
                             mHandler.sendEmptyMessage(0);
                         }
 
                         @Override
                         public void onResponse(Call call, Response response) throws IOException {
                             if (response.isSuccessful()) {
-                                msg.what = 5;
+                                msg.what = 8;
                                 msg.obj = response.body().string();
                             } else {
+                                msg.what = 0;
                                 msg.obj = "网络异常,请确认网络情况";
                             }
                             mHandler.sendMessage(msg);
@@ -707,7 +776,7 @@ public class EventEntryListActivity extends AppCompatActivity {
     /**
      * 退回,不予立案,作废操作
      */
-    public void ReturnOperation(final TFtZtlzEntity tFtZtlzEntity, int layout, String title,String url) {
+    public void ReturnOperation(final TFtZtlzEntity tFtZtlzEntity, int layout, String title, String url) {
         final View mView = LayoutInflater.from(EventEntryListActivity.this).inflate(layout, null);
         //获取弹出框的属性
         handlePersonEdt = ButterKnife.findById(mView, R.id.handle_person_edt);
@@ -718,12 +787,12 @@ public class EventEntryListActivity extends AppCompatActivity {
         radioButton02 = ButterKnife.findById(mView, R.id.radioButton02);
         radioButton03 = ButterKnife.findById(mView, R.id.radioButton03);
         //不予立案退回备选原因
-        if("4".equals(tFtZtlzEntity.getNextzt())){
+        if ("4".equals(tFtZtlzEntity.getNextZt())) {
             radioButton01.setText("未达到立案标准");
             radioButton02.setVisibility(View.INVISIBLE);
         }
         //回放核查不通过
-        if("7,8".equals(tFtZtlzEntity.getNextzt()) || ("13".equals(tFtZtlzEntity.getNextzt())&&"14".equals(tFtZtlzEntity.getPrevzt()))){
+        if ("7,8".equals(tFtZtlzEntity.getNextZt()) || ("13".equals(tFtZtlzEntity.getNextZt()) && "14".equals(tFtZtlzEntity.getPrevZt()))) {
             radioButton03.setVisibility(View.VISIBLE);
             radioGroup.setOrientation(LinearLayout.VERTICAL);
             radioButton01.setText("街道回访核查不通过原因1");
@@ -732,13 +801,13 @@ public class EventEntryListActivity extends AppCompatActivity {
 
         }
         //回放核查通过
-        if("10".equals(tFtZtlzEntity.getNextzt()) || "15".equals(tFtZtlzEntity.getNextzt())){
+        if ("10".equals(tFtZtlzEntity.getNextZt()) || "15".equals(tFtZtlzEntity.getNextZt())) {
             radioButton03.setVisibility(View.VISIBLE);
             radioButton01.setText("人手不足");
             radioButton02.setText("权限不足");
             radioButton03.setText("脱离可控范围");
         }
-        if(radioGroup!=null){
+        if (radioGroup != null) {
             radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -753,11 +822,11 @@ public class EventEntryListActivity extends AppCompatActivity {
             });
         }
         //自行处理时间输入框
-        if(happendTImeEdt!=null){
+        if (happendTImeEdt != null) {
             happendTImeEdt.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View view, MotionEvent motionEvent) {
-                    if(motionEvent.getAction() == MotionEvent.ACTION_DOWN){
+                    if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                        /* Calendar c = Calendar.getInstance();
                         new DatePickerDialog(EventEntryListActivity.this, new DatePickerDialog.OnDateSetListener() {
                             @Override
@@ -778,10 +847,8 @@ public class EventEntryListActivity extends AppCompatActivity {
             });
         }
         //将修改状态的数据上传到后台
-        sendOperation(mView,tFtZtlzEntity,title,url);
+        sendOperation(mView, tFtZtlzEntity, title, url);
     }
-
-
 
 
     /**
@@ -789,8 +856,6 @@ public class EventEntryListActivity extends AppCompatActivity {
      */
     public void sendOperation(final View mView, final TFtZtlzEntity tFtZtlzEntity, String title, final String url) {
         final Message msg = new Message();
-        //初始状态为6，表示状态修改不成功
-        msg.what = 6;
         AlertDialog.Builder builder = new AlertDialog.Builder(EventEntryListActivity.this);
         builder.setTitle(title);
         builder.setView(mView);
@@ -798,74 +863,75 @@ public class EventEntryListActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (netWorkConnection.isWIFIConnection()) {
-                    String message="";
+                    String message = "";
                     Map<String, String> paramsMap = new HashMap<String, String>();
                     paramsMap.put("userId", userId);
                     paramsMap.put("sjId", tFtSjEntity.getId());
                     paramsMap.put("action", tFtZtlzEntity.getAction());
-                    paramsMap.put("actionName", tFtZtlzEntity.getActionname());
+                    paramsMap.put("actionName", tFtZtlzEntity.getActionName());
                     paramsMap.put("zt", tFtSjEntity.getZt());
-                    paramsMap.put("nextZt", tFtZtlzEntity.getNextzt());
-                    if(happendTImeEdt!=null){
+                    paramsMap.put("nextZt", tFtZtlzEntity.getNextZt());
+                    if (happendTImeEdt != null) {
                         paramsMap.put("lrclsj", happendTImeEdt.getText().toString());
                     }
-                    if(returnEdt!=null){
+                    if (returnEdt != null) {
                         //7.2自行处理反馈时，处理人和处理结果为必填项
-                        if("7.2".equals(tFtZtlzEntity.getNextzt())){
-                            if("".equals(returnEdt.getText().toString())){
-                                message +="处理结果不能为空\n";
-                            }else{
+                        if ("7.2".equals(tFtZtlzEntity.getNextZt())) {
+                            if ("".equals(returnEdt.getText().toString())) {
+                                message += "处理结果不能为空\n";
+                            } else {
                                 paramsMap.put("czyy", returnEdt.getText().toString());
                             }
                             //回访核查和回访核查不通过原因必填
-                        }else if("7,8".equals(tFtZtlzEntity.getNextzt()) || "10".equals(tFtZtlzEntity.getNextzt())){
-                            if("".equals(returnEdt.getText().toString())){
-                                message += tFtZtlzEntity.getActionname()+"原因不能为空\n";
-                            }else{
+                        } else if ("7,8".equals(tFtZtlzEntity.getNextZt()) || "10".equals(tFtZtlzEntity.getNextZt())) {
+                            if ("".equals(returnEdt.getText().toString())) {
+                                message += tFtZtlzEntity.getActionName() + "原因不能为空\n";
+                            } else {
                                 paramsMap.put("czyy", returnEdt.getText().toString());
                             }
-                        }else{
+                        } else {
                             paramsMap.put("czyy", returnEdt.getText().toString());
                         }
                     }
-                    if(handlePersonEdt!=null){
-                        if("7.2".equals(tFtZtlzEntity.getNextzt())){
-                            if("".equals(handlePersonEdt.getText().toString())){
-                                message +="处理人不能为空\n";
-                            }else{
+                    if (handlePersonEdt != null) {
+                        if ("7.2".equals(tFtZtlzEntity.getNextZt())) {
+                            if ("".equals(handlePersonEdt.getText().toString())) {
+                                message += "处理人不能为空\n";
+                            } else {
                                 paramsMap.put("clr", handlePersonEdt.getText().toString());
                             }
-                        }else{
+                        } else {
                             paramsMap.put("clr", handlePersonEdt.getText().toString());
                         }
 
                     }
-                  if(!"".equals(message)){
-                      Toast.makeText(EventEntryListActivity.this,message,Toast.LENGTH_SHORT).show();;
-                  }else{
-                      sweetAlertDialogUtil.loadAlertDialog();
-                      // 发送请求
-                      OkHttpUtil.sendRequest(url,paramsMap, new Callback() {
+                    if (!"".equals(message)) {
+                        Toast.makeText(EventEntryListActivity.this, message, Toast.LENGTH_SHORT).show();
+                        ;
+                    } else {
+                        sweetAlertDialogUtil.loadAlertDialog();
+                        // 发送请求
+                        OkHttpUtil.sendRequest(url, paramsMap, new Callback() {
 
-                          @Override
-                          public void onFailure(Call call, IOException e) {
-                              msg.what=6;
-                              mHandler.sendEmptyMessage(0);
-                          }
+                            @Override
+                            public void onFailure(Call call, IOException e) {
+                                mHandler.sendEmptyMessage(0);
+                            }
 
-                          @Override
-                          public void onResponse(Call call, Response response) throws IOException {
-                              if (response.isSuccessful()) {
-                                  msg.what = 5;
-                                  msg.obj = response.body().string();
-                              } else {
-                                  msg.obj = "网络异常,请确认网络情况";
-                              }
-                              mHandler.sendMessage(msg);
-                          }
-                      });
-                  }
-                  }else {
+                            @Override
+                            public void onResponse(Call call, Response response) throws IOException {
+                                if (response.isSuccessful()) {
+                                    msg.what = 8;
+                                    msg.obj = response.body().string();
+                                } else {
+                                    msg.what = 0;
+                                    msg.obj = "网络异常,请确认网络情况";
+                                }
+                                mHandler.sendMessage(msg);
+                            }
+                        });
+                    }
+                } else {
                     msg.obj = "WIFI网络不可用,请检查网络连接情况";
                     mHandler.sendMessage(msg);
                 }

@@ -263,7 +263,8 @@ public class QuHandleActivity extends AppCompatActivity {
             Toast.makeText(QuHandleActivity.this, "没有SD卡", Toast.LENGTH_LONG).show();
         }
         //初始化imageList
-        adapter = new EventImageListAdapter(fileEntityList, QuHandleActivity.this,false);
+        FileEntityDao fileEntityDao = new FileEntityDao();
+        adapter = new EventImageListAdapter(fileEntityList,fileEntityDao,QuHandleActivity.this,false);
         fileList.setAdapter(adapter);
         if(radioGroup!=null){
             radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -372,9 +373,9 @@ public class QuHandleActivity extends AppCompatActivity {
                 paramsMap.put("sjId", taskEntity.getId());
                 paramsMap.put("action", tFtZtlzEntity.getAction());
                 paramsMap.put("CLID", taskEntity.getClid());
-                paramsMap.put("actionName", tFtZtlzEntity.getActionname());
+                paramsMap.put("actionName", tFtZtlzEntity.getActionName());
                 paramsMap.put("zt", taskEntity.getZt());
-                paramsMap.put("nextZt", tFtZtlzEntity.getNextzt());
+                paramsMap.put("nextZt", tFtZtlzEntity.getNextZt());
                 if (files != null && files.length > 0) {
                     String[] filesName = new String[files.length];
                     for (int i = 0; i < files.length; i++) {

@@ -22,12 +22,12 @@ public class StringUtils {
 	/**
 	 * 重载父类isBlank(String)方法，专为对象进行判断<br/>
 	 * 传入的对象中将转换为String进行判断，案例如下:<br/>
-	 * KYStringUtils.isBlank(null) = false<br/>
+	 * KYStringUtils.isBlank(null) = true<br/>
 	 * KYStringUtils.isBlank("") = false<br/>
 	 * KYStringUtils.isBlank(" ") = true<br/>
 	 * KYStringUtils.isBlank("         ") = true<br/>
-	 * KYStringUtils.isBlank("hello lady") = true<br/>
-	 * KYStringUtils.isBlank(" hello lady ") = true <br/>
+	 * KYStringUtils.isBlank("hello lady") = false<br/>
+	 * KYStringUtils.isBlank(" hello lady ") = false <br/>
 	 * @param value
 	 * @return boolean
 	 */

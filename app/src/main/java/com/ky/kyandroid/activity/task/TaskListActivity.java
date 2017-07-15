@@ -31,10 +31,12 @@ import android.widget.Toast;
 import com.ky.kyandroid.Constants;
 import com.ky.kyandroid.R;
 import com.ky.kyandroid.activity.dispatch.QuHandleActivity;
+import com.ky.kyandroid.activity.evententry.EventEntryListActivity;
 import com.ky.kyandroid.adapter.TaskEntityListAdapter;
 import com.ky.kyandroid.bean.AckMessage;
 import com.ky.kyandroid.bean.NetWorkConnection;
 import com.ky.kyandroid.bean.PageBean;
+import com.ky.kyandroid.db.dao.TFtSjEntityDao;
 import com.ky.kyandroid.entity.TFtSjEntity;
 import com.ky.kyandroid.entity.TFtZtlzEntity;
 import com.ky.kyandroid.entity.TaskEntity;
@@ -360,14 +362,25 @@ public class TaskListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_evententry_list);
         ButterKnife.bind(this);
         taskEntityList = new ArrayList<TaskEntity>();
-        sweetAlertDialogUtil = new SweetAlertDialogUtil(TaskListActivity.this);
+        // 初始化视图片
+        initViewAndEvent();
         //初始化事件
         initEvent();
         // List列表设置初始化数据
         initData();
-        userId = sp.getString(USER_ID, "");
         adapter = new TaskEntityListAdapter(taskEntityList, TaskListActivity.this);
         searchEvententryList.setAdapter(adapter);
+    }
+
+    /**
+     * 初始化视图与事件
+     */
+    void initViewAndEvent() {
+        sp = SpUtil.getSharePerference(this);
+        // 初始化网络工具
+        netWorkConnection = new NetWorkConnection(this);
+        sweetAlertDialogUtil = new SweetAlertDialogUtil(TaskListActivity.this);
+        userId = sp.getString(USER_ID, "");
     }
 
 
@@ -375,9 +388,6 @@ public class TaskListActivity extends AppCompatActivity {
      * 初始化事件
      */
     private void initEvent() {
-        sp = SpUtil.getSharePerference(this);
-        // 初始化网络工具
-        netWorkConnection = new NetWorkConnection(this);
         // 加载“正在加载”布局文件
         list_jiazai = (LinearLayout) getLayoutInflater().inflate(R.layout.lv_item_jiazai, null);
         list_jiazai.setVisibility(View.GONE);
@@ -555,16 +565,16 @@ public class TaskListActivity extends AppCompatActivity {
                 public void onClick(DialogInterface dialogInterface, int pos) {
                     //根据点击的item项获取该item对应的实体，
                     TFtZtlzEntity tFtZtlzEntity = tFtZtlzEntities[pos];
-                    if ("8.1".equals(tFtZtlzEntity.getNextzt())) {
+                    if ("8.1".equals(tFtZtlzEntity.getNextZt())) {
                         //当8.1申请延期的时候，并且上一个状态为8,13，表示接收，否则表示申请延期，弹出自定义对话框
-                        if("8,13".equals(tFtZtlzEntity.getPrevzt())){
+                        if("8,13".equals(tFtZtlzEntity.getPrevZt())){
                             OperatingProcess(tFtZtlzEntity,Constants.SERVICE_QUERY_TASKRECV);
-                        }else if("8,8.1".equals(tFtZtlzEntity.getPrevzt())){
+                        }else if("8,8.1".equals(tFtZtlzEntity.getPrevZt())){
                             yanQiOperation(tFtZtlzEntity, R.layout.dialog_return_operation, tFtZtlzEntity.getName(),Constants.SERVICE_EDIT_YANQI );
                         }
-                    }else if ("8.2".equals(tFtZtlzEntity.getNextzt())) {
+                    }else if ("8.2".equals(tFtZtlzEntity.getNextZt())) {
                         //街道职能办处理
-                        if("13,8,8.1".equals(tFtZtlzEntity.getPrevzt())){
+                        if("13,8,8.1".equals(tFtZtlzEntity.getPrevZt())){
                             Intent intent = new Intent(TaskListActivity.this, QuHandleActivity.class);
                             Bundle bundle = new Bundle();
                             bundle.putSerializable("taskEntity", taskEntity);
@@ -576,7 +586,7 @@ public class TaskListActivity extends AppCompatActivity {
                             banJiOperation(tFtZtlzEntity, R.layout.dialog_over_operation, "申请办结",Constants.SERVICE_EDIT_BANJI );
                         }
 
-                    }else if ("13.2".equals(tFtZtlzEntity.getNextzt())) {
+                    }else if ("13.2".equals(tFtZtlzEntity.getNextZt())) {
                         //当13.3区处理的时候，弹出自定义对话框
                         Intent intent = new Intent(TaskListActivity.this, QuHandleActivity.class);
                         Bundle bundle = new Bundle();
@@ -608,7 +618,7 @@ public class TaskListActivity extends AppCompatActivity {
         radioButton02 = ButterKnife.findById(mView, R.id.radioButton02);
         radioButton03 = ButterKnife.findById(mView, R.id.radioButton03);
         //申请延期原因
-        if("8.1".equals(tFtZtlzEntity.getNextzt())){
+        if("8.1".equals(tFtZtlzEntity.getNextZt())){
             radioButton03.setVisibility(View.VISIBLE);
             radioButton01.setText("人手不足");
             radioButton02.setText("权限不足");
@@ -708,7 +718,7 @@ public class TaskListActivity extends AppCompatActivity {
                     paramsMap.put("userId", userId);
                     paramsMap.put("sjId", taskEntity.getId());
                     paramsMap.put("zt", taskEntity.getZt());
-                    paramsMap.put("nextZt", tFtZtlzEntity.getNextzt());
+                    paramsMap.put("nextZt", tFtZtlzEntity.getNextZt());
                     paramsMap.put("clId", taskEntity.getClid());
                     if(happenTimeEdt!=null){
                         paramsMap.put("lrclsj", happenTimeEdt.getText().toString());

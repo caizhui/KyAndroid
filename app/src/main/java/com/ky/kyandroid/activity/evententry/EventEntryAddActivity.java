@@ -2,6 +2,8 @@ package com.ky.kyandroid.activity.evententry;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -33,6 +35,7 @@ import com.ky.kyandroid.entity.TFtSjDetailEntity;
 import com.ky.kyandroid.entity.TFtSjEntity;
 import com.ky.kyandroid.entity.TFtSjFjEntity;
 import com.ky.kyandroid.entity.TFtSjRyEntity;
+import com.ky.kyandroid.util.IDHelper;
 import com.ky.kyandroid.util.JsonUtil;
 import com.ky.kyandroid.util.OkHttpUtil;
 import com.ky.kyandroid.util.SpUtil;
@@ -40,6 +43,8 @@ import com.ky.kyandroid.util.StringUtils;
 import com.ky.kyandroid.util.SweetAlertDialogUtil;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,6 +65,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+
+import static com.ky.kyandroid.util.FileManager.delFile;
 
 
 /**
@@ -209,7 +216,7 @@ public class EventEntryAddActivity extends FragmentActivity {
     /**
      * 存放图片List
      */
-    private List<FileEntity>   fileEntityList;
+    private List<FileEntity> fileEntityList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -220,16 +227,17 @@ public class EventEntryAddActivity extends FragmentActivity {
         sweetAlertDialogUtil = new SweetAlertDialogUtil(EventEntryAddActivity.this);
         userId = sp.getString(USER_ID, "");
         intent = getIntent();
+        czlx = intent.getStringExtra("czlx");
         type = intent.getStringExtra("type");
         tFtSjEntity = (TFtSjEntity) intent.getSerializableExtra("tFtSjEntity");
-        fileEntityDao= new FileEntityDao();
+        fileEntityDao = new FileEntityDao();
         tFtSjEntityDao = new TFtSjEntityDao();
         tFtSjRyEntityDao = new TFtSjRyEntityDao();
         //1表示草稿修改或者查看已经上报的事件信息，则获取传过来的uuid，否则新建
         if ("1".equals(type)) {
             uuid = tFtSjEntity.getId();
         } else {
-            uuid = UUID.randomUUID().toString().trim().replaceAll("-", "").toUpperCase();
+            uuid = IDHelper.getUUID();
         }
         initToolbar();
         initPageView();
@@ -242,8 +250,8 @@ public class EventEntryAddActivity extends FragmentActivity {
             }
         }
         //3 街道退回
-        if(tFtSjEntity!=null){
-            if("3".equals(tFtSjEntity.getZt())){
+        if (tFtSjEntity != null) {
+            if ("3".equals(tFtSjEntity.getZt())) {
                 initOnLineData();
             }
         }
@@ -300,8 +308,8 @@ public class EventEntryAddActivity extends FragmentActivity {
     @SuppressWarnings("deprecation")
     private void initPageView() {
         eventEntryAdd_basic = new EventEntryAdd_Basic(intent);
-        eventEntryAdd_person = new EventEntryAdd_Person(intent,uuid);
-        eventEntryAdd_attachment = new EventEntryAdd_Attachment(intent,uuid);
+        eventEntryAdd_person = new EventEntryAdd_Person(intent, uuid);
+        eventEntryAdd_attachment = new EventEntryAdd_Attachment(intent, uuid);
         // 设置Fragment集合
         List<Fragment> fragmList = new ArrayList<Fragment>();
         fragmList.add(eventEntryAdd_basic);
@@ -397,12 +405,11 @@ public class EventEntryAddActivity extends FragmentActivity {
         @Override
         public void handleMessage(Message msg) {
             // 提示信息
-            String message = String.valueOf(msg.obj == null ? "系统繁忙,请稍后再试"
-                    : msg.obj);
+            String message = String.valueOf(msg.obj == null ? "系统繁忙,请稍后再试": msg.obj);
+            sweetAlertDialogUtil.dismissAlertDialog();
             switch (msg.what) {
                 // 失败
                 case 0:
-                    sweetAlertDialogUtil.dismissAlertDialog();
                     Toast.makeText(EventEntryAddActivity.this, message, Toast.LENGTH_SHORT).show();
                     break;
                 // 获取详细信息数据成功
@@ -411,17 +418,32 @@ public class EventEntryAddActivity extends FragmentActivity {
                     break;
                 //上传数据成功
                 case 2:
-                    //将本地的草稿数据删除
-                    boolean flag = tFtSjEntityDao.deleteEventEntry(eventEntity.getId());
-                    sweetAlertDialogUtil.dismissAlertDialog();
-                    if(flag){
+                    //将本地的草稿数据删除(带文件与子表信息)
+                    TFtSjEntity ftsjEntity = eventEntryAdd_basic.PackageData();
+                    if (ftsjEntity != null){
+                        String sjid = ftsjEntity.getId();
+                        tFtSjEntityDao.deleteEventEntry(sjid);
+                        // 删除不事人表信息
+                        tFtSjRyEntityDao.deleteEventEntryByuuid(sjid);
+                        // 删除附件信息同时处理掉文件
+                        List<FileEntity> fileList = fileEntityDao.queryList(sjid);
+                        if(fileList != null && fileList.size() > 0){
+                            for(FileEntity fileVo : fileList){
+                                boolean flag = fileEntityDao.deleteEventEntry(fileVo.getUuid());
+                                if(flag){
+                                    /* 得到SD卡得路径 */
+                                    String sdcard = Environment.getExternalStorageDirectory().getAbsolutePath().toString();
+                                    File fileRoute = new File(sdcard + "/img/" + sjid);
+                                    delFile(fileRoute + "/" + fileVo.getFileName());
+                                }
+                            }
+                        }
                         Toast.makeText(EventEntryAddActivity.this, "上报成功", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(EventEntryAddActivity.this, EventEntryListActivity.class);
                         startActivity(intent);
                     }else{
                         Toast.makeText(EventEntryAddActivity.this, "上报失败", Toast.LENGTH_SHORT).show();
                     }
-
                     break;
             }
         }
@@ -472,7 +494,7 @@ public class EventEntryAddActivity extends FragmentActivity {
     /**
      * 上传文件及参数
      */
-    private void sendMultipart(String userId, String paramMap, File[] files,String czlx) {
+    private void sendMultipart(String userId, String paramMap, List<File> files, String czlx) {
         File sdcache = this.getExternalCacheDir();
         int cacheSize = 10 * 1024 * 1024;
         //设置超时时间及缓存，下边都应该这样设置的。
@@ -487,12 +509,15 @@ public class EventEntryAddActivity extends FragmentActivity {
         requestBody.setType(MultipartBody.FORM);
         requestBody.addFormDataPart("userId", userId);//设置post的参数
         requestBody.addFormDataPart("jsonData", paramMap);//设置post的参数
-        requestBody.addFormDataPart("czlx", czlx);//设置post的参数
-        if (files != null && files.length > 0) {
-            for (int i = 0; i < files.length; i++) {
+        if (!StringUtils.isBlank(czlx)){
+            requestBody.addFormDataPart("czlx", czlx);//设置post的参数
+        }
+        if (files != null && files.size() > 0) {
+            for (int i = 0; i < files.size(); i++) {
                 //uploadFles
-                requestBody.addFormDataPart("uploadFles", files[i].getName(),
-                        RequestBody.create(MediaType.parse("application/octet-stream; charset=utf-8"), files[i]));
+                File mfile = files.get(i);
+                requestBody.addFormDataPart("uploadFles", mfile.getName(),
+                        RequestBody.create(MediaType.parse("application/octet-stream; charset=utf-8"), mfile));
             }
 
         }
@@ -532,111 +557,80 @@ public class EventEntryAddActivity extends FragmentActivity {
                 break;
             /** 上报领导按钮*/
             case R.id.reporting_leadership_btn:
-                eventEntity = eventEntryAdd_basic.PackageData();
-                fileEntityList = eventEntryAdd_attachment.PackageData();
-                if(fileEntityList!=null && fileEntityList.size()>0){
-                    for(int i=0;i<fileEntityList.size();i++){
-                        FileEntity fileEntity = fileEntityList.get(i);
-                        if(fileEntity.getUuid() == 0){
-                            fileEntity.setSjId(uuid);
-                            fileEntityDao.saveFileEntity(fileEntity);
-                        }else{
-                            fileEntityDao.updateFileEntity(fileEntity);
-                        }
-                    }
-                }
-                if (eventEntity != null) {
-                    //当上报领导时，如果id为空，表示状态为0，表示是通过草稿去上报的，否则就是直接上报的
-                    if ("0".equals(eventEntity.getZt())) {
-                        //如果是第一次上传，要设置一个uuid，如果是从草稿中上传，就直接拿草稿里面的uuid
-                        eventEntity.setId(uuid);
-                    }
-                    //当状态为3或uuid不为空时，表示是退回修改再上传的，uuid不为空是先保存了草稿
-                    if ("3".equals(eventEntity.getZt())){
-                        czlx="edit";
-                    }else if(eventEntity.getUuid()!=null){
-                        eventEntity.setId(eventEntity.getUuid());
-                        czlx="edit";
-                    }else{
-                        czlx="add";
-                    }
+                // 事件基本信息
+                TFtSjEntity ftsjEntity = eventEntryAdd_basic.PackageData();
+                // 附件列表
+                List<FileEntity> fileEntityList = eventEntryAdd_attachment.PackageData();
+                if (ftsjEntity != null) {
                     HashMap map = new HashMap();
-                    //上报领导，状态为1
-                    eventEntity.setZt("1");
+                    //上报领导，状态为1 即为录入状态
+                    ftsjEntity.setZt("1");
+                    // 当事人信息列表
                     List<TFtSjRyEntity> tFtSjRyEntityList = eventEntryAdd_person.tFtSjRyEntityList();
-                    tFtSjRyEntityDao.deleteEventEntryByuuid(uuid);
-                /* 得到SD卡得路径 */
-                    String sdcard = Environment.getExternalStorageDirectory().getAbsolutePath().toString();
-                    File fileRoute = new File(sdcard + "/img/" + uuid);
-                    File files[] = fileRoute.listFiles();
-                    map.put("entity", eventEntity);
+                    map.put("entity", ftsjEntity);
                     if (tFtSjRyEntityList != null) {
                         map.put("tFtSjRyEntityList", tFtSjRyEntityList);
                     }
-                    fileEntityList = fileEntityDao.queryList(uuid);
-                    if (files != null && files.length > 0) {
-                        String[] filesName = new String[files.length];
-                        String[] filesMs = new String[files.length];
-                        for (int i = 0; i < files.length; i++) {
-                            if(fileEntityList!=null&& fileEntityList.size()>0){
-                                //这里循环遍历存放文件信息的List，如果在本地获取的文件名跟我们从数据库中获取的一致，则表示是同一条记录,就将数据库中的描述信息变成文件名称
-                                for(int j=0;j<fileEntityList.size();j++){
-                                    if(fileEntityList.get(j).getFileName().equals(files[i].getName())){
-                                        filesMs[i] =fileEntityList.get(j).getFileMs();
-                                    }
-                                }
+
+                     /* 得到SD卡得路径 */
+                    String sdcard = Environment.getExternalStorageDirectory().getAbsolutePath().toString();
+                    File fileRoute = new File(sdcard + "/img/" + uuid);
+                    // 上传的附件列表数组
+                    List<File> files = new ArrayList<File>();
+                    if (fileEntityList != null && fileEntityList.size() > 0) {
+                        // 封装文件名称与文件描述到后台处理
+                        List<String> filesName = new ArrayList<String>();
+                        List<String> filesMs = new ArrayList<String>();
+                        for (FileEntity entity : fileEntityList) {
+                            String fileName = entity.getFileName();
+                            String fileMs = entity.getFileMs();
+                            File file = new File(fileRoute + "/" + fileName);
+                            if (file.isFile()) {
+                                // 存放文件
+                                files.add(file);
+                                filesName.add(fileName);
+                                filesMs.add(fileMs);
                             }
-                            filesName[i]=files[i].getName();
                         }
                         map.put("filesName", filesName);
                         map.put("filesMs", filesMs);
                     }
+                    // 转成json格式
                     String paramMap = JsonUtil.map2Json(map);
                     sweetAlertDialogUtil.loadAlertDialog();
-                    sendMultipart(userId, paramMap, files,czlx);
+                    sendMultipart(userId, paramMap, files, ftsjEntity.getCzlx());
                 }
                 break;
             /**保存草稿按钮*/
             case R.id.save_draft_btn:
                 TFtSjEntity tempenenEntity = eventEntryAdd_basic.PackageData();
-                if(tempenenEntity.getId()!=null){
-                    //做这一步操作是当时间退回，状态为3时，保存草稿的时候，在数据库添加一条记录，将本身的id放在uuid中，为了再上报领导时又重新去新增上报
-                    tempenenEntity.setUuid(tempenenEntity.getId());
+                if (tempenenEntity == null) {
+                    return;
                 }
-                fileEntityList = eventEntryAdd_attachment.PackageData();
-                if(fileEntityList!=null && fileEntityList.size()>0){
-                    for(int i=0;i<fileEntityList.size();i++){
-                        FileEntity fileEntity = fileEntityList.get(i);
-                        if(fileEntity.getUuid() == 0){
-                            fileEntity.setSjId(uuid);
-                            fileEntityDao.saveFileEntity(fileEntity);
-                        }else{
-                            fileEntityDao.updateFileEntity(fileEntity);
-                        }
+                // 只有czlx类型为空情况下，再重新设值
+                if (StringUtils.isBlank(tempenenEntity.getCzlx())){
+                    tempenenEntity.setCzlx(czlx);
+                }
 
-                    }
+                boolean flag = false;
+                String message = "";
+                if ("1".equals(tempenenEntity.getZt())) {
+                    flag = tFtSjEntityDao.updateTFtSjEntity(tempenenEntity);
+                    message = "修改";
+                } else {
+                    tempenenEntity.setId(uuid);
+                    //保存草稿，状态为0
+                    tempenenEntity.setZt("0");
+                    flag = tFtSjEntityDao.saveTFtSjEntity(tempenenEntity);
+                    message = "保存";
                 }
-                if (tempenenEntity != null) {
-                    boolean flag = false;
-                    String message = "";
-                    if ("1".equals(tempenenEntity.getZt())) {
-                        flag = tFtSjEntityDao.updateTFtSjEntity(tempenenEntity);
-                        message = "修改";
-                    } else {
-                        tempenenEntity.setId(uuid);
-                        //保存草稿，状态为0
-                        tempenenEntity.setZt("0");
-                        flag = tFtSjEntityDao.saveTFtSjEntity(tempenenEntity);
-                        message = "保存";
-                    }
-                    if (flag) {
-                        Toast.makeText(EventEntryAddActivity.this, message + "成功", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(EventEntryAddActivity.this, EventDraftListActivity.class);
-                        startActivity(intent);
-                        finish();
-                    } else {
-                        Toast.makeText(EventEntryAddActivity.this, message + "失败", Toast.LENGTH_SHORT).show();
-                    }
+                if (flag) {
+                    Toast.makeText(EventEntryAddActivity.this, message + "成功", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(EventEntryAddActivity.this, EventDraftListActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Toast.makeText(EventEntryAddActivity.this, message + "失败", Toast.LENGTH_SHORT).show();
                 }
                 break;
         }

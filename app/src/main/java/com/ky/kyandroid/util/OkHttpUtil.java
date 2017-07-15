@@ -401,6 +401,9 @@ public class OkHttpUtil {
 			FormBody.Builder formBuilder = new FormBody.Builder();
 			Set<Entry<String, String>> entrySet = params.entrySet();
 			for (Entry<String, String> entry : entrySet) {
+				if(StringUtils.isBlank(entry.getValue())){
+					continue;
+				}
 				formBuilder.add(entry.getKey(), entry.getValue());
 			}
 			requestBuilder.post(formBuilder.build());

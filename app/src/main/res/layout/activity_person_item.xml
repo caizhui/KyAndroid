@@ -1,58 +1,126 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp">
+    android:descendantFocusability="blocksDescendants"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <LinearLayout
+            android:id="@+id/item_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingTop="5dp">
 
-            <TextView
-                android:id="@+id/person_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/TextStyle"
-                android:text="事件测试"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/person_name"
+                    style="@style/TextStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="性别:"/>
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="姓名"
+                    android:textColor="@color/material_blue_grey_80" />
+
+                <TextView
+                    android:id="@+id/person_phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="1dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="性别:" />
 
                 <TextView
                     android:id="@+id/person_sex"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
 
-
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="证件号码:"/>
+                    android:layout_marginLeft="60dp"
+                    android:text="民族:" />
+
+                <TextView
+                    android:id="@+id/person_mz"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="60dp"
+                    android:text="党员:" />
+
+                <TextView
+                    android:id="@+id/person_dy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="1dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="证件号码:" />
 
                 <TextView
                     android:id="@+id/person_idcard"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-                </LinearLayout>
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|center_horizontal"
+            android:layout_weight="5">
+
+            <ImageButton
+                android:id="@+id/delete_btn"
+                android:layout_width="25dp"
+                android:layout_height="30dp"
+                android:background="@mipmap/delete_icon_normal2" />
+
+        </LinearLayout>
+    </LinearLayout>
+
     <View
         android:id="@+id/item_view"
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="#DDDDDD"
-        android:focusable="false"
         android:layout_marginTop="5dp"
-        android:layout_marginBottom="8dp"/>
+        android:background="#DDDDDD"
+        android:focusable="false" />
 </LinearLayout>

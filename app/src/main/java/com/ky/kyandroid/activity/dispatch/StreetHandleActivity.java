@@ -263,7 +263,8 @@ public class StreetHandleActivity extends AppCompatActivity {
             Toast.makeText(StreetHandleActivity.this, "没有SD卡", Toast.LENGTH_LONG).show();
         }
         //初始化imageList
-        adapter = new EventImageListAdapter(fileEntityList, StreetHandleActivity.this,false);
+        FileEntityDao fileEntityDao = new FileEntityDao();
+        adapter = new EventImageListAdapter(fileEntityList,fileEntityDao,StreetHandleActivity.this,false);
         fileList.setAdapter(adapter);
         if(radioGroup!=null){
             radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -371,9 +372,9 @@ public class StreetHandleActivity extends AppCompatActivity {
                 paramsMap.put("userId", userId);
                 paramsMap.put("sjId", tFtSjEntity.getId());
                 paramsMap.put("action", tFtZtlzEntity.getAction());
-                paramsMap.put("actionName", tFtZtlzEntity.getActionname());
+                paramsMap.put("actionName", tFtZtlzEntity.getActionName());
                 paramsMap.put("zt", tFtSjEntity.getZt());
-                paramsMap.put("nextZt", tFtZtlzEntity.getNextzt());
+                paramsMap.put("nextZt", tFtZtlzEntity.getNextZt());
                 if (files != null && files.length > 0) {
                     String[] filesName = new String[files.length];
                     for (int i = 0; i < files.length; i++) {

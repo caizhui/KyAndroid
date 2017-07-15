@@ -233,7 +233,7 @@ public class MsgNoticeActivity extends AppCompatActivity implements View.OnClick
         setContentView(R.layout.activity_msgnotice_list);
         ButterKnife.bind(this);
         // 初始化视图
-        InitViewAndEvent();
+        initViewAndEvent();
         // 获取参数Bundle
         initBundle();
         // 初始化Toolbar
@@ -250,7 +250,7 @@ public class MsgNoticeActivity extends AppCompatActivity implements View.OnClick
     /**
      * 初始化视图与事件
      */
-    void InitViewAndEvent() {
+    void initViewAndEvent() {
         sp = SpUtil.getSharePerference(this);
         netWorkConnection = new NetWorkConnection(this);
         sweetAlertDialogUtil = new SweetAlertDialogUtil(MsgNoticeActivity.this);
