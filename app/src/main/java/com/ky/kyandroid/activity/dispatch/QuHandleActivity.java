@@ -227,6 +227,8 @@ public class QuHandleActivity extends AppCompatActivity {
                     //处理完成之后，将手机的附件删除
                     FileManager.delFile(imageUrl);
                     Toast.makeText(QuHandleActivity.this, "处理成功", Toast.LENGTH_SHORT).show();
+                    intent.putExtra("businessType","isfrash");
+                    intent.putExtra("message",message);
                     Intent intent = new Intent(QuHandleActivity.this, TaskListActivity.class);
                     startActivity(intent);
                     break;
