@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ky.kyandroid.R;
+import com.ky.kyandroid.activity.MainAddEventActivity;
 import com.ky.kyandroid.activity.evententry.EventEntryAddActivity;
 import com.ky.kyandroid.adapter.EventEntityListAdapter;
 import com.ky.kyandroid.db.dao.TFtSjEntityDao;
@@ -101,14 +102,17 @@ public class EventDraftListActivity extends AppCompatActivity {
 
     @OnClick({R.id.left_btn, R.id.right_btn})
     public void onClick(View v) {
+        Intent intent = null;
         switch (v.getId()) {
             /** 返回键 **/
             case R.id.left_btn:
-                onBackPressed();
+                //onBackPressed();
+                intent = new Intent(this, MainAddEventActivity.class);
+                startActivity(intent);
                 //finish();
                 break;
             case R.id.right_btn:
-                Intent intent = new Intent(this, EventEntryAddActivity.class);
+                intent = new Intent(this, EventEntryAddActivity.class);
                 startActivity(intent);
                 break;
         }

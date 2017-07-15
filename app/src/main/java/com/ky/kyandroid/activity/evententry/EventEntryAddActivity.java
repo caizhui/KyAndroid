@@ -423,7 +423,7 @@ public class EventEntryAddActivity extends FragmentActivity {
                     if (ftsjEntity != null){
                         String sjid = ftsjEntity.getId();
                         tFtSjEntityDao.deleteEventEntry(sjid);
-                        // 删除不事人表信息
+                        // 删除当事人表信息
                         tFtSjRyEntityDao.deleteEventEntryByuuid(sjid);
                         // 删除附件信息同时处理掉文件
                         List<FileEntity> fileList = fileEntityDao.queryList(sjid);
@@ -440,6 +440,7 @@ public class EventEntryAddActivity extends FragmentActivity {
                         }
                         Toast.makeText(EventEntryAddActivity.this, "上报成功", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(EventEntryAddActivity.this, EventEntryListActivity.class);
+                        intent.putExtra("businessType","initList");
                         startActivity(intent);
                     }else{
                         Toast.makeText(EventEntryAddActivity.this, "上报失败", Toast.LENGTH_SHORT).show();
