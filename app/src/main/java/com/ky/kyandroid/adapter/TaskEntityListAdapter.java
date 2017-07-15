@@ -88,5 +88,16 @@ public class TaskEntityListAdapter extends BaseAdapter {
         super.notifyDataSetChanged();
     }
 
+    /**
+     * @param addList
+     */
+    public void addDataSetChanged(List<TaskEntity> addList){
+        this.list.addAll(addList);
+        this.notifyDataSetChanged(list);
+    }
+
+    public List<TaskEntity> getList() {
+        return list;
+    }
 
 }

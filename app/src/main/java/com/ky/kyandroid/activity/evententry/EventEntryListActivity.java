@@ -113,11 +113,6 @@ public class EventEntryListActivity extends AppCompatActivity {
     private List<TFtSjEntity> tFtSjEntityList;
 
     /**
-     * 每次加载信息List条数
-     */
-    private List<TFtSjEntity> pList;
-
-    /**
      * 数据加载
      */
     private List<?> dataList;
@@ -144,16 +139,6 @@ public class EventEntryListActivity extends AppCompatActivity {
     TFtSjEntity tFtSjEntity;
 
     /**
-     * 提示信息
-     */
-    String message;
-
-    /**
-     * 操作是否成功标识
-     */
-    boolean flag;
-
-    /**
      * SharedPreferences
      */
     private SharedPreferences sp;
@@ -178,11 +163,6 @@ public class EventEntryListActivity extends AppCompatActivity {
      *
      */
     private PageBean pageBean;
-
-    /**
-     * 返回的总条数
-     */
-    private int totalMumber;
 
     /**
      * 总条数
