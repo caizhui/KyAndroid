@@ -206,6 +206,8 @@ public class DispatchActivity extends AppCompatActivity {
                     sweetAlertDialogUtil.dismissAlertDialog();
                     Toast.makeText(DispatchActivity.this, "派遣成功", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(DispatchActivity.this, EventEntryListActivity.class);
+                    intent.putExtra("businessType","isfrash");
+                    intent.putExtra("message",message);
                     startActivity(intent);
                     break;
                 case 3:

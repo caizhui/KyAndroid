@@ -4,8 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -34,13 +32,11 @@ import com.ky.kyandroid.R;
 import com.ky.kyandroid.activity.LoginActivity;
 import com.ky.kyandroid.activity.dispatch.DispatchActivity;
 import com.ky.kyandroid.activity.dispatch.StreetHandleActivity;
-import com.ky.kyandroid.activity.msg.MsgNoticeActivity;
 import com.ky.kyandroid.adapter.EventEntityListAdapter;
 import com.ky.kyandroid.bean.AckMessage;
 import com.ky.kyandroid.bean.NetWorkConnection;
 import com.ky.kyandroid.bean.PageBean;
 import com.ky.kyandroid.db.dao.TFtSjEntityDao;
-import com.ky.kyandroid.entity.MsgNoticeEntity;
 import com.ky.kyandroid.entity.SjHandleParams;
 import com.ky.kyandroid.entity.TFtSjEntity;
 import com.ky.kyandroid.entity.TFtZtlzEntity;
@@ -51,7 +47,6 @@ import com.ky.kyandroid.util.SpUtil;
 import com.ky.kyandroid.util.StringUtils;
 import com.ky.kyandroid.util.SweetAlertDialogUtil;
 import com.ky.kyandroid.util.SwipeRefreshUtil;
-import com.solidfire.gson.JsonObject;
 import com.solidfire.gson.reflect.TypeToken;
 
 import java.io.IOException;
@@ -346,18 +341,29 @@ public class EventEntryListActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onRestart() {
-        super.onRestart();
-        Intent intent = getIntent();
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
         if (intent != null){
             String type = intent.getStringExtra("businessType");
             if("initList".equals(type)){
                 // 初始化数据
                 initData();
+            }else if ("isfrash".equals(type)){
+                //刷新当前一行数据
+                String message = intent.getStringExtra("message");
+                if(!"".equals(message)){
+                    // 状态修改
+                    Log.i(TAG, "加载操作...");
+                    if (handleResponseDataState(message)) {
+                        Toast.makeText(EventEntryListActivity.this, "操作成功", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(EventEntryListActivity.this, "操作失败", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
             }
         }
     }
-
 
 
     /**
@@ -808,11 +814,8 @@ public class EventEntryListActivity extends AppCompatActivity {
         }
         //回放核查不通过
         if ("7,8".equals(tFtZtlzEntity.getNextZt()) || ("13".equals(tFtZtlzEntity.getNextZt()) && "14".equals(tFtZtlzEntity.getPrevZt()))) {
-            radioButton03.setVisibility(View.VISIBLE);
-            radioGroup.setOrientation(LinearLayout.VERTICAL);
-            radioButton01.setText("街道回访核查不通过原因1");
-            radioButton02.setText("街道回访核查不通过原因2");
-            radioButton03.setText("街道回访核查不通过原因3");
+            radioButton02.setVisibility(View.GONE);
+            radioButton01.setText("事件未处置完");
 
         }
         //回放核查通过

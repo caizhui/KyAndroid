@@ -208,6 +208,7 @@ public class StreetHandleActivity extends AppCompatActivity {
 
     FileEntityDao fileEntityDao;
 
+
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -228,6 +229,8 @@ public class StreetHandleActivity extends AppCompatActivity {
                     FileManager.delFile(imageUrl);
                     Toast.makeText(StreetHandleActivity.this, "处理成功", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(StreetHandleActivity.this, EventEntryListActivity.class);
+                    intent.putExtra("businessType","isfrash");
+                    intent.putExtra("message",message);
                     startActivity(intent);
                     break;
             }

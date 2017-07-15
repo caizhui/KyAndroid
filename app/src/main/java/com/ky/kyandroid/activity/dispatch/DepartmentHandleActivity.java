@@ -28,7 +28,6 @@ import android.widget.Toast;
 
 import com.ky.kyandroid.Constants;
 import com.ky.kyandroid.R;
-import com.ky.kyandroid.activity.evententry.EventEntryAdd_Attachment;
 import com.ky.kyandroid.activity.task.TaskListActivity;
 import com.ky.kyandroid.adapter.EventImageListAdapter;
 import com.ky.kyandroid.bean.NetWorkConnection;
@@ -210,6 +209,8 @@ public class DepartmentHandleActivity extends AppCompatActivity {
                     FileManager.delFile(imageUrl);
                     Toast.makeText(DepartmentHandleActivity.this, "处理成功", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(DepartmentHandleActivity.this, TaskListActivity.class);
+                    intent.putExtra("businessType","isfrash");
+                    intent.putExtra("message",message);
                     startActivity(intent);
                     break;
             }
