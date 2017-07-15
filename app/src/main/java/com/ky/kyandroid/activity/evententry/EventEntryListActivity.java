@@ -794,7 +794,8 @@ public class EventEntryListActivity extends AppCompatActivity {
         }
         //回放核查不通过
         if ("7,8".equals(tFtZtlzEntity.getNextZt()) || ("13".equals(tFtZtlzEntity.getNextZt()) && "14".equals(tFtZtlzEntity.getPrevZt()))) {
-            radioButton02.setVisibility(View.GONE);
+            radioButton02.setVisibility(View.INVISIBLE);
+            radioButton03.setVisibility(View.INVISIBLE);
             radioButton01.setText("事件未处置完");
 
         }

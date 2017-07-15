@@ -361,6 +361,7 @@ public class TaskListActivity extends AppCompatActivity {
         sweetAlertDialogUtil = new SweetAlertDialogUtil(TaskListActivity.this);
         taskEntityList = new ArrayList<TaskEntity>();
         userId = sp.getString(USER_ID, "");
+        centerText.setText("任务列表");
     }
 
 
@@ -372,7 +373,7 @@ public class TaskListActivity extends AppCompatActivity {
         // 查询自己的消息
         paramsMap.put("userId", sp.getString(LoginActivity.USER_ID, ""));
         // 设置标题及颜色
-        centerText.setText("事件列表(" + total + ")");
+        centerText.setText("任务列表(" + total + ")");
         //toolbar_layout.setBackgroundColor(Color.parseColor("#A4C639"));
         swipeRefreshUtil = new SwipeRefreshUtil(swipeContainer, Constants.SERVICE_QUERY_TASK, mHandler);
         // 上拉刷新初始化
@@ -498,7 +499,7 @@ public class TaskListActivity extends AppCompatActivity {
             // 刷新列表
             adapter.notifyDataSetChanged(entityList);
         }
-        centerText.setText("事件列表(" + adapter.getCount() + ")");
+        centerText.setText("任务列表(" + adapter.getCount() + ")");
     }
 
     /**
@@ -741,8 +742,6 @@ public class TaskListActivity extends AppCompatActivity {
      */
     public void OperatingProcess(final TFtZtlzEntity tFtZtlzEntity, final String url) {
         final Message msg = new Message();
-        //初始状态为6，表示状态修改不成功
-        msg.what = 6;
         AlertDialog.Builder builder = new AlertDialog.Builder(TaskListActivity.this);
         builder.setTitle("信息");
         builder.setMessage("确定要执行次操作吗？");
@@ -774,9 +773,10 @@ public class TaskListActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(Call call, Response response) throws IOException {
                             if (response.isSuccessful()) {
-                                msg.what = 5;
+                                msg.what = 8;
                                 msg.obj = response.body().string();
                             } else {
+                                msg.what = 0;
                                 msg.obj = "网络异常,请确认网络情况";
                             }
                             mHandler.sendMessage(msg);
@@ -836,16 +836,16 @@ public class TaskListActivity extends AppCompatActivity {
 
                             @Override
                             public void onFailure(Call call, IOException e) {
-                                msg.what=6;
                                 mHandler.sendEmptyMessage(0);
                             }
 
                             @Override
                             public void onResponse(Call call, Response response) throws IOException {
                                 if (response.isSuccessful()) {
-                                    msg.what = 5;
+                                    msg.what = 8;
                                     msg.obj = response.body().string();
                                 } else {
+                                    msg.what = 0;
                                     msg.obj = "网络异常,请确认网络情况";
                                 }
                                 mHandler.sendMessage(msg);

@@ -35,7 +35,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemClick;
-import butterknife.OnItemLongClick;
 import butterknife.Optional;
 
 /**
@@ -468,13 +467,13 @@ public class EventEntryAdd_Person extends Fragment {
                 for(int i=0;i<sjryList.size();i++){
                     TFtSjRyEntity tFtSjRyEntity  = sjryList.get(i);
                     if(tFtSjRyEntityDao!=null){
-                        //判断是否已经将数据加载到本地数据库
-                        List<TFtSjRyEntity> tFtSjRyEntities = tFtSjRyEntityDao.queryListBId(tFtSjRyEntity.getId());
-                        if(tFtSjRyEntities!=null && tFtSjRyEntities.size()>0){
-                            tFtSjRyEntityDao.updateTFtSjRyEntity(tFtSjRyEntity);
-                        }else{
-                            tFtSjRyEntityDao.saveTFtSjRyEntity(tFtSjRyEntity);
-                        }
+                            //判断是否已经将数据加载到本地数据库
+                            List<TFtSjRyEntity> tFtSjRyEntities = tFtSjRyEntityDao.queryListBId(tFtSjRyEntity.getId());
+                            if(tFtSjRyEntities!=null && tFtSjRyEntities.size()>0){
+                                tFtSjRyEntityDao.updateTFtSjRyEntity(tFtSjRyEntity);
+                            }else{
+                                tFtSjRyEntityDao.saveTFtSjRyEntity(tFtSjRyEntity);
+                            }
 
                     }
                 }
