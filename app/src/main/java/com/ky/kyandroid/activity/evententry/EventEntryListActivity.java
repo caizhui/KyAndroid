@@ -345,6 +345,21 @@ public class EventEntryListActivity extends AppCompatActivity {
         initData();
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Intent intent = getIntent();
+        if (intent != null){
+            String type = intent.getStringExtra("businessType");
+            if("initList".equals(type)){
+                // 初始化数据
+                initData();
+            }
+        }
+    }
+
+
+
     /**
      * 初始化视图与事件
      */
@@ -456,15 +471,15 @@ public class EventEntryListActivity extends AppCompatActivity {
             // 追加列表
             adapter.addDataSetChanged(entityList);
         } else {
-            // hqb01才加载草稿 - 暂时这么定义
+            /*
             String userName = sp.getString(LoginActivity.USER_NAME, "");
             if ("hqb01".equals(userName)) {
                 loadLocationSjList(entityList);
             }
+            */
             // 刷新列表
             adapter.notifyDataSetChanged(entityList);
         }
-
         centerText.setText("事件列表(" + adapter.getCount() + ")");
     }
 
