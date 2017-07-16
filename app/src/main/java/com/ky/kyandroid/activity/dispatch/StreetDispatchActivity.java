@@ -378,6 +378,7 @@ public class StreetDispatchActivity extends AppCompatActivity {
                         String ftSjClbmList = JsonUtil.toJson(ypqbmList);
                         paramsMap.put("userId", userId);
                         paramsMap.put("sjId", uuid);
+                        paramsMap.put("clbmId", taskEntity.getClid());
                         paramsMap.put("ftSjClbmList", ftSjClbmList);
                         // 发送请求
                         OkHttpUtil.sendRequest(Constants.SERVICE_TASK_DISPATCH_SAVE, paramsMap, new Callback() {
