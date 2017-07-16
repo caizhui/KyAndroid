@@ -103,7 +103,13 @@ public class MsgNoticeListAdapter extends BaseAdapter {
 		// 发送人
 		holder.tv_center_name.setText("发送人:" + entity.getFsr());
 		// 消息类型
-		holder.tv_center_name2.setText("消息类型:" + ("1".equals(entity.getLx())?"事件处理" : "督办处理"));
+		if ("1".equals(entity.getLx())) {
+			holder.tv_center_name2.setText("消息类型:事件处理");
+		} else if("2".equals(entity.getLx())) {
+			holder.tv_center_name2.setText("消息类型:督办处理");
+		}else if("3".equals(entity.getLx())){
+			holder.tv_center_name2.setText("消息类型:申请延期");
+		}
 		// 内容
 		holder.tv_center_name3.setText("内容信息:" + entity.getNr());
 		// 时间
