@@ -803,10 +803,9 @@ public class EventEntryListActivity extends AppCompatActivity {
         }
         //回放核查通过
         if ("10".equals(tFtZtlzEntity.getNextZt()) || "15".equals(tFtZtlzEntity.getNextZt())) {
-            radioButton03.setVisibility(View.VISIBLE);
-            radioButton01.setText("人手不足");
-            radioButton02.setText("权限不足");
-            radioButton03.setText("脱离可控范围");
+            radioButton02.setVisibility(View.GONE);
+            radioButton03.setVisibility(View.GONE);
+            radioButton01.setText("事件已经完结");
         }
         if (radioGroup != null) {
             radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
