@@ -603,30 +603,34 @@ public class EventEntryAddActivity extends FragmentActivity {
                 if (tempenenEntity == null) {
                     return;
                 }
-                // 只有czlx类型为空情况下，再重新设值
-                if (StringUtils.isBlank(tempenenEntity.getCzlx())){
-                    tempenenEntity.setCzlx(czlx);
-                }
+                if("3".equals(tempenenEntity.getZt())){
+                    Toast.makeText(this,"街道退回的事件不能保存草稿，请修改之后直接上报!",Toast.LENGTH_SHORT).show();
+                }else {
+                    // 只有czlx类型为空情况下，再重新设值
+                    if (StringUtils.isBlank(tempenenEntity.getCzlx())){
+                        tempenenEntity.setCzlx(czlx);
+                    }
 
-                boolean flag = false;
-                String message = "";
-                if ("1".equals(tempenenEntity.getZt())) {
-                    flag = tFtSjEntityDao.updateTFtSjEntity(tempenenEntity);
-                    message = "修改";
-                } else {
-                    tempenenEntity.setId(uuid);
-                    //保存草稿，状态为0
-                    tempenenEntity.setZt("0");
-                    flag = tFtSjEntityDao.saveTFtSjEntity(tempenenEntity);
-                    message = "保存";
-                }
-                if (flag) {
-                    Toast.makeText(EventEntryAddActivity.this, message + "成功", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(EventEntryAddActivity.this, EventDraftListActivity.class);
-                    startActivity(intent);
-                    finish();
-                } else {
-                    Toast.makeText(EventEntryAddActivity.this, message + "失败", Toast.LENGTH_SHORT).show();
+                    boolean flag = false;
+                    String message = "";
+                    if ("1".equals(tempenenEntity.getZt())) {
+                        flag = tFtSjEntityDao.updateTFtSjEntity(tempenenEntity);
+                        message = "修改";
+                    } else {
+                        tempenenEntity.setId(uuid);
+                        //保存草稿，状态为0
+                        tempenenEntity.setZt("0");
+                        flag = tFtSjEntityDao.saveTFtSjEntity(tempenenEntity);
+                        message = "保存";
+                    }
+                    if (flag) {
+                        Toast.makeText(EventEntryAddActivity.this, message + "成功", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(EventEntryAddActivity.this, EventDraftListActivity.class);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Toast.makeText(EventEntryAddActivity.this, message + "失败", Toast.LENGTH_SHORT).show();
+                    }
                 }
                 break;
         }

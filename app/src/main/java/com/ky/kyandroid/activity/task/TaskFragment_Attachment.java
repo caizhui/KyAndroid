@@ -11,9 +11,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import com.ky.kyandroid.R;
-import com.ky.kyandroid.activity.evententry.EventEntryAdd_Attachment;
 import com.ky.kyandroid.activity.evententry.EventLogListActivity;
 import com.ky.kyandroid.activity.evententry.EventRelevanceListActivity;
 import com.ky.kyandroid.adapter.EventImageListAdapter;
@@ -62,6 +62,13 @@ public class TaskFragment_Attachment extends Fragment {
     @BindView(R.id.image_list)
     ListView imageList;
 
+    @BindView(R.id.item_view)
+    View itemView;
+
+
+    @BindView(R.id.fj_relativieLayout)
+    RelativeLayout fjRelativieLayout;
+
     @BindView(R.id.main)
     LinearLayout main;
 
@@ -94,6 +101,8 @@ public class TaskFragment_Attachment extends Fragment {
      */
     private Map<String, TFtSjEntity> glsjListMap;
 
+    boolean flag;
+
     FileEntityDao fileEntityDao;
 
     @Nullable
@@ -102,6 +111,8 @@ public class TaskFragment_Attachment extends Fragment {
         View view = inflater.inflate(R.layout.evententeradd_attachment_fragment, container, false);
         ButterKnife.bind(this, view);
         addAttachment.setVisibility(View.GONE);
+        fjRelativieLayout.setVisibility(View.GONE);
+        itemView.setVisibility(View.GONE);
         eventLogBtn.setVisibility(View.VISIBLE);
         eventRelevanceBtn.setVisibility(View.VISIBLE);
         fileEntityList = new ArrayList<FileEntity>();
@@ -118,22 +129,26 @@ public class TaskFragment_Attachment extends Fragment {
      * 显示图片或者创建文件路径
      */
     public void appendImage() {
-        if (sjfjList != null && sjfjList.size() > 0) {
-            //每次进来都给fileEntityList重新初始化一次
-            fileEntityList = new ArrayList<FileEntity>();
-            for (int i = 0; i < sjfjList.size(); i++) {
-                fileEntity = new FileEntity();
-                if (sjfjList.get(i).getUrl() != null) {
-                    fileEntity.setFileUrl(sjfjList.get(i).getUrl());
-                    fileEntity.setFileMs(sjfjList.get(i).getWjms());
+        //当flag为true时，表示是去查看已经上报事件的图片
+        if (flag) {
+            if (sjfjList != null && sjfjList.size() > 0) {
+                //每次进来都给fileEntityList重新初始化一次
+                fileEntityList =new ArrayList<FileEntity>();
+                for(int i=0;i<sjfjList.size();i++){
+                    fileEntity = new FileEntity();
+                    if(sjfjList.get(i).getUrl()!=null){
+                        fileEntity.setFileUrl(sjfjList.get(i).getUrl());
+                        fileEntity.setFileMs(sjfjList.get(i).getWjms());
+                        fileEntity.setFjlx(sjfjList.get(i).getFjlx());
+                    }
+                    fileEntityList.add(fileEntity);
+                    //加载完一次就把文件实体清空一次
                 }
-                fileEntityList.add(fileEntity);
-                //加载完一次就把文件实体清空一次
-            }
-            if (fileEntityList != null && fileEntityList.size() > 0) {
-                adapter.notifyDataSetChanged(fileEntityList);
-            }
+                if (fileEntityList != null && fileEntityList.size() > 0) {
+                    adapter.notifyDataSetChanged(fileEntityList);
+                }
 
+            }
         }
     }
 
@@ -170,6 +185,7 @@ public class TaskFragment_Attachment extends Fragment {
      */
     public void setTFtSjFjEntityList(List<TFtSjFjEntity> sjfjList, boolean flag) {
         this.sjfjList = sjfjList;
+        this.flag = flag;
     }
 
     /**

@@ -142,6 +142,12 @@
             android:launchMode="singleTask"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
 
+        <!--区维稳办转拍给街维稳办，再由街维稳办派遣-->
+        <activity
+            android:name=".activity.dispatch.StreetDispatchActivity"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
+
         <!--我的任务新增-->
         <activity
             android:name=".activity.task.TaskAddActivity"

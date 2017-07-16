@@ -33,6 +33,9 @@ public class Constants {
 	//自行处理 - 反馈
 	public final static String SERVICE_ZXCLBANJ_EVENT= "ft/kyAndroid/zxclBanj.action";
 
+	//任务退回状态接口
+	public final static String SERVICE_TASK_BACK= "ft/kyAndroid/taskBack.action";
+
 	//任务申请延期状态接口
 	public final static String SERVICE_EDIT_YANQI= "ft/kyAndroid/taskYanqi.action";
 

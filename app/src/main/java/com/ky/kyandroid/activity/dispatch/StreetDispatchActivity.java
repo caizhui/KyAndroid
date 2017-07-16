@@ -24,7 +24,7 @@ import android.widget.Toast;
 
 import com.ky.kyandroid.Constants;
 import com.ky.kyandroid.R;
-import com.ky.kyandroid.activity.evententry.EventEntryListActivity;
+import com.ky.kyandroid.activity.task.TaskListActivity;
 import com.ky.kyandroid.adapter.DisplayDepartmentListAdapter;
 import com.ky.kyandroid.bean.AckMessage;
 import com.ky.kyandroid.bean.CodeValue;
@@ -32,7 +32,7 @@ import com.ky.kyandroid.bean.NetWorkConnection;
 import com.ky.kyandroid.entity.DispatchEntity;
 import com.ky.kyandroid.entity.KpqbmEntity;
 import com.ky.kyandroid.entity.OrgsEntity;
-import com.ky.kyandroid.entity.TFtSjEntity;
+import com.ky.kyandroid.entity.TaskEntity;
 import com.ky.kyandroid.entity.YpqbmEntity;
 import com.ky.kyandroid.util.DateTimePickDialogUtil;
 import com.ky.kyandroid.util.JsonUtil;
@@ -58,10 +58,10 @@ import okhttp3.Response;
 
 /**
  * Created by Caizhui on 2017/6/30.
- * 街道派遣Activity
+ * 去维稳办转发街道派遣Activity
  */
 
-public class DispatchActivity extends AppCompatActivity {
+public class StreetDispatchActivity extends AppCompatActivity {
 
     /**
      * 新增派遣部门按钮
@@ -126,7 +126,7 @@ public class DispatchActivity extends AppCompatActivity {
     private EditText handlerTextEdt;
 
 
-    private TFtSjEntity tFtSjEntity;
+    private TaskEntity taskEntity;
 
 
     private Intent intent;
@@ -196,7 +196,7 @@ public class DispatchActivity extends AppCompatActivity {
                 // 失败
                 case 0:
                     sweetAlertDialogUtil.dismissAlertDialog();
-                    //Toast.makeText(DispatchActivity.this, message, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(StreetDispatchActivity.this, message, Toast.LENGTH_SHORT).show();
                     break;
                 // 成功跳转
                 case 1:
@@ -205,19 +205,19 @@ public class DispatchActivity extends AppCompatActivity {
                     break;
                 case 2:
                     sweetAlertDialogUtil.dismissAlertDialog();
-                    Toast.makeText(DispatchActivity.this, "派遣成功", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(DispatchActivity.this, EventEntryListActivity.class);
+                    Toast.makeText(StreetDispatchActivity.this, "派遣成功", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(StreetDispatchActivity.this, TaskListActivity.class);
                     intent.putExtra("businessType","isfrash");
                     intent.putExtra("message",message);
                     startActivity(intent);
                     break;
                 case 3:
                     sweetAlertDialogUtil.dismissAlertDialog();
-                    Toast.makeText(DispatchActivity.this, "派遣失败", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(StreetDispatchActivity.this, "派遣失败", Toast.LENGTH_SHORT).show();
                     break;
                 case 4:
                     sweetAlertDialogUtil.dismissAlertDialog();
-                    Toast.makeText(DispatchActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(StreetDispatchActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
                     if(ypqbmList.get(tempPosition)!=null){
                         ypqbmList.remove(tempPosition);
                     }
@@ -225,7 +225,7 @@ public class DispatchActivity extends AppCompatActivity {
                     break;
                 case 5:
                     sweetAlertDialogUtil.dismissAlertDialog();
-                    Toast.makeText(DispatchActivity.this, "删除失败", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(StreetDispatchActivity.this, "删除失败", Toast.LENGTH_SHORT).show();
                     break;
 
             }
@@ -240,9 +240,9 @@ public class DispatchActivity extends AppCompatActivity {
         centerText.setText("事件派遣");
         rightBtn.setVisibility(View.INVISIBLE);
         intent = getIntent();
-        tFtSjEntity = (TFtSjEntity) intent.getSerializableExtra("tFtSjEntity");
-        if(tFtSjEntity!=null){
-            uuid = tFtSjEntity.getId();
+        taskEntity = (TaskEntity) intent.getSerializableExtra("taskEntity");
+        if(taskEntity!=null){
+            uuid = taskEntity.getId();
         }
         ypqbmEntity = new YpqbmEntity();
         kpqbmList = new ArrayList<KpqbmEntity>();
@@ -313,7 +313,7 @@ public class DispatchActivity extends AppCompatActivity {
     public boolean OnItemLongClick(int position){
         tempPosition = position;
         ypqbmEntity = (YpqbmEntity) adapter.getItem(position);
-        AlertDialog.Builder builder = new AlertDialog.Builder(DispatchActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(StreetDispatchActivity.this);
         builder.setTitle("信息");
         builder.setMessage("确定要删除该条记录吗？");
         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
@@ -378,6 +378,7 @@ public class DispatchActivity extends AppCompatActivity {
                         String ftSjClbmList = JsonUtil.toJson(ypqbmList);
                         paramsMap.put("userId", userId);
                         paramsMap.put("sjId", uuid);
+                        paramsMap.put("clbmId", taskEntity.getClid());
                         paramsMap.put("ftSjClbmList", ftSjClbmList);
                         // 发送请求
                         OkHttpUtil.sendRequest(Constants.SERVICE_TASK_DISPATCH_SAVE, paramsMap, new Callback() {
@@ -404,7 +405,7 @@ public class DispatchActivity extends AppCompatActivity {
                         mHandler.sendMessage(msg);
                     }
                 }else{
-                    Toast.makeText(DispatchActivity.this,"没有可派遣的部门！",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(StreetDispatchActivity.this,"没有可派遣的部门！",Toast.LENGTH_SHORT).show();
                 }
 
                 break;
@@ -444,7 +445,7 @@ public class DispatchActivity extends AppCompatActivity {
      * 新增派遣部门信息
      */
     public void addDepartmentInfo(){
-        View dialogView = LayoutInflater.from(DispatchActivity.this).inflate(R.layout.dialog_street_display, null);
+        View dialogView = LayoutInflater.from(StreetDispatchActivity.this).inflate(R.layout.dialog_street_display, null);
         departmentTypeSpinner = ButterKnife.findById(dialogView, R.id.department_type_spinner);
         /*departmentTypeImg =  ButterKnife.findById(dialogView, R.id.department_type_img);*/
         departmenTextSpinner = ButterKnife.findById(dialogView, R.id.department_text_spinner);
@@ -468,7 +469,7 @@ public class DispatchActivity extends AppCompatActivity {
                         }
                     }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();*/
                     DateTimePickDialogUtil dateTimePicKDialog = new DateTimePickDialogUtil(
-                            DispatchActivity.this, "");
+                            StreetDispatchActivity.this, "");
                     dateTimePicKDialog.dateTimePicKDialog(handlerTimeEdt);
                 }
                 return false;
@@ -480,7 +481,7 @@ public class DispatchActivity extends AppCompatActivity {
         spinnerList.add(new CodeValue("3", "协办单位"));
         spinnerList.add(new CodeValue("4", "责任单位"));
         //将可选内容与ArrayAdapter连接起来
-        arrayAdapter = new ArrayAdapter<CodeValue>(DispatchActivity.this, android.R.layout.simple_spinner_item, spinnerList);
+        arrayAdapter = new ArrayAdapter<CodeValue>(StreetDispatchActivity.this, android.R.layout.simple_spinner_item, spinnerList);
         //设置下拉列表的风格
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         departmentTypeSpinner.setAdapter(arrayAdapter);//将adapter 添加到部门类型spinner中
@@ -492,7 +493,7 @@ public class DispatchActivity extends AppCompatActivity {
             }
         }
         //将可选内容与ArrayAdapter连接起来
-        arrayAdapter = new ArrayAdapter<CodeValue>(DispatchActivity.this, android.R.layout.simple_spinner_item, spinnerList);
+        arrayAdapter = new ArrayAdapter<CodeValue>(StreetDispatchActivity.this, android.R.layout.simple_spinner_item, spinnerList);
         //设置下拉列表的风格
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         departmenTextSpinner.setAdapter(arrayAdapter);//将adapter 添加到部门spinner中
@@ -502,7 +503,7 @@ public class DispatchActivity extends AppCompatActivity {
             handlerTimeEdt.setText(ypqbmEntity.getClsx());
             handlerTextEdt.setText(ypqbmEntity.getRwnr());
         }
-        AlertDialog.Builder builder = new AlertDialog.Builder(DispatchActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(StreetDispatchActivity.this);
         builder.setCancelable(false);
         builder.setTitle("派遣部门信息");
         builder.setView(dialogView);
@@ -517,7 +518,7 @@ public class DispatchActivity extends AppCompatActivity {
                 tempYpqbmEntity.setBmlx(departmentTypeCodeValue.getCode());
                 tempYpqbmEntity.setBmmc(departmentCodeValue.getValue());
                 tempYpqbmEntity.setBm_id(departmentCodeValue.getCode());
-                tempYpqbmEntity.setSjId(tFtSjEntity.getId());
+                tempYpqbmEntity.setSjId(taskEntity.getId());
                 String message ="";
                 if("".equals(handlerTime)){
                     message+= "处理时限不能为空\n";
@@ -545,7 +546,7 @@ public class DispatchActivity extends AppCompatActivity {
                         adapter.notifyDataSetChanged(ypqbmList);
                     }
                 }else{
-                    Toast.makeText(DispatchActivity.this,message,Toast.LENGTH_SHORT).show();
+                    Toast.makeText(StreetDispatchActivity.this,message,Toast.LENGTH_SHORT).show();
                 }
             }
         });

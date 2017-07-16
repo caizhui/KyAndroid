@@ -94,13 +94,15 @@
                     android:id="@+id/radioButton02"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="处置情况二"/>
+                    android:text="处置情况二"
+                    android:visibility="gone"/>
 
                 <RadioButton
                     android:id="@+id/radioButton03"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="处置情况三"/>
+                    android:text="处置情况三"
+                    android:visibility="gone"/>
             </RadioGroup>
 
             <EditText

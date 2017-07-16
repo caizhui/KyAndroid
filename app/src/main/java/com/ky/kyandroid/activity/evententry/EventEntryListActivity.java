@@ -677,12 +677,6 @@ public class EventEntryListActivity extends AppCompatActivity {
                         //当7.2事件街道自行处理反馈的时候，弹出自定义对话框 修改为调用接口：Constants.SERVICE_ZXCLBANJ_EVENT
                         ReturnOperation(tFtZtlzEntity, R.layout.dialog_streetfeedback_operation, tFtZtlzEntity.getName(), Constants.SERVICE_ZXCLBANJ_EVENT);
                     } else if ("7,8".equals(tFtZtlzEntity.getNextZt())) {
-                        //当走街道自行处理这条线时，如果当前状态为9，则退回到7街道自行处理，否则退回8，弹出自定义对话框
-                          /*  if("9".equals(tFtSjEntity.getZt())){
-                                tFtZtlzEntity.setNextzt("7");
-                            }else{
-                                tFtZtlzEntity.setNextzt("8");
-                            }*/
                         //当10回访核查通过或者7,8回访核查不通过的时候，弹出自定义对话框
                         ReturnOperation(tFtZtlzEntity, R.layout.dialog_verification_operation, tFtZtlzEntity.getName() + "原因", Constants.SERVICE_EDIT_EVENT);
                     } else if ("8".equals(tFtZtlzEntity.getNextZt()) || "13".equals(tFtZtlzEntity.getNextZt())) {
@@ -792,18 +786,26 @@ public class EventEntryListActivity extends AppCompatActivity {
             radioButton01.setText("未达到立案标准");
             radioButton02.setVisibility(View.INVISIBLE);
         }
-        //回放核查不通过
+        //回放核查不通过 或者反归档操作
         if ("7,8".equals(tFtZtlzEntity.getNextZt()) || ("13".equals(tFtZtlzEntity.getNextZt()) && "14".equals(tFtZtlzEntity.getPrevZt()))) {
-            radioButton02.setVisibility(View.GONE);
-            radioButton01.setText("事件未处置完");
+            //反归档操作
+            if (("sjJdfgd".equals(tFtZtlzEntity.getAction()))) {
+                radioButton03.setVisibility(View.GONE);
+                radioGroup.setOrientation(LinearLayout.HORIZONTAL);
+                radioButton01.setText("事件出现不稳定苗头");
+                radioButton02.setText("事件再次爆发");
 
+            }else{
+                radioButton02.setVisibility(View.GONE);
+                radioButton03.setVisibility(View.GONE);
+                radioButton01.setText("事件未处置完");
+            }
         }
         //回放核查通过
         if ("10".equals(tFtZtlzEntity.getNextZt()) || "15".equals(tFtZtlzEntity.getNextZt())) {
-            radioButton03.setVisibility(View.VISIBLE);
-            radioButton01.setText("人手不足");
-            radioButton02.setText("权限不足");
-            radioButton03.setText("脱离可控范围");
+            radioButton02.setVisibility(View.GONE);
+            radioButton03.setVisibility(View.GONE);
+            radioButton01.setText("事件已经完结");
         }
         if (radioGroup != null) {
             radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -905,7 +907,6 @@ public class EventEntryListActivity extends AppCompatActivity {
                     }
                     if (!"".equals(message)) {
                         Toast.makeText(EventEntryListActivity.this, message, Toast.LENGTH_SHORT).show();
-                        ;
                     } else {
                         sweetAlertDialogUtil.loadAlertDialog();
                         // 发送请求

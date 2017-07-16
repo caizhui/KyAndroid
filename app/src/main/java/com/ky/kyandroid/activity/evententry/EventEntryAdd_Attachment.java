@@ -281,6 +281,7 @@ public class EventEntryAdd_Attachment extends Fragment {
          /* 得到SD卡得路径 */
         sdcard = Environment.getExternalStorageDirectory().getAbsolutePath().toString();
         fileRoute = new File(sdcard + "/img/" + imageId + "/");
+        //FileManager.delFile(sdcard + "/img/");
         //如果文件夹不存在，
         if (!fileRoute.exists()) {
             fileRoute.mkdirs();
