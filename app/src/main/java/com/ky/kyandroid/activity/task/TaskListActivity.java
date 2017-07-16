@@ -528,10 +528,11 @@ public class TaskListActivity extends AppCompatActivity {
                         SjHandleParams sjHandleParams = JsonUtil.fromJson(dataStr, SjHandleParams.class);
                         if (sjHandleParams != null) {
                             flag = true;
-                            if(sjHandleParams.getIsRemove()!=null && "1".equals(sjHandleParams.getIsRemove())){
+                            if("1".equals(sjHandleParams.getIsRemove())){
+                                List<TaskEntity> tftsjList = adapter.getList();
                                 //任务退回时，该条记录去掉
-                                if(entityList.get(tempPosition)!=null){
-                                    entityList.remove(tempPosition);
+                                if(tftsjList.get(tempPosition)!=null){
+                                    tftsjList.remove(tempPosition);
                                     adapter.notifyDataSetChanged();
                                 }
                             }else{
