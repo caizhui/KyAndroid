@@ -196,7 +196,7 @@ public class StreetDispatchActivity extends AppCompatActivity {
                 // 失败
                 case 0:
                     sweetAlertDialogUtil.dismissAlertDialog();
-                    //Toast.makeText(DispatchActivity.this, message, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(StreetDispatchActivity.this, message, Toast.LENGTH_SHORT).show();
                     break;
                 // 成功跳转
                 case 1:
