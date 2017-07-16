@@ -72,7 +72,7 @@ public class MsgNoticeEntity implements Serializable {
     private String sjmc;
 
     /**
-     * 消息类型：1，事件、2，督办
+     * 消息类型：1，事件、2，督办、3延期
      */
     private String lx;
     /**
@@ -83,6 +83,16 @@ public class MsgNoticeEntity implements Serializable {
      * 是否从列表中移除 1、移除
      */
     private String clbyc;
+
+    /**
+     * 延期申请对象
+     */
+    private TFtSjYqsqEntity yqsqEntity;
+
+    /**
+     * 处理部门
+     */
+    private TFtSjClbmEntity clbmEntity;
 
     /**
      * 后续加上受理结果的一系列操作
@@ -217,5 +227,21 @@ public class MsgNoticeEntity implements Serializable {
 
     public void setSjmc(String sjmc) {
         this.sjmc = sjmc;
+    }
+
+    public TFtSjYqsqEntity getYqsqEntity() {
+        return yqsqEntity;
+    }
+
+    public void setYqsqEntity(TFtSjYqsqEntity yqsqEntity) {
+        this.yqsqEntity = yqsqEntity;
+    }
+
+    public TFtSjClbmEntity getClbmEntity() {
+        return clbmEntity;
+    }
+
+    public void setClbmEntity(TFtSjClbmEntity clbmEntity) {
+        this.clbmEntity = clbmEntity;
     }
 }

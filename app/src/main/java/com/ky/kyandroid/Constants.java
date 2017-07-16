@@ -66,6 +66,9 @@ public class Constants {
 	//消息最新修改处理接口
 	public final static String SERVICE_NOTICE_EDIT_HADLE= "ft/kyAndroid/msgEdit.action";
 
+	//消息最新延期申请处理
+	public final static String SERVICE_NOTICE_EXTENSION_HADLE= "ft/kyAndroid/msgExtension.action";
+
 	//消息最新查询处理接口
 	public final static String SERVICE_NOTICE_LIST_HADLE= "ft/kyAndroid/msgList.action";
 

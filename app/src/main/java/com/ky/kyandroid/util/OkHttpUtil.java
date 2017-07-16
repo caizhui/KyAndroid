@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -34,7 +35,8 @@ public class OkHttpUtil {
 	/** TAG */
 	private static final String TAG = "OkHttpUtil";
 	/** OkHttpClient */
-	private static OkHttpClient mOkHttpClient = new OkHttpClient();
+	private static OkHttpClient mOkHttpClient = new OkHttpClient.Builder()
+			.connectTimeout(60, TimeUnit.SECONDS).readTimeout(60, TimeUnit.SECONDS).build();
 
 	/**
 	 * 文件上传类型内部类

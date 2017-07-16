@@ -2,8 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:alpha="0.95"
-    android:background="@drawable/pop_bg_1" >
+    android:background="@drawable/pop_bg_1">
 
     <LinearLayout
         android:id="@+id/linear_layout_0"
@@ -14,7 +13,7 @@
         android:layout_marginTop="10dp"
         android:background="@drawable/pop_bg_1"
         android:orientation="horizontal"
-        android:padding="5dp" >
+        android:padding="5dp">
 
         <TextView
             android:id="@+id/tv_msg_fsr_text"
@@ -25,7 +24,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/tv_msg_fsr_mc"
@@ -58,7 +57,7 @@
         android:layout_marginTop="3dp"
         android:background="@drawable/pop_bg_1"
         android:orientation="horizontal"
-        android:padding="5dp" >
+        android:padding="5dp">
 
         <TextView
             android:id="@+id/tv_msg_sj_text"
@@ -69,7 +68,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/tv_msg_sj_mc"
@@ -93,16 +92,201 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linear_layout_2"
+        android:id="@+id/lx3_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/linear_layout_1"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/lx3_layout_01"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="3dp"
+            android:background="@drawable/pop_bg_1"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/tv_msg_yqyy_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="申请原因:" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tv_msg_yqyy_mc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:gravity="left"
+                    android:text="原因" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lx3_layout_02"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="3dp"
+            android:background="@drawable/pop_bg_1"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/tv_msg_yclsx_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="原处理时限:" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tv_msg_yclsx"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:gravity="left"
+                    android:text="原处理时限" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lx3_layout_03"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="3dp"
+            android:background="@drawable/pop_bg_1"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/tv_msg_sfty_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="是否同意:" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tv_sfty_detial"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:gravity="left"
+                    android:text="是否同意详情" />
+
+                <RadioGroup
+                    android:id="@+id/rg_sfty_btnG"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/rd_btn_bty"
+                        android:layout_width="wrap_content"
+                        android:layout_height="20dp"
+                        android:checked="true"
+                        android:text="不同意" />
+
+                    <RadioButton
+                        android:id="@+id/rd_btn_ty"
+                        android:layout_width="wrap_content"
+                        android:layout_height="20dp"
+                        android:text="同意" />
+                </RadioGroup>
+
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lx3_layout_04"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="3dp"
+            android:background="@drawable/pop_bg_1"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/tv_msg_change_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="变化内容:" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tv_detail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:gravity="left"
+                    android:text="详情" />
+
+                <EditText
+                    android:id="@+id/et_yqsx"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/pop_bg_1"
+                    android:layout_marginLeft="2dp"
+                    android:textSize="14dp"
+                    android:paddingLeft="3dp"
+                    android:gravity="left"
+                    android:hint="延期时限"/>
+
+                <EditText
+                    android:id="@+id/et_btyyy"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:background="@drawable/pop_bg_1"
+                    android:layout_marginLeft="2dp"
+                    android:textSize="14dp"
+                    android:padding="3dp"
+                    android:gravity="left"
+                    android:hint="不同意原因"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true" />
+
+            </RelativeLayout>
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_layout_3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/lx3_layout"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="3dp"
         android:background="@drawable/pop_bg_1"
         android:orientation="vertical"
-        android:padding="5dp" >
+        android:padding="5dp">
 
         <LinearLayout
             android:id="@+id/linear_layout"
@@ -122,7 +306,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content">
 
                 <TextView
                     android:id="@+id/tv_msg_fssj"
@@ -139,14 +323,13 @@
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="120dp" >
+            android:layout_height="60dp">
 
             <TextView
                 android:id="@+id/tv_msg_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
-
                 android:gravity="left"
                 android:scrollbars="vertical"
                 android:text="内容" />
@@ -157,7 +340,7 @@
         android:id="@+id/layout_confirm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/linear_layout_2"
+        android:layout_below="@id/linear_layout_3"
         android:layout_centerInParent="true"
         android:layout_marginBottom="6dp"
         android:layout_marginLeft="10dp"
@@ -165,7 +348,7 @@
         android:layout_marginTop="6dp"
         android:background="@drawable/button_white_shape_default"
         android:orientation="horizontal"
-        android:padding="5dp" >
+        android:padding="5dp">
 
         <TextView
             android:layout_width="match_parent"
