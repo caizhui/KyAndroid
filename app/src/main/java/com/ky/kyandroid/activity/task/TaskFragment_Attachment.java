@@ -11,9 +11,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import com.ky.kyandroid.R;
-import com.ky.kyandroid.activity.evententry.EventEntryAdd_Attachment;
 import com.ky.kyandroid.activity.evententry.EventLogListActivity;
 import com.ky.kyandroid.activity.evententry.EventRelevanceListActivity;
 import com.ky.kyandroid.adapter.EventImageListAdapter;
@@ -62,6 +62,13 @@ public class TaskFragment_Attachment extends Fragment {
     @BindView(R.id.image_list)
     ListView imageList;
 
+    @BindView(R.id.item_view)
+    View itemView;
+
+
+    @BindView(R.id.fj_relativieLayout)
+    RelativeLayout fjRelativieLayout;
+
     @BindView(R.id.main)
     LinearLayout main;
 
@@ -102,6 +109,8 @@ public class TaskFragment_Attachment extends Fragment {
         View view = inflater.inflate(R.layout.evententeradd_attachment_fragment, container, false);
         ButterKnife.bind(this, view);
         addAttachment.setVisibility(View.GONE);
+        fjRelativieLayout.setVisibility(View.GONE);
+        itemView.setVisibility(View.GONE);
         eventLogBtn.setVisibility(View.VISIBLE);
         eventRelevanceBtn.setVisibility(View.VISIBLE);
         fileEntityList = new ArrayList<FileEntity>();
