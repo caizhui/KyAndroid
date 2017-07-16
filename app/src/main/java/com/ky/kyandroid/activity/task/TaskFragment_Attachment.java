@@ -101,6 +101,8 @@ public class TaskFragment_Attachment extends Fragment {
      */
     private Map<String, TFtSjEntity> glsjListMap;
 
+    boolean flag;
+
     FileEntityDao fileEntityDao;
 
     @Nullable
@@ -127,22 +129,26 @@ public class TaskFragment_Attachment extends Fragment {
      * 显示图片或者创建文件路径
      */
     public void appendImage() {
-        if (sjfjList != null && sjfjList.size() > 0) {
-            //每次进来都给fileEntityList重新初始化一次
-            fileEntityList = new ArrayList<FileEntity>();
-            for (int i = 0; i < sjfjList.size(); i++) {
-                fileEntity = new FileEntity();
-                if (sjfjList.get(i).getUrl() != null) {
-                    fileEntity.setFileUrl(sjfjList.get(i).getUrl());
-                    fileEntity.setFileMs(sjfjList.get(i).getWjms());
+        //当flag为true时，表示是去查看已经上报事件的图片
+        if (flag) {
+            if (sjfjList != null && sjfjList.size() > 0) {
+                //每次进来都给fileEntityList重新初始化一次
+                fileEntityList =new ArrayList<FileEntity>();
+                for(int i=0;i<sjfjList.size();i++){
+                    fileEntity = new FileEntity();
+                    if(sjfjList.get(i).getUrl()!=null){
+                        fileEntity.setFileUrl(sjfjList.get(i).getUrl());
+                        fileEntity.setFileMs(sjfjList.get(i).getWjms());
+                        fileEntity.setFjlx(sjfjList.get(i).getFjlx());
+                    }
+                    fileEntityList.add(fileEntity);
+                    //加载完一次就把文件实体清空一次
                 }
-                fileEntityList.add(fileEntity);
-                //加载完一次就把文件实体清空一次
-            }
-            if (fileEntityList != null && fileEntityList.size() > 0) {
-                adapter.notifyDataSetChanged(fileEntityList);
-            }
+                if (fileEntityList != null && fileEntityList.size() > 0) {
+                    adapter.notifyDataSetChanged(fileEntityList);
+                }
 
+            }
         }
     }
 
@@ -179,6 +185,7 @@ public class TaskFragment_Attachment extends Fragment {
      */
     public void setTFtSjFjEntityList(List<TFtSjFjEntity> sjfjList, boolean flag) {
         this.sjfjList = sjfjList;
+        this.flag = flag;
     }
 
     /**

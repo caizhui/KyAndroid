@@ -196,6 +196,7 @@ public class DispatchActivity extends AppCompatActivity {
                 // 失败
                 case 0:
                     sweetAlertDialogUtil.dismissAlertDialog();
+                    //Toast.makeText(DispatchActivity.this, message, Toast.LENGTH_SHORT).show();
                     break;
                 // 成功跳转
                 case 1:
@@ -321,7 +322,6 @@ public class DispatchActivity extends AppCompatActivity {
                 final Message msg = new Message();
                 if (netWorkConnection.isWIFIConnection()) {
                     sweetAlertDialogUtil.loadAlertDialog();
-                    msg.what = 5;
                     Map<String, String> paramsMap = new HashMap<String, String>();
                     paramsMap.put("userId", userId);
                     paramsMap.put("clbmId", ypqbmEntity.getId());
@@ -339,6 +339,7 @@ public class DispatchActivity extends AppCompatActivity {
                                 msg.what = 4;
                                 msg.obj = response.body().string();
                             } else {
+                                msg.what = 5;
                                 msg.obj = "网络异常,请确认网络情况";
                             }
                             mHandler.sendMessage(msg);
@@ -373,7 +374,6 @@ public class DispatchActivity extends AppCompatActivity {
                 if(ypqbmList!=null && ypqbmList.size()>0){
                     if (netWorkConnection.isWIFIConnection()) {
                         sweetAlertDialogUtil.loadAlertDialog();
-                        msg.what = 3;
                         Map<String, String> paramsMap = new HashMap<String, String>();
                         String ftSjClbmList = JsonUtil.toJson(ypqbmList);
                         paramsMap.put("userId", userId);
@@ -393,6 +393,7 @@ public class DispatchActivity extends AppCompatActivity {
                                     msg.what = 2;
                                     msg.obj = response.body().string();
                                 } else {
+                                    msg.what = 3;
                                     msg.obj = "网络异常,请确认网络情况";
                                 }
                                 mHandler.sendMessage(msg);
@@ -512,30 +513,34 @@ public class DispatchActivity extends AppCompatActivity {
                 CodeValue departmentCodeValue = (CodeValue) departmenTextSpinner.getSelectedItem();
                 String handlerTime = handlerTimeEdt.getText().toString();
                 String handlerText = handlerTextEdt.getText().toString();
-                YpqbmEntity ypqbmEntity = new YpqbmEntity();
-                ypqbmEntity.setBmlx(departmentTypeCodeValue.getCode());
-                ypqbmEntity.setBmmc(departmentCodeValue.getValue());
-                ypqbmEntity.setBm_id(departmentCodeValue.getCode());
-                ypqbmEntity.setSjId(tFtSjEntity.getId());
+                YpqbmEntity tempYpqbmEntity = new YpqbmEntity();
+                tempYpqbmEntity.setBmlx(departmentTypeCodeValue.getCode());
+                tempYpqbmEntity.setBmmc(departmentCodeValue.getValue());
+                tempYpqbmEntity.setBm_id(departmentCodeValue.getCode());
+                tempYpqbmEntity.setSjId(tFtSjEntity.getId());
                 String message ="";
                 if("".equals(handlerTime)){
                     message+= "处理时限不能为空\n";
                 }else{
-                    ypqbmEntity.setClsx(handlerTime);
+                    tempYpqbmEntity.setClsx(handlerTime);
                 }
                 if("".equals(handlerText)){
                     message+= "处理内容不能为空\n";
                 }else{
-                    ypqbmEntity.setRwnr(handlerText);
+                    tempYpqbmEntity.setRwnr(handlerText);
                 }
                 if("".equals(message)){
                     //如果在list的item已经存在数据，则表示是修改，将之前的数据去掉，重新加载
                     if(ypqbmList!=null && ypqbmList.size()>0){
-                        if(ypqbmList.get(tempPosition)!=null &&  isDetail){
-                            ypqbmList.remove(tempPosition);
+                        if(isDetail){
+                            if(ypqbmList.get(tempPosition)!=null){
+                                tempYpqbmEntity.setId(ypqbmEntity.getId());
+                                ypqbmList.remove(tempPosition);
+                                isDetail = false;
+                            }
                         }
                     }
-                    ypqbmList.add(ypqbmEntity);
+                    ypqbmList.add(tempYpqbmEntity);
                     if(ypqbmList!=null && ypqbmList.size()>0){
                         adapter.notifyDataSetChanged(ypqbmList);
                     }

@@ -47,8 +47,28 @@ public class SjHandleParams {
 	 * 操作原因
 	 */
 	private String czyy;
-	
-	
+
+
+	/**
+	 * 处理部门Id
+	 */
+	private String clbmId;
+
+	/**
+	 * 任务接受人
+	 */
+	private String jsr;
+
+	/**
+	 * 任务接收时间
+	 */
+	private  String jssj;
+
+	/**
+	 * 是否移除此行数据
+	 */
+	private String isRemove;
+
 	/**
 	 * 参数生成
 	 * 
@@ -164,5 +184,37 @@ public class SjHandleParams {
 
 	public void setZtname(String ztname) {
 		this.ztname = ztname;
+	}
+
+	public String getClbmId() {
+		return clbmId;
+	}
+
+	public void setClbmId(String clbmId) {
+		this.clbmId = clbmId;
+	}
+
+	public String getJsr() {
+		return jsr;
+	}
+
+	public void setJsr(String jsr) {
+		this.jsr = jsr;
+	}
+
+	public String getJssj() {
+		return jssj;
+	}
+
+	public void setJssj(String jssj) {
+		this.jssj = jssj;
+	}
+
+	public String getIsRemove() {
+		return isRemove;
+	}
+
+	public void setIsRemove(String isRemove) {
+		this.isRemove = isRemove;
 	}
 }

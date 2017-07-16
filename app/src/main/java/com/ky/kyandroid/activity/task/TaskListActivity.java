@@ -223,6 +223,13 @@ public class TaskListActivity extends AppCompatActivity {
 
     private CheckBox checkBox03;
 
+    List<TaskEntity> entityList;
+
+    /**
+     * 临时未知
+     */
+    private int tempPosition;
+
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
 
@@ -491,7 +498,7 @@ public class TaskListActivity extends AppCompatActivity {
      * 加载数据
      */
     private void notifyListViewData(boolean isAdd) {
-        List<TaskEntity> entityList = (List<TaskEntity>) dataList;
+        entityList = (List<TaskEntity>) dataList;
         if (isAdd) {
             // 追加列表
             adapter.addDataSetChanged(entityList);
@@ -521,8 +528,17 @@ public class TaskListActivity extends AppCompatActivity {
                         SjHandleParams sjHandleParams = JsonUtil.fromJson(dataStr, SjHandleParams.class);
                         if (sjHandleParams != null) {
                             flag = true;
-                            // 更新数据列表状态
-                            updateListDataStatie(sjHandleParams);
+                            if(sjHandleParams.getIsRemove()!=null && "1".equals(sjHandleParams.getIsRemove())){
+                                //任务退回时，该条记录去掉
+                                if(entityList.get(tempPosition)!=null){
+                                    entityList.remove(tempPosition);
+                                    adapter.notifyDataSetChanged();
+                                }
+                            }else{
+                                // 更新数据列表状态
+                                updateListDataStatie(sjHandleParams);
+                            }
+
                         }
 
                     }
@@ -545,12 +561,19 @@ public class TaskListActivity extends AppCompatActivity {
         if (tftsjList != null) {
             for (int i = 0; i < tftsjList.size(); i++) {
                 TaskEntity entity = tftsjList.get(i);
-                if (entity.getId().equals(sjHandleParams.getSjId())) {
-                    entity.setZt(sjHandleParams.getNextZt());
-                    entity.setZtname(sjHandleParams.getZtname());
-                    entity.setAnlist(sjHandleParams.getAnlist());
-                    break;
-                }
+                    if (entity.getClid().equals(sjHandleParams.getClbmId())) {
+                        entity.setZt(sjHandleParams.getNextZt());
+                        entity.setZtname(sjHandleParams.getZtname());
+                        entity.setAnlist(sjHandleParams.getAnlist());
+                        //当申请办结的时候，因为没有刷新任务列表，所以申请办结的接收人和接收时间放在返回的参数里面，并且更新到当前任务中
+                        if(sjHandleParams.getJsr()!=null){
+                            entity.setJsr(sjHandleParams.getJsr());
+                        }
+                        if(sjHandleParams.getJssj()!=null){
+                            entity.setJssj(sjHandleParams.getJssj());
+                        }
+                        break;
+                    }
             }
             adapter.notifyDataSetChanged();
         }
@@ -583,6 +606,7 @@ public class TaskListActivity extends AppCompatActivity {
     @OnItemLongClick(R.id.search_evententry_list)
     public boolean OnItemLongClick(final int position) {
         taskEntity = (TaskEntity) adapter.getItem(position);
+        tempPosition  = position;
         //获取按钮list信息
         List<TFtZtlzEntity> tFtZtlzEntityList = taskEntity.getAnlist();
         if (tFtZtlzEntityList != null && tFtZtlzEntityList.size() > 0) {
@@ -594,60 +618,66 @@ public class TaskListActivity extends AppCompatActivity {
                 //获取按钮list信息中的按钮实体
                 tFtZtlzEntities[i] = tFtZtlzEntityList.get(i);
             }
+            if (listViewContent != null && listViewContent.length > 0) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setItems(listViewContent, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int pos) {
+                        //根据点击的item项获取该item对应的实体，
+                        TFtZtlzEntity tFtZtlzEntity = tFtZtlzEntities[pos];
+                        if ("8".equals(tFtZtlzEntity.getNextZt())) {
+                            //当下个状态为8 的时候，并且上一个状态为8，表示退回，弹出自定义对话框
+                            if ("8".equals(tFtZtlzEntity.getPrevZt())) {
+                                yanQiOrReturnOperation(tFtZtlzEntity, R.layout.dialog_return_operation, tFtZtlzEntity.getName(), Constants.SERVICE_TASK_BACK);
+                            }
+                        } else if ("8.1".equals(tFtZtlzEntity.getNextZt())) {
+                            //当8.1申请延期的时候，并且上一个状态为8,13，表示接收，否则表示申请延期，弹出自定义对话框
+                            if ("8,13".equals(tFtZtlzEntity.getPrevZt())) {
+                                OperatingProcess(tFtZtlzEntity, Constants.SERVICE_QUERY_TASKRECV);
+                            } else if ("8,8.1".equals(tFtZtlzEntity.getPrevZt())) {
+                                yanQiOrReturnOperation(tFtZtlzEntity, R.layout.dialog_return_operation, tFtZtlzEntity.getName(), Constants.SERVICE_EDIT_YANQI);
+                            }
+                        } else if ("8.2".equals(tFtZtlzEntity.getNextZt())) {
+                            //街道职能办处理
+                            if ("13,8,8.1".equals(tFtZtlzEntity.getPrevZt())) {
+                                Intent intent = new Intent(TaskListActivity.this, QuHandleActivity.class);
+                                Bundle bundle = new Bundle();
+                                bundle.putSerializable("taskEntity", taskEntity);
+                                bundle.putSerializable("tFtZtlzEntity", tFtZtlzEntity);
+                                intent.putExtras(bundle);
+                                startActivity(intent);
+                            } else {
+                                //当8.2申请办结处理的时候，弹出自定义对话框
+                                banJiOperation(tFtZtlzEntity, R.layout.dialog_over_operation, "申请办结", Constants.SERVICE_EDIT_BANJI);
+                            }
 
-        }
-        if (listViewContent != null && listViewContent.length > 0) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setItems(listViewContent, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int pos) {
-                    //根据点击的item项获取该item对应的实体，
-                    TFtZtlzEntity tFtZtlzEntity = tFtZtlzEntities[pos];
-                    if ("8.1".equals(tFtZtlzEntity.getNextZt())) {
-                        //当8.1申请延期的时候，并且上一个状态为8,13，表示接收，否则表示申请延期，弹出自定义对话框
-                        if("8,13".equals(tFtZtlzEntity.getPrevZt())){
-                            OperatingProcess(tFtZtlzEntity,Constants.SERVICE_QUERY_TASKRECV);
-                        }else if("8,8.1".equals(tFtZtlzEntity.getPrevZt())){
-                            yanQiOperation(tFtZtlzEntity, R.layout.dialog_return_operation, tFtZtlzEntity.getName(),Constants.SERVICE_EDIT_YANQI );
-                        }
-                    }else if ("8.2".equals(tFtZtlzEntity.getNextZt())) {
-                        //街道职能办处理
-                        if("13,8,8.1".equals(tFtZtlzEntity.getPrevZt())){
+                        } else if ("13.2".equals(tFtZtlzEntity.getNextZt())) {
+                            //当13.3区处理的时候，弹出自定义对话框
                             Intent intent = new Intent(TaskListActivity.this, QuHandleActivity.class);
                             Bundle bundle = new Bundle();
                             bundle.putSerializable("taskEntity", taskEntity);
                             bundle.putSerializable("tFtZtlzEntity", tFtZtlzEntity);
                             intent.putExtras(bundle);
                             startActivity(intent);
-                        }else{
-                            //当8.2申请办结处理的时候，弹出自定义对话框
-                            banJiOperation(tFtZtlzEntity, R.layout.dialog_over_operation, "申请办结",Constants.SERVICE_EDIT_BANJI );
+                        } else {
+                            //其他的弹出确定对话框
+                            OperatingProcess(tFtZtlzEntity, Constants.SERVICE_QUERY_TASKRECV);
                         }
-
-                    }else if ("13.2".equals(tFtZtlzEntity.getNextZt())) {
-                        //当13.3区处理的时候，弹出自定义对话框
-                        Intent intent = new Intent(TaskListActivity.this, QuHandleActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("taskEntity", taskEntity);
-                        bundle.putSerializable("tFtZtlzEntity", tFtZtlzEntity);
-                        intent.putExtras(bundle);
-                        startActivity(intent);
-                    }else{
-                        //其他的弹出确定对话框
-                        OperatingProcess(tFtZtlzEntity,Constants.SERVICE_QUERY_TASKRECV);
                     }
-                    }
-            });
-            builder.create().show();
+                });
+                builder.create().show();
+            }
+        }else {
+            Toast.makeText(this, "权限不足,不支持该操作", Toast.LENGTH_SHORT).show();
         }
         return true;
     }
 
 
     /**
-     * 申请延期操作
+     * 申请延期或者退回操作
      */
-    public void yanQiOperation(final TFtZtlzEntity tFtZtlzEntity, int layout, String title,String url) {
+    public void yanQiOrReturnOperation(final TFtZtlzEntity tFtZtlzEntity, int layout, String title,String url) {
         final View mView = LayoutInflater.from(TaskListActivity.this).inflate(layout, null);
         //获取弹出框的属性
         czyyEdt = ButterKnife.findById(mView, R.id.return_edt);
@@ -656,7 +686,10 @@ public class TaskListActivity extends AppCompatActivity {
         radioButton02 = ButterKnife.findById(mView, R.id.radioButton02);
         radioButton03 = ButterKnife.findById(mView, R.id.radioButton03);
         //申请延期原因
-        if("8.1".equals(tFtZtlzEntity.getNextZt())){
+        if("8.1".equals(tFtZtlzEntity.getNextZt()) || "8".equals(tFtZtlzEntity.getNextZt())){
+            if(clr_edit!=null){
+                clr_edit = null;
+            }
             radioButton03.setVisibility(View.VISIBLE);
             radioButton01.setText("人手不足");
             radioButton02.setText("权限不足");
@@ -755,7 +788,7 @@ public class TaskListActivity extends AppCompatActivity {
                     paramsMap.put("sjId", taskEntity.getId());
                     paramsMap.put("zt", taskEntity.getZt());
                     paramsMap.put("nextZt", tFtZtlzEntity.getNextZt());
-                    paramsMap.put("clId", taskEntity.getClid());
+                    paramsMap.put("clbmId", taskEntity.getClid());
                     if(happenTimeEdt!=null){
                         paramsMap.put("lrclsj", happenTimeEdt.getText().toString());
                     }
