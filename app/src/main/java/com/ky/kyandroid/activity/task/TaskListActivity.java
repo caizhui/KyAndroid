@@ -31,6 +31,7 @@ import com.ky.kyandroid.Constants;
 import com.ky.kyandroid.R;
 import com.ky.kyandroid.activity.LoginActivity;
 import com.ky.kyandroid.activity.dispatch.QuHandleActivity;
+import com.ky.kyandroid.activity.dispatch.StreetDispatchActivity;
 import com.ky.kyandroid.adapter.TaskEntityListAdapter;
 import com.ky.kyandroid.bean.AckMessage;
 import com.ky.kyandroid.bean.NetWorkConnection;
@@ -652,7 +653,14 @@ public class TaskListActivity extends AppCompatActivity {
                                 banJiOperation(tFtZtlzEntity, R.layout.dialog_over_operation, "申请办结", Constants.SERVICE_EDIT_BANJI);
                             }
 
-                        } else if ("13.2".equals(tFtZtlzEntity.getNextZt())) {
+                        }else if ("13".equals(tFtZtlzEntity.getNextZt()) && "13".equals(tFtZtlzEntity.getPrevZt())) {
+                            //当下一个状态为13，并且上一个状态也为13时，表示区维稳办派发给街道维稳办，跳到派遣界面
+                            Intent intent = new Intent(TaskListActivity.this, StreetDispatchActivity.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable("taskEntity", taskEntity);
+                            intent.putExtras(bundle);
+                            startActivity(intent);
+                        }  else if ("13.2".equals(tFtZtlzEntity.getNextZt())) {
                             //当13.3区处理的时候，弹出自定义对话框
                             Intent intent = new Intent(TaskListActivity.this, QuHandleActivity.class);
                             Bundle bundle = new Bundle();
