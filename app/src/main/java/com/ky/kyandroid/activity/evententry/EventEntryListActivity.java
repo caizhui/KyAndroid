@@ -189,6 +189,8 @@ public class EventEntryListActivity extends AppCompatActivity {
 
     private String userId;
 
+    private String name;
+
     /****弹出框用到的一些控件start**/
 
     /**
@@ -356,6 +358,11 @@ public class EventEntryListActivity extends AppCompatActivity {
         tFtSjEntityDao = new TFtSjEntityDao();
         tFtSjEntityList = new ArrayList<TFtSjEntity>();
         userId = sp.getString(USER_ID, "");
+        name = sp.getString("name", "");
+        if ("街道办工作人员".equals(name)  || "香蜜湖录入人员".equals(name)) {
+            rightBtn.setVisibility(View.VISIBLE);
+        }
+
     }
 
 

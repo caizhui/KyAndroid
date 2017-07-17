@@ -82,6 +82,7 @@ public class EventImageListAdapter extends BaseAdapter {
         }
         if(isDetail){
             holder.imageMs.setEnabled(false);
+            holder.imageMs.setHint("");
             holder.fjlx_text.setVisibility(View.VISIBLE);
             if("1".equals(list.get(position).getFjlx())){
                 holder.fjlx_text.setText("事件上传附件");

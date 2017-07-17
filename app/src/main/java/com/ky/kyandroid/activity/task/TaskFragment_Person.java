@@ -189,7 +189,7 @@ public class TaskFragment_Person extends Fragment {
      */
     @Optional
     public void addPersonInfo() {
-        View dialogView = LayoutInflater.from(TaskFragment_Person.this.getActivity()).inflate(R.layout.dialog_person_add, null);
+        View dialogView = LayoutInflater.from(TaskFragment_Person.this.getActivity()).inflate(R.layout.dialog_person_detail, null);
         personNameEdt = ButterKnife.findById(dialogView, R.id.person_name_edt);
         personSexSpinner = ButterKnife.findById(dialogView, R.id.person_sex_edt);
         personNationSpinner = ButterKnife.findById(dialogView, R.id.person_nation_edt);

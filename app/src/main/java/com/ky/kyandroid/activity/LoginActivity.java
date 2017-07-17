@@ -9,7 +9,6 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
@@ -286,9 +285,10 @@ public class LoginActivity extends AppCompatActivity {
         if(logined){
             String name = sp.getString("name", "");
             Intent intent = new Intent();
-            if ("街道办工作人员".equals(name) || "香蜜湖录入人员".equals(name)) {
+            if ("街道办工作人员".equals(name)  || "香蜜湖录入人员".equals(name)) {
                 intent.setClass(this, MainAddEventActivity.class);
-            } else if ("街道职能部门".equals(name) || "区职能部门".equals(name) || "香蜜湖职能处理人员".equals(name)) {
+            } else if ("街道职能部门".equals(name) || "街道办工作人员2".equals(name) || "区职能部门".equals(name)
+                    || "区职能部门处理人员".equals(name) ||"香蜜湖职能处理人员".equals(name)) {
                 intent.setClass(this, MainHandleEventActivity.class);
             } else if ("区维稳办".equals(name)) {
                 intent.setClass(this, MainOfficeActivity.class);

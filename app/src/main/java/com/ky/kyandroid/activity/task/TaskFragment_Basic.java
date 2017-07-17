@@ -146,6 +146,12 @@ public class TaskFragment_Basic extends Fragment {
      */
     @BindView(R.id.event_summary_edt)
     EditText eventSummaryEdt;
+
+    /**
+     * 任务内容
+     */
+    @BindView(R.id.task_content_edt)
+    EditText taskContentEdt;
     /**
      * >领导批示
      */
@@ -182,7 +188,7 @@ public class TaskFragment_Basic extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.evententerdetail_basic_fragment, container, false);
+        View view = inflater.inflate(R.layout.taskdetail_basic_fragment, container, false);
         ButterKnife.bind(this, view);
         sp = SpUtil.getSharePerference(getActivity());
         descEntityDao= new DescEntityDao();
@@ -229,6 +235,7 @@ public class TaskFragment_Basic extends Fragment {
 
             mainAppealsEdt.setText(taskEntity.getZysq());
             eventSummaryEdt.setText(taskEntity.getSjgyqk());
+            taskContentEdt.setText(taskEntity.getRwnr());
             leadershipInstructionsEdt.setText(taskEntity.getLdps());
             //以下为下拉控件设置默认值
             if (taskEntity.getBxxs() != null && !"".equals(taskEntity.getBxxs())) {

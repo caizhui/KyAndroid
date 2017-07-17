@@ -699,10 +699,9 @@ public class TaskListActivity extends AppCompatActivity {
             if(clr_edit!=null){
                 clr_edit = null;
             }
-            radioButton03.setVisibility(View.VISIBLE);
-            radioButton01.setText("人手不足");
-            radioButton02.setText("权限不足");
-            radioButton03.setText("脱离可控范围");
+            radioButton02.setVisibility(View.GONE);
+            radioButton03.setVisibility(View.GONE);
+            radioButton01.setText("当事人未出席会议");
         }
         if(radioGroup!=null){
             radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {

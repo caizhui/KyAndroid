@@ -51,7 +51,7 @@ public class TaskEntityListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         if (convertView == null) {
-            convertView = View.inflate(context, R.layout.activity_evententry_item, null);
+            convertView = View.inflate(context, R.layout.activity_task_item, null);
             holder = new ViewHolder(convertView);
             convertView.setTag(holder);// 绑定ViewHolder对象
         } else {
@@ -61,6 +61,7 @@ public class TaskEntityListAdapter extends BaseAdapter {
         holder.thingAddress.setText(list.get(position).getFsdd());
         holder.thingTime.setText(list.get(position).getFssj());
         holder.thingStatus.setText(list.get(position).getZtname());
+        holder.taskContentText.setText(list.get(position).getRwnr());
         return convertView;
     }
 
@@ -76,6 +77,8 @@ public class TaskEntityListAdapter extends BaseAdapter {
         TextView thingAddress;
         @BindView(R.id.thing_time)
         TextView thingTime;
+        @BindView(R.id.task_content_text)
+        TextView taskContentText;
 
         ViewHolder(View view) {
             ButterKnife.bind(this, view);

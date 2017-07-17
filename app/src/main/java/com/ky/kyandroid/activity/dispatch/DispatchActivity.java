@@ -313,50 +313,60 @@ public class DispatchActivity extends AppCompatActivity {
     public boolean OnItemLongClick(int position){
         tempPosition = position;
         ypqbmEntity = (YpqbmEntity) adapter.getItem(position);
-        AlertDialog.Builder builder = new AlertDialog.Builder(DispatchActivity.this);
-        builder.setTitle("信息");
-        builder.setMessage("确定要删除该条记录吗？");
-        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                final Message msg = new Message();
-                if (netWorkConnection.isWIFIConnection()) {
-                    sweetAlertDialogUtil.loadAlertDialog();
-                    Map<String, String> paramsMap = new HashMap<String, String>();
-                    paramsMap.put("userId", userId);
-                    paramsMap.put("clbmId", ypqbmEntity.getId());
-                    // 发送请求
-                    OkHttpUtil.sendRequest(Constants.SERVICE_TASK_DISPATCH_DELETE, paramsMap, new Callback() {
-
-                        @Override
-                        public void onFailure(Call call, IOException e) {
-                            mHandler.sendEmptyMessage(0);
+        if("8".equals(ypqbmEntity.getClzt())|| "1".equals(ypqbmEntity.getIsDelete())){
+            AlertDialog.Builder builder = new AlertDialog.Builder(DispatchActivity.this);
+            builder.setTitle("信息");
+            builder.setMessage("确定要删除该条记录吗？");
+            builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    if("1".equals(ypqbmEntity.getIsDelete())){
+                        Toast.makeText(DispatchActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
+                        if(ypqbmList.get(tempPosition)!=null){
+                            ypqbmList.remove(tempPosition);
                         }
+                        adapter.notifyDataSetChanged(ypqbmList);
+                    }else{
+                        final Message msg = new Message();
+                        if (netWorkConnection.isWIFIConnection()) {
+                            sweetAlertDialogUtil.loadAlertDialog();
+                            Map<String, String> paramsMap = new HashMap<String, String>();
+                            paramsMap.put("userId", userId);
+                            paramsMap.put("clbmId", ypqbmEntity.getId());
+                            // 发送请求
+                            OkHttpUtil.sendRequest(Constants.SERVICE_TASK_DISPATCH_DELETE, paramsMap, new Callback() {
 
-                        @Override
-                        public void onResponse(Call call, Response response) throws IOException {
-                            if (response.isSuccessful()) {
-                                msg.what = 4;
-                                msg.obj = response.body().string();
-                            } else {
-                                msg.what = 5;
-                                msg.obj = "网络异常,请确认网络情况";
-                            }
+                                @Override
+                                public void onFailure(Call call, IOException e) {
+                                    mHandler.sendEmptyMessage(0);
+                                }
+
+                                @Override
+                                public void onResponse(Call call, Response response) throws IOException {
+                                    if (response.isSuccessful()) {
+                                        msg.what = 4;
+                                        msg.obj = response.body().string();
+                                    } else {
+                                        msg.what = 5;
+                                        msg.obj = "网络异常,请确认网络情况";
+                                    }
+                                    mHandler.sendMessage(msg);
+                                }
+                            });
+                        } else {
+                            msg.obj = "WIFI网络不可用,请检查网络连接情况";
                             mHandler.sendMessage(msg);
                         }
-                    });
-                } else {
-                    msg.obj = "WIFI网络不可用,请检查网络连接情况";
-                    mHandler.sendMessage(msg);
+                    }
                 }
-            }
-        });
-        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-            }
-        });
-        builder.create().show();
+            });
+            builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                }
+            });
+            builder.create().show();
+        }
         return false;
     }
 
@@ -502,6 +512,12 @@ public class DispatchActivity extends AppCompatActivity {
             handlerTimeEdt.setText(ypqbmEntity.getClsx());
             handlerTextEdt.setText(ypqbmEntity.getRwnr());
         }
+        if("8.2".equals(ypqbmEntity.getClzt())){
+            departmentTypeSpinner.setEnabled(false);
+            departmenTextSpinner.setEnabled(false);
+            handlerTimeEdt.setEnabled(false);
+            handlerTextEdt.setEnabled(false);
+        }
         AlertDialog.Builder builder = new AlertDialog.Builder(DispatchActivity.this);
         builder.setCancelable(false);
         builder.setTitle("派遣部门信息");
@@ -518,6 +534,7 @@ public class DispatchActivity extends AppCompatActivity {
                 tempYpqbmEntity.setBmmc(departmentCodeValue.getValue());
                 tempYpqbmEntity.setBm_id(departmentCodeValue.getCode());
                 tempYpqbmEntity.setSjId(tFtSjEntity.getId());
+                tempYpqbmEntity.setIsDelete("1");
                 String message ="";
                 if("".equals(handlerTime)){
                     message+= "处理时限不能为空\n";
