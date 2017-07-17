@@ -509,6 +509,7 @@ public class DispatchActivity extends AppCompatActivity {
 
         if(isDetail){
             departmentTypeSpinner.setSelection(Integer.parseInt(ypqbmEntity.getBmlx())-1);
+            departmenTextSpinner.setSelection(1);
             handlerTimeEdt.setText(ypqbmEntity.getClsx());
             handlerTextEdt.setText(ypqbmEntity.getRwnr());
         }
