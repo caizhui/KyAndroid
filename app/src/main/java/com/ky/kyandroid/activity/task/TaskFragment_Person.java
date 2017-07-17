@@ -257,7 +257,11 @@ public class TaskFragment_Person extends Fragment {
             }else{
                 personNationSpinner.setSelection(Integer.parseInt(tFtSjRyEntity.getMz()));
             }
-            personIdcardTypeSpinner.setSelection(Integer.parseInt(tFtSjRyEntity.getZjlx())-1);
+            if("".equals(tFtSjRyEntity.getZjlx()) || tFtSjRyEntity.getZjlx()==null){
+                personIdcardTypeSpinner.setSelection(0);
+            }else{
+                personIdcardTypeSpinner.setSelection(Integer.parseInt(tFtSjRyEntity.getZjlx()));
+            }
             personIdcardEdt.setText(tFtSjRyEntity.getZjhm());
             personAddressEdt.setText(tFtSjRyEntity.getHjd());
             personJobaddressEdt.setText(tFtSjRyEntity.getGzdw());
