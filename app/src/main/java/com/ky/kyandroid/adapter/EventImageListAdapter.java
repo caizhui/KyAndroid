@@ -121,7 +121,7 @@ public class EventImageListAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 AlertDialog  dialog = new AlertDialog.Builder(context).create();
-                ImageView imgView = getView(holder.attachmentImg,position);
+                ImageView imgView = getView(holder.attachmentImg);
                 dialog.setView(imgView);
                 dialog.show();
 
@@ -138,11 +138,11 @@ public class EventImageListAdapter extends BaseAdapter {
         });
         return convertView;
     }
-    private ImageView getView(ImageView attachmentImg,int position) {
+    private ImageView getView(ImageView attachmentImg) {
         ImageView imgView = new ImageView(context);
         imgView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-        ImageLoader.getInstance().displayImage(Constants.SERVICE_BASE_URL + list.get(position).getFileUrl()
-                ,attachmentImg, AppContext.getImgBuilder());
+       /* ImageLoader.getInstance().displayImage(Constants.SERVICE_BASE_URL + list.get(position).getFileUrl()
+                ,attachmentImg, AppContext.getImgBuilder());*/
        // InputStream is = context.getResources().(attachmentImg.getDrawable());
         Drawable drawable = attachmentImg.getDrawable();
         imgView.setImageDrawable(drawable);
@@ -166,6 +166,9 @@ public class EventImageListAdapter extends BaseAdapter {
 
        @BindView(R.id.fjlx_text)
        TextView fjlx_text;
+
+     @BindView(R.id.attachment_img1)
+     ImageView attachment_img1;
 
         ViewHolder(View view) {
             ButterKnife.bind(this, view);
