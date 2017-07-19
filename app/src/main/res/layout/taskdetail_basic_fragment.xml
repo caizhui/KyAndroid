@@ -37,6 +37,7 @@
                         android:layout_weight="1"
                         android:background="@null"
                         android:enabled="false"
+                        style="@style/TextColorStyle"
                         android:padding="5dp"
                         android:textSize="16sp" />
 
@@ -71,6 +72,7 @@
                         android:layout_weight="1"
                         android:background="@null"
                         android:enabled="false"
+                        style="@style/TextColorStyle"
                         android:padding="5dp"
                         android:textSize="16sp" />
 
@@ -104,6 +106,7 @@
                         android:layout_weight="1"
                         android:background="@null"
                         android:enabled="false"
+                        style="@style/TextColorStyle"
                         android:padding="5dp"
                         android:textSize="16sp" />
 
@@ -137,6 +140,7 @@
                         android:layout_weight="1"
                         android:background="@null"
                         android:enabled="false"
+                        style="@style/TextColorStyle"
                         android:padding="5dp"
                         android:textSize="16sp" />
                 </LinearLayout>
@@ -169,6 +173,7 @@
                         android:layout_weight="1"
                         android:background="@null"
                         android:enabled="false"
+                        style="@style/TextColorStyle"
                         android:gravity="center_vertical"
                         android:padding="5dp"
                         android:textSize="16sp" />
@@ -211,6 +216,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
+                        style="@style/TextColorStyle"
                         android:background="@null"
                         android:enabled="false"
                         android:textSize="16sp" />
@@ -243,6 +249,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:background="@null"
+                        style="@style/TextColorStyle"
                         android:enabled="false"
                         android:textSize="16sp" />
 
@@ -275,6 +282,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:background="@null"
+                        style="@style/TextColorStyle"
                         android:enabled="false"
                         android:textSize="16sp" />
                 </LinearLayout>
@@ -308,6 +316,7 @@
                         android:background="@null"
                         android:enabled="false"
                         android:gravity="center_vertical"
+                        style="@style/TextColorStyle"
                         android:padding="5dp"
                         android:textSize="16sp" />
 
@@ -345,6 +354,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    style="@style/TextColorStyle"
                     android:background="@null"
                     android:enabled="false"
                     android:textSize="16sp" />
@@ -370,6 +380,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    style="@style/TextColorStyle"
                     android:background="@null"
                     android:enabled="false"
                     android:textSize="16sp" />
@@ -396,6 +407,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@null"
+                    style="@style/TextColorStyle"
                     android:enabled="false"
                     android:textSize="16sp" />
             </LinearLayout>
@@ -421,6 +433,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@null"
+                    style="@style/TextColorStyle"
                     android:enabled="false"
                     android:textSize="16sp" />
             </LinearLayout>
@@ -448,6 +461,7 @@
                     android:background="@null"
                     android:enabled="false"
                     android:padding="5dp"
+                    style="@style/TextColorStyle"
                     android:text="华强北街道"
                     android:textSize="16sp" />
             </LinearLayout>
@@ -473,6 +487,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@null"
+                    style="@style/TextColorStyle"
                     android:enabled="false"
                     android:textSize="16sp" />
             </LinearLayout>
@@ -503,6 +518,7 @@
                         android:layout_weight="1"
                         android:background="@null"
                         android:enabled="false"
+                        style="@style/TextColorStyle"
                         android:layout_gravity="center"
                         android:padding="5dp"
                         android:textSize="16sp" />
@@ -535,6 +551,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:background="@null"
+                        style="@style/TextColorStyle"
                         android:enabled="false"
                         android:padding="5dp"
                         android:textSize="16sp" />
@@ -567,6 +584,7 @@
                     android:layout_height="100dp"
                     android:background="@null"
                     android:enabled="false"
+                    style="@style/TextColorStyle"
                     android:padding="5dp"
                     android:textSize="16sp" />
             </LinearLayout>
@@ -596,6 +614,7 @@
                         android:layout_height="100dp"
                         android:background="@null"
                         android:enabled="false"
+                        style="@style/TextColorStyle"
                         android:padding="5dp"
                         android:textSize="16sp" />
                 </LinearLayout>

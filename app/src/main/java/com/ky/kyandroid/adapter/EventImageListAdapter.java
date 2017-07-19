@@ -1,10 +1,13 @@
 package com.ky.kyandroid.adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -28,6 +31,8 @@ public class EventImageListAdapter extends BaseAdapter {
     public Context context;
     private boolean isDetail;
     private FileEntityDao fileEntityDao;
+
+    boolean isShow =false;
 
 
     public EventImageListAdapter(Context context) {
@@ -111,13 +116,46 @@ public class EventImageListAdapter extends BaseAdapter {
                 }
             }
         });
+
+        holder.attachmentImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog  dialog = new AlertDialog.Builder(context).create();
+                ImageView imgView = getView(holder.attachmentImg,position);
+                dialog.setView(imgView);
+                dialog.show();
+
+                // 点击图片消失
+                final AlertDialog finalDialog = dialog;
+                imgView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // TODO Auto-generated method stub
+                        finalDialog.dismiss();
+                    }
+                });
+            }
+        });
         return convertView;
+    }
+    private ImageView getView(ImageView attachmentImg,int position) {
+        ImageView imgView = new ImageView(context);
+        imgView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        ImageLoader.getInstance().displayImage(Constants.SERVICE_BASE_URL + list.get(position).getFileUrl()
+                ,attachmentImg, AppContext.getImgBuilder());
+       // InputStream is = context.getResources().(attachmentImg.getDrawable());
+        Drawable drawable = attachmentImg.getDrawable();
+        imgView.setImageDrawable(drawable);
+
+        return imgView;
     }
 
     public void notifyDataSetChanged(List<FileEntity> list) {
         this.list = list;
         super.notifyDataSetChanged();
     }
+
+
 
  class ViewHolder {
         @BindView(R.id.attachment_img)

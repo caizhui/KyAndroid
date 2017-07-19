@@ -444,13 +444,15 @@ public class EventEntryAdd_Attachment extends Fragment {
         switch (requestCode) {
             case PHOTO_REQUEST_TAKEPHOTO:
                 isPhoto = "1";
-                startPhotoZoom(uri, 600);
+                //startPhotoZoom(uri, 600);
+                showPhoto(uri);
                 break;
             case PHOTO_REQUEST_GALLERY:
                 if (data != null) {
                     isPhoto = "2";
                     uri = data.getData();
-                    startPhotoZoom(uri, 600);
+                    showPhoto(uri);
+                    //startPhotoZoom(uri, 600);
                 }
                 break;
             case PHOTO_REQUEST_CUT:
@@ -487,7 +489,39 @@ public class EventEntryAdd_Attachment extends Fragment {
         }
     }
 
-    ;
+    /**
+     * 显示照片
+     */
+    public void showPhoto(Uri uri){
+        if(uri!=null) {
+            try {
+                Bitmap bitmapFromUri = getBitmapFromUri(uri, EventEntryAdd_Attachment.this.getActivity());
+                Bitmap endBit = Bitmap.createScaledBitmap(bitmapFromUri, 600, 600, true); //创建新的图像大小
+                if (endBit != null) {
+                    //先把拍照之后保存在本地的原图删掉。
+                    if ("1".equals(isPhoto)) {
+                        delFile(fileRoute + "/" + photoName);
+                    }
+                    File file = SavePicInLocal(endBit);
+                    FileInputStream fis = new FileInputStream(file);
+                    Bitmap tempBp = BitmapFactory.decodeStream(fis);
+                    FileEntity entity = new FileEntity();
+                    if(tempBp!=null){
+                        entity.setFileName(photoName);
+                        entity.setSjId(imageId);
+                        entity.setBitmap(tempBp);
+                        fileEntityDao.saveFileEntity(entity);
+                    }
+                    fileEntityList.add(entity);
+                    if (fileEntityList != null ) {
+                        adapter.notifyDataSetChanged(fileEntityList);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     private void startPhotoZoom(Uri uri, int size) {
         Intent intent = new Intent("com.android.camera.action.CROP");

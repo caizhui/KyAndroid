@@ -38,6 +38,7 @@
                         android:layout_height="70dp"
                         android:background="@null"
                         android:padding="5dp"
+                        style="@style/TextColorStyle"
                         android:textSize="16sp" />
 
                 </LinearLayout>
@@ -64,6 +65,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="70dp"
                         android:background="@null"
+                        style="@style/TextColorStyle"
                         android:textSize="16sp" />
 
                 </LinearLayout>
@@ -89,6 +91,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="70dp"
                         android:background="@null"
+                        style="@style/TextColorStyle"
                         android:textSize="16sp" />
                 </LinearLayout>
 
@@ -112,6 +115,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="70dp"
                         android:background="@null"
+                        style="@style/TextColorStyle"
                         android:textSize="16sp" />
                 </LinearLayout>
 
@@ -137,6 +141,7 @@
                         android:layout_height="70dp"
                         android:background="@null"
                         android:padding="5dp"
+                        style="@style/TextColorStyle"
                         android:textSize="16sp" />
                 </LinearLayout>
 
@@ -162,6 +167,7 @@
                         android:layout_height="70dp"
                         android:background="@null"
                         android:padding="5dp"
+                        style="@style/TextColorStyle"
                         android:textSize="16sp" />
 
                 </LinearLayout>
@@ -187,6 +193,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="70dp"
                         android:background="@null"
+                        style="@style/TextColorStyle"
                         android:textSize="16sp" />
 
                 </LinearLayout>
@@ -212,6 +219,7 @@
                         android:layout_height="70dp"
                         android:background="@null"
                         android:padding="5dp"
+                        style="@style/TextColorStyle"
                         android:textSize="16sp" />
 
                 </LinearLayout>
@@ -237,6 +245,7 @@
                         android:layout_height="70dp"
                         android:background="@null"
                         android:padding="5dp"
+                        style="@style/TextColorStyle"
                         android:textSize="16sp" />
 
                 </LinearLayout>
@@ -262,6 +271,7 @@
                         android:layout_height="70dp"
                         android:background="@null"
                         android:padding="5dp"
+                        style="@style/TextColorStyle"
                         android:textSize="16sp" />
 
                 </LinearLayout>
@@ -288,6 +298,7 @@
                         android:layout_height="70dp"
                         android:background="@null"
                         android:padding="5dp"
+                        style="@style/TextColorStyle"
                         android:textSize="16sp" />
 
                 </LinearLayout>
@@ -313,6 +324,7 @@
                         android:layout_height="70dp"
                         android:background="@null"
                         android:padding="5dp"
+                        style="@style/TextColorStyle"
                         android:textSize="16sp" />
 
                 </LinearLayout>
@@ -338,6 +350,7 @@
                         android:layout_height="70dp"
                         android:background="@null"
                         android:padding="5dp"
+                        style="@style/TextColorStyle"
                         android:textSize="16sp" />
 
                 </LinearLayout>
@@ -364,6 +377,7 @@
                         android:layout_height="70dp"
                         android:background="@null"
                         android:padding="5dp"
+                        style="@style/TextColorStyle"
                         android:textSize="16sp" />
 
                 </LinearLayout>

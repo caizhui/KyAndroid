@@ -33,6 +33,7 @@
             android:layout_height="100dp"
             android:layout_marginLeft="10dp"
             android:hint="请输入文件描述"
+            style="@style/TextColorStyle"
             android:textSize="14sp"
             android:textColorHint="@color/gray"
             android:gravity="start"/>
