@@ -159,6 +159,12 @@ public class TaskFragment_Basic extends Fragment {
     EditText leadershipInstructionsEdt;
 
     /**
+     * 处理时限
+     */
+    @BindView(R.id.clsx_text)
+    EditText clsxText;
+
+    /**
      * 数组 配置器 下拉菜单赋值用
      */
     ArrayAdapter<CodeValue> adapter;
@@ -274,6 +280,8 @@ public class TaskFragment_Basic extends Fragment {
                 belongStreetEdt.setText(qhList.get(0).getJdmc());
                 belongCommunitySpinner.setText(qhList.get(0).getSqgzz());
             }
+
+            clsxText.setText(taskEntity.getSclsx());
 
 
         }

@@ -2,6 +2,7 @@ package com.ky.kyandroid.adapter;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -13,7 +14,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.ky.kyandroid.AppContext;
 import com.ky.kyandroid.Constants;
 import com.ky.kyandroid.R;
 import com.ky.kyandroid.db.dao.FileEntityDao;
@@ -76,8 +76,11 @@ public class EventImageListAdapter extends BaseAdapter {
         }
         //fileUrl不为空 表示从后台获取的文件链接，否则是查看本地图片
         if(list.get(position).getFileUrl()!=null &&  !"".equals(list.get(position).getFileUrl())){
-            ImageLoader.getInstance().displayImage(Constants.SERVICE_BASE_URL + list.get(position).getFileUrl()
-                    ,holder.attachmentImg, AppContext.getImgBuilder());
+           /* ImageLoader.getInstance().displayImage(Constants.SERVICE_BASE_URL + list.get(position).getFileUrl()
+                    ,holder.attachmentImg, AppContext.getImgBuilder());*/
+            Bitmap bitmap  =  ImageLoader.getInstance().loadImageSync(Constants.SERVICE_BASE_URL + list.get(position).getFileUrl());
+            holder.attachmentImg.setImageBitmap(bitmap);
+
         }else{
             holder.attachmentImg.setImageBitmap(list.get(position).getBitmap());
         }
@@ -166,9 +169,6 @@ public class EventImageListAdapter extends BaseAdapter {
 
        @BindView(R.id.fjlx_text)
        TextView fjlx_text;
-
-     @BindView(R.id.attachment_img1)
-     ImageView attachment_img1;
 
         ViewHolder(View view) {
             ButterKnife.bind(this, view);

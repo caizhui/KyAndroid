@@ -62,6 +62,7 @@ public class TaskEntityListAdapter extends BaseAdapter {
         holder.thingTime.setText(list.get(position).getFssj());
         holder.thingStatus.setText(list.get(position).getZtname());
         holder.taskContentText.setText(list.get(position).getRwnr());
+        holder.clsxText.setText(list.get(position).getSclsx());
         return convertView;
     }
 
@@ -79,6 +80,8 @@ public class TaskEntityListAdapter extends BaseAdapter {
         TextView thingTime;
         @BindView(R.id.task_content_text)
         TextView taskContentText;
+        @BindView(R.id.clsx_text)
+        TextView clsxText;
 
         ViewHolder(View view) {
             ButterKnife.bind(this, view);
