@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
+import android.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +28,7 @@ import com.ky.kyandroid.entity.TFtSjEntity;
 import com.ky.kyandroid.entity.TFtSjRyEntity;
 import com.ky.kyandroid.util.CommonUtil;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -407,10 +408,12 @@ public class EventEntryAdd_Person extends Fragment {
                 tFtSjRyEntity.setComments(personRemarkEdt.getText().toString());
                 tFtSjRyEntity.setSjId(uuid);
                 if(!"".equals(message.toString())){
+                    closeDialog(dialogInterface,false);
                     temptFtSjRyEntity = new TFtSjRyEntity();
                     temptFtSjRyEntity= tFtSjRyEntity;
                     Toast.makeText(EventEntryAdd_Person.this.getActivity(),message.toString(),Toast.LENGTH_SHORT).show();
                 }else{
+                    closeDialog(dialogInterface,true);
                     if(tFtSjRyEntity.getUuid()!=0){
                         flag = tFtSjRyEntityDao.updateTFtSjRyEntity(tFtSjRyEntity);
                         tFtSjRyEntity = null;
@@ -437,10 +440,26 @@ public class EventEntryAdd_Person extends Fragment {
         builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                closeDialog(dialogInterface,true);
                 tFtSjRyEntity = null;
             }
         });
         builder.create().show();
+    }
+
+    /**
+     * 关闭弹出框  isClose =false 关闭，否则 不关闭
+     * @param isClose
+     */
+    public void  closeDialog(DialogInterface dialogInterface,boolean isClose){
+        //不关闭
+        try{
+            Field field = dialogInterface.getClass().getSuperclass().getDeclaredField("mShowing");
+            field.setAccessible(true);
+            field.set(dialogInterface, isClose);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 

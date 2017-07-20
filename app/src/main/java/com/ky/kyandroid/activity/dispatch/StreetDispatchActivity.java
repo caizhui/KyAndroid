@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
+import android.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -42,6 +42,7 @@ import com.ky.kyandroid.util.StringUtils;
 import com.ky.kyandroid.util.SweetAlertDialogUtil;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -562,7 +563,9 @@ public class StreetDispatchActivity extends AppCompatActivity {
                     if(ypqbmList!=null && ypqbmList.size()>0){
                         adapter.notifyDataSetChanged(ypqbmList);
                     }
+                    closeDialog(dialogInterface,true);
                 }else{
+                    closeDialog(dialogInterface,false);
                     Toast.makeText(StreetDispatchActivity.this,message,Toast.LENGTH_SHORT).show();
                 }
             }
@@ -570,9 +573,25 @@ public class StreetDispatchActivity extends AppCompatActivity {
         builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                closeDialog(dialogInterface,true);
                 isDetail = false;
             }
         });
         builder.create().show();
+    }
+
+    /**
+     * 关闭弹出框  isClose =false 关闭，否则 不关闭
+     * @param isClose
+     */
+    public void  closeDialog(DialogInterface dialogInterface,boolean isClose){
+        //不关闭
+        try{
+            Field field = dialogInterface.getClass().getSuperclass().getDeclaredField("mShowing");
+            field.setAccessible(true);
+            field.set(dialogInterface, isClose);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
