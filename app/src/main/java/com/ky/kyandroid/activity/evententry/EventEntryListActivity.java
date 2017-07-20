@@ -884,7 +884,8 @@ public class EventEntryListActivity extends AppCompatActivity {
                     }
                     if (returnEdt != null) {
                         //3 退回，4不予立案，5自行处理退回
-                        if ("3".equals(tFtZtlzEntity.getNextZt()) || "4".equals(tFtZtlzEntity.getNextZt()) ||"5".equals(tFtZtlzEntity.getNextZt())) {
+                        if ("3".equals(tFtZtlzEntity.getNextZt()) || "4".equals(tFtZtlzEntity.getNextZt()) ||
+                                ("5".equals(tFtZtlzEntity.getNextZt())&&!"2".equals(tFtSjEntity.getZt()))) {
                             if ("".equals(returnEdt.getText().toString())) {
                                 message += tFtZtlzEntity.getName()+"原因不能为空\n";
                             } else {
