@@ -32,13 +32,14 @@
                         android:layout_height="wrap_content"
                         android:text="督办名称:"/>
 
-                    <EditText
+                    <TextView
                         android:id="@+id/supervisor_name_edt"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:background="@null"
                         android:enabled="false"
                         android:textSize="16sp"
+                        style="@style/TextColorStyle"
                         android:layout_weight="1" />
 
                 </LinearLayout>
@@ -59,13 +60,14 @@
                         android:layout_height="wrap_content"
                         android:text="@string/supervisor_glsj" />
 
-                    <EditText
+                    <TextView
                         android:id="@+id/supervisor_glsj_edt"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:background="@null"
                         android:enabled="false"
                         android:textSize="16sp"
+                        style="@style/TextColorStyle"
                         android:layout_weight="1" />
 
                 </LinearLayout>
@@ -89,13 +91,14 @@
                         android:layout_height="wrap_content"
                         android:text="@string/supervisor_type" />
 
-                    <EditText
+                    <TextView
                         android:id="@+id/supervisor_dblx_edt"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:background="@null"
                         android:enabled="false"
                         android:textSize="16sp"
+                        style="@style/TextColorStyle"
                         android:layout_weight="1" />
 
                 </LinearLayout>
@@ -115,41 +118,19 @@
                         android:layout_height="wrap_content"
                         android:text="@string/be_supervisor_unit" />
 
-                    <EditText
+                    <TextView
                         android:id="@+id/be_supervisor_unit_spinner"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:enabled="false"
                         android:background="@null"
+                        style="@style/TextColorStyle"
                         android:textSize="16sp"/>
                 </LinearLayout>
 
 
                 <include layout="@layout/linearlayout_one" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginLeft="15dp"
-                    android:padding="10dp">
-
-                    <TextView
-                        style="@style/TextStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/supervisor_glsj" />
-
-                    <EditText
-                        android:id="@+id/supervisor_glsj"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:enabled="false"
-                        android:background="@null"
-                        android:textSize="16sp"/>
-                </LinearLayout>
-
-                <include layout="@layout/linearlayout_one" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -170,6 +151,7 @@
                         android:layout_height="wrap_content"
                         android:enabled="false"
                         android:background="@null"
+                        style="@style/TextColorStyle"
                         android:textSize="16sp" />
                 </LinearLayout>
 
@@ -194,6 +176,7 @@
                         android:layout_height="wrap_content"
                         android:enabled="false"
                         android:background="@null"
+                        style="@style/TextColorStyle"
                         android:textSize="16sp" />
                 </LinearLayout>
 
@@ -204,7 +187,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginLeft="15dp"
+                    android:layout_marginLeft="45dp"
                     android:padding="10dp">
 
                     <TextView
@@ -219,6 +202,7 @@
                         android:layout_height="wrap_content"
                         android:enabled="false"
                         android:background="@null"
+                        style="@style/TextColorStyle"
                         android:textSize="16sp" />
                 </LinearLayout>
 
@@ -242,6 +226,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:enabled="false"
+                        style="@style/TextColorStyle"
                         android:background="@null"
                         android:textSize="16sp" />
                 </LinearLayout>
@@ -270,6 +255,7 @@
                         android:layout_height="100dp"
                         android:background="@null"
                         android:textSize="16sp"
+                        style="@style/TextColorStyle"
                         android:enabled="false"
                         android:layout_weight="1" />
                 </LinearLayout>
@@ -297,6 +283,7 @@
                         android:layout_height="100dp"
                         android:background="@null"
                         android:textSize="16sp"
+                        style="@style/TextColorStyle"
                         android:enabled="false"
                         android:layout_weight="1" />
                 </LinearLayout>
@@ -317,12 +304,13 @@
                         android:layout_height="wrap_content"
                         android:text="@string/supervisor_require" />
 
-                    <EditText
+                    <TextView
                         android:id="@+id/supervisor_require_edt"
                         android:layout_width="0dp"
                         android:layout_height="100dp"
                         android:background="@null"
                         android:textSize="16sp"
+                        style="@style/TextColorStyle"
                         android:enabled="false"
                         android:layout_weight="1" />
                 </LinearLayout>
@@ -342,12 +330,13 @@
                         android:layout_height="wrap_content"
                         android:text="@string/supervisor_fkjg" />
 
-                    <EditText
+                    <TextView
                         android:id="@+id/supervisor_fkjg_edt"
                         android:layout_width="0dp"
                         android:layout_height="100dp"
                         android:background="@null"
                         android:textSize="16sp"
+                        style="@style/TextColorStyle"
                         android:enabled="false"
                         android:layout_weight="1" />
                 </LinearLayout>
@@ -367,11 +356,12 @@
                         android:layout_marginLeft="35dp"
                         android:text="@string/remark_text" />
 
-                    <EditText
+                    <TextView
                         android:id="@+id/remark_text_edt"
                         android:layout_width="0dp"
                         android:layout_height="100dp"
                         android:background="@null"
+                        style="@style/TextColorStyle"
                         android:enabled="false"
                         android:textSize="16sp"
                         android:layout_weight="1" />

@@ -79,6 +79,17 @@ public class SupervisionListAdapter extends BaseAdapter {
         super.notifyDataSetChanged();
     }
 
+    /**
+     * @param addList
+     */
+    public void addDataSetChanged(List<TFtDbEntity> addList){
+        this.list.addAll(addList);
+        this.notifyDataSetChanged(list);
+    }
+
+    public List<TFtDbEntity> getList() {
+        return list;
+    }
 
     static class ViewHolder {
         @BindView(R.id.db_name)
