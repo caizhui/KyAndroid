@@ -79,6 +79,11 @@ public class LoginActivity extends AppCompatActivity {
     public static final String ORG_NAME = "orgName";
 
     /**
+     * 所属orgName
+     */
+    public static final String ORG_ID= "orgId";
+
+    /**
      * 街道代码
      */
     public static final String ORG_CODE = "ORG_CODE";
@@ -343,6 +348,7 @@ public class LoginActivity extends AppCompatActivity {
                     SpUtil.setStringSharedPerference(sp, USER_ID, user.getId());
                     SpUtil.setStringSharedPerference(sp, USER_NAME, user.getUserName());
                     SpUtil.setStringSharedPerference(sp, ORG_NAME, user.getOrgName());
+                    SpUtil.setStringSharedPerference(sp, ORG_ID, user.getOrgId());
                     SpUtil.setStringSharedPerference(sp, ORG_CODE, user.getOrgCode());
                     SpUtil.setStringSharedPerference(sp, NAME, user.getName());
                     SpUtil.setStringSharedPerference(sp, USER_SFZHM, user.getGmsfhm());

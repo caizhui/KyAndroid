@@ -262,7 +262,7 @@ public class SuperVisionListActivity extends AppCompatActivity {
         initData();
     }
 
-    @OnClick({R.id.left_btn})
+    @OnClick({R.id.left_btn,R.id.right_btn})
     public void onClick(View v) {
         switch (v.getId()) {
             /** 返回键 **/
@@ -270,6 +270,9 @@ public class SuperVisionListActivity extends AppCompatActivity {
                 onBackPressed();
                 //finish();
                 break;
+            case R.id.right_btn:
+                Intent intent = new Intent(this, SuperVisionAddActivity.class);
+                startActivity(intent);
         }
     }
 
@@ -324,6 +327,7 @@ public class SuperVisionListActivity extends AppCompatActivity {
         tFtDbEntityList = new ArrayList<TFtDbEntity>();
         userId = sp.getString(USER_ID, "");
         centerText.setText("督查督办");
+        rightBtn.setVisibility(View.VISIBLE);
     }
 
 

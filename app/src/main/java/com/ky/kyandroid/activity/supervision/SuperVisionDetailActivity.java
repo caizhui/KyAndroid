@@ -160,9 +160,6 @@ public class SuperVisionDetailActivity extends AppCompatActivity {
     public void initView() {
         /** 设置toolbar标题 **/
         centerText.setText("督查督办详情");
-
-        /** 将右边按钮隐藏*/
-        rightBtn.setVisibility(View.INVISIBLE);
     }
 
 

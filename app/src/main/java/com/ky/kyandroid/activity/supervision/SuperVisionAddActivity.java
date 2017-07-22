@@ -1,6 +1,10 @@
 package com.ky.kyandroid.activity.supervision;
 
+import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -13,13 +17,25 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ky.kyandroid.Constants;
 import com.ky.kyandroid.R;
+import com.ky.kyandroid.bean.NetWorkConnection;
 import com.ky.kyandroid.entity.TFtDbEntity;
 import com.ky.kyandroid.util.DateTimePickDialogUtil;
+import com.ky.kyandroid.util.OkHttpUtil;
+import com.ky.kyandroid.util.SpUtil;
+import com.ky.kyandroid.util.SweetAlertDialogUtil;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 /**
  * Created by Caizhui on 2017/6/14.
@@ -103,12 +119,48 @@ public class SuperVisionAddActivity extends AppCompatActivity {
     private String dblx;
 
 
+    /**
+     * SharedPreferences
+     */
+    private SharedPreferences sp;
+    /**
+     * 网路工具类
+     */
+    private NetWorkConnection netWorkConnection;
+
+
+    /**
+     * 弹出框工具类
+     */
+    private SweetAlertDialogUtil sweetAlertDialogUtil;
+
+    private String userId;
+
+
+    private String orgId;
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_supervision_add);
         ButterKnife.bind(this);
         initView();
+        initEvent();
+        dbAddData();
+
+    }
+
+    /**
+     * 初始化事件
+     */
+    private void initEvent() {
+        sp = SpUtil.getSharePerference(this);
+        // 初始化网络工具
+        netWorkConnection = new NetWorkConnection(this);
+        sweetAlertDialogUtil = new SweetAlertDialogUtil(SuperVisionAddActivity.this);
+        userId = sp.getString("userId", "");
+        orgId = sp.getString("orgId", "");
 
     }
 
@@ -140,6 +192,61 @@ public class SuperVisionAddActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("HandlerLeak")
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            // 提示信息
+            String message = String.valueOf(msg.obj == null ? "系统繁忙,请稍后再试"
+                    : msg.obj);
+            switch (msg.what) {
+                // 失败
+                case 0:
+                    sweetAlertDialogUtil.dismissAlertDialog();
+                    Toast.makeText(SuperVisionAddActivity.this, message, Toast.LENGTH_SHORT).show();
+                    break;
+                // 成功跳转
+                case 1:
+                    sweetAlertDialogUtil.dismissAlertDialog();
+                    break;
+            }
+        }
+    };
+
+
+    public void dbAddData(){
+        final Message msg = new Message();
+        if (netWorkConnection.isWIFIConnection()) {
+            sweetAlertDialogUtil.loadAlertDialog("Loading...");
+            msg.what = 0;
+            // 参数列表 - 账号、密码（加密）
+            Map<String, String> paramsMap = new HashMap<String, String>();
+            paramsMap.put("userId", userId);
+            paramsMap.put("orgId", orgId);
+            // 发送请求
+            OkHttpUtil.sendRequest(Constants.SERVICE_DBADD_DATA, paramsMap, new Callback() {
+
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    mHandler.sendEmptyMessage(0);
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    if (response.isSuccessful()) {
+                        msg.what = 1;
+                        msg.obj = response.body().string();
+                    } else {
+                        msg.obj = "网络异常,请确认网络情况";
+                    }
+                    mHandler.sendMessage(msg);
+                }
+            });
+        } else {
+            msg.obj = "WIFI网络不可用,请检查网络连接情况";
+            mHandler.sendMessage(msg);
+        }
+    }
 
     @OnClick({R.id.left_btn,R.id.feedback_time_edt,R.id.supervision_add_btn})
     public void onClick(View v) {
@@ -151,17 +258,6 @@ public class SuperVisionAddActivity extends AppCompatActivity {
             /** 点击发生时间控件 **/
             case R.id.feedback_time_edt:
                 feedbackTimeEdt.clearFocus();
-               /* Calendar c = Calendar.getInstance();
-                new DatePickerDialog(SuperVisionAddActivity.this, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        Date date = new Date(System.currentTimeMillis());
-                        SimpleDateFormat dateFormat = new SimpleDateFormat(" HH:mm:ss");
-                        String time = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
-                        time += dateFormat.format(date);
-                        feedbackTimeEdt.setText(time);
-                    }
-                }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();*/
                 DateTimePickDialogUtil dateTimePicKDialog = new DateTimePickDialogUtil(
                         SuperVisionAddActivity.this, "");
                 dateTimePicKDialog.dateTimePicKDialog(feedbackTimeEdt);
