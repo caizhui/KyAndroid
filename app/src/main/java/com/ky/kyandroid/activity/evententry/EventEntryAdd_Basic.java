@@ -221,7 +221,7 @@ public class EventEntryAdd_Basic extends Fragment {
     ListView groupListView = null;
     ListView childListView = null;
     /**
-     * 稻城部门的第二层子节点ListView
+     * 到场部门的第三层子节点ListView
      */
     ListView childListView2 = null;
     GroupAdapter groupAdapter = null;

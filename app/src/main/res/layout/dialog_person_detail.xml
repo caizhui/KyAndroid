@@ -60,11 +60,13 @@
                         android:layout_marginLeft="30dp"
                         android:text="@string/person_sex" />
 
-                    <Spinner
+                    <TextView
                         android:id="@+id/person_sex_edt"
                         android:layout_width="match_parent"
                         android:layout_height="70dp"
                         android:background="@null"
+                        android:gravity="center_vertical"
+                        android:padding="5dp"
                         style="@style/TextColorStyle"
                         android:textSize="16sp" />
 
@@ -86,11 +88,13 @@
                         android:layout_marginLeft="30dp"
                         android:text="@string/person_nation" />
 
-                    <Spinner
+                    <TextView
                         android:id="@+id/person_nation_edt"
                         android:layout_width="match_parent"
                         android:layout_height="70dp"
                         android:background="@null"
+                        android:gravity="center_vertical"
+                        android:padding="5dp"
                         style="@style/TextColorStyle"
                         android:textSize="16sp" />
                 </LinearLayout>
@@ -110,11 +114,13 @@
                         android:layout_height="wrap_content"
                         android:text="@string/person_idcard_type" />
 
-                    <Spinner
+                    <TextView
                         android:id="@+id/person_idcard_type_edt"
                         android:layout_width="match_parent"
                         android:layout_height="70dp"
                         android:background="@null"
+                        android:gravity="center_vertical"
+                        android:padding="5dp"
                         style="@style/TextColorStyle"
                         android:textSize="16sp" />
                 </LinearLayout>
@@ -188,11 +194,13 @@
                         android:layout_marginLeft="30dp"
                         android:text="@string/person_party" />
 
-                    <Spinner
+                    <TextView
                         android:id="@+id/person_party_edt"
                         android:layout_width="match_parent"
                         android:layout_height="70dp"
                         android:background="@null"
+                        android:gravity="center_vertical"
+                        android:padding="5dp"
                         style="@style/TextColorStyle"
                         android:textSize="16sp" />
 
