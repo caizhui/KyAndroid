@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linear_evententry"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -8,9 +9,8 @@
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/linear_evententry"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <LinearLayout
@@ -152,7 +152,6 @@
 
 
             <LinearLayout
-                android:id="@+id/field_departmen_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -165,6 +164,7 @@
                     android:text="@string/field_departmen" />
 
                 <LinearLayout
+                    android:id="@+id/field_departmen_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/border_edittext_bg">
@@ -172,10 +172,11 @@
                     <EditText
                         android:id="@+id/field_departmen_edt"
                         android:layout_width="0dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:background="@null"
                         android:enabled="false"
+                        android:focusable="false"
                         android:gravity="center_vertical"
                         android:padding="5dp"
                         android:textSize="16sp" />
@@ -185,6 +186,7 @@
                         android:layout_width="16dp"
                         android:layout_height="16dp"
                         android:layout_gravity="center"
+                        android:enabled="false"
                         android:layout_marginRight="5dp"
                         android:background="@mipmap/down" />
 
@@ -305,7 +307,6 @@
 
 
             <LinearLayout
-                android:id="@+id/fields_involved_linearlayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -318,8 +319,10 @@
                     android:text="@string/fields_involved" />
 
                 <LinearLayout
+                    android:id="@+id/fields_involved_linearlayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:focusable="true"
                     android:background="@drawable/border_edittext_bg">
 
                     <EditText
@@ -329,6 +332,7 @@
                         android:layout_weight="1"
                         android:background="@null"
                         android:enabled="false"
+                        android:focusable="false"
                         android:gravity="center_vertical"
                         android:padding="5dp"
                         android:textSize="16sp" />
@@ -339,6 +343,7 @@
                         android:layout_width="16dp"
                         android:layout_height="16dp"
                         android:layout_gravity="center"
+                        android:enabled="false"
                         android:layout_marginRight="5dp"
                         android:background="@mipmap/down" />
                 </LinearLayout>
