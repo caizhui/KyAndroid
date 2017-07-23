@@ -38,6 +38,11 @@ public class YpqbmEntity implements Serializable{
     private String lastUpdateBy;
     private String lastUpdateTime;
 
+    /**
+     * 判断是否能删除
+     */
+    private String isDelete;
+
     public String getSjId() {
         return sjId;
     }
@@ -132,5 +137,13 @@ public class YpqbmEntity implements Serializable{
 
     public void setLastUpdateTime(String lastUpdateTime) {
         this.lastUpdateTime = lastUpdateTime;
+    }
+
+    public String getIsDelete() {
+        return isDelete;
+    }
+
+    public void setIsDelete(String isDelete) {
+        this.isDelete = isDelete;
     }
 }

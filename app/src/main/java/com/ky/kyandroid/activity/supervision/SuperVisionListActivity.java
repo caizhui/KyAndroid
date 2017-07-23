@@ -1,16 +1,16 @@
 package com.ky.kyandroid.activity.supervision;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.Button;
@@ -23,17 +23,22 @@ import android.widget.Toast;
 
 import com.ky.kyandroid.Constants;
 import com.ky.kyandroid.R;
+import com.ky.kyandroid.activity.LoginActivity;
 import com.ky.kyandroid.adapter.SupervisionListAdapter;
 import com.ky.kyandroid.bean.AckMessage;
 import com.ky.kyandroid.bean.NetWorkConnection;
 import com.ky.kyandroid.bean.PageBean;
+import com.ky.kyandroid.entity.SjHandleParams;
 import com.ky.kyandroid.entity.TFtDbEntity;
+import com.ky.kyandroid.entity.TFtZtlzEntity;
 import com.ky.kyandroid.util.JsonUtil;
 import com.ky.kyandroid.util.SpUtil;
 import com.ky.kyandroid.util.StringUtils;
 import com.ky.kyandroid.util.SweetAlertDialogUtil;
 import com.ky.kyandroid.util.SwipeRefreshUtil;
+import com.solidfire.gson.reflect.TypeToken;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -51,6 +56,8 @@ import butterknife.OnItemLongClick;
  */
 
 public class SuperVisionListActivity extends AppCompatActivity {
+
+    private final String TAG = "SuperVisionListActivity";
 
     /**
      * 标题左边按钮
@@ -83,23 +90,29 @@ public class SuperVisionListActivity extends AppCompatActivity {
     SwipeRefreshLayout swipeContainer;
 
     /**
-     * 督办列表
+     * 事件列表
      */
     private List<TFtDbEntity> tFtDbEntityList;
 
-    /**
-     * 每次加载信息List条数
-     */
-    private List<TFtDbEntity> pList;
-
 
     private SupervisionListAdapter adapter;
+
+    /**
+     * 操作人员权限名称
+     */
+    private String[] listViewContent;
+
+    /**
+     * 操作人员权限实体
+     */
+    private TFtZtlzEntity[] tFtZtlzEntities;
 
 
     /**
      * 事件实体
      */
     TFtDbEntity tFtDbEntity;
+
 
     /**
      * SharedPreferences
@@ -117,29 +130,20 @@ public class SuperVisionListActivity extends AppCompatActivity {
 
     private LinearLayout list_jiazai;
 
-    boolean ifRefreshOK = false, ifrefresh = false;// 是否刷新完毕（防止第一次进入刷新跟加载同时进行）
-    boolean ifDateEnd = false, ifload = false;// 数据是否加载完
+    /**
+     * 默认查询条目数/每页 -- 后台已经写死10条记录
+     */
+    private String pageSize = "10";
 
-    // 当前页
-    private int currentPage;
-
-    //每页显示条数
-    private int pageSize = 10;
+    /**
+     * 总条数
+     */
+    private int total = 0;
 
     /**
      *
      */
     private PageBean pageBean;
-
-    /**
-     * 返回的总条数
-     */
-    private int totalMumber;
-
-    /**
-     * 总条数
-     */
-    private int total;
 
     /**
      * 底部标题
@@ -156,12 +160,30 @@ public class SuperVisionListActivity extends AppCompatActivity {
      */
     private SwipeRefreshUtil swipeRefreshUtil;
 
+    /**
+     * 数据加载
+     */
+    private List<?> dataList;
+
     private String userId;
+
 
     /**
      * 弹出框工具类
      */
     private SweetAlertDialogUtil sweetAlertDialogUtil;
+
+    /**
+     * 查询参数
+     */
+    private Map<String, String> paramsMap = null;
+
+    List<TFtDbEntity> entityList;
+
+    /**
+     * 临时未知
+     */
+    private int tempPosition;
 
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
@@ -170,107 +192,59 @@ public class SuperVisionListActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             // 提示信息
-            String message = String.valueOf((msg.obj == null || "".equals(msg.obj) )? "系统繁忙,请稍后再试" : msg.obj);
+            String message = String.valueOf((msg.obj == null || "".equals(msg.obj)) ? "系统繁忙,请稍后再试" : msg.obj);
+            sweetAlertDialogUtil.dismissAlertDialog();
             switch (msg.what) {
-                // 失败
+                // 默认处理
                 case 0:
-                    sweetAlertDialogUtil.dismissAlertDialog();
-                    swipeContainer.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            swipeContainer.setRefreshing(false);
-                        }
-                    });
                     Toast.makeText(SuperVisionListActivity.this, message, Toast.LENGTH_SHORT).show();
                     break;
-                // 刷新成功
+                // 加载失败
                 case 1:
-                    sweetAlertDialogUtil.dismissAlertDialog();
-                    //刷新重新初始List
-                    tFtDbEntityList = new ArrayList<TFtDbEntity>();
-                    // 判断是否刷新，刷新true,加载false
-                    ifrefresh = true;
-                    //判断是否刷新成功
-                    ifRefreshOK = true;
-                    //判断是否最后加载到最后
-                    ifDateEnd = false;
-                    currentPage = 2;
-                    //刷新时总条数从新设值
-                    total = 0;
-                    //解析数据
-                    handleTransation(message);
-                    if(pList!=null){
-                        totalMumber = pList.size();
-                        if (pList.size() < pageSize) {
-                            ifDateEnd = true;
-                            if (pageBean != null) {
-                                if (pageBean.getCurrentPage() == 1) {
-                                    list_jiazai.setVisibility(View.GONE);
-                                }
-                            }
-                        }else{
-                            ifload = false;
-                            list_jiazai.setVisibility(View.GONE);
-                        }
-                    }
-                    swipeContainer.post(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            swipeContainer.setRefreshing(false);
-                        }
-                    });
-                    adapter.notifyDataSetChanged(tFtDbEntityList);
-                    break;
-                // 加载更多
-                case 2:
-                    sweetAlertDialogUtil.dismissAlertDialog();
-                    //解析数据
-                    handleTransation(message);
-                    currentPage = currentPage + 1;
-                    //当加载的 条数小鱼每页显示条数时，加载完成
-                    if (pList.size() < pageSize) {
-                        totalMumber = pList.size();
-                        ifDateEnd = true;
-                        if (pageBean != null) {
-                            progressBar.setVisibility(View.GONE);
-                            foot_title.setText("已经没有更多数据了");
-                        }
+                    Log.i(TAG, "刷新操作...");
+                    if (handleResponseData(message)) {
+                        notifyListViewData(false);
+                        Toast.makeText(SuperVisionListActivity.this, "刷新成功", Toast.LENGTH_SHORT).show();
                     } else {
-                        ifload = false;
-                        list_jiazai.setVisibility(View.GONE);
+                        Toast.makeText(SuperVisionListActivity.this, "刷新失败", Toast.LENGTH_SHORT).show();
                     }
-                    adapter.notifyDataSetChanged(tFtDbEntityList);
+                    swipeRefreshUtil.dismissRefreshing();
                     break;
-                //刷新失败
-                case 3:
-                    swipeContainer.post(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            swipeContainer.setRefreshing(false);
-                        }
-                    });
+                // 加载操作
+                case 2:
+                    Log.i(TAG, "加载操作...");
+                    if (handleResponseData(message)) {
+                        notifyListViewData(true);
+                    }
                     break;
-                //加载失败
+                // 加载失败
                 case 4:
-                    list_jiazai.setVisibility(View.GONE);
+                    Log.i(TAG, "加载失败...");
+                    swipeRefreshUtil.dismissRefreshing();
+                    Toast.makeText(SuperVisionListActivity.this, message, Toast.LENGTH_SHORT).show();
                     break;
-                //修改状态成功
-                case 5:
-                    sweetAlertDialogUtil.dismissAlertDialog();
-                    Toast.makeText(SuperVisionListActivity.this, "操作成功", Toast.LENGTH_SHORT).show();
-                    initData();
+                // 初始化跳转
+                case 7:
+                    Log.i(TAG, "初始化成功...");
+                    swipeRefreshUtil.dismissRefreshing();
+                    if (handleResponseData(message)) {
+                        notifyListViewData(false);
+                    } else {
+                        Toast.makeText(SuperVisionListActivity.this, "查询不到符合条件记录", Toast.LENGTH_SHORT).show();
+                    }
                     break;
-                //修改状态失败
-                case 6:
-                    sweetAlertDialogUtil.dismissAlertDialog();
-                    Toast.makeText(SuperVisionListActivity.this, "操作失败", Toast.LENGTH_SHORT).show();
+                case 8:
+                    // 状态修改
+                    Log.i(TAG, "加载操作...");
+                    if (handleResponseDataState(message)) {
+                        Toast.makeText(SuperVisionListActivity.this, "操作成功", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(SuperVisionListActivity.this, "操作失败", Toast.LENGTH_SHORT).show();
+                    }
                     break;
 
             }
         }
-
     };
 
     @Override
@@ -278,43 +252,17 @@ public class SuperVisionListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_supervision_list);
         ButterKnife.bind(this);
-        sweetAlertDialogUtil = new SweetAlertDialogUtil(this);
-        tFtDbEntityList = new ArrayList<TFtDbEntity>();
-        //初始化事件
-        initEvent();
-        // List列表设置初始化数据
-        initData();
-        userId = sp.getString(USER_ID, "");
-        searchSupervisionList.setSelector(getResources().getDrawable(R.drawable.item_selector_grey));
-        adapter = new SupervisionListAdapter(tFtDbEntityList, SuperVisionListActivity.this);
-        searchSupervisionList.setAdapter(adapter);
-
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
+        // 初始化视图
+        initViewAndEvent();
+        // 设置参数
+        initBundle();
+        //初始化下拉列表
+        initListView();
+        // 初始化数据
         initData();
     }
 
-    /**
-     * 初始化事件
-     */
-    private void initEvent() {
-        sp = SpUtil.getSharePerference(this);
-        // 初始化网络工具
-        netWorkConnection = new NetWorkConnection(this);
-        // 加载“正在加载”布局文件
-        list_jiazai = (LinearLayout) getLayoutInflater().inflate(R.layout.lv_item_jiazai, null);
-        list_jiazai.setVisibility(View.GONE);
-        foot_title = (TextView) list_jiazai.findViewById(R.id.foot_title);
-        progressBar = (ProgressBar) list_jiazai.findViewById(R.id.progressBar);
-        searchSupervisionList.addFooterView(list_jiazai, null, false);
-        searchSupervisionList.setSelector(new ColorDrawable(Color.TRANSPARENT));
-        centerText.setText("督查督办列表");
-    }
-
-    @OnClick({R.id.left_btn, R.id.right_btn})
+    @OnClick({R.id.left_btn,R.id.right_btn})
     public void onClick(View v) {
         switch (v.getId()) {
             /** 返回键 **/
@@ -325,7 +273,31 @@ public class SuperVisionListActivity extends AppCompatActivity {
             case R.id.right_btn:
                 Intent intent = new Intent(this, SuperVisionAddActivity.class);
                 startActivity(intent);
-                break;
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (intent != null) {
+            String type = intent.getStringExtra("businessType");
+            if ("initList".equals(type)) {
+                // 初始化数据
+                initData();
+            } else if ("isfrash".equals(type)) {
+                //刷新当前一行数据
+                String message = intent.getStringExtra("message");
+                if (!"".equals(message)) {
+                    // 状态修改
+                    Log.i(TAG, "加载操作...");
+                    if (handleResponseDataState(message)) {
+                        Toast.makeText(SuperVisionListActivity.this, "操作成功", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(SuperVisionListActivity.this, "操作失败", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+            }
         }
     }
 
@@ -333,101 +305,218 @@ public class SuperVisionListActivity extends AppCompatActivity {
      * List列表设置初始化数据
      */
     public void initData() {
-        final Message msg = new Message();
-        msg.what = 0;
         if (netWorkConnection.isWIFIConnection()) {
-            final Map<String, String> paramsMap = new HashMap<String, String>();
-            String userId = sp.getString(USER_ID, "");
-            paramsMap.put("userId", userId);
-            //1.表示刷新，2表示加载
-            swipeRefreshUtil = new SwipeRefreshUtil(swipeContainer, Constants.SERVICE_DBLIST, mHandler);
-            //刷新操作(1.表示刷新，2表示加载)
-            swipeRefreshUtil.setSwipeRefresh(paramsMap, 1);
-
-            //加载操作
-            searchSupervisionList.setOnScrollListener(new AbsListView.OnScrollListener() {
-
-                @Override
-                public void onScrollStateChanged(AbsListView view, int scrollState) {
-                    // 判断是否滑动到最底层
-                    if (view.getLastVisiblePosition() == view.getCount() - 1) {
-                        // 判断返回的条数是否小于每页显示的 条数
-                        if (totalMumber < pageSize) {
-                            list_jiazai.setVisibility(View.VISIBLE);
-                            progressBar.setVisibility(View.GONE);
-                            foot_title.setText("已经没有更多数据了");
-                            return;
-                        }
-                    }
-                }
-
-                @Override
-                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                    if (firstVisibleItem + visibleItemCount == totalItemCount && list_jiazai.getVisibility() == View.GONE
-                            && tFtDbEntityList.size() != 0) {
-                        if (ifDateEnd) {
-                            return;
-                        }
-                        if (!ifload) {
-                            ifload = true;
-                            paramsMap.put("currentPage", currentPage + "");
-                            list_jiazai.setVisibility(View.VISIBLE);
-                            progressBar.setVisibility(View.VISIBLE);
-                            foot_title.setText("正在加载");
-                            //1.表示刷新，2表示加载
-                            swipeRefreshUtil.setSwipeRefresh(paramsMap, 2);
-                        }
-                    }
-                }
-            });
+            list_jiazai.setVisibility(View.GONE);
+            paramsMap.put("currentPage", "1");
+            paramsMap.put("pageSize", pageSize);
+            swipeRefreshUtil.showRefreshing();
+            swipeRefreshUtil.refreshSetDate(paramsMap, 7);
         } else {
-            Toast.makeText(this, "连接不上网络！", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "WIFI不可用,请确认网络连接", Toast.LENGTH_SHORT).show();
         }
     }
 
 
     /**
-     * 当从后台查询到数据周，做相应的处理，并且会将本地的草稿信息显示出来
-     *
-     * @param body
+     * 初始化视图与事件
      */
-    public void handleTransation(String body) {
+    void initViewAndEvent() {
+        sp = SpUtil.getSharePerference(this);
+        netWorkConnection = new NetWorkConnection(this);
+        sweetAlertDialogUtil = new SweetAlertDialogUtil(SuperVisionListActivity.this);
+        tFtDbEntityList = new ArrayList<TFtDbEntity>();
+        userId = sp.getString(USER_ID, "");
+        centerText.setText("督查督办");
+        rightBtn.setVisibility(View.VISIBLE);
+    }
+
+
+    /**
+     * 获取参数Bundle
+     */
+    void initBundle() {
+        paramsMap = new HashMap<String, String>();
+        // 查询自己的消息
+        paramsMap.put("userId", sp.getString(LoginActivity.USER_ID, ""));
+        // 设置标题及颜色
+        centerText.setText("督查督办(" + total + ")");
+        //toolbar_layout.setBackgroundColor(Color.parseColor("#A4C639"));
+        swipeRefreshUtil = new SwipeRefreshUtil(swipeContainer, Constants.SERVICE_DBLIST, mHandler);
+        // 上拉刷新初始化
+        swipeRefreshUtil.setRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                paramsMap.put("currentPage", "1");
+                paramsMap.put("pageSize", pageSize);
+                // 打开圈圈
+                swipeContainer.setRefreshing(true);
+                swipeRefreshUtil.refreshSetDate(paramsMap, 1);
+            }
+        });
+    }
+
+
+    /**
+     * 初始化列表
+     */
+    private void initListView() {
+        // 加载“正在加载”布局文件
+        list_jiazai = (LinearLayout) getLayoutInflater().inflate(R.layout.lv_item_jiazai, null);
+        searchSupervisionList.addFooterView(list_jiazai, null, false);
+        searchSupervisionList.setSelector(getResources().getDrawable(R.drawable.item_selector_grey));
+        //滚动监听
+        searchSupervisionList.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                switch (scrollState) {
+                    // 当不滚动时
+                    case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
+                        // 判断滚动到底部
+                        if (view.getLastVisiblePosition() == (view.getCount() - 1)) {
+                            list_jiazai.setVisibility(View.VISIBLE);
+                            if (pageBean.getTotalCount() < pageBean.getPageSize()) {
+                                initListFoot("没有更多内容了", View.GONE);
+                            } else {
+                                initListFoot("正在加载,请稍后...", View.VISIBLE);
+                                nextCurrentPage();
+                                swipeRefreshUtil.refreshSetDate(paramsMap, 2);
+                            }
+                        }
+                        break;
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+            }
+        });
+
+        adapter = new SupervisionListAdapter(tFtDbEntityList, SuperVisionListActivity.this);
+        searchSupervisionList.setAdapter(adapter);
+    }
+
+    /**
+     * 初始化页脚
+     */
+    private void initListFoot(String message, int display) {
+        foot_title = (TextView) list_jiazai.findViewById(R.id.foot_title);
+        progressBar = (ProgressBar) list_jiazai.findViewById(R.id.progressBar);
+        if (StringUtils.isNotBlank(message)) {
+            foot_title.setText(message);
+        }
+        progressBar.setVisibility(display);
+    }
+
+    /**
+     * 下一页
+     */
+    void nextCurrentPage() {
+        int currentPage = 1;
+        if (pageBean != null) {
+            currentPage = pageBean.getCurrentPage() + 1;
+        }
+        paramsMap.put("currentPage", currentPage + "");
+        paramsMap.put("pageSize", pageSize);
+    }
+
+    /**
+     * 处理响应数据
+     */
+    public boolean handleResponseData(String body) {
+        boolean flag = false;
         if (StringUtils.isBlank(body)) {
+            Log.i(TAG, "解释响应body失败...");
         } else {
             // 处理响应信息
             AckMessage ackMsg = JsonUtil.fromJson(body, AckMessage.class);
-            if (ifrefresh) {
-                //tFtSjEntityList = setMessage(ackMsg);
-                ifrefresh = false;
-            }
-            tFtDbEntityList.addAll(setMessage(ackMsg));
-        }
-    }
-
-    /**
-     * 设置事件信息
-     *
-     * @param ackMsg
-     * @return
-     */
-    private List<TFtDbEntity> setMessage(AckMessage ackMsg) {
-        pList = new ArrayList<TFtDbEntity>();
-        if (ackMsg != null) {
-            if (AckMessage.SUCCESS.equals(ackMsg.getAckCode())) {
-                List<Object> list  = (List<Object>) ackMsg.getData();
-                if (list != null && list.size()>0) {
-                    for (int i = 0; i < list.size(); i++) {
-                        //先将获取的Object对象转成String
-                        String entityStr = JsonUtil.toJson(list.get(i));
-                        TFtDbEntity tFtDbEntity = JsonUtil.fromJson(entityStr.toLowerCase(), TFtDbEntity.class);
-                        pList.add(tFtDbEntity);
+            if (ackMsg != null) {
+                if (AckMessage.SUCCESS.equals(ackMsg.getAckCode())) {
+                    Log.i(TAG, "消息通知解释成功...");
+                    pageBean = ackMsg.getPageBean();
+                    if(pageBean!=null){
+                        List<?> dataL = pageBean.getDataList();
+                        if (dataL != null && dataL.size() > 0) {
+                            // 响应字符串
+                            String resultList = JsonUtil.toJson(dataL);
+                            dataList = (List<TFtDbEntity>) JsonUtil.fromJson(resultList.toLowerCase(), new TypeToken<List<TFtDbEntity>>() {
+                            });
+                            flag = true;
+                        } else {
+                            Log.i(TAG, "解释列表信息失败...");
+                        }
                     }
+
                 }
             }
         }
-        total += pList.size();
-        return pList;
+        return flag;
     }
+
+    /**
+     * 加载数据
+     */
+    private void notifyListViewData(boolean isAdd) {
+        entityList = (List<TFtDbEntity>) dataList;
+        if (isAdd) {
+            // 追加列表
+            adapter.addDataSetChanged(entityList);
+        } else {
+            // 刷新列表
+            adapter.notifyDataSetChanged(entityList);
+        }
+        centerText.setText("督查督办(" + adapter.getCount() + ")");
+    }
+
+    /**
+     * 处理响应数据状态
+     */
+    public boolean handleResponseDataState(String body) {
+        boolean flag = false;
+        if (StringUtils.isBlank(body)) {
+            Log.i(TAG, "解释响应body失败...");
+        } else {
+            // 处理响应信息
+            AckMessage ackMsg = JsonUtil.fromJson(body, AckMessage.class);
+            if (ackMsg != null) {
+                if (AckMessage.SUCCESS.equals(ackMsg.getAckCode())) {
+                    Log.i(TAG, "数据解释成功...");
+                    Object entity = ackMsg.getEntity();
+                    if (entity != null) {
+                        String dataStr = JsonUtil.toJson(entity);
+                        SjHandleParams sjHandleParams = JsonUtil.fromJson(dataStr, SjHandleParams.class);
+                        if (sjHandleParams != null) {
+                            flag = true;
+                            // 更新数据列表状态
+                            updateListDataStatie(sjHandleParams);
+
+                        }
+
+                    }
+                }
+            } else {
+                Log.i(TAG, "解释列表信息失败...");
+            }
+
+        }
+        return flag;
+    }
+
+    /**
+     * 更新数据列表状态
+     *
+     * @param sjHandleParams
+     */
+    private void updateListDataStatie(SjHandleParams sjHandleParams) {
+        List<TFtDbEntity> tFtDbEntityList = adapter.getList();
+        if (tFtDbEntityList != null) {
+            for (int i = 0; i < tFtDbEntityList.size(); i++) {
+                TFtDbEntity entity = tFtDbEntityList.get(i);
+            }
+            adapter.notifyDataSetChanged();
+        }
+    }
+
 
     /**
      * 点击List列表Item
@@ -436,11 +525,12 @@ public class SuperVisionListActivity extends AppCompatActivity {
      */
     @OnItemClick(R.id.search_supervision_list)
     public void OnItemClick(int position) {
-        tFtDbEntity =  (TFtDbEntity) adapter.getItem(position);
-        Intent intent = new Intent();
+        tFtDbEntity = (TFtDbEntity) adapter.getItem(position);
+        Intent intent = new Intent(this, SuperVisionDetailActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable("tFtDbEntity", tFtDbEntity);
-        intent.setClass(this, SuperVisionDetailActivity.class);
+        /**type 0：新增 1：修改**/
+        intent.putExtra("type", "1");
         intent.putExtras(bundle);
         startActivity(intent);
     }
@@ -453,7 +543,24 @@ public class SuperVisionListActivity extends AppCompatActivity {
      */
     @OnItemLongClick(R.id.search_supervision_list)
     public boolean OnItemLongClick(final int position) {
-        return true;
+        tFtDbEntity = (TFtDbEntity) adapter.getItem(position);
+        tempPosition = position;
+        return false;
     }
 
+    /**
+     * 关闭弹出框  isClose =false 关闭，否则 不关闭
+     *
+     * @param
+     */
+    public void closeDialog(DialogInterface dialogInterface, boolean isClose) {
+        //不关闭
+        try {
+            Field field = dialogInterface.getClass().getSuperclass().getDeclaredField("mShowing");
+            field.setAccessible(true);
+            field.set(dialogInterface, isClose);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

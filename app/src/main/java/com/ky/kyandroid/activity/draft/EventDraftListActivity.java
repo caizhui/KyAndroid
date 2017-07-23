@@ -82,7 +82,7 @@ public class EventDraftListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_evententry_list);
+        setContentView(R.layout.activity_eventdraft_list);
         ButterKnife.bind(this);
         tFtSjEntityDao = new TFtSjEntityDao();
         tFtSjEntityList = new ArrayList<TFtSjEntity>();

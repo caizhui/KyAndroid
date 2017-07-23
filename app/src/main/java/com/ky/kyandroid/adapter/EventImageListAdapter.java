@@ -1,16 +1,19 @@
 package com.ky.kyandroid.adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.ky.kyandroid.AppContext;
 import com.ky.kyandroid.Constants;
 import com.ky.kyandroid.R;
 import com.ky.kyandroid.db.dao.FileEntityDao;
@@ -28,6 +31,8 @@ public class EventImageListAdapter extends BaseAdapter {
     public Context context;
     private boolean isDetail;
     private FileEntityDao fileEntityDao;
+
+    boolean isShow =false;
 
 
     public EventImageListAdapter(Context context) {
@@ -71,8 +76,11 @@ public class EventImageListAdapter extends BaseAdapter {
         }
         //fileUrl不为空 表示从后台获取的文件链接，否则是查看本地图片
         if(list.get(position).getFileUrl()!=null &&  !"".equals(list.get(position).getFileUrl())){
-            ImageLoader.getInstance().displayImage(Constants.SERVICE_BASE_URL + list.get(position).getFileUrl()
-                    ,holder.attachmentImg, AppContext.getImgBuilder());
+           /* ImageLoader.getInstance().displayImage(Constants.SERVICE_BASE_URL + list.get(position).getFileUrl()
+                    ,holder.attachmentImg, AppContext.getImgBuilder());*/
+            Bitmap bitmap  =  ImageLoader.getInstance().loadImageSync(Constants.SERVICE_BASE_URL + list.get(position).getFileUrl());
+            holder.attachmentImg.setImageBitmap(bitmap);
+
         }else{
             holder.attachmentImg.setImageBitmap(list.get(position).getBitmap());
         }
@@ -82,6 +90,7 @@ public class EventImageListAdapter extends BaseAdapter {
         }
         if(isDetail){
             holder.imageMs.setEnabled(false);
+            holder.imageMs.setHint("");
             holder.fjlx_text.setVisibility(View.VISIBLE);
             if("1".equals(list.get(position).getFjlx())){
                 holder.fjlx_text.setText("事件上传附件");
@@ -110,13 +119,46 @@ public class EventImageListAdapter extends BaseAdapter {
                 }
             }
         });
+
+        holder.attachmentImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog  dialog = new AlertDialog.Builder(context).create();
+                ImageView imgView = getView(holder.attachmentImg);
+                dialog.setView(imgView);
+                dialog.show();
+
+                // 点击图片消失
+                final AlertDialog finalDialog = dialog;
+                imgView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // TODO Auto-generated method stub
+                        finalDialog.dismiss();
+                    }
+                });
+            }
+        });
         return convertView;
+    }
+    private ImageView getView(ImageView attachmentImg) {
+        ImageView imgView = new ImageView(context);
+        imgView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+       /* ImageLoader.getInstance().displayImage(Constants.SERVICE_BASE_URL + list.get(position).getFileUrl()
+                ,attachmentImg, AppContext.getImgBuilder());*/
+       // InputStream is = context.getResources().(attachmentImg.getDrawable());
+        Drawable drawable = attachmentImg.getDrawable();
+        imgView.setImageDrawable(drawable);
+
+        return imgView;
     }
 
     public void notifyDataSetChanged(List<FileEntity> list) {
         this.list = list;
         super.notifyDataSetChanged();
     }
+
+
 
  class ViewHolder {
         @BindView(R.id.attachment_img)

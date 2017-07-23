@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
+import android.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -42,6 +42,7 @@ import com.ky.kyandroid.util.StringUtils;
 import com.ky.kyandroid.util.SweetAlertDialogUtil;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -75,7 +76,7 @@ public class DispatchActivity extends AppCompatActivity {
     @BindView(R.id.add_dispatch)
     Button addDispatch;
     /**
-     *  派遣部门List
+     * 派遣部门List
      */
     @BindView(R.id.department_list)
     ListView departmentList;
@@ -96,7 +97,7 @@ public class DispatchActivity extends AppCompatActivity {
     Button rightBtn;
 
     /**
-     *  部门类型
+     * 部门类型
      */
     private Spinner departmentTypeSpinner;
 
@@ -131,7 +132,7 @@ public class DispatchActivity extends AppCompatActivity {
 
     private Intent intent;
 
-    private String  uuid;
+    private String uuid;
 
     /**
      * SharedPreferences
@@ -147,12 +148,12 @@ public class DispatchActivity extends AppCompatActivity {
      */
     public static final String USER_ID = "userId";
 
-    private  String userId;
+    private String userId;
 
     /**
      * 可派遣部门
      */
-    private List<KpqbmEntity> kpqbmList  ;
+    private List<KpqbmEntity> kpqbmList;
 
     /**
      * 已派遣部门
@@ -173,7 +174,7 @@ public class DispatchActivity extends AppCompatActivity {
     /**
      * 是否查看详情
      */
-    private  boolean isDetail;
+    private boolean isDetail;
 
     /**
      * 弹出框工具类
@@ -207,8 +208,8 @@ public class DispatchActivity extends AppCompatActivity {
                     sweetAlertDialogUtil.dismissAlertDialog();
                     Toast.makeText(DispatchActivity.this, "派遣成功", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(DispatchActivity.this, EventEntryListActivity.class);
-                    intent.putExtra("businessType","isfrash");
-                    intent.putExtra("message",message);
+                    intent.putExtra("businessType", "isfrash");
+                    intent.putExtra("message", message);
                     startActivity(intent);
                     break;
                 case 3:
@@ -218,7 +219,7 @@ public class DispatchActivity extends AppCompatActivity {
                 case 4:
                     sweetAlertDialogUtil.dismissAlertDialog();
                     Toast.makeText(DispatchActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
-                    if(ypqbmList.get(tempPosition)!=null){
+                    if (ypqbmList.get(tempPosition) != null) {
                         ypqbmList.remove(tempPosition);
                     }
                     adapter.notifyDataSetChanged(ypqbmList);
@@ -241,13 +242,13 @@ public class DispatchActivity extends AppCompatActivity {
         rightBtn.setVisibility(View.INVISIBLE);
         intent = getIntent();
         tFtSjEntity = (TFtSjEntity) intent.getSerializableExtra("tFtSjEntity");
-        if(tFtSjEntity!=null){
+        if (tFtSjEntity != null) {
             uuid = tFtSjEntity.getId();
         }
         ypqbmEntity = new YpqbmEntity();
         kpqbmList = new ArrayList<KpqbmEntity>();
         ypqbmList = new ArrayList<YpqbmEntity>();
-        adapter = new DisplayDepartmentListAdapter(ypqbmList,this);
+        adapter = new DisplayDepartmentListAdapter(ypqbmList, this);
         departmentList.setAdapter(adapter);
         initEvent();
         initData();
@@ -268,7 +269,7 @@ public class DispatchActivity extends AppCompatActivity {
     /**
      * 初始化数据
      */
-    public void initData(){
+    public void initData() {
         final Message msg = new Message();
         if (netWorkConnection.isWIFIConnection()) {
             msg.what = 0;
@@ -302,67 +303,77 @@ public class DispatchActivity extends AppCompatActivity {
     }
 
     @OnItemClick(R.id.department_list)
-    public  void OnItemClick(int position){
+    public void OnItemClick(int position) {
         ypqbmEntity = (YpqbmEntity) adapter.getItem(position);
-        isDetail= true;
+        isDetail = true;
         tempPosition = position;
         addDepartmentInfo();
     }
 
     @OnItemLongClick(R.id.department_list)
-    public boolean OnItemLongClick(int position){
+    public boolean OnItemLongClick(int position) {
         tempPosition = position;
         ypqbmEntity = (YpqbmEntity) adapter.getItem(position);
-        AlertDialog.Builder builder = new AlertDialog.Builder(DispatchActivity.this);
-        builder.setTitle("信息");
-        builder.setMessage("确定要删除该条记录吗？");
-        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                final Message msg = new Message();
-                if (netWorkConnection.isWIFIConnection()) {
-                    sweetAlertDialogUtil.loadAlertDialog();
-                    Map<String, String> paramsMap = new HashMap<String, String>();
-                    paramsMap.put("userId", userId);
-                    paramsMap.put("clbmId", ypqbmEntity.getId());
-                    // 发送请求
-                    OkHttpUtil.sendRequest(Constants.SERVICE_TASK_DISPATCH_DELETE, paramsMap, new Callback() {
-
-                        @Override
-                        public void onFailure(Call call, IOException e) {
-                            mHandler.sendEmptyMessage(0);
+        if ("8".equals(ypqbmEntity.getClzt()) || "1".equals(ypqbmEntity.getIsDelete())) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(DispatchActivity.this);
+            builder.setTitle("信息");
+            builder.setMessage("确定要删除该条记录吗？");
+            builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    if ("1".equals(ypqbmEntity.getIsDelete())) {
+                        Toast.makeText(DispatchActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
+                        if (ypqbmList.get(tempPosition) != null) {
+                            ypqbmList.remove(tempPosition);
                         }
+                        adapter.notifyDataSetChanged(ypqbmList);
+                    } else {
+                        final Message msg = new Message();
+                        if (netWorkConnection.isWIFIConnection()) {
+                            sweetAlertDialogUtil.loadAlertDialog();
+                            Map<String, String> paramsMap = new HashMap<String, String>();
+                            paramsMap.put("userId", userId);
+                            paramsMap.put("clbmId", ypqbmEntity.getId());
+                            // 发送请求
+                            OkHttpUtil.sendRequest(Constants.SERVICE_TASK_DISPATCH_DELETE, paramsMap, new Callback() {
 
-                        @Override
-                        public void onResponse(Call call, Response response) throws IOException {
-                            if (response.isSuccessful()) {
-                                msg.what = 4;
-                                msg.obj = response.body().string();
-                            } else {
-                                msg.what = 5;
-                                msg.obj = "网络异常,请确认网络情况";
-                            }
+                                @Override
+                                public void onFailure(Call call, IOException e) {
+                                    mHandler.sendEmptyMessage(0);
+                                }
+
+                                @Override
+                                public void onResponse(Call call, Response response) throws IOException {
+                                    if (response.isSuccessful()) {
+                                        msg.what = 4;
+                                        msg.obj = response.body().string();
+                                    } else {
+                                        msg.what = 5;
+                                        msg.obj = "网络异常,请确认网络情况";
+                                    }
+                                    mHandler.sendMessage(msg);
+                                }
+                            });
+                        } else {
+                            msg.obj = "WIFI网络不可用,请检查网络连接情况";
                             mHandler.sendMessage(msg);
                         }
-                    });
-                } else {
-                    msg.obj = "WIFI网络不可用,请检查网络连接情况";
-                    mHandler.sendMessage(msg);
+                    }
                 }
-            }
-        });
-        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-            }
-        });
-        builder.create().show();
+            });
+            builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                }
+            });
+            builder.create().show();
+        }
         return false;
     }
 
-    @OnClick({R.id.add_department,R.id.left_btn,R.id.add_dispatch})
+    @OnClick({R.id.add_department, R.id.left_btn, R.id.add_dispatch})
     public void OnClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.left_btn:
                 onBackPressed();
                 break;
@@ -371,7 +382,7 @@ public class DispatchActivity extends AppCompatActivity {
                 break;
             case R.id.add_dispatch:
                 final Message msg = new Message();
-                if(ypqbmList!=null && ypqbmList.size()>0){
+                if (ypqbmList != null && ypqbmList.size() > 0) {
                     if (netWorkConnection.isWIFIConnection()) {
                         sweetAlertDialogUtil.loadAlertDialog();
                         Map<String, String> paramsMap = new HashMap<String, String>();
@@ -403,8 +414,8 @@ public class DispatchActivity extends AppCompatActivity {
                         msg.obj = "WIFI网络不可用,请检查网络连接情况";
                         mHandler.sendMessage(msg);
                     }
-                }else{
-                    Toast.makeText(DispatchActivity.this,"没有可派遣的部门！",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(DispatchActivity.this, "没有可派遣的部门！", Toast.LENGTH_SHORT).show();
                 }
 
                 break;
@@ -428,11 +439,11 @@ public class DispatchActivity extends AppCompatActivity {
                     //先将获取的json象转成实体
                     DispatchEntity dispatchEntity = JsonUtil.fromJson(entityStr, DispatchEntity.class);
                     OrgsEntity orgsEntity = dispatchEntity.getOrgs();
-                    if(orgsEntity!=null){
+                    if (orgsEntity != null) {
                         kpqbmList = orgsEntity.getKpqbmList();
-                        ypqbmList =orgsEntity.getYpqbmList();
+                        ypqbmList = orgsEntity.getYpqbmList();
                     }
-                    if(ypqbmList!=null && ypqbmList.size()>0){
+                    if (ypqbmList != null && ypqbmList.size() > 0) {
                         adapter.notifyDataSetChanged(ypqbmList);
                     }
                 }
@@ -443,7 +454,7 @@ public class DispatchActivity extends AppCompatActivity {
     /**
      * 新增派遣部门信息
      */
-    public void addDepartmentInfo(){
+    public void addDepartmentInfo() {
         View dialogView = LayoutInflater.from(DispatchActivity.this).inflate(R.layout.dialog_street_display, null);
         departmentTypeSpinner = ButterKnife.findById(dialogView, R.id.department_type_spinner);
         /*departmentTypeImg =  ButterKnife.findById(dialogView, R.id.department_type_img);*/
@@ -454,7 +465,7 @@ public class DispatchActivity extends AppCompatActivity {
         handlerTimeEdt.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                if(motionEvent.getAction() == MotionEvent.ACTION_DOWN){
+                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                     handlerTimeEdt.clearFocus();
                    /* Calendar c = Calendar.getInstance();
                     new DatePickerDialog(DispatchActivity.this, new DatePickerDialog.OnDateSetListener() {
@@ -486,8 +497,8 @@ public class DispatchActivity extends AppCompatActivity {
         departmentTypeSpinner.setAdapter(arrayAdapter);//将adapter 添加到部门类型spinner中
 
         spinnerList = new ArrayList<CodeValue>();
-        if(kpqbmList!=null && kpqbmList.size()>0){
-            for(int i=0;i<kpqbmList.size();i++){
+        if (kpqbmList != null && kpqbmList.size() > 0) {
+            for (int i = 0; i < kpqbmList.size(); i++) {
                 spinnerList.add(new CodeValue(kpqbmList.get(i).getID(), kpqbmList.get(i).getORG_NAME()));
             }
         }
@@ -497,12 +508,19 @@ public class DispatchActivity extends AppCompatActivity {
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         departmenTextSpinner.setAdapter(arrayAdapter);//将adapter 添加到部门spinner中
 
-        if(isDetail){
-            departmentTypeSpinner.setSelection(Integer.parseInt(ypqbmEntity.getBmlx())-1);
+        if (isDetail) {
+            departmentTypeSpinner.setSelection(Integer.parseInt(ypqbmEntity.getBmlx()) - 1);
+            departmenTextSpinner.setSelection(1);
             handlerTimeEdt.setText(ypqbmEntity.getClsx());
             handlerTextEdt.setText(ypqbmEntity.getRwnr());
         }
-        AlertDialog.Builder builder = new AlertDialog.Builder(DispatchActivity.this);
+        if ("8.2".equals(ypqbmEntity.getClzt())) {
+            departmentTypeSpinner.setEnabled(false);
+            departmenTextSpinner.setEnabled(false);
+            handlerTimeEdt.setEnabled(false);
+            handlerTextEdt.setEnabled(false);
+        }
+        final AlertDialog.Builder builder = new AlertDialog.Builder(DispatchActivity.this);
         builder.setCancelable(false);
         builder.setTitle("派遣部门信息");
         builder.setView(dialogView);
@@ -518,22 +536,23 @@ public class DispatchActivity extends AppCompatActivity {
                 tempYpqbmEntity.setBmmc(departmentCodeValue.getValue());
                 tempYpqbmEntity.setBm_id(departmentCodeValue.getCode());
                 tempYpqbmEntity.setSjId(tFtSjEntity.getId());
-                String message ="";
-                if("".equals(handlerTime)){
-                    message+= "处理时限不能为空\n";
-                }else{
+                tempYpqbmEntity.setIsDelete("1");
+                String message = "";
+                if ("".equals(handlerTime)) {
+                    message += "处理时限不能为空\n";
+                } else {
                     tempYpqbmEntity.setClsx(handlerTime);
                 }
-                if("".equals(handlerText)){
-                    message+= "处理内容不能为空\n";
-                }else{
+                if ("".equals(handlerText)) {
+                    message += "处理内容不能为空\n";
+                } else {
                     tempYpqbmEntity.setRwnr(handlerText);
                 }
-                if("".equals(message)){
+                if ("".equals(message)) {
                     //如果在list的item已经存在数据，则表示是修改，将之前的数据去掉，重新加载
-                    if(ypqbmList!=null && ypqbmList.size()>0){
-                        if(isDetail){
-                            if(ypqbmList.get(tempPosition)!=null){
+                    if (ypqbmList != null && ypqbmList.size() > 0) {
+                        if (isDetail) {
+                            if (ypqbmList.get(tempPosition) != null) {
                                 tempYpqbmEntity.setId(ypqbmEntity.getId());
                                 ypqbmList.remove(tempPosition);
                                 isDetail = false;
@@ -541,20 +560,38 @@ public class DispatchActivity extends AppCompatActivity {
                         }
                     }
                     ypqbmList.add(tempYpqbmEntity);
-                    if(ypqbmList!=null && ypqbmList.size()>0){
+                    if (ypqbmList != null && ypqbmList.size() > 0) {
                         adapter.notifyDataSetChanged(ypqbmList);
                     }
-                }else{
-                    Toast.makeText(DispatchActivity.this,message,Toast.LENGTH_SHORT).show();
+                    closeDialog(dialogInterface,true);
+                } else {
+                    closeDialog(dialogInterface,false);
+                    Toast.makeText(DispatchActivity.this, message, Toast.LENGTH_SHORT).show();
                 }
             }
         });
         builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                closeDialog(dialogInterface,true);
                 isDetail = false;
             }
         });
         builder.create().show();
+    }
+
+    /**
+     * 关闭弹出框  isClose =false 关闭，否则 不关闭
+     * @param isClose
+     */
+    public void  closeDialog(DialogInterface dialogInterface,boolean isClose){
+        //不关闭
+        try{
+            Field field = dialogInterface.getClass().getSuperclass().getDeclaredField("mShowing");
+            field.setAccessible(true);
+            field.set(dialogInterface, isClose);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

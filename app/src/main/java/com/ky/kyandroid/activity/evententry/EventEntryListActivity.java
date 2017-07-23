@@ -9,7 +9,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
+import android.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -50,6 +50,7 @@ import com.ky.kyandroid.util.SwipeRefreshUtil;
 import com.solidfire.gson.reflect.TypeToken;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -188,6 +189,8 @@ public class EventEntryListActivity extends AppCompatActivity {
 
 
     private String userId;
+
+    private String name;
 
     /****弹出框用到的一些控件start**/
 
@@ -356,6 +359,11 @@ public class EventEntryListActivity extends AppCompatActivity {
         tFtSjEntityDao = new TFtSjEntityDao();
         tFtSjEntityList = new ArrayList<TFtSjEntity>();
         userId = sp.getString(USER_ID, "");
+        name = sp.getString("name", "");
+        if ("街道办工作人员".equals(name)  || "香蜜湖录入人员".equals(name)) {
+            rightBtn.setVisibility(View.VISIBLE);
+        }
+
     }
 
 
@@ -875,6 +883,15 @@ public class EventEntryListActivity extends AppCompatActivity {
                         paramsMap.put("lrclsj", happendTImeEdt.getText().toString());
                     }
                     if (returnEdt != null) {
+                        //3 退回，4不予立案，5自行处理退回
+                        if ("3".equals(tFtZtlzEntity.getNextZt()) || "4".equals(tFtZtlzEntity.getNextZt()) ||
+                                ("5".equals(tFtZtlzEntity.getNextZt())&&!"2".equals(tFtSjEntity.getZt()))) {
+                            if ("".equals(returnEdt.getText().toString())) {
+                                message += tFtZtlzEntity.getName()+"原因不能为空\n";
+                            } else {
+                                paramsMap.put("czyy", returnEdt.getText().toString());
+                            }
+                        }
                         //7.2自行处理反馈时，处理人和处理结果为必填项
                         if ("7.2".equals(tFtZtlzEntity.getNextZt())) {
                             if ("".equals(returnEdt.getText().toString())) {
@@ -906,8 +923,10 @@ public class EventEntryListActivity extends AppCompatActivity {
 
                     }
                     if (!"".equals(message)) {
+                        closeDialog(dialogInterface,false);
                         Toast.makeText(EventEntryListActivity.this, message, Toast.LENGTH_SHORT).show();
                     } else {
+                        closeDialog(dialogInterface,true);
                         sweetAlertDialogUtil.loadAlertDialog();
                         // 发送请求
                         OkHttpUtil.sendRequest(url, paramsMap, new Callback() {
@@ -939,9 +958,26 @@ public class EventEntryListActivity extends AppCompatActivity {
         builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                closeDialog(dialogInterface,true);
             }
         });
         builder.create().show();
+    }
+
+
+    /**
+     * 关闭弹出框  isClose =false 关闭，否则 不关闭
+     * @param isClose
+     */
+    public void  closeDialog(DialogInterface dialogInterface,boolean isClose){
+        //不关闭
+        try{
+            Field field = dialogInterface.getClass().getSuperclass().getDeclaredField("mShowing");
+            field.setAccessible(true);
+            field.set(dialogInterface, isClose);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

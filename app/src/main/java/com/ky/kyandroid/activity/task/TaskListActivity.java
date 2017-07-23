@@ -9,7 +9,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
+import android.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -48,6 +48,7 @@ import com.ky.kyandroid.util.SwipeRefreshUtil;
 import com.solidfire.gson.reflect.TypeToken;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -699,10 +700,9 @@ public class TaskListActivity extends AppCompatActivity {
             if(clr_edit!=null){
                 clr_edit = null;
             }
-            radioButton03.setVisibility(View.VISIBLE);
-            radioButton01.setText("人手不足");
-            radioButton02.setText("权限不足");
-            radioButton03.setText("脱离可控范围");
+            radioButton02.setVisibility(View.GONE);
+            radioButton03.setVisibility(View.GONE);
+            radioButton01.setText("当事人未出席会议");
         }
         if(radioGroup!=null){
             radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -872,6 +872,7 @@ public class TaskListActivity extends AppCompatActivity {
                         }
                     }
                     if("".equals(message)){
+                        closeDialog(dialogInterface,true);
                         sweetAlertDialogUtil.loadAlertDialog();
                         // 发送请求
                         OkHttpUtil.sendRequest(url,paramsMap, new Callback() {
@@ -894,6 +895,7 @@ public class TaskListActivity extends AppCompatActivity {
                             }
                         });
                     }else{
+                        closeDialog(dialogInterface,false);
                         Toast.makeText(TaskListActivity.this,message,Toast.LENGTH_SHORT).show();
                     }
 
@@ -907,9 +909,25 @@ public class TaskListActivity extends AppCompatActivity {
         builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                closeDialog(dialogInterface,true);
             }
         });
         builder.create().show();
+    }
+
+    /**
+     * 关闭弹出框  isClose =false 关闭，否则 不关闭
+     * @param isClose
+     */
+    public void  closeDialog(DialogInterface dialogInterface,boolean isClose){
+        //不关闭
+        try{
+            Field field = dialogInterface.getClass().getSuperclass().getDeclaredField("mShowing");
+            field.setAccessible(true);
+            field.set(dialogInterface, isClose);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

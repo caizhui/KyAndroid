@@ -19,6 +19,10 @@
         <item name="android:padding">3dp</item>
     </style>
 
+    <style name="TextColorStyle">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
     <!-- pop 菜单2 -->
     <style name="pop_menu2">
         <item name="android:windowEnterAnimation">@anim/fade_in</item>

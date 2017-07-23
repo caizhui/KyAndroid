@@ -40,7 +40,6 @@ import com.ky.kyandroid.entity.FileEntity;
 import com.ky.kyandroid.entity.TFtSjEntity;
 import com.ky.kyandroid.entity.TFtZtlzEntity;
 import com.ky.kyandroid.util.DateTimePickDialogUtil;
-import com.ky.kyandroid.util.FileManager;
 import com.ky.kyandroid.util.JsonUtil;
 import com.ky.kyandroid.util.SpUtil;
 import com.ky.kyandroid.util.SweetAlertDialogUtil;
@@ -72,6 +71,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+
+import static com.ky.kyandroid.util.FileManager.delFile;
 
 /**
  * Created by Caizhui on 2017/7/1.
@@ -226,7 +227,7 @@ public class StreetHandleActivity extends AppCompatActivity {
                     //将本地的草稿数据删除
                     sweetAlertDialogUtil.dismissAlertDialog();
                     //处理完成之后，将手机的附件删除
-                    FileManager.delFile(imageUrl);
+                    delFile(imageUrl);
                     Toast.makeText(StreetHandleActivity.this, "处理成功", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(StreetHandleActivity.this, EventEntryListActivity.class);
                     intent.putExtra("businessType","isfrash");
@@ -333,7 +334,7 @@ public class StreetHandleActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialogInterface, int i) {
                 if(fileEntityList!=null && fileEntityList.size()>0){
                     //删除保存在本地的图片
-                    FileManager.delFile(fileRoute + "/" +fileEntity.getFileName());
+                    delFile(fileRoute + "/" +fileEntity.getFileName());
                     boolean flag = fileEntityDao.deleteEventEntry(fileEntity.getUuid());
                     if(flag){
                         if(fileEntityList.get(position)!=null){
@@ -508,13 +509,15 @@ public class StreetHandleActivity extends AppCompatActivity {
         switch (requestCode) {
             case PHOTO_REQUEST_TAKEPHOTO:
                 isPhoto = "1";
-                startPhotoZoom(uri, 600);
+                //startPhotoZoom(uri, 600);
+                 showPhoto(uri);
                 break;
             case PHOTO_REQUEST_GALLERY:
                 if (data != null) {
                     isPhoto = "2";
                     uri = data.getData();
-                    startPhotoZoom(uri, 600);
+                    showPhoto(uri);
+                    //startPhotoZoom(uri, 600);
                 }
                 break;
             case PHOTO_REQUEST_CUT:
@@ -524,7 +527,7 @@ public class StreetHandleActivity extends AppCompatActivity {
                             Bitmap bitmapFromUri = getBitmapFromUri(uri, StreetHandleActivity.this);
                             //先把拍照之后保存在本地的原图删掉。
                             if ("1".equals(isPhoto)) {
-                                boolean flag = FileManager.delFile(fileRoute + "/" + photoName);
+                                boolean flag = delFile(fileRoute + "/" + photoName);
                             }
                             if (bitmapFromUri != null) {
                                 File file = SavePicInLocal(bitmapFromUri);
@@ -556,7 +559,44 @@ public class StreetHandleActivity extends AppCompatActivity {
         }
     }
 
-    ;
+    /**
+     * 显示照片
+     */
+    public void showPhoto(Uri uri){
+        if(uri!=null){
+            try {
+                Bitmap bitmapFromUri = getBitmapFromUri(uri, StreetHandleActivity.this);
+                Bitmap endBit = Bitmap.createScaledBitmap(bitmapFromUri, 600, 600, true); //创建新的图像大小
+                //先把拍照之后保存在本地的原图删掉。
+                if ("1".equals(isPhoto)) {
+                    boolean flag = delFile(fileRoute + "/" + photoName);
+                }
+                if (endBit != null) {
+                    File file = SavePicInLocal(endBit);
+                    FileInputStream fis = new FileInputStream(file);
+                    tupbitmap = BitmapFactory.decodeStream(fis);
+                    fileEntity = new FileEntity();
+                    if(tupbitmap!=null){
+                        fileEntity.setHaveMs(false);
+                        fileEntity.setBitmap(tupbitmap);
+                        fileEntity.setSjId(uuid);
+                        fileEntity.setFileName(photoName);
+                        fileEntityDao.saveFileEntity(fileEntity);
+                    }
+                    if(fileEntityList==null){
+                        fileEntityList =new ArrayList<FileEntity>();
+                    }
+                    fileEntityList.add(fileEntity);
+                    if (fileEntityList != null && fileEntityList.size() > 0) {
+                        adapter.notifyDataSetChanged(fileEntityList);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
 
     private void startPhotoZoom(Uri uri, int size) {
         Intent intent = new Intent("com.android.camera.action.CROP");

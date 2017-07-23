@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
+import android.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -42,6 +42,7 @@ import com.ky.kyandroid.util.StringUtils;
 import com.ky.kyandroid.util.SweetAlertDialogUtil;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -313,50 +314,60 @@ public class StreetDispatchActivity extends AppCompatActivity {
     public boolean OnItemLongClick(int position){
         tempPosition = position;
         ypqbmEntity = (YpqbmEntity) adapter.getItem(position);
-        AlertDialog.Builder builder = new AlertDialog.Builder(StreetDispatchActivity.this);
-        builder.setTitle("信息");
-        builder.setMessage("确定要删除该条记录吗？");
-        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                final Message msg = new Message();
-                if (netWorkConnection.isWIFIConnection()) {
-                    sweetAlertDialogUtil.loadAlertDialog();
-                    Map<String, String> paramsMap = new HashMap<String, String>();
-                    paramsMap.put("userId", userId);
-                    paramsMap.put("clbmId", ypqbmEntity.getId());
-                    // 发送请求
-                    OkHttpUtil.sendRequest(Constants.SERVICE_TASK_DISPATCH_DELETE, paramsMap, new Callback() {
-
-                        @Override
-                        public void onFailure(Call call, IOException e) {
-                            mHandler.sendEmptyMessage(0);
+        if("8".equals(ypqbmEntity.getClzt())|| "1".equals(ypqbmEntity.getIsDelete())){
+            AlertDialog.Builder builder = new AlertDialog.Builder(StreetDispatchActivity.this);
+            builder.setTitle("信息");
+            builder.setMessage("确定要删除该条记录吗？");
+            builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    if("1".equals(ypqbmEntity.getIsDelete())){
+                        Toast.makeText(StreetDispatchActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
+                        if(ypqbmList.get(tempPosition)!=null){
+                            ypqbmList.remove(tempPosition);
                         }
+                        adapter.notifyDataSetChanged(ypqbmList);
+                    }else{
+                        final Message msg = new Message();
+                        if (netWorkConnection.isWIFIConnection()) {
+                            sweetAlertDialogUtil.loadAlertDialog();
+                            Map<String, String> paramsMap = new HashMap<String, String>();
+                            paramsMap.put("userId", userId);
+                            paramsMap.put("clbmId", ypqbmEntity.getId());
+                            // 发送请求
+                            OkHttpUtil.sendRequest(Constants.SERVICE_TASK_DISPATCH_DELETE, paramsMap, new Callback() {
 
-                        @Override
-                        public void onResponse(Call call, Response response) throws IOException {
-                            if (response.isSuccessful()) {
-                                msg.what = 4;
-                                msg.obj = response.body().string();
-                            } else {
-                                msg.what = 5;
-                                msg.obj = "网络异常,请确认网络情况";
-                            }
+                                @Override
+                                public void onFailure(Call call, IOException e) {
+                                    mHandler.sendEmptyMessage(0);
+                                }
+
+                                @Override
+                                public void onResponse(Call call, Response response) throws IOException {
+                                    if (response.isSuccessful()) {
+                                        msg.what = 4;
+                                        msg.obj = response.body().string();
+                                    } else {
+                                        msg.what = 5;
+                                        msg.obj = "网络异常,请确认网络情况";
+                                    }
+                                    mHandler.sendMessage(msg);
+                                }
+                            });
+                        } else {
+                            msg.obj = "WIFI网络不可用,请检查网络连接情况";
                             mHandler.sendMessage(msg);
                         }
-                    });
-                } else {
-                    msg.obj = "WIFI网络不可用,请检查网络连接情况";
-                    mHandler.sendMessage(msg);
+                    }
                 }
-            }
-        });
-        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-            }
-        });
-        builder.create().show();
+            });
+            builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                }
+            });
+            builder.create().show();
+        }
         return false;
     }
 
@@ -503,6 +514,12 @@ public class StreetDispatchActivity extends AppCompatActivity {
             handlerTimeEdt.setText(ypqbmEntity.getClsx());
             handlerTextEdt.setText(ypqbmEntity.getRwnr());
         }
+        if("8.2".equals(ypqbmEntity.getClzt())){
+            departmentTypeSpinner.setEnabled(false);
+            departmenTextSpinner.setEnabled(false);
+            handlerTimeEdt.setEnabled(false);
+            handlerTextEdt.setEnabled(false);
+        }
         AlertDialog.Builder builder = new AlertDialog.Builder(StreetDispatchActivity.this);
         builder.setCancelable(false);
         builder.setTitle("派遣部门信息");
@@ -519,6 +536,7 @@ public class StreetDispatchActivity extends AppCompatActivity {
                 tempYpqbmEntity.setBmmc(departmentCodeValue.getValue());
                 tempYpqbmEntity.setBm_id(departmentCodeValue.getCode());
                 tempYpqbmEntity.setSjId(taskEntity.getId());
+                tempYpqbmEntity.setIsDelete("1");
                 String message ="";
                 if("".equals(handlerTime)){
                     message+= "处理时限不能为空\n";
@@ -545,7 +563,9 @@ public class StreetDispatchActivity extends AppCompatActivity {
                     if(ypqbmList!=null && ypqbmList.size()>0){
                         adapter.notifyDataSetChanged(ypqbmList);
                     }
+                    closeDialog(dialogInterface,true);
                 }else{
+                    closeDialog(dialogInterface,false);
                     Toast.makeText(StreetDispatchActivity.this,message,Toast.LENGTH_SHORT).show();
                 }
             }
@@ -553,9 +573,25 @@ public class StreetDispatchActivity extends AppCompatActivity {
         builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                closeDialog(dialogInterface,true);
                 isDetail = false;
             }
         });
         builder.create().show();
+    }
+
+    /**
+     * 关闭弹出框  isClose =false 关闭，否则 不关闭
+     * @param isClose
+     */
+    public void  closeDialog(DialogInterface dialogInterface,boolean isClose){
+        //不关闭
+        try{
+            Field field = dialogInterface.getClass().getSuperclass().getDeclaredField("mShowing");
+            field.setAccessible(true);
+            field.set(dialogInterface, isClose);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

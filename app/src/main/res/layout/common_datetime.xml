@@ -9,13 +9,15 @@
         android:layout_width="wrap_content"
         android:layout_height="170dp"
         android:layout_gravity="center"
-        android:datePickerMode="spinner"
-        android:calendarViewShown="false" />
+        android:calendarViewShown="false"
+        android:datePickerMode="spinner" />
 
     <TimePicker
         android:id="@+id/timepicker"
         android:layout_width="wrap_content"
+        android:timePickerMode="spinner"
         android:layout_marginTop="5dp"
+        android:layout_gravity="center"
         android:layout_height="wrap_content"/>
 
 </LinearLayout>

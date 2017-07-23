@@ -189,7 +189,7 @@ public class TaskFragment_Person extends Fragment {
      */
     @Optional
     public void addPersonInfo() {
-        View dialogView = LayoutInflater.from(TaskFragment_Person.this.getActivity()).inflate(R.layout.dialog_person_add, null);
+        View dialogView = LayoutInflater.from(TaskFragment_Person.this.getActivity()).inflate(R.layout.dialog_person_detail, null);
         personNameEdt = ButterKnife.findById(dialogView, R.id.person_name_edt);
         personSexSpinner = ButterKnife.findById(dialogView, R.id.person_sex_edt);
         personNationSpinner = ButterKnife.findById(dialogView, R.id.person_nation_edt);
@@ -257,7 +257,11 @@ public class TaskFragment_Person extends Fragment {
             }else{
                 personNationSpinner.setSelection(Integer.parseInt(tFtSjRyEntity.getMz()));
             }
-            personIdcardTypeSpinner.setSelection(Integer.parseInt(tFtSjRyEntity.getZjlx())-1);
+            if("".equals(tFtSjRyEntity.getZjlx()) || tFtSjRyEntity.getZjlx()==null){
+                personIdcardTypeSpinner.setSelection(0);
+            }else{
+                personIdcardTypeSpinner.setSelection(Integer.parseInt(tFtSjRyEntity.getZjlx()));
+            }
             personIdcardEdt.setText(tFtSjRyEntity.getZjhm());
             personAddressEdt.setText(tFtSjRyEntity.getHjd());
             personJobaddressEdt.setText(tFtSjRyEntity.getGzdw());

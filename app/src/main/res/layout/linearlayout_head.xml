@@ -61,7 +61,8 @@
                 android:paddingRight="10dp"
                 android:drawableRight="@mipmap/add_icon_1"
                 android:textColor="@color/white"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:visibility="invisible"/>
         </LinearLayout>
     </LinearLayout>
 

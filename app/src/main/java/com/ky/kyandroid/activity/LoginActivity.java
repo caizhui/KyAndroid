@@ -9,10 +9,9 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AlertDialog;
+import android.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -78,6 +77,11 @@ public class LoginActivity extends AppCompatActivity {
      * 所属orgName
      */
     public static final String ORG_NAME = "orgName";
+
+    /**
+     * 所属orgName
+     */
+    public static final String ORG_ID= "orgId";
 
     /**
      * 街道代码
@@ -286,9 +290,10 @@ public class LoginActivity extends AppCompatActivity {
         if(logined){
             String name = sp.getString("name", "");
             Intent intent = new Intent();
-            if ("街道办工作人员".equals(name) || "香蜜湖录入人员".equals(name)) {
+            if ("街道办工作人员".equals(name)  || "香蜜湖录入人员".equals(name)) {
                 intent.setClass(this, MainAddEventActivity.class);
-            } else if ("街道职能部门".equals(name) || "区职能部门".equals(name) || "香蜜湖职能处理人员".equals(name)) {
+            } else if ("街道职能部门".equals(name) || "街道办工作人员2".equals(name) || "区职能部门".equals(name)
+                    || "区职能部门处理人员".equals(name) ||"香蜜湖职能处理人员".equals(name)) {
                 intent.setClass(this, MainHandleEventActivity.class);
             } else if ("区维稳办".equals(name)) {
                 intent.setClass(this, MainOfficeActivity.class);
@@ -343,6 +348,7 @@ public class LoginActivity extends AppCompatActivity {
                     SpUtil.setStringSharedPerference(sp, USER_ID, user.getId());
                     SpUtil.setStringSharedPerference(sp, USER_NAME, user.getUserName());
                     SpUtil.setStringSharedPerference(sp, ORG_NAME, user.getOrgName());
+                    SpUtil.setStringSharedPerference(sp, ORG_ID, user.getOrgId());
                     SpUtil.setStringSharedPerference(sp, ORG_CODE, user.getOrgCode());
                     SpUtil.setStringSharedPerference(sp, NAME, user.getName());
                     SpUtil.setStringSharedPerference(sp, USER_SFZHM, user.getGmsfhm());
@@ -390,11 +396,13 @@ public class LoginActivity extends AppCompatActivity {
                     SpUtil.setStringSharedPerference(sp, "port", port);
                 }
                 if (!"".equals(message)) {
+                    closeDialog(dialogInterface,false);
                     Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
                     builder.setCancelable(false);
                     //canCloseDialog(dialogInterface, false);//不关闭对话框
                     return;
                 } else {
+                    closeDialog(dialogInterface,true);
                     Toast.makeText(LoginActivity.this, "设置IP成功", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -402,22 +410,22 @@ public class LoginActivity extends AppCompatActivity {
         builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                closeDialog(dialogInterface,true);
             }
         });
         builder.create().show();
     }
 
     /**
-     * 不关闭对话框
-     *
-     * @param dialogInterface
-     * @param close
+     * 关闭弹出框  isClose =false 关闭，否则 不关闭
+     * @param isClose
      */
-    private void canCloseDialog(DialogInterface dialogInterface, boolean close) {
-        try {
+    public void  closeDialog(DialogInterface dialogInterface,boolean isClose){
+        //不关闭
+        try{
             Field field = dialogInterface.getClass().getSuperclass().getDeclaredField("mShowing");
             field.setAccessible(true);
-            field.set(dialogInterface, close);
+            field.set(dialogInterface, isClose);
         } catch (Exception e) {
             e.printStackTrace();
         }

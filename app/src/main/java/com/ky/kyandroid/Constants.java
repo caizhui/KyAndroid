@@ -90,6 +90,9 @@ public class Constants {
 	//督查督办查询接口
 	public final static String SERVICE_DBLIST = "ft/kyAndroid/dbList.action";
 
+	//督查督办新增所需数据接口
+	public final static String SERVICE_DBADD_DATA = "ft/kyAndroid/dbAddData.action";
+
 	//督查督办操作接口
 	public final static String SERVICE_DBDBEXCEUTE= "ft/kyAndroid/dbdbExecute.action";
 

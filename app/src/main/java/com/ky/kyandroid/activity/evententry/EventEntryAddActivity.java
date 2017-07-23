@@ -437,6 +437,7 @@ public class EventEntryAddActivity extends FragmentActivity {
                         Intent intent = new Intent(EventEntryAddActivity.this, EventEntryListActivity.class);
                         intent.putExtra("businessType","initList");
                         startActivity(intent);
+                        finish();
                     }else{
                         Toast.makeText(EventEntryAddActivity.this, "上报失败", Toast.LENGTH_SHORT).show();
                     }

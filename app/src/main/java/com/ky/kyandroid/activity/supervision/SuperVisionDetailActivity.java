@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -45,35 +44,35 @@ public class SuperVisionDetailActivity extends AppCompatActivity {
      * 督办名称
      */
     @BindView(R.id.supervisor_name_edt)
-    EditText supervisorNameEdt;
+    TextView supervisorNameEdt;
 
 
     /**
      * 关联事件
      */
     @BindView(R.id.supervisor_glsj_edt)
-    EditText supervisorGlsjEdt;
+    TextView supervisorGlsjEdt;
 
 
     /**
      * 督办类型
      */
     @BindView(R.id.supervisor_dblx_edt)
-    EditText supervisorDblxEdt;
+    TextView supervisorDblxEdt;
 
 
     /**
      * 被督办单位
      */
     @BindView(R.id.be_supervisor_unit_spinner)
-    EditText beSupervisorUnitSpinner;
+    TextView beSupervisorUnitSpinner;
 
 
     /**
      *  督办时限
      */
     @BindView(R.id.feedback_time_edt)
-    EditText feedbackTimEdt;
+    TextView feedbackTimEdt;
 
 
     /**
@@ -108,21 +107,21 @@ public class SuperVisionDetailActivity extends AppCompatActivity {
      * 督办要求
      */
     @BindView(R.id.supervisor_require_edt)
-    EditText supervisorRequireEdt;
+    TextView supervisorRequireEdt;
 
 
     /**
      * 反馈结果
      */
     @BindView(R.id.supervisor_fkjg_edt)
-    EditText supervisorFkjgEdt;
+    TextView supervisorFkjgEdt;
 
 
     /**
      *  备注
      */
     @BindView(R.id.remark_text_edt)
-    EditText remarkTextEdt;
+    TextView remarkTextEdt;
 
     /**
      *  状态
@@ -160,10 +159,7 @@ public class SuperVisionDetailActivity extends AppCompatActivity {
      */
     public void initView() {
         /** 设置toolbar标题 **/
-        centerText.setText("督察信息详情");
-
-        /** 将右边按钮隐藏*/
-        rightBtn.setVisibility(View.INVISIBLE);
+        centerText.setText("督查督办详情");
     }
 
 
