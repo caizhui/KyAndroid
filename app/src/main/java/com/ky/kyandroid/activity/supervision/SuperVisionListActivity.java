@@ -1,6 +1,7 @@
 package com.ky.kyandroid.activity.supervision;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -32,12 +33,14 @@ import com.ky.kyandroid.entity.SjHandleParams;
 import com.ky.kyandroid.entity.TFtDbEntity;
 import com.ky.kyandroid.entity.TFtZtlzEntity;
 import com.ky.kyandroid.util.JsonUtil;
+import com.ky.kyandroid.util.OkHttpUtil;
 import com.ky.kyandroid.util.SpUtil;
 import com.ky.kyandroid.util.StringUtils;
 import com.ky.kyandroid.util.SweetAlertDialogUtil;
 import com.ky.kyandroid.util.SwipeRefreshUtil;
 import com.solidfire.gson.reflect.TypeToken;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,6 +52,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemClick;
 import butterknife.OnItemLongClick;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 /**
  * Created by Caizhui on 2017-6-9.
@@ -181,7 +187,7 @@ public class SuperVisionListActivity extends AppCompatActivity {
     List<TFtDbEntity> entityList;
 
     /**
-     * 临时未知
+     * 临时位置
      */
     private int tempPosition;
 
@@ -534,7 +540,86 @@ public class SuperVisionListActivity extends AppCompatActivity {
     public boolean OnItemLongClick(final int position) {
         tFtDbEntity = (TFtDbEntity) adapter.getItem(position);
         tempPosition = position;
-        return false;
+        listViewContent = new String[]{"编辑", "删除", "作废", "转排", "受理", "退回"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setItems(listViewContent, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int pos) {
+                if(pos ==0){
+                    Intent intent =new Intent(SuperVisionListActivity.this,SuperVisionEditActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("tFtDbEntity", tFtDbEntity);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }else if(pos ==1){
+                    OperatingProcess(tFtDbEntity,"del");
+                }else if(pos ==2){
+
+                }else if(pos ==3){
+
+                }else if(pos ==4){
+
+                }else if(pos ==5){
+
+                }
+            }
+        });
+        builder.create().show();
+        return true;
+    }
+
+    /**
+     * 操作流程
+     *
+     * @param
+     */
+    public void OperatingProcess(final TFtDbEntity tFtDbEntity, final String requestType) {
+        final Message msg = new Message();
+        AlertDialog.Builder builder = new AlertDialog.Builder(SuperVisionListActivity.this);
+        builder.setTitle("信息");
+        builder.setMessage("确定要执行次操作吗？");
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if (netWorkConnection.isWIFIConnection()) {
+                    sweetAlertDialogUtil.loadAlertDialog();
+                    Map<String, String> paramsMap = new HashMap<String, String>();
+                    paramsMap.put("userId", userId);
+                    paramsMap.put("dbIds", tFtDbEntity.getId());
+                    paramsMap.put("requestType",requestType);
+
+                    // 发送请求
+                    OkHttpUtil.sendRequest(Constants.SERVICE_DBDBEXCEUTE, paramsMap, new Callback() {
+
+                        @Override
+                        public void onFailure(Call call, IOException e) {
+                            mHandler.sendEmptyMessage(0);
+                        }
+
+                        @Override
+                        public void onResponse(Call call, Response response) throws IOException {
+                            if (response.isSuccessful()) {
+                                msg.what = 8;
+                                msg.obj = response.body().string();
+                            } else {
+                                msg.what = 0;
+                                msg.obj = "网络异常,请确认网络情况";
+                            }
+                            mHandler.sendMessage(msg);
+                        }
+                    });
+                } else {
+                    msg.obj = "WIFI网络不可用,请检查网络连接情况";
+                    mHandler.sendMessage(msg);
+                }
+            }
+        });
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+            }
+        });
+        builder.create().show();
     }
 
     /**
