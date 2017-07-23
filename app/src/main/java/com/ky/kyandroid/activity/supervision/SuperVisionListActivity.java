@@ -262,6 +262,8 @@ public class SuperVisionListActivity extends AppCompatActivity {
         initData();
     }
 
+
+
     @OnClick({R.id.left_btn,R.id.right_btn})
     public void onClick(View v) {
         switch (v.getId()) {
@@ -284,19 +286,6 @@ public class SuperVisionListActivity extends AppCompatActivity {
             if ("initList".equals(type)) {
                 // 初始化数据
                 initData();
-            } else if ("isfrash".equals(type)) {
-                //刷新当前一行数据
-                String message = intent.getStringExtra("message");
-                if (!"".equals(message)) {
-                    // 状态修改
-                    Log.i(TAG, "加载操作...");
-                    if (handleResponseDataState(message)) {
-                        Toast.makeText(SuperVisionListActivity.this, "操作成功", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(SuperVisionListActivity.this, "操作失败", Toast.LENGTH_SHORT).show();
-                    }
-                }
-
             }
         }
     }

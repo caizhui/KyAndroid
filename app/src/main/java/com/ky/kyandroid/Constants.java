@@ -94,7 +94,7 @@ public class Constants {
 	public final static String SERVICE_DBADD_DATA = "ft/kyAndroid/dbAddData.action";
 
 	//督查督办操作接口
-	public final static String SERVICE_DBDBEXCEUTE= "ft/kyAndroid/dbdbExecute.action";
+	public final static String SERVICE_DBDBEXCEUTE= "ft/kyAndroid/dbExecute.action";
 
 	/**督查督办end**/
 

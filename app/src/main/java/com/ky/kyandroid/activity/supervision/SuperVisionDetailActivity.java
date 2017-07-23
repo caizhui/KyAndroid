@@ -184,7 +184,7 @@ public class SuperVisionDetailActivity extends AppCompatActivity {
            // supervisorFkjgEdt.setText(tFtDbEntity.get);
             supervisorRequireEdt.setText(tFtDbEntity.getDbyq());
             ztEdt.setText(tFtDbEntity.getZt());
-            remarkTextEdt.setText("");
+            remarkTextEdt.setText(tFtDbEntity.getComments());
         }
     }
 

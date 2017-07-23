@@ -92,29 +92,6 @@
 
                 <include layout="@layout/linearlayout_one" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:padding="10dp">
-
-                    <TextView
-                        style="@style/TextStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/be_supervisor_unit" />
-
-                    <Spinner
-                        android:id="@+id/be_supervisor_unit_spinner"
-                        android:layout_width="match_parent"
-                        android:layout_height="30dp"
-                        android:background="@drawable/border_edittext_bg"
-                        android:textSize="16sp" />
-                </LinearLayout>
-
-
-                <include layout="@layout/linearlayout_one" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -143,6 +120,32 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
+
+                    <TextView
+                        style="@style/TextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/be_supervisor_unit" />
+
+                    <Spinner
+                        android:id="@+id/be_supervisor_unit_spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:background="@drawable/border_edittext_bg"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+
+                <include layout="@layout/linearlayout_one" />
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
                     android:layout_marginLeft="15dp"
                     android:gravity="center"
                     android:orientation="horizontal"
@@ -152,7 +155,7 @@
                         style="@style/TextStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/feedback_time" />
+                        android:text="@string/fk_time" />
 
                     <EditText
                         android:id="@+id/feedback_time_edt"

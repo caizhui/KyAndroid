@@ -1,13 +1,17 @@
 package com.ky.kyandroid.activity.supervision;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -19,20 +23,27 @@ import android.widget.Toast;
 
 import com.ky.kyandroid.Constants;
 import com.ky.kyandroid.R;
+import com.ky.kyandroid.bean.AckMessage;
+import com.ky.kyandroid.bean.CodeValue;
 import com.ky.kyandroid.bean.NetWorkConnection;
+import com.ky.kyandroid.entity.DescEntity;
 import com.ky.kyandroid.entity.TFtDbEntity;
 import com.ky.kyandroid.util.DateTimePickDialogUtil;
+import com.ky.kyandroid.util.JsonUtil;
 import com.ky.kyandroid.util.OkHttpUtil;
 import com.ky.kyandroid.util.SpUtil;
 import com.ky.kyandroid.util.SweetAlertDialogUtil;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnTouch;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -88,6 +99,13 @@ public class SuperVisionAddActivity extends AppCompatActivity {
      */
     @BindView(R.id.feedback_time_edt)
     EditText feedbackTimeEdt;
+
+    /**
+     * 关联事件
+     */
+    @BindView(R.id.supervisor_glsj)
+    Spinner supervisorGlsj;
+
     /**
      * 督办要求
      */
@@ -139,6 +157,33 @@ public class SuperVisionAddActivity extends AppCompatActivity {
 
     private String orgId;
 
+    /**
+     * 设置Spinner控件的初始值
+     */
+    public List<CodeValue> glsjList;
+
+    /**
+     * 数组 配置器 下拉菜单赋值用
+     */
+    ArrayAdapter<CodeValue> glsjAdapter;
+
+    /**
+     * 设置Spinner控件的初始值
+     */
+    public List<CodeValue> bdcbmList;
+
+    /**
+     * 数组 配置器 下拉菜单赋值用
+     */
+    ArrayAdapter<CodeValue> bdcbmAdapter;
+
+    private String sjId;
+
+    private boolean flag =true;;
+
+    private  CodeValue glsjCodeValue;
+
+    private  CodeValue ddbbmCodeValue;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -147,7 +192,9 @@ public class SuperVisionAddActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         initView();
         initEvent();
+        sweetAlertDialogUtil.loadAlertDialog("Loading...");
         dbAddData();
+        spinnerSelect();
 
     }
 
@@ -190,6 +237,38 @@ public class SuperVisionAddActivity extends AppCompatActivity {
                 }
             });
         }
+
+    }
+
+    /**
+     * Spinner item点击
+     */
+    public void spinnerSelect(){
+        supervisorGlsj.setSelection(0, false);
+        beSupervisorUnitSpinner.setSelection(0, false);
+        supervisorGlsj.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                glsjCodeValue = (CodeValue) adapterView.getItemAtPosition(position);
+                sjId = glsjCodeValue.getCode();
+                dbAddData();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+        beSupervisorUnitSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                ddbbmCodeValue = (CodeValue) adapterView.getItemAtPosition(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
     }
 
     @SuppressLint("HandlerLeak")
@@ -207,6 +286,14 @@ public class SuperVisionAddActivity extends AppCompatActivity {
                     break;
                 // 成功跳转
                 case 1:
+                    HandleDescData(message);
+                    break;
+                // 成功跳转
+                case 2:
+                    Intent intent =new Intent(SuperVisionAddActivity.this,SuperVisionListActivity.class);
+                    intent.putExtra("businessType", "initList");
+                    startActivity(intent);
+                    Toast.makeText(SuperVisionAddActivity.this,"保存成功",Toast.LENGTH_SHORT).show();
                     sweetAlertDialogUtil.dismissAlertDialog();
                     break;
             }
@@ -214,15 +301,79 @@ public class SuperVisionAddActivity extends AppCompatActivity {
     };
 
 
+    /**
+     * 字典处理返回的数据
+     * @param response
+     */
+    public void HandleDescData(String response){
+        AckMessage ackMessage = JsonUtil.fromJson(response, AckMessage.class);
+        if(AckMessage.SUCCESS.equals(ackMessage.getAckCode())){
+            //成功后操作 - 解释数据
+            List<DescEntity> descList=new ArrayList<DescEntity>();
+            List<?> list = ackMessage.getData();
+            glsjList = new ArrayList<CodeValue>();
+            bdcbmList = new ArrayList<CodeValue>();
+            for (int i = 0; i < list.size(); i++) {
+                String entityStr = JsonUtil.toJson(list.get(i));
+                DescEntity bd_desc=JsonUtil.fromJson(entityStr, DescEntity.class);
+                String []code =String.valueOf(bd_desc.getCode()).split("\\.");
+                if(code.length>0){
+                    bd_desc.setCode(code[0]);
+                }
+                if("glsj".equals(bd_desc.getType())){
+                    //关联事件
+                    glsjList.add(new CodeValue(bd_desc.getCode(),bd_desc.getValue()));
+                }else{
+                    //被督察部门
+                    bdcbmList.add(new CodeValue(bd_desc.getCode(),bd_desc.getValue()));
+                }
+            }
+            if(glsjList!=null && glsjList.size()>0) {
+                //将可选内容与ArrayAdapter连接起来
+                glsjAdapter = new ArrayAdapter<CodeValue>(SuperVisionAddActivity.this, android.R.layout.simple_spinner_item, glsjList);
+                //设置下拉列表的风格
+                glsjAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                supervisorGlsj.setAdapter(glsjAdapter);//将adapter 添加到表现形式spinner中
+            }
+            if(bdcbmList!=null && bdcbmList.size()>0){
+                //将可选内容与ArrayAdapter连接起来
+                bdcbmAdapter = new ArrayAdapter<CodeValue>(SuperVisionAddActivity.this, android.R.layout.simple_spinner_item, bdcbmList);
+                //设置下拉列表的风格
+                bdcbmAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                beSupervisorUnitSpinner.setAdapter(bdcbmAdapter);//将adapter 添加到表现形式spinner中
+                sweetAlertDialogUtil.dismissAlertDialog();
+            }
+            }else if(Constants.FAILURE.equals(ackMessage.getAckCode())){
+            //失败后操作
+        }
+
+    }
+
+    @OnTouch({R.id.feedback_time_edt})
+    public boolean OnTouch(View v, MotionEvent event) {
+        switch (v.getId()) {
+            /** 点击发生时间控件 **/
+            case R.id.feedback_time_edt:
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    feedbackTimeEdt.clearFocus();
+                    DateTimePickDialogUtil dateTimePicKDialog = new DateTimePickDialogUtil(
+                            SuperVisionAddActivity.this, "");
+                    dateTimePicKDialog.dateTimePicKDialog(feedbackTimeEdt);
+                    return false;
+                }
+                break;
+        }
+        return false;
+    }
+
     public void dbAddData(){
         final Message msg = new Message();
         if (netWorkConnection.isWIFIConnection()) {
-            sweetAlertDialogUtil.loadAlertDialog("Loading...");
             msg.what = 0;
             // 参数列表 - 账号、密码（加密）
             Map<String, String> paramsMap = new HashMap<String, String>();
             paramsMap.put("userId", userId);
-            paramsMap.put("orgId", orgId);
+            paramsMap.put("sjId", sjId);
             // 发送请求
             OkHttpUtil.sendRequest(Constants.SERVICE_DBADD_DATA, paramsMap, new Callback() {
 
@@ -271,6 +422,11 @@ public class SuperVisionAddActivity extends AppCompatActivity {
                 }else{
                     tFtDbEntity.setDbmc(supervisorNameEdt.getText().toString());
                 }
+                if("".equals(supervisorGlsj.getTextAlignment())){
+                    message+="关联事件不能为空\n";
+                }else{
+                    tFtDbEntity.setSjId(glsjCodeValue.getCode());
+                }
                 if("".equals(dblx)){
                     message+="督办类型不能为空\n";
                 }else{
@@ -279,24 +435,62 @@ public class SuperVisionAddActivity extends AppCompatActivity {
                 if("".equals(beSupervisorUnitSpinner.getTextAlignment())){
                     message+="被督办名称不能为空\n";
                 }else{
-                    tFtDbEntity.setBdbdw(beSupervisorUnitSpinner.getSelectedItem().toString());
+                    tFtDbEntity.setBdbdw(ddbbmCodeValue.getCode());
                 }
                 if("".equals(feedbackTimeEdt.getText())){
                     message+="反馈时限不能为空\n";
                 }else{
-                    tFtDbEntity.setDbsj(feedbackTimeEdt.getText().toString());
+                    tFtDbEntity.setFksx(feedbackTimeEdt.getText().toString());
                 }
                 if("".equals(supervisorRequireEdt.getText())){
                     message+="督办要求不能为空\n";
                 }else{
                     tFtDbEntity.setDbyq(supervisorRequireEdt.getText().toString());
                 }
+                tFtDbEntity.setComments(remarkTextEdt.getText().toString());
                 if("".equals(message)){
-
+                    sendData();
                 }else{
                     Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
                 }
                 break;
+        }
+    }
+
+    public  void sendData(){
+        final Message msg = new Message();
+        if (netWorkConnection.isWIFIConnection()) {
+            sweetAlertDialogUtil.loadAlertDialog("Loading...");
+            msg.what = 0;
+            // 参数列表 - 账号、密码（加密）
+            Map<String, String> paramsMap = new HashMap<String, String>();
+            // 转成json格式
+            String mapJson = JsonUtil.toJson(tFtDbEntity);
+            paramsMap.put("userId", userId);
+            paramsMap.put("TFtDb",mapJson);
+            paramsMap.put("requestType","save");
+            // 发送请求
+            OkHttpUtil.sendRequest(Constants.SERVICE_DBDBEXCEUTE, paramsMap, new Callback() {
+
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    mHandler.sendEmptyMessage(0);
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    if (response.isSuccessful()) {
+                        msg.what = 2;
+                        msg.obj = response.body().string();
+                    } else {
+                        msg.obj = "网络异常,请确认网络情况";
+                    }
+                    mHandler.sendMessage(msg);
+                }
+            });
+        } else {
+            msg.obj = "WIFI网络不可用,请检查网络连接情况";
+            mHandler.sendMessage(msg);
         }
     }
 }
