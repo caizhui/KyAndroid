@@ -90,7 +90,7 @@ public class EventEntryAdd_Basic extends Fragment {
      * 到场部门
      */
     @BindView(R.id.field_departmen_edt)
-    EditText fieldDepartmenEdt;
+    TextView fieldDepartmenEdt;
 
     /**
      * 到场部门图标
@@ -122,7 +122,7 @@ public class EventEntryAdd_Basic extends Fragment {
      * 涉及领域
      */
     @BindView(R.id.fields_involved_edt)
-    EditText fieldsInvolvedEdt;
+    TextView fieldsInvolvedEdt;
     /**
      * 涉及领域img
      */
