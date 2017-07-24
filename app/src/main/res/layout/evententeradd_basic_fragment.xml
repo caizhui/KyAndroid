@@ -181,6 +181,7 @@
                         android:enabled="false"
                         android:focusable="false"
                         android:gravity="center_vertical"
+                        style="@style/TextColorStyle"
                         android:padding="5dp"
                         android:textSize="16sp" />
 
@@ -340,6 +341,7 @@
                         android:background="@null"
                         android:enabled="false"
                         android:focusable="false"
+                        style="@style/TextColorStyle"
                         android:gravity="center_vertical"
                         android:padding="5dp"
                         android:textSize="16sp" />
@@ -470,6 +472,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/border_edittext_bg"
                     android:padding="5dp"
+                    style="@style/TextColorStyle"
                     android:enabled="false"
                     android:text="华强北街道"
                     android:textSize="16sp" />
