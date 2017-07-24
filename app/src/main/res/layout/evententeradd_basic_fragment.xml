@@ -592,14 +592,14 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="130dp"
                     android:background="@drawable/border_edittext_bg">
 
                     <EditText
                         android:id="@+id/leadership_instructions_edt"
                         android:layout_width="match_parent"
-                        android:layout_height="100dp"
-                        android:background="@drawable/border_edittext_bg"
+                        android:layout_height="130dp"
+                        android:background="@null"
                         android:gravity="start"
                         android:padding="5dp"
                         android:textSize="16sp" />
