@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.ky.kyandroid.R;
@@ -19,7 +21,7 @@ import com.ky.kyandroid.R;
 public class GroupAdapter extends BaseAdapter {
 
 	Context mContext;// 上下文对象
-	String[] mGroupNameArr;// 父item标题数组
+	String[][] mGroupItems;// item标题数组
 	int mPosition = 0;// 选中的位置
 
 	/**
@@ -30,29 +32,43 @@ public class GroupAdapter extends BaseAdapter {
 	 * @param groupArr
 	 *            // item标题数组
 	 */
-	public GroupAdapter(Context context, String[] groupArr) {
+	public GroupAdapter(Context context, String[][] groupArr) {
 		this.mContext = context;
-		this.mGroupNameArr = groupArr;
+		this.mGroupItems = groupArr;
 	}
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
+	public View getView(final int position, View convertView, ViewGroup parent) {
 		ViewHolder holder = null;
 
 		// 初始化布局控件
 		if (convertView == null) {
 			holder = new ViewHolder();
-			convertView = LayoutInflater.from(mContext).inflate(
-					R.layout.group_item_layout, null);
-			holder.groupName = (TextView) convertView
-					.findViewById(R.id.group_textView);
+			convertView = LayoutInflater.from(mContext).inflate(R.layout.group_item_layout, null);
+			holder.groupName = (TextView) convertView.findViewById(R.id.group_textView);
+			holder.checkBox = (CheckBox) convertView.findViewById(R.id.group_checkBox);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
 
+		String[] index_group = mGroupItems[position];
+
 		// 设置控件内容
-		holder.groupName.setText(mGroupNameArr[position]);
+		holder.groupName.setText(index_group[1]);
+		// 是否选中
+		holder.checkBox.setChecked("1".equals(index_group[0]));
+		holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
+				if (checked){
+					mGroupItems[position][0] = "1";
+				}else{
+					mGroupItems[position][0] = "0";
+				}
+			}
+		});
+
 		if (mPosition == position) {
 			holder.groupName.setTextColor(mContext.getResources().getColor(
 					R.color.list_item_text_pressed_bg));
@@ -73,7 +89,7 @@ public class GroupAdapter extends BaseAdapter {
 	 */
 	@Override
 	public int getCount() {
-		return mGroupNameArr.length;
+		return mGroupItems.length;
 	}
 
 	/**
@@ -81,7 +97,7 @@ public class GroupAdapter extends BaseAdapter {
 	 */
 	@Override
 	public Object getItem(int position) {
-		return mGroupNameArr[position];
+		return mGroupItems[position];
 	}
 
 	/**
@@ -95,6 +111,8 @@ public class GroupAdapter extends BaseAdapter {
 	static class ViewHolder {
 		/** 父Item名称 **/
 		TextView groupName;
+		/** 是否选中 **/
+		CheckBox checkBox;
 	}
 
 	/**
@@ -106,4 +124,11 @@ public class GroupAdapter extends BaseAdapter {
 		this.mPosition = position;
 	}
 
+	public void setChildData(String[][] mGroupItems){
+		this.mGroupItems = mGroupItems;
+	}
+
+	public String[][] getmGroupItems() {
+		return this.mGroupItems;
+	}
 }

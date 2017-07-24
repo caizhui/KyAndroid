@@ -2,44 +2,88 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/mypop_bg"
-    android:orientation="horizontal" >
+    android:orientation="vertical">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/border_pop_default"
+        android:padding="5dp">
 
-    <ListView
-        android:id="@+id/listView1"
-        android:layout_width="0dp"
-        android:layout_height="fill_parent"
-        android:layout_weight="1"
-        android:background="@color/group_item_bg"
-        android:cacheColorHint="@android:color/transparent"
-        android:divider="@color/child_item_diveder"
-        android:dividerHeight="1dp"
-        android:scrollbars="none"/>
+        <TextView
+            android:id="@+id/btn_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="标题"
+            android:textSize="17sp" />
 
-    <View
-        android:layout_width="1dp"
-        android:layout_height="fill_parent"
-        android:background="@color/child_item_diveder" />
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_alignParentStart="true"
+            android:background="@drawable/border_sbldbutton_bg2"
+            android:drawableStart="@mipmap/btn_cancel"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:text="取消"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
 
-    <ListView
-        android:id="@+id/listView2"
-        android:layout_width="0dp"
-        android:layout_height="fill_parent"
-        android:layout_weight="1"
-        android:background="@color/child_item_bg"
-        android:cacheColorHint="@android:color/transparent"
-        android:divider="@color/child_item_diveder"
-        android:dividerHeight="1dp"
-        android:scrollbars="none"/>
+        <Button
+            android:id="@+id/btn_confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/border_sbldbutton_bg"
+            android:drawableStart="@mipmap/btn_ok"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:text="确定"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
 
-    <View
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/mypop_bg"
+        android:orientation="horizontal">
+
+        <ListView
+            android:id="@+id/listView1"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@color/group_item_bg"
+            android:cacheColorHint="@android:color/transparent"
+            android:divider="@color/child_item_diveder"
+            android:dividerHeight="1dp"/>
+
+        <View
             android:layout_width="1dp"
             android:layout_height="fill_parent"
             android:background="@color/child_item_diveder" />
 
         <ListView
-            android:visibility="gone"
+            android:id="@+id/listView2"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@color/child_item_bg"
+            android:cacheColorHint="@android:color/transparent"
+            android:divider="@color/child_item_diveder"
+            android:dividerHeight="1dp"/>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="fill_parent"
+            android:background="@color/child_item_diveder" />
+
+        <ListView
             android:id="@+id/listView3"
             android:layout_width="0dp"
             android:layout_height="fill_parent"
@@ -47,8 +91,9 @@
             android:background="@color/child_item_bg"
             android:cacheColorHint="@android:color/transparent"
             android:divider="@color/child_item_diveder"
-            android:dividerHeight="1dp"
-            android:scrollbars="none"/>
+            android:dividerHeight="1dp"/>
+
+    </LinearLayout>
 
 
 </LinearLayout>

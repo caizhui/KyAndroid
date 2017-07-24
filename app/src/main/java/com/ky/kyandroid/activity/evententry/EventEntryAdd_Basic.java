@@ -9,6 +9,7 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,12 +17,14 @@ import android.view.ViewGroup;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ky.kyandroid.R;
@@ -79,6 +82,11 @@ public class EventEntryAdd_Basic extends Fragment {
      */
     @BindView(R.id.field_departmen_layout)
     LinearLayout fieldDepartmenLayout;
+    /**
+     * 全局LinearLayout
+     */
+    @BindView(R.id.linear_evententry)
+    LinearLayout linearEvententry;
     /**
      * 到场部门
      */
@@ -212,11 +220,15 @@ public class EventEntryAdd_Basic extends Fragment {
     /**
      * 一级菜单名称数组
      **/
-    String[] GroupNameArray;
+    String[][] GroupNameArray;
     /**
      * 二级菜单名称数组
      **/
-    String[] childNameArray;
+    String[][] childNameArray;
+    /**
+     * 三级菜单名称数组
+     **/
+    String[][] child2NameArray;
 
     ListView groupListView = null;
     ListView childListView = null;
@@ -226,13 +238,16 @@ public class EventEntryAdd_Basic extends Fragment {
     ListView childListView2 = null;
     GroupAdapter groupAdapter = null;
 
+    Button btnCancel, btnConfirm;
+
+    TextView btntext;
     /**
      * 到场部门第二层adapter
      */
-    ChildAdapter childTwoAdapter = null;
+    GroupAdapter childTwoAdapter = null;
 
 
-    ChildAdapter childAdapter = null;
+    GroupAdapter childAdapter = null;
 
     TranslateAnimation animation;// 出现的动画效果
     // 屏幕的宽高
@@ -253,36 +268,6 @@ public class EventEntryAdd_Basic extends Fragment {
      */
     private String spinnerType;
 
-    /**
-     * 子列表是否已经点击
-     */
-    private boolean isChildClick;
-
-    /**
-     * 第二个子列表是否已经点击
-     */
-    private boolean isTwoChildClick;
-
-    /**
-     * 父列表是否已经点击
-     */
-    private boolean isGroupClick;
-
-
-    /**
-     * 父节点临时Position
-     */
-    private int oneTempPosition;
-
-    /**
-     * 第二层节点临时Position
-     */
-    private int twoTempPosition;
-
-    /**
-     * 第三层节点临时Position
-     */
-    private int threeTempPosition;
 
     @Nullable
     @Override
@@ -310,7 +295,7 @@ public class EventEntryAdd_Basic extends Fragment {
         if (spinnerList == null) {
             //设置Spinner控件的初始值
             spinnerList = new ArrayList<CodeValue>();
-            Toast.makeText(EventEntryAdd_Basic.this.getActivity(),"字典项加载不完全,请重新加载",Toast.LENGTH_SHORT).show();
+            Toast.makeText(EventEntryAdd_Basic.this.getActivity(), "字典项加载不完全,请重新加载", Toast.LENGTH_SHORT).show();
         }
         //将可选内容与ArrayAdapter连接起来
         adapter = new ArrayAdapter<CodeValue>(EventEntryAdd_Basic.this.getActivity(), android.R.layout.simple_spinner_item, spinnerList);
@@ -355,13 +340,13 @@ public class EventEntryAdd_Basic extends Fragment {
         scopeTextSpinner.setAdapter(adapter);//将adapter 添加到规模spinner中
 
         // 根据用户ORG_CODE确定所属街道
-        String jddm = sp.getString(LoginActivity.ORG_CODE,"");
+        String jddm = sp.getString(LoginActivity.ORG_CODE, "");
         List<TFtQhEntity> qhList = tFtQhEntityDao.queryList(jddm);
         spinnerList = new ArrayList<CodeValue>();
-        if (qhList != null && qhList.size() > 0){
+        if (qhList != null && qhList.size() > 0) {
             belongStreetEdt.setText(qhList.get(0).getJdmc());
-            for(TFtQhEntity entity : qhList){
-                if(StringUtils.isNotBlank(entity.getSqgzz())){
+            for (TFtQhEntity entity : qhList) {
+                if (StringUtils.isNotBlank(entity.getSqgzz())) {
                     spinnerList.add(new CodeValue(entity.getId(), entity.getSqgzz()));
                 }
             }
@@ -382,24 +367,24 @@ public class EventEntryAdd_Basic extends Fragment {
             petitionGroupsEdt.setText(tFtSjEntity.getSfsqqt());
 
             if (tFtSjEntity.getDcbm() != null && !"".equals(tFtSjEntity.getDcbm())) {
-                String []dcbms = tFtSjEntity.getDcbm().split(",");
+                String[] dcbms = tFtSjEntity.getDcbm().split(",");
                 String dcbm = "";
-                if(dcbms.length>0){
-                    for(int i = 0 ;i<dcbms.length;i++){
-                        dcbm += descEntityDao.queryName("dcbm", dcbms[i])+",";
+                if (dcbms.length > 0) {
+                    for (int i = 0; i < dcbms.length; i++) {
+                        dcbm += descEntityDao.queryName("dcbm", dcbms[i]) + ",";
                     }
-                    dcbm=dcbm.substring(0,dcbm.length()-1);
+                    dcbm = dcbm.substring(0, dcbm.length() - 1);
                 }
                 fieldDepartmenEdt.setText(dcbm);
             }
             if (tFtSjEntity.getSjly() != null && !"".equals(tFtSjEntity.getSjly())) {
-                String []sjlys = tFtSjEntity.getSjly().split(",");
+                String[] sjlys = tFtSjEntity.getSjly().split(",");
                 String sjly = "";
-                if(sjlys.length>0){
-                    for(int i = 0 ;i<sjlys.length;i++){
-                        sjly += descEntityDao.queryName("sjly", sjlys[i])+",";
+                if (sjlys.length > 0) {
+                    for (int i = 0; i < sjlys.length; i++) {
+                        sjly += descEntityDao.queryName("sjly", sjlys[i]) + ",";
                     }
-                    sjly=sjly.substring(0,sjly.length()-1);
+                    sjly = sjly.substring(0, sjly.length() - 1);
                 }
                 //String sjlyName = descEntityDao.queryName("sjly", tFtSjEntity.getSjly().split(",")[0]);
                 fieldsInvolvedEdt.setText(sjly);
@@ -416,10 +401,10 @@ public class EventEntryAdd_Basic extends Fragment {
             }
 
             if (tFtSjEntity.getXcts() != null) {
-                fieldMorpholoySpinner.setSelection(Integer.valueOf(tFtSjEntity.getXcts())-1);
+                fieldMorpholoySpinner.setSelection(Integer.valueOf(tFtSjEntity.getXcts()) - 1);
             }
             if (tFtSjEntity.getGm() != null) {
-                scopeTextSpinner.setSelection(Integer.valueOf(tFtSjEntity.getGm())-1);
+                scopeTextSpinner.setSelection(Integer.valueOf(tFtSjEntity.getGm()) - 1);
             }
             if (tFtSjEntity.getSfsw() != null) {
                 foreignRelatedSpinner.setSelection(Integer.valueOf(tFtSjEntity.getSfsw()));
@@ -489,7 +474,7 @@ public class EventEntryAdd_Basic extends Fragment {
         String involvePublicOpinionString = descEntityDao.queryCodeByName("sfsw", involvePublicOpinionSpinner.getSelectedItem().toString());
         String publicSecurityDisposalString = descEntityDao.queryCodeByName("sfsw", publicSecurityDisposalSpinner.getSelectedItem().toString());
         String belongStreetString = belongStreetEdt.getText().toString();
-        String belongCommunityString = ((CodeValue)belongCommunitySpinner.getSelectedItem()).getCode();
+        String belongCommunityString = ((CodeValue) belongCommunitySpinner.getSelectedItem()).getCode();
         String mainAppealsString = mainAppealsEdt.getText().toString();
         String eventSummaryString = eventSummaryEdt.getText().toString();
         String leadershipInstructionsString = leadershipInstructionsEdt.getText().toString();
@@ -583,63 +568,48 @@ public class EventEntryAdd_Basic extends Fragment {
 
     @OnClick({R.id.field_departmen_layout, R.id.fields_involved_linearlayout})
     public void onClick(View v) {
+        int[] location = new int[2];
+        // 获取控件在屏幕中的位置,方便展示Popupwindow
+        fieldDepartmenLayout.getLocationOnScreen(location);
         switch (v.getId()) {
+            // 到场部门
             case R.id.field_departmen_layout:
-                tabStateArr[0] = !tabStateArr[0];
-                int[] location = new int[2];
                 spinnerType = "dcbm";
-                fieldDepartmenLayout.getLocationOnScreen(location);// 获取控件在屏幕中的位置,方便展示Popupwindow
-                animation = null;
-                animation = new TranslateAnimation(0, 0, -700, location[1]);
-                animation.setDuration(500);
-                List<CodeValue> aaa = descEntityDao.queryListByDcbm(spinnerType);
-                List<CodeValue> codeValueList = descEntityDao.queryPidList(spinnerType);
-                /** 一级菜单名称数组 **/
-                GroupNameArray = new String[codeValueList.size()];
-                if (codeValueList != null && codeValueList.size() > 0) {
-                    for (int i = 0; i < codeValueList.size(); i++) {
-                        GroupNameArray[i] = codeValueList.get(i).getValue();
-                    }
-                    /** 二级菜单名称数组 **/
-                    String pidCode = descEntityDao.queryCodeByName(spinnerType, codeValueList.get(0).getValue());
-                    List<CodeValue> childCodeValueList = descEntityDao.queryValueListByPid(spinnerType, pidCode);
-                    childNameArray = new String[childCodeValueList.size()];
-                    if (childCodeValueList != null && childCodeValueList.size() > 0) {
-                        for (int i = 0; i < childCodeValueList.size(); i++) {
-                            childNameArray[i] = childCodeValueList.get(i).getValue();
-                        }
-                    }
-                }
-                showPupupWindow();
                 break;
             case R.id.fields_involved_linearlayout:
-                int[] location1 = new int[2];
-                fieldsInvolvedLinearLayout.getLocationOnScreen(location1);// 获取控件在屏幕中的位置,方便展示Popupwindow
-                animation = null;
                 spinnerType = "sjly";
-                animation = new TranslateAnimation(0, 0, -700, location1[1]);
-                animation.setDuration(500);
-                List<CodeValue> codeValueList1 = descEntityDao.queryPidList(spinnerType);
-                /** 一级菜单名称数组 **/
-                GroupNameArray = new String[codeValueList1.size()];
-                if (codeValueList1 != null && codeValueList1.size() > 0) {
-                    for (int i = 0; i < codeValueList1.size(); i++) {
-                        GroupNameArray[i] = codeValueList1.get(i).getValue();
-                    }
-                    /** 二级菜单名称数组 **/
-                    String pidCode = descEntityDao.queryCodeByName(spinnerType, codeValueList1.get(0).getValue());
-                    List<CodeValue> childCodeValueList = descEntityDao.queryValueListByPid(spinnerType, pidCode);
-                    childNameArray = new String[childCodeValueList.size()];
-                    if (childCodeValueList != null && childCodeValueList.size() > 0) {
-                        for (int i = 0; i < childCodeValueList.size(); i++) {
-                            childNameArray[i] = childCodeValueList.get(i).getValue();
-                        }
-                    }
-                }
-                showPupupWindow();
                 break;
         }
-
+        animation = null;
+        // location[1] 改成 0
+        animation = new TranslateAnimation(0, 0, -700, 0);
+        animation.setDuration(500);
+        List<CodeValue> codeValueList = descEntityDao.queryPidList(spinnerType);
+        /** 一级菜单名称数组 **/
+        GroupNameArray = new String[codeValueList.size()][];
+        if (codeValueList != null && codeValueList.size() > 0) {
+            for (int i = 0; i < codeValueList.size(); i++) {
+                String[] cg = new String[2];
+                // 0 是未选中,1 是选中
+                cg[0] = "0";
+                cg[1] = codeValueList.get(i).getValue();
+                GroupNameArray[i] = cg;
+            }
+            CodeValue cv = codeValueList.get(0);
+            /** 二级菜单名称数组 **/
+            List<CodeValue> childCodeValueList = descEntityDao.queryValueListByPid(spinnerType, cv.getCode());
+            childNameArray = new String[childCodeValueList.size()][];
+            if (childCodeValueList != null && childCodeValueList.size() > 0) {
+                for (int i = 0; i < childCodeValueList.size(); i++) {
+                    String[] cg = new String[2];
+                    // 0 是未选中,1 是选中
+                    cg[0] = "0";
+                    cg[1] = childCodeValueList.get(i).getValue();
+                    childNameArray[i] = cg;
+                }
+            }
+        }
+        showPupupWindow();
     }
 
     /**
@@ -651,16 +621,16 @@ public class EventEntryAdd_Basic extends Fragment {
         /* 第一个参数弹出显示view 后两个是窗口大小 */
         mPopupWindow = new PopupWindow(view, screen_width, screen_height);
         /* 设置背景显示 */
-        mPopupWindow.setBackgroundDrawable(getResources().getDrawable(
-                R.drawable.mypop_bg));
+        mPopupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.mypop_bg));
         /* 设置触摸外面时消失 */
         // mPopupWindow.setOutsideTouchable(true);
+        // 设置动画
+        mPopupWindow.setAnimationStyle(R.style.pop_menu);
 
-        mPopupWindow.update();
         mPopupWindow.setTouchable(true);
-		/* 设置点击menu以外其他地方以及返回键退出 */
+        /* 设置点击menu以外其他地方以及返回键退出 */
         mPopupWindow.setFocusable(true);
-
+        mPopupWindow.update();
         /**
          * 1.解决再次点击MENU键无反应问题 2.sub_view是PopupWindow的子View
          */
@@ -675,124 +645,142 @@ public class EventEntryAdd_Basic extends Fragment {
                 R.layout.bottom_layout, null);
         initPopuWindow(showPupWindow);
         // 初始化三个ListView
-        groupListView = (ListView) showPupWindow.findViewById(R.id.listView1);
-        childListView = (ListView) showPupWindow.findViewById(R.id.listView2);
-        childListView2 = (ListView) showPupWindow.findViewById(R.id.listView3);
+        groupListView = showPupWindow.findViewById(R.id.listView1);
+        childListView = showPupWindow.findViewById(R.id.listView2);
+        childListView2 = showPupWindow.findViewById(R.id.listView3);
 
+        // 初始化点击事件 - 取消
+        btnCancel = showPupWindow.findViewById(R.id.btn_cancel);
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mPopupWindow.dismiss();
+            }
+        });
 
+        // 初始化点击事件 - 确定
+        btnConfirm = showPupWindow.findViewById(R.id.btn_confirm);
+        btnConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // 填充选择框
+                fillListValues();
+            }
+        });
+
+        // 标题
+        btntext = showPupWindow.findViewById(R.id.btn_text);
+
+        // 设置视图 一级菜单
         groupAdapter = new GroupAdapter(EventEntryAdd_Basic.this.getActivity(), GroupNameArray);
         groupListView.setAdapter(groupAdapter);
-
-        childAdapter = new ChildAdapter(EventEntryAdd_Basic.this.getActivity());
-        childListView.setAdapter(childAdapter);
-        childAdapter.setChildData(childNameArray);
-        childAdapter.notifyDataSetChanged();
         groupAdapter.notifyDataSetChanged();
-
-
         groupListView.setOnItemClickListener(new MyItemClick());
+
+        // 设置视图 二级菜单
+        childAdapter = new GroupAdapter(EventEntryAdd_Basic.this.getActivity(), childNameArray);
+        childListView.setAdapter(childAdapter);
+        childAdapter.notifyDataSetChanged();
+        childListView.setOnItemClickListener(new MyChildItemClick());
 
         //因为到场部门有3层结构，而涉及领域只有2层
         if ("dcbm".equals(spinnerType)) {
+            btntext.setText("到场部门列表");
             childListView2.setVisibility(View.VISIBLE);
+        } else if ("sjly".equals(spinnerType)) {
+            btntext.setText("涉及领域列表");
+            childListView2.setVisibility(View.GONE);
         }
-        childListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                if ("sjly".equals(spinnerType)) {
-                    //如果点击子节点，则将父节点的点击变成false
-                    isGroupClick = false;
-                    //如果子节点点击两次，则选择子节点的值
-                    if (isChildClick && twoTempPosition == position) {
-                        String name = (String) parent.getItemAtPosition(position);
-                        fieldsInvolvedEdt.setText(name);
-                        fieldsInvolvedImg.setBackgroundResource(R.mipmap.down);
-                        isChildClick = false;
-                        mPopupWindow.dismiss();
-                    }else{
-                        isChildClick = true;
-                        twoTempPosition = position;
-                    }
-                } else {
-                    isChildClick = true;
-                    twoTempPosition = position;
-                    childListView.setOnItemClickListener(new MyChildItemClick());
-                }
-            }
-        });
 
-        childListView2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long l) {
-                //如果点击子节点，则将父节点的点击变成false
-                isChildClick = false;
-                isGroupClick = false;
-                //如果子节点点击两次，则选择子节点的值
-                if (isTwoChildClick && threeTempPosition == position) {
-                    String name = (String) parent.getItemAtPosition(position);
-                    fieldDepartmenEdt.setText(name);
-                    fieldDepartmenImg.setBackgroundResource(R.mipmap.down);
-                    isTwoChildClick = false;
-                    mPopupWindow.dismiss();
-                }
-                //点击两次才去获取item的值
-                isTwoChildClick = true;
-                threeTempPosition = position;
-            }
-        });
-        showPupWindow.setAnimation(animation);
-        showPupWindow.startAnimation(animation);
-
+        mPopupWindow.showAtLocation(linearEvententry, Gravity.CENTER, 0, 0);
+        /*
         if ("sjly".equals(spinnerType)) {
             mPopupWindow.showAsDropDown(fieldsInvolvedLinearLayout, -5, 10);
         } else {
             mPopupWindow.showAsDropDown(fieldDepartmenLayout, -5, 10);
+        }*/
+    }
+
+    /**
+     * 填充列表框
+     */
+    private void fillListValues() {
+        StringBuffer sb = new StringBuffer();
+        // 菜单列表项
+        List<GroupAdapter> adapterList = new ArrayList<GroupAdapter>();
+        adapterList.add((GroupAdapter) groupListView.getAdapter());
+        adapterList.add((GroupAdapter) childListView.getAdapter());
+        if (childListView2.getAdapter() != null) {
+            adapterList.add((GroupAdapter) childListView2.getAdapter());
         }
 
+        // 判断是否有选中
+        if (checkGroupAdapter(sb, adapterList)) {
+            Toast.makeText(EventEntryAdd_Basic.this.getActivity(), "请选择任意一项", Toast.LENGTH_LONG).show();
+            return;
+        } else {
+            if ("sjly".equals(spinnerType)) {
+                // 涉及领域
+                fieldsInvolvedEdt.setText(sb.deleteCharAt(sb.length() - 1).toString());
+            } else if ("dcbm".equals(spinnerType)) {
+                fieldDepartmenEdt.setText(sb.deleteCharAt(sb.length() - 1).toString());
+            }
+            mPopupWindow.dismiss();
+        }
+    }
 
+
+    private boolean checkGroupAdapter(StringBuffer selectedStr, List<GroupAdapter> adapters) {
+        boolean flag = true;
+        if (adapters != null && adapters.size() > 0) {
+            for (GroupAdapter adap : adapters) {
+                String[][] mitems = adap.getmGroupItems();
+                for (int i = 0; i < mitems.length; i++) {
+                    if ("1".equals(mitems[i][0])) {
+                        flag = false;
+                        selectedStr.append(mitems[i][1]).append(",");
+                    }
+                }
+            }
+        }
+        return flag;
     }
 
     class MyItemClick implements AdapterView.OnItemClickListener {
 
         @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position,
-                                long id) {
-            //如果点击父节点，则将字节点的点击变成false
-            isChildClick = false;
-            //如果父节点只点击一次，则显示子列表，如果点击两次，则选择父节点的值
-            if (isGroupClick && oneTempPosition == position) {
-                String name = (String) parent.getItemAtPosition(position);
-                if ("sjly".equals(spinnerType)) {
-                    fieldsInvolvedEdt.setText(name);
-                    fieldsInvolvedImg.setBackgroundResource(R.mipmap.down);
-                } else {
-                    fieldDepartmenEdt.setText(name);
-                    fieldDepartmenImg.setBackgroundResource(R.mipmap.down);
-                }
-                isGroupClick = false;
-                mPopupWindow.dismiss();
-            } else {
-                groupAdapter.setSelectedPosition(position);
-                String pidName = (String) groupAdapter.getItem(position);
-                String pidCode = descEntityDao.queryCodeByName(spinnerType, pidName);
-                List<CodeValue> childCodeValueList = descEntityDao.queryValueListByPid(spinnerType, pidCode);
-                childNameArray = new String[childCodeValueList.size()];
-                if (childCodeValueList != null && childCodeValueList.size() > 0) {
-                    for (int i = 0; i < childCodeValueList.size(); i++) {
-                        childNameArray[i] = childCodeValueList.get(i).getValue();
-                    }
-                }
-                isGroupClick = true;
-                oneTempPosition = position;
-                childAdapter = new ChildAdapter(EventEntryAdd_Basic.this.getActivity());
-                childListView.setAdapter(childAdapter);
-            }
-            Message msg = new Message();
-            msg.what = 20;
-            msg.arg1 = position;
-            handler.sendMessage(msg);
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            groupAdapter.setSelectedPosition(position);
+            String[] adCg = (String[]) groupAdapter.getItem(position);
+            String pidCode = descEntityDao.queryCodeByName(spinnerType, adCg[1]);
+            // 获取列表集合
+            List<CodeValue> childCodeValueList = descEntityDao.queryValueListByPid(spinnerType, pidCode);
+            childNameArray = new String[childCodeValueList.size()][];
+            String[][] groupItems = childAdapter.getmGroupItems();
+            boolean flag = true;
+            if (childCodeValueList.size() > 0) {
+                for (int i = 0; i < childCodeValueList.size(); i++) {
+                    String[] cg = new String[2];
+                    // 0 是未选中,1 是选中
+                    cg[0] = "0";
+                    cg[1] = childCodeValueList.get(i).getValue();
+                    // 如果名称有一个一样就换值不刷新
+                    if (groupItems != null && i < groupItems.length) {
+                        if (cg[1].equals(groupItems[i][1])) {
+                            flag = false;
+                            break;
+                        }
 
+                    }
+                    childNameArray[i] = cg;
+                }
+            } else {
+                flag = true;
+            }
+            if (flag) {
+                childAdapter.setChildData(childNameArray);
+            }
+            handler.sendEmptyMessage(20);
         }
 
     }
@@ -801,37 +789,44 @@ public class EventEntryAdd_Basic extends Fragment {
     class MyChildItemClick implements AdapterView.OnItemClickListener {
 
         @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position,
-                                long id) {
-            //如果点击父节点，则将字节点的点击变成false
-            isTwoChildClick = false;
-            //如果父节点只点击一次，则显示子列表，如果点击两次，则选择父节点的值
-            if (isChildClick && twoTempPosition == position) {
-                String name = (String) parent.getItemAtPosition(position);
-                fieldDepartmenEdt.setText(name);
-                fieldDepartmenImg.setBackgroundResource(R.mipmap.down);
-                isGroupClick = false;
-                mPopupWindow.dismiss();
-                isChildClick = false;
-            } else {
-                String pidName = (String) childAdapter.getItem(position);
-                String pidCode = descEntityDao.queryCodeByName(spinnerType, pidName);
-                List<CodeValue> childTwoCodeValueList = descEntityDao.queryValueListByPid(spinnerType, pidCode);
-                childNameArray = new String[childTwoCodeValueList.size()];
-                if (childTwoCodeValueList != null && childTwoCodeValueList.size() > 0) {
-                    for (int i = 0; i < childTwoCodeValueList.size(); i++) {
-                        childNameArray[i] = childTwoCodeValueList.get(i).getValue();
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            childAdapter.setSelectedPosition(position);
+            String[] adCg = (String[]) childAdapter.getItem(position);
+            String pidCode = descEntityDao.queryCodeByName(spinnerType, adCg[1]);
+            // 获取列表集合
+            List<CodeValue> childCodeValueList = descEntityDao.queryValueListByPid(spinnerType, pidCode);
+            child2NameArray = new String[childCodeValueList.size()][];
+
+            boolean flag = true;
+            if (childCodeValueList.size() > 0) {
+                for (int i = 0; i < childCodeValueList.size(); i++) {
+                    String[] cg = new String[2];
+                    // 0 是未选中,1 是选中
+                    cg[0] = "0";
+                    cg[1] = childCodeValueList.get(i).getValue();
+                    // 如果名称一样就换值不刷新
+                    if (childTwoAdapter != null) {
+                        String[][] groupItems = childTwoAdapter.getmGroupItems();
+                        if (groupItems != null && i < groupItems.length) {
+                            if (cg[1].equals(groupItems[i][1])) {
+                                flag = false;
+                                break;
+                            }
+
+                        }
                     }
+                    child2NameArray[i] = cg;
                 }
-                isChildClick = true;
-                twoTempPosition = position;
-                childTwoAdapter = new ChildAdapter(EventEntryAdd_Basic.this.getActivity());
-                childListView2.setAdapter(childTwoAdapter);
+            } else {
+                flag = true;
             }
-            Message msg = new Message();
-            msg.what = 22;
-            msg.arg1 = position;
-            handler.sendMessage(msg);
+            if (flag) {
+                if (childTwoAdapter == null) {
+                    childTwoAdapter = new GroupAdapter(EventEntryAdd_Basic.this.getActivity(), child2NameArray);
+                }
+                childTwoAdapter.setChildData(child2NameArray);
+            }
+            handler.sendEmptyMessage(22);
         }
 
     }
@@ -841,20 +836,16 @@ public class EventEntryAdd_Basic extends Fragment {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 20:
-                    if (childAdapter != null) {
-                        childAdapter.setChildData(childNameArray);
-                        childAdapter.notifyDataSetChanged();
-                        groupAdapter.notifyDataSetChanged();
-                        childNameArray = null;
-                    }
+                    // 刷新二级菜单列表
+                    childAdapter.notifyDataSetChanged();
+                    groupAdapter.notifyDataSetChanged();
                     break;
                 case 22:
                     if (childTwoAdapter != null) {
-                        childTwoAdapter.setChildData(childNameArray);
+                        childListView2.setAdapter(childTwoAdapter);
                         childTwoAdapter.notifyDataSetChanged();
-                        childAdapter.notifyDataSetChanged();
-                        childNameArray = null;
                     }
+                    childAdapter.notifyDataSetChanged();
                     break;
                 default:
                     break;
