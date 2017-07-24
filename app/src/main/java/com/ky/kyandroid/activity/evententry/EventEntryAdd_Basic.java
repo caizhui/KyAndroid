@@ -29,7 +29,6 @@ import android.widget.Toast;
 
 import com.ky.kyandroid.R;
 import com.ky.kyandroid.activity.LoginActivity;
-import com.ky.kyandroid.adapter.ChildAdapter;
 import com.ky.kyandroid.adapter.GroupAdapter;
 import com.ky.kyandroid.bean.CodeValue;
 import com.ky.kyandroid.db.dao.DescEntityDao;
@@ -463,12 +462,30 @@ public class EventEntryAdd_Basic extends Fragment {
         String happenTimeString = happenTimeEdt.getText().toString();
         String happenAddressString = happenAddressEdt.getText().toString();
         String petitionGroupsString = petitionGroupsEdt.getText().toString();
-        String fieldDepartmenString = descEntityDao.queryCodeByName("dcbm", fieldDepartmenEdt.getText().toString());
+        String fieldDepartmenString="";
+        if(!"".equals(fieldDepartmenEdt.getText().toString())){
+            String[] dcbms = fieldDepartmenEdt.getText().toString().split(",");
+            for(int i=0;i<dcbms.length;i++){
+                fieldDepartmenString += descEntityDao.queryCodeByName("dcbm", dcbms[i])+",";
+            }
+            fieldDepartmenString = fieldDepartmenString.substring(0,fieldDepartmenString.length()-1);
+
+        }
+        //String fieldDepartmenString = descEntityDao.queryCodeByName("dcbm", fieldDepartmenEdt.getText().toString());
         //String fieldDepartmenString = fieldDepartmenEdt.getText().toString();
         String patternManifestationString = descEntityDao.queryCodeByName("BXXS", patternManifestationSpinner.getSelectedItem().toString());
         String fieldMorpholoySpinnerString = descEntityDao.queryCodeByName("XCTS", fieldMorpholoySpinner.getSelectedItem().toString());
         String scopeTextString = descEntityDao.queryCodeByName("sjgm", scopeTextSpinner.getSelectedItem().toString());
-        String fieldsInvolved = descEntityDao.queryCodeByName("sjly", fieldsInvolvedEdt.getText().toString());
+        String fieldsInvolved="";
+        if(!"".equals(fieldsInvolvedEdt.getText().toString())){
+            String[] sjlys = fieldsInvolvedEdt.getText().toString().split(",");
+            for(int i=0;i<sjlys.length;i++){
+                fieldsInvolved += descEntityDao.queryCodeByName("sjly", sjlys[i])+",";
+            }
+            fieldsInvolved = fieldsInvolved.substring(0,fieldsInvolved.length()-1);
+
+        }
+        //String fieldsInvolved = descEntityDao.queryCodeByName("sjly", fieldsInvolvedEdt.getText().toString());
         String foreignRelatedString = descEntityDao.queryCodeByName("sfsw", foreignRelatedSpinner.getSelectedItem().toString());
         String involvedXinjiangString = descEntityDao.queryCodeByName("sfsw", involvedXinjiangSpinner.getSelectedItem().toString());
         String involvePublicOpinionString = descEntityDao.queryCodeByName("sfsw", involvePublicOpinionSpinner.getSelectedItem().toString());
