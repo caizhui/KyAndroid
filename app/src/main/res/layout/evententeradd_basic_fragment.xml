@@ -10,12 +10,12 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="60dp"
                 android:orientation="horizontal"
                 android:padding="10dp">
 
@@ -23,36 +23,36 @@
                     style="@style/TextStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:text="@string/thing_name" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="40dp"
                     android:background="@drawable/border_edittext_bg">
-
-                    <EditText
-                        android:id="@+id/thing_name_edt"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@null"
-                        android:padding="5dp"
-                        android:textSize="16sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="5dp"
-                        android:text="*"
-                        android:textColor="@color/red" />
-                </LinearLayout>
+                        <EditText
+                            android:id="@+id/thing_name_edt"
+                            android:layout_width="0dp"
+                            android:layout_height="40dp"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            android:maxLength="85"
+                            android:padding="5dp"
+                            android:textSize="16sp" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="5dp"
+                                android:text="*"
+                                android:textColor="@color/red" />
+                        </LinearLayout>
 
             </LinearLayout>
 
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="60dp"
                 android:orientation="horizontal"
                 android:padding="10dp">
 
@@ -60,17 +60,18 @@
                     style="@style/TextStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:text="@string/happen_time" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="40dp"
                     android:background="@drawable/border_edittext_bg">
 
                     <EditText
                         android:id="@+id/happen_time_edt"
                         android:layout_width="0dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="40dp"
                         android:layout_weight="1"
                         android:background="@null"
                         android:padding="5dp"
@@ -88,7 +89,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="60dp"
                 android:orientation="horizontal"
                 android:padding="10dp">
 
@@ -96,19 +97,21 @@
                     style="@style/TextStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:text="@string/happen_address" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="40dp"
                     android:background="@drawable/border_edittext_bg">
 
                     <EditText
                         android:id="@+id/happen_address_edt"
                         android:layout_width="0dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="40dp"
                         android:layout_weight="1"
                         android:background="@null"
+                        android:maxLength="85"
                         android:padding="5dp"
                         android:textSize="16sp" />
 
@@ -124,7 +127,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="60dp"
                 android:orientation="horizontal"
                 android:padding="10dp">
 
@@ -132,19 +135,21 @@
                     style="@style/TextStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:text="@string/petition_groups" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="40dp"
                     android:background="@drawable/border_edittext_bg">
 
                     <EditText
                         android:id="@+id/petition_groups_edt"
                         android:layout_width="0dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="40dp"
                         android:layout_weight="1"
                         android:background="@null"
+                        android:maxLength="166"
                         android:padding="5dp"
                         android:textSize="16sp" />
                 </LinearLayout>
@@ -153,7 +158,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="80dp"
                 android:orientation="horizontal"
                 android:padding="10dp">
 
@@ -161,23 +166,26 @@
                     style="@style/TextStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:text="@string/field_departmen" />
 
                 <LinearLayout
                     android:id="@+id/field_departmen_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="60dp"
                     android:background="@drawable/border_edittext_bg">
 
-                    <EditText
+                    <TextView
                         android:id="@+id/field_departmen_edt"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="60dp"
                         android:layout_weight="1"
                         android:background="@null"
                         android:enabled="false"
                         android:focusable="false"
+                        android:maxLength="85"
                         android:gravity="center_vertical"
+                        style="@style/TextColorStyle"
                         android:padding="5dp"
                         android:textSize="16sp" />
 
@@ -198,7 +206,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="60dp"
                 android:orientation="horizontal"
                 android:padding="10dp">`
 
@@ -206,17 +214,18 @@
                     style="@style/TextStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:text="@string/pattern_manifestation" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="40dp"
                     android:background="@drawable/border_edittext_bg">
 
                     <Spinner
                         android:id="@+id/pattern_manifestation_spinner"
                         android:layout_width="0dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="40dp"
                         android:layout_weight="1"
                         android:background="@null"
                         android:textSize="16sp" />
@@ -225,9 +234,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="5dp"
-                        android:visibility="gone"
                         android:text="*"
-                        android:textColor="@color/red" />
+                        android:textColor="@color/red"
+                        android:visibility="gone" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -235,7 +244,7 @@
             <LinearLayout
                 android:id="@+id/xcts_linear"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="60dp"
                 android:orientation="horizontal"
                 android:padding="10dp">`
 
@@ -243,17 +252,18 @@
                     style="@style/TextStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:text="@string/field_morphology" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="40dp"
                     android:background="@drawable/border_edittext_bg">
 
                     <Spinner
                         android:id="@+id/field_morphology_spinner"
                         android:layout_width="0dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="40dp"
                         android:layout_weight="1"
                         android:background="@null"
                         android:textSize="16sp" />
@@ -271,7 +281,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="60dp"
                 android:orientation="horizontal"
                 android:padding="10dp">
 
@@ -279,18 +289,19 @@
                     style="@style/TextStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:layout_marginLeft="30dp"
                     android:text="@string/scope_text" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="40dp"
                     android:background="@drawable/border_edittext_bg">
 
                     <Spinner
                         android:id="@+id/scope_text_spinner"
                         android:layout_width="0dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="40dp"
                         android:layout_weight="1"
                         android:background="@null"
                         android:textSize="16sp" />
@@ -308,7 +319,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="80dp"
                 android:orientation="horizontal"
                 android:padding="10dp">
 
@@ -316,23 +327,25 @@
                     style="@style/TextStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:text="@string/fields_involved" />
 
                 <LinearLayout
                     android:id="@+id/fields_involved_linearlayout"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="60dp"
                     android:focusable="true"
                     android:background="@drawable/border_edittext_bg">
 
-                    <EditText
+                    <TextView
                         android:id="@+id/fields_involved_edt"
                         android:layout_width="0dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="60dp"
                         android:layout_weight="1"
                         android:background="@null"
                         android:enabled="false"
                         android:focusable="false"
+                        style="@style/TextColorStyle"
                         android:gravity="center_vertical"
                         android:padding="5dp"
                         android:textSize="16sp" />
@@ -354,20 +367,20 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="60dp"
                 android:orientation="horizontal"
                 android:padding="10dp">
 
                 <TextView
                     style="@style/TextStyle"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:text="@string/foreign_related" />
 
                 <Spinner
                     android:id="@+id/foreign_related_spinner"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="40dp"
                     android:layout_weight="1"
                     android:background="@drawable/border_edittext_bg"
                     android:textSize="16sp" />
@@ -376,7 +389,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="60dp"
                 android:orientation="horizontal"
                 android:padding="10dp">
 
@@ -384,12 +397,13 @@
                     style="@style/TextStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:text="@string/involved_xinjiang" />
 
                 <Spinner
                     android:id="@+id/involved_xinjiang_spinner"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="40dp"
                     android:layout_weight="1"
                     android:background="@drawable/border_edittext_bg"
                     android:textSize="16sp" />
@@ -398,7 +412,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="60dp"
                 android:orientation="horizontal"
                 android:padding="10dp">
 
@@ -406,12 +420,13 @@
                     style="@style/TextStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:text="@string/involve_public_opinion" />
 
                 <Spinner
                     android:id="@+id/involve_public_opinion_spinner"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="40dp"
                     android:layout_weight="1"
                     android:background="@drawable/border_edittext_bg"
                     android:textSize="16sp" />
@@ -420,7 +435,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="60dp"
                 android:orientation="horizontal"
                 android:padding="10dp">
 
@@ -428,12 +443,13 @@
                     style="@style/TextStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
                     android:text="@string/public_security_disposal" />
 
                 <Spinner
                     android:id="@+id/public_security_disposal_spinner"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="40dp"
                     android:layout_weight="1"
                     android:background="@drawable/border_edittext_bg"
                     android:textSize="16sp" />
@@ -442,7 +458,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="60dp"
                 android:orientation="horizontal"
                 android:padding="10dp">
 
@@ -450,15 +466,17 @@
                     style="@style/TextStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:text="@string/belong_street" />
 
                 <EditText
                     android:id="@+id/belong_street_edt"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="40dp"
                     android:layout_weight="1"
                     android:background="@drawable/border_edittext_bg"
                     android:padding="5dp"
+                    style="@style/TextColorStyle"
                     android:enabled="false"
                     android:text="华强北街道"
                     android:textSize="16sp" />
@@ -467,7 +485,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="60dp"
                 android:orientation="horizontal"
                 android:padding="10dp">
 
@@ -475,12 +493,13 @@
                     style="@style/TextStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:text="@string/belong_community" />
 
                 <Spinner
                     android:id="@+id/belong_community_spinner"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="40dp"
                     android:layout_weight="1"
                     android:background="@drawable/border_edittext_bg"
                     android:textSize="16sp" />
@@ -501,15 +520,16 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="130dp"
                     android:background="@drawable/border_edittext_bg">
 
                     <EditText
                         android:id="@+id/main_appeals_edt"
                         android:layout_width="0dp"
-                        android:layout_height="100dp"
+                        android:layout_height="130dp"
                         android:layout_weight="1"
                         android:background="@null"
+                        android:maxLength="1333"
                         android:gravity="start"
                         android:padding="5dp"
                         android:textSize="16sp" />
@@ -539,16 +559,17 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="130dp"
                     android:background="@drawable/border_edittext_bg">
 
                     <EditText
                         android:id="@+id/event_summary_edt"
                         android:layout_width="0dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="130dp"
                         android:layout_weight="1"
                         android:background="@null"
                         android:gravity="start"
+                        android:maxLength="1333"
                         android:padding="5dp"
                         android:textSize="16sp" />
 
@@ -577,14 +598,15 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="130dp"
                     android:background="@drawable/border_edittext_bg">
 
                     <EditText
                         android:id="@+id/leadership_instructions_edt"
                         android:layout_width="match_parent"
-                        android:layout_height="100dp"
-                        android:background="@drawable/border_edittext_bg"
+                        android:layout_height="130dp"
+                        android:background="@null"
+                        android:maxLength="83"
                         android:gravity="start"
                         android:padding="5dp"
                         android:textSize="16sp" />

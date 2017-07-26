@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -16,6 +17,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.Gravity;
@@ -421,7 +423,12 @@ public class EventEntryAdd_Attachment extends Fragment {
                     intent.putExtra("showActionIcons", false);
                     // 指定调用相机拍照后照片的储存路径
                     File out = new File(fileRoute, getPhotoFileName());
-                    uri = Uri.fromFile(out);
+                    if (Build.VERSION.SDK_INT >= 24){
+                        uri = FileProvider.getUriForFile(EventEntryAdd_Attachment.this.getActivity(),"com.yang.cameratest.fileprovider",out);
+                    }else {
+                        uri = Uri.fromFile(out);
+                    }
+                    //uri = Uri.fromFile(out);
                     intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
                     startActivityForResult(intent, PHOTO_REQUEST_TAKEPHOTO);
                     break;

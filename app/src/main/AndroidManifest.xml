@@ -39,6 +39,15 @@
         android:theme="@style/AppTheme"
         tools:replace="android:icon, android:theme">
 
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.harry.shopping.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"/>
+        </provider>
         <activity
             android:name=".activity.LoginActivity"
             android:launchMode="singleTask"
@@ -162,12 +171,18 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
 
+        <!--都督查办修改-->
+        <activity
+            android:name=".activity.supervision.SuperVisionEditActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
+
         <!--都督查办列表-->
         <activity
             android:name=".activity.supervision.SuperVisionListActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
+            android:screenOrientation="portrait" />
 
 
         <!--都督查办详情-->

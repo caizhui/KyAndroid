@@ -50,10 +50,10 @@ import okhttp3.Response;
 
 /**
  * Created by Caizhui on 2017/6/14.
- * 督察督办新增
+ * 督察督办修改
  */
 
-public class SuperVisionAddActivity extends AppCompatActivity {
+public class SuperVisionEditActivity extends AppCompatActivity {
 
     /**
      * 导航栏左边按钮
@@ -129,8 +129,6 @@ public class SuperVisionAddActivity extends AppCompatActivity {
 
     String message ="";
 
-    private TFtDbEntity tFtDbEntity;
-
     /**
      * 督办类型标识符
      */
@@ -185,6 +183,11 @@ public class SuperVisionAddActivity extends AppCompatActivity {
 
     private  CodeValue ddbbmCodeValue;
 
+    private Intent intent;
+
+
+    private TFtDbEntity tFtDbEntity;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -195,6 +198,9 @@ public class SuperVisionAddActivity extends AppCompatActivity {
         sweetAlertDialogUtil.loadAlertDialog("Loading...");
         dbAddData();
         spinnerSelect();
+        intent=getIntent();
+        tFtDbEntity = (TFtDbEntity) intent.getSerializableExtra("tFtDbEntity");
+        initData();
 
     }
 
@@ -205,10 +211,29 @@ public class SuperVisionAddActivity extends AppCompatActivity {
         sp = SpUtil.getSharePerference(this);
         // 初始化网络工具
         netWorkConnection = new NetWorkConnection(this);
-        sweetAlertDialogUtil = new SweetAlertDialogUtil(SuperVisionAddActivity.this);
+        sweetAlertDialogUtil = new SweetAlertDialogUtil(SuperVisionEditActivity.this);
         userId = sp.getString("userId", "");
         orgId = sp.getString("orgId", "");
 
+    }
+
+    /**
+     * 初始化值
+     */
+    public void initData(){
+        if (tFtDbEntity != null) {
+            supervisorNameEdt.setText(tFtDbEntity.getDbmc());
+            if("1".equals(tFtDbEntity.getDblx())){
+                radioButton01.setChecked(true);
+            }else if("2".equals(tFtDbEntity.getDblx())){
+                radioButton02.setChecked(true);
+            }else if("3".equals(tFtDbEntity.getDblx())){
+                radioButton02.setChecked(true);
+            }
+            feedbackTimeEdt.setText(tFtDbEntity.getFksx());
+            supervisorRequireEdt.setText(tFtDbEntity.getDbyq());
+            remarkTextEdt.setText(tFtDbEntity.getComments());
+        }
     }
 
     /**
@@ -216,8 +241,8 @@ public class SuperVisionAddActivity extends AppCompatActivity {
      */
     public  void initView(){
         /** 设置toolbar标题 **/
-        centerText.setText("督察信息录入");
-
+        centerText.setText("督察信息修改");
+        supervisionAddBtn.setText("修改");
         /** 将右边按钮隐藏*/
         rightBtn.setVisibility(View.INVISIBLE);
 
@@ -282,7 +307,7 @@ public class SuperVisionAddActivity extends AppCompatActivity {
                 // 失败
                 case 0:
                     sweetAlertDialogUtil.dismissAlertDialog();
-                    Toast.makeText(SuperVisionAddActivity.this, message, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SuperVisionEditActivity.this, message, Toast.LENGTH_SHORT).show();
                     break;
                 // 成功跳转
                 case 1:
@@ -290,10 +315,10 @@ public class SuperVisionAddActivity extends AppCompatActivity {
                     break;
                 // 成功跳转
                 case 2:
-                    Intent intent =new Intent(SuperVisionAddActivity.this,SuperVisionListActivity.class);
+                    Intent intent =new Intent(SuperVisionEditActivity.this,SuperVisionListActivity.class);
                     intent.putExtra("businessType", "initList");
                     startActivity(intent);
-                    Toast.makeText(SuperVisionAddActivity.this,"保存成功",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SuperVisionEditActivity.this,"修改成功",Toast.LENGTH_SHORT).show();
                     sweetAlertDialogUtil.dismissAlertDialog();
                     break;
             }
@@ -330,14 +355,14 @@ public class SuperVisionAddActivity extends AppCompatActivity {
             }
             if(glsjList!=null && glsjList.size()>0) {
                 //将可选内容与ArrayAdapter连接起来
-                glsjAdapter = new ArrayAdapter<CodeValue>(SuperVisionAddActivity.this, android.R.layout.simple_spinner_item, glsjList);
+                glsjAdapter = new ArrayAdapter<CodeValue>(SuperVisionEditActivity.this, android.R.layout.simple_spinner_item, glsjList);
                 //设置下拉列表的风格
                 glsjAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 supervisorGlsj.setAdapter(glsjAdapter);//将adapter 添加到表现形式spinner中
             }
             if(bdcbmList!=null && bdcbmList.size()>0){
                 //将可选内容与ArrayAdapter连接起来
-                bdcbmAdapter = new ArrayAdapter<CodeValue>(SuperVisionAddActivity.this, android.R.layout.simple_spinner_item, bdcbmList);
+                bdcbmAdapter = new ArrayAdapter<CodeValue>(SuperVisionEditActivity.this, android.R.layout.simple_spinner_item, bdcbmList);
                 //设置下拉列表的风格
                 bdcbmAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 beSupervisorUnitSpinner.setAdapter(bdcbmAdapter);//将adapter 添加到表现形式spinner中
@@ -357,7 +382,7 @@ public class SuperVisionAddActivity extends AppCompatActivity {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     feedbackTimeEdt.clearFocus();
                     DateTimePickDialogUtil dateTimePicKDialog = new DateTimePickDialogUtil(
-                            SuperVisionAddActivity.this, "");
+                            SuperVisionEditActivity.this, "");
                     dateTimePicKDialog.dateTimePicKDialog(feedbackTimeEdt);
                     return false;
                 }
@@ -410,7 +435,7 @@ public class SuperVisionAddActivity extends AppCompatActivity {
             case R.id.feedback_time_edt:
                 feedbackTimeEdt.clearFocus();
                 DateTimePickDialogUtil dateTimePicKDialog = new DateTimePickDialogUtil(
-                        SuperVisionAddActivity.this, "");
+                        SuperVisionEditActivity.this, "");
                 dateTimePicKDialog.dateTimePicKDialog(feedbackTimeEdt);
                 break;
             case R.id.supervision_add_btn:

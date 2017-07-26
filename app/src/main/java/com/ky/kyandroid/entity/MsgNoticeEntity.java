@@ -54,7 +54,7 @@ public class MsgNoticeEntity implements Serializable {
     /**
      * 阅读时间
      */
-    private String ydsj;
+        private String ydsj;
 
     /**
      * 接收人所属部门
