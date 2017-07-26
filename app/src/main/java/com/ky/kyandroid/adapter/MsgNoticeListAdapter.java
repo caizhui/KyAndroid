@@ -2,7 +2,6 @@ package com.ky.kyandroid.adapter;
 
 import android.content.Context;
 import android.os.Handler;
-import android.support.v7.widget.DrawableUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -91,6 +90,7 @@ public class MsgNoticeListAdapter extends BaseAdapter {
 			holder.tv_right_name = (TextView) slideView.findViewById(R.id.tv_right_name);
 			holder.tv_right_name2 = (TextView) slideView.findViewById(R.id.tv_right_name2);
 			holder.deleteHolder = (ViewGroup)slideView.findViewById(R.id.holder);
+			holder.tv_clsx = (TextView)slideView.findViewById(R.id.tv_clsx);
 			slideView.setOnSlideListener(onSlideListener);
             slideView.setTag(holder);
 		}else {
@@ -114,6 +114,7 @@ public class MsgNoticeListAdapter extends BaseAdapter {
 		holder.tv_center_name3.setText("内容信息:" + entity.getNr());
 		// 时间
 		holder.tv_right_name.setText(entity.getFssj());
+		holder.tv_clsx.setText("处理时限:"+entity.getDksj());
 		// 已读与未读 根据阅读时间判断
 		if (StringUtils.isBlank(entity.getYdsj())) {
 			holder.tv_right_name2.setText("未读");
@@ -144,6 +145,7 @@ public class MsgNoticeListAdapter extends BaseAdapter {
 		public TextView tv_right_name;
 		public TextView tv_right_name2;
 		public ViewGroup deleteHolder;
+		public TextView tv_clsx;
 	}
 
 	/**

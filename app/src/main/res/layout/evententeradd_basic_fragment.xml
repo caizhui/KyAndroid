@@ -36,6 +36,7 @@
                             android:layout_height="40dp"
                             android:layout_weight="1"
                             android:background="@null"
+                            android:maxLength="85"
                             android:padding="5dp"
                             android:textSize="16sp" />
                             <TextView
@@ -110,6 +111,7 @@
                         android:layout_height="40dp"
                         android:layout_weight="1"
                         android:background="@null"
+                        android:maxLength="85"
                         android:padding="5dp"
                         android:textSize="16sp" />
 
@@ -147,6 +149,7 @@
                         android:layout_height="40dp"
                         android:layout_weight="1"
                         android:background="@null"
+                        android:maxLength="166"
                         android:padding="5dp"
                         android:textSize="16sp" />
                 </LinearLayout>
@@ -180,6 +183,7 @@
                         android:background="@null"
                         android:enabled="false"
                         android:focusable="false"
+                        android:maxLength="85"
                         android:gravity="center_vertical"
                         style="@style/TextColorStyle"
                         android:padding="5dp"
@@ -525,6 +529,7 @@
                         android:layout_height="130dp"
                         android:layout_weight="1"
                         android:background="@null"
+                        android:maxLength="1333"
                         android:gravity="start"
                         android:padding="5dp"
                         android:textSize="16sp" />
@@ -564,6 +569,7 @@
                         android:layout_weight="1"
                         android:background="@null"
                         android:gravity="start"
+                        android:maxLength="1333"
                         android:padding="5dp"
                         android:textSize="16sp" />
 
@@ -600,6 +606,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="130dp"
                         android:background="@null"
+                        android:maxLength="83"
                         android:gravity="start"
                         android:padding="5dp"
                         android:textSize="16sp" />
