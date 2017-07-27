@@ -8,7 +8,9 @@ import java.io.Serializable;
  * Created by msi on 2017/6/26.
  */
 public class MsgNoticeEntity implements Serializable {
-    /** long */
+    /**
+     * long
+     */
     private static final long serialVersionUID = 1L;
 
     /**
@@ -54,7 +56,7 @@ public class MsgNoticeEntity implements Serializable {
     /**
      * 阅读时间
      */
-        private String ydsj;
+    private String ydsj;
 
     /**
      * 接收人所属部门
@@ -85,6 +87,13 @@ public class MsgNoticeEntity implements Serializable {
     private String clbyc;
 
     /**
+     * 处理时限
+     */
+    private String clsx;
+
+
+
+    /**
      * 延期申请对象
      */
     private TFtSjYqsqEntity yqsqEntity;
@@ -98,8 +107,18 @@ public class MsgNoticeEntity implements Serializable {
      * 后续加上受理结果的一系列操作
      * */
 
-    /** SlideView */
+    /**
+     * SlideView
+     */
     public transient SlideView slideView;
+
+    public String getClsx() {
+        return clsx;
+    }
+
+    public void setClsx(String clsx) {
+        this.clsx = clsx;
+    }
 
     public String getFsbm() {
         return fsbm;

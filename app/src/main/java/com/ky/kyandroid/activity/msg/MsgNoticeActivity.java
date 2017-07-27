@@ -168,6 +168,16 @@ public class MsgNoticeActivity extends AppCompatActivity implements View.OnClick
     private LinearLayout lx3_layout;
 
     /**
+     * 任务处理时限显示层
+     */
+    private LinearLayout linear_layout_5;
+
+    /**
+     * 事件处理时限（类型为任务处理时才有值）
+     */
+    private TextView sj_clsx;
+
+    /**
      * 延期层下字段列表 - 申请原因,原处理时限,变化内容,展示文本,
      */
     private TextView tv_msg_yqyy_mc,tv_msg_yclsx,tv_sfty_detial,tv_msg_change_text,tv_detail;
@@ -358,6 +368,9 @@ public class MsgNoticeActivity extends AppCompatActivity implements View.OnClick
         tv_msg_sj_mc = mPopView.findViewById(R.id.tv_msg_sj_mc);
         tv_msg_type = mPopView.findViewById(R.id.tv_msg_type);
         tv_msg_content = mPopView.findViewById(R.id.tv_msg_content);
+        /************任务处理层控制初始化**********/
+        linear_layout_5 = mPopView.findViewById(R.id.linear_layout_5);
+        sj_clsx = mPopView.findViewById(R.id.sj_clsx);
         /******************** 延期消息类控件初始化*****************************/
         lx3_layout = mPopView.findViewById(R.id.lx3_layout);
         tv_msg_yqyy_mc = mPopView.findViewById(R.id.tv_msg_yqyy_mc);
@@ -481,10 +494,17 @@ public class MsgNoticeActivity extends AppCompatActivity implements View.OnClick
                     tv_msg_fsr_bm.setText(adaterEntity.getFsbmmc());
                     tv_msg_fssj.setText(adaterEntity.getFssj());
                     lx3_layout.setVisibility(View.GONE);
+                    linear_layout_5.setVisibility(View.GONE);
                     /*********** 根据类型做不同判断  *************/
                     if ("1".equals(adaterEntity.getLx())) {
                         tv_msg_sj_text.setText("事件名称:");
                         tv_msg_type.setText("事件处理");
+                        // 处理时限有值时 - 任务处理
+                        if (!StringUtils.isBlank(adaterEntity.getClsx())){
+                            linear_layout_5.setVisibility(View.VISIBLE);
+                            sj_clsx.setText(adaterEntity.getClsx());
+                            tv_msg_type.setText("任务处理");
+                        }
                     } else if("2".equals(adaterEntity.getLx())) {
                         tv_msg_sj_text.setText("督办名称:");
                         tv_msg_type.setText("督办处理");
@@ -534,7 +554,7 @@ public class MsgNoticeActivity extends AppCompatActivity implements View.OnClick
                         }
                     }
                     tv_msg_sj_mc.setText(adaterEntity.getSjmc());
-                    tv_msg_content.setText("          " + adaterEntity.getNr());
+                    tv_msg_content.setText("      " + adaterEntity.getNr());
                     showPopMenu();
 
                     /******* 更改阅读状态 ********/

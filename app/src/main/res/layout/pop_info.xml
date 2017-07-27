@@ -72,22 +72,63 @@
 
             <TextView
                 android:id="@+id/tv_msg_sj_mc"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="2dp"
-                android:gravity="left"
+                android:layout_alignParentStart="true"
+
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="50dp"
+                android:ellipsize="marquee"
+                android:gravity="start"
+                android:maxLines="1"
                 android:text="名称" />
 
             <TextView
                 android:id="@+id/tv_msg_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_marginTop="2dp"
                 android:text="消息类型"
                 android:textColor="@color/green"
-                android:textSize="12dp" />
+                android:textSize="12sp" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_layout_5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/linear_layout_1"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="3dp"
+        android:background="@drawable/pop_bg_1"
+        android:orientation="horizontal"
+        android:padding="5dp">
+
+        <TextView
+            android:id="@+id/msg_clsx_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="处理时限:" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/sj_clsx"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="2dp"
+                android:ellipsize="marquee"
+                android:gravity="start"
+                android:maxLines="1"
+                android:text="时间" />
+
         </RelativeLayout>
     </LinearLayout>
 
@@ -95,7 +136,7 @@
         android:id="@+id/lx3_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/linear_layout_1"
+        android:layout_below="@id/linear_layout_5"
         android:orientation="vertical">
 
         <LinearLayout
@@ -170,8 +211,8 @@
             android:layout_marginRight="10dp"
             android:layout_marginTop="3dp"
             android:background="@drawable/pop_bg_1"
-            android:orientation="horizontal"
             android:gravity="center_vertical"
+            android:orientation="horizontal"
             android:padding="5dp">
 
             <TextView
@@ -250,23 +291,23 @@
                     android:id="@+id/et_yqsx"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/pop_bg_1"
                     android:layout_marginLeft="2dp"
-                    android:textSize="14dp"
-                    android:paddingLeft="3dp"
+                    android:background="@drawable/pop_bg_1"
                     android:gravity="left"
-                    android:hint="延期时限"/>
+                    android:hint="延期时限"
+                    android:paddingLeft="3dp"
+                    android:textSize="14dp" />
 
                 <EditText
                     android:id="@+id/et_btyyy"
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
-                    android:background="@drawable/pop_bg_1"
                     android:layout_marginLeft="2dp"
-                    android:textSize="14dp"
-                    android:padding="3dp"
+                    android:background="@drawable/pop_bg_1"
                     android:gravity="left"
                     android:hint="不同意原因"
+                    android:padding="3dp"
+                    android:textSize="14dp"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentEnd="true" />
 
