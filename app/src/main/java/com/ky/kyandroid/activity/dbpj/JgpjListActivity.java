@@ -27,7 +27,6 @@ import com.ky.kyandroid.adapter.JgpjListAdapter;
 import com.ky.kyandroid.bean.AckMessage;
 import com.ky.kyandroid.bean.NetWorkConnection;
 import com.ky.kyandroid.bean.PageBean;
-import com.ky.kyandroid.entity.JgpjEntity;
 import com.ky.kyandroid.entity.SjHandleParams;
 import com.ky.kyandroid.util.JsonUtil;
 import com.ky.kyandroid.util.SpUtil;
@@ -89,7 +88,7 @@ public class JgpjListActivity extends AppCompatActivity {
     /**
      * 事件列表
      */
-    private List<JgpjEntity> jgpjEntityList;
+    private List<Map<String,String>> jgpjEntityList;
 
 
     private JgpjListAdapter adapter;
@@ -98,7 +97,7 @@ public class JgpjListActivity extends AppCompatActivity {
     /**
      * 部门评价实体
      */
-    JgpjEntity jgpjEntity;
+    Map<String,String> map;
 
 
     /**
@@ -165,7 +164,7 @@ public class JgpjListActivity extends AppCompatActivity {
      */
     private Map<String, String> paramsMap = null;
 
-    List<JgpjEntity> entityList;
+    List<Map<String,String>> entityList;
 
     /**
      * 临时位置
@@ -297,7 +296,7 @@ public class JgpjListActivity extends AppCompatActivity {
         sp = SpUtil.getSharePerference(this);
         netWorkConnection = new NetWorkConnection(this);
         sweetAlertDialogUtil = new SweetAlertDialogUtil(JgpjListActivity.this);
-        jgpjEntityList = new ArrayList<JgpjEntity>();
+        jgpjEntityList = new ArrayList<Map<String,String>>();
         userId = sp.getString(USER_ID, "");
         centerText.setText("机构评价");
         rightBtn.setVisibility(View.VISIBLE);
@@ -413,7 +412,7 @@ public class JgpjListActivity extends AppCompatActivity {
                         if (dataL != null && dataL.size() > 0) {
                             // 响应字符串
                             String resultList = JsonUtil.toJson(dataL);
-                            dataList = (List<JgpjEntity>) JsonUtil.fromJson(resultList, new TypeToken<List<JgpjEntity>>() {
+                            dataList = (List<Map<String,String>>) JsonUtil.fromJson(resultList, new TypeToken<List<Map<String,String>>>() {
                             });
                             flag = true;
                         } else {
@@ -431,7 +430,7 @@ public class JgpjListActivity extends AppCompatActivity {
      * 加载数据
      */
     private void notifyListViewData(boolean isAdd) {
-        entityList = (List<JgpjEntity>) dataList;
+        entityList = (List<Map<String,String>>) dataList;
         if (isAdd) {
             // 追加列表
             adapter.addDataSetChanged(entityList);
@@ -482,10 +481,10 @@ public class JgpjListActivity extends AppCompatActivity {
      * @param sjHandleParams
      */
     private void updateListDataStatie(SjHandleParams sjHandleParams) {
-        List<JgpjEntity> tFtDbEntityList = adapter.getList();
+        List<Map<String,String>> tFtDbEntityList = adapter.getList();
         if (tFtDbEntityList != null) {
             for (int i = 0; i < tFtDbEntityList.size(); i++) {
-                JgpjEntity entity = tFtDbEntityList.get(i);
+                Map<String,String> entity = tFtDbEntityList.get(i);
             }
             adapter.notifyDataSetChanged();
         }
@@ -515,7 +514,7 @@ public class JgpjListActivity extends AppCompatActivity {
      */
     @OnItemLongClick(R.id.search_bmpj_list)
     public boolean OnItemLongClick(final int position) {
-        jgpjEntity = (JgpjEntity) adapter.getItem(position);
+        map = (Map<String,String>) adapter.getItem(position);
         tempPosition = position;
 
         return true;

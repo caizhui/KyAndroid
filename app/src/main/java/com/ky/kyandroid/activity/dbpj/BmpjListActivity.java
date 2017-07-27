@@ -27,7 +27,6 @@ import com.ky.kyandroid.adapter.DbpjListAdapter;
 import com.ky.kyandroid.bean.AckMessage;
 import com.ky.kyandroid.bean.NetWorkConnection;
 import com.ky.kyandroid.bean.PageBean;
-import com.ky.kyandroid.entity.BmpjEntity;
 import com.ky.kyandroid.entity.SjHandleParams;
 import com.ky.kyandroid.util.JsonUtil;
 import com.ky.kyandroid.util.SpUtil;
@@ -46,6 +45,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemClick;
 import butterknife.OnItemLongClick;
+
 
 /**
  * Created by Caizhui on 2017-6-9.
@@ -89,16 +89,16 @@ public class BmpjListActivity extends AppCompatActivity {
     /**
      * 事件列表
      */
-    private List<BmpjEntity> bmpjEntityList;
+    private List<Map<String,String>> bmpjEntityList;
 
 
     private DbpjListAdapter adapter;
 
 
     /**
-     * 部门评价实体
+     *
      */
-    BmpjEntity bmpjEntity;
+    Map<String,String> map;
 
 
     /**
@@ -165,7 +165,7 @@ public class BmpjListActivity extends AppCompatActivity {
      */
     private Map<String, String> paramsMap = null;
 
-    List<BmpjEntity> entityList;
+    List<Map<String,String>> entityList;
 
     /**
      * 临时位置
@@ -297,7 +297,7 @@ public class BmpjListActivity extends AppCompatActivity {
         sp = SpUtil.getSharePerference(this);
         netWorkConnection = new NetWorkConnection(this);
         sweetAlertDialogUtil = new SweetAlertDialogUtil(BmpjListActivity.this);
-        bmpjEntityList = new ArrayList<BmpjEntity>();
+        bmpjEntityList = new ArrayList<Map<String,String>>();
         userId = sp.getString(USER_ID, "");
         centerText.setText("部门评价");
         rightBtn.setVisibility(View.VISIBLE);
@@ -413,7 +413,7 @@ public class BmpjListActivity extends AppCompatActivity {
                         if (dataL != null && dataL.size() > 0) {
                             // 响应字符串
                             String resultList = JsonUtil.toJson(dataL);
-                            dataList = (List<BmpjEntity>) JsonUtil.fromJson(resultList, new TypeToken<List<BmpjEntity>>() {
+                            dataList = (List<Map<String,String>>) JsonUtil.fromJson(resultList, new TypeToken<List<Map<String,String>>>() {
                             });
                             flag = true;
                         } else {
@@ -431,7 +431,7 @@ public class BmpjListActivity extends AppCompatActivity {
      * 加载数据
      */
     private void notifyListViewData(boolean isAdd) {
-        entityList = (List<BmpjEntity>) dataList;
+        entityList = (List<Map<String,String>>) dataList;
         if (isAdd) {
             // 追加列表
             adapter.addDataSetChanged(entityList);
@@ -482,10 +482,10 @@ public class BmpjListActivity extends AppCompatActivity {
      * @param sjHandleParams
      */
     private void updateListDataStatie(SjHandleParams sjHandleParams) {
-        List<BmpjEntity> tFtDbEntityList = adapter.getList();
+        List<Map<String,String>> tFtDbEntityList = adapter.getList();
         if (tFtDbEntityList != null) {
             for (int i = 0; i < tFtDbEntityList.size(); i++) {
-                BmpjEntity entity = tFtDbEntityList.get(i);
+                Map<String,String> entity = tFtDbEntityList.get(i);
             }
             adapter.notifyDataSetChanged();
         }
@@ -499,10 +499,10 @@ public class BmpjListActivity extends AppCompatActivity {
      */
     @OnItemClick(R.id.search_bmpj_list)
     public void OnItemClick(int position) {
-       /* bmpjEntity = (BmpjEntity) adapter.getItem(position);
+       /* Map<String,String> = (Map<String,String>) adapter.getItem(position);
         Intent intent = new Intent(this, BmpjDetailActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("bmpjEntity", bmpjEntity);
+        bundle.putSerializable("Map<String,String>", Map<String,String>);
         intent.putExtras(bundle);
         startActivity(intent);*/
     }
@@ -515,7 +515,7 @@ public class BmpjListActivity extends AppCompatActivity {
      */
     @OnItemLongClick(R.id.search_bmpj_list)
     public boolean OnItemLongClick(final int position) {
-        bmpjEntity = (BmpjEntity) adapter.getItem(position);
+        map = (Map<String,String>) adapter.getItem(position);
         tempPosition = position;
 
         return true;

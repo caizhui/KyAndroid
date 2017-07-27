@@ -7,26 +7,26 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.ky.kyandroid.R;
-import com.ky.kyandroid.entity.BmpjEntity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class DbpjListAdapter extends BaseAdapter {
-    public List<BmpjEntity> list;
+    public List<Map<String,String>> list;
     public Context context;
 
 
     public DbpjListAdapter(Context context) {
         super();
-        list = new ArrayList<BmpjEntity>();
+        list = new ArrayList<Map<String,String>>();
         this.context = context;
     }
 
-    public DbpjListAdapter(List<BmpjEntity> list, Context context) {
+    public DbpjListAdapter(List<Map<String,String>> list, Context context) {
         super();
         this.list = list;
         this.context = context;
@@ -54,39 +54,25 @@ public class DbpjListAdapter extends BaseAdapter {
             convertView = View.inflate(context, R.layout.activity_bmpj_item, null);
             holder = new ViewHolder(convertView);
             convertView.setTag(holder);// 绑定ViewHolder对象
-            holder.bmName.setText(list.get(position).getBPJR());
-            holder.pjdjText.setText(list.get(position).getDJ());
-            holder.dzsText.setText(list.get(position).getDZS()==null? "0":list.get(position).getDZS()+"");
-            holder.sjzsText.setText(list.get(position).getSJS() == null ?"0":list.get(position).getSJS()+"");
-           /* holder.zfText.setText(list.get(position).getZF() == null ? "99.55":formateRate(list.get(position).getZF())+"");
-            holder.pjfText.setText(list.get(position).getFS()== null ?"99.55":formateRate(list.get(position).getFS())+"");
-            holder.sjsfjsczText.setText(list.get(position).get_$59205ff2a5b2b1610460435c()==null?
-                    "99.55":formateRate(list.get(position).get_$59205ff2a5b2b1610460435c())+"");
-            holder.sjsftsczText.setText(list.get(position).get_$59206000a5b2b1610460435d()==null?
-                    "99.55":formateRate(list.get(position).get_$59206000a5b2b1610460435d())+"");
-            holder.sjclfwzlText.setText(list.get(position).get_$595c77d14f75180274e11dfc()==null?
-                    "99.55":formateRate(list.get(position).get_$595c77d14f75180274e11dfc())+"");
-            holder.sjclfwtdText.setText(list.get(position).get_$595c77894f75180274e11dfa()==null?
-                    "99.55":formateRate(list.get(position).get_$595c77894f75180274e11dfa())+"");
-            holder.sjclfwsxText.setText(list.get(position).get_$595c77bc4f75180274e11dfb()==null?
-                    "99.55": formateRate(list.get(position).get_$595c77bc4f75180274e11dfb())+"");
-            holder.sjsfyfczText.setText(list.get(position).get_$595c77664f75180274e11df9()==null?
-                    "99.55":formateRate(list.get(position).get_$595c77664f75180274e11df9())+"");*/
+            holder.bmName.setText(list.get(position).get("BPJR"));
+            holder.pjdjText.setText(list.get(position).get("DJ"));
+            holder.dzsText.setText(list.get(position).get("DZS")==null? "0":list.get(position).get("DZS")+"");
+            holder.sjzsText.setText(list.get(position).get("SJS") == null ?"0":list.get(position).get("SJS")+"");
 
-            holder.zfText.setText(list.get(position).getZF() == null ? "99.55":formateRate(list.get(position).getZF())+"");
-            holder.pjfText.setText(list.get(position).getFS()== null ?"99.55":formateRate(list.get(position).getFS())+"");
-            holder.sjsfjsczText.setText(list.get(position).get_$59205ff2a5b2b1610460435c()==null?
-                    "99.55":formateRate(list.get(position).get_$59205ff2a5b2b1610460435c())+"");
-            holder.sjsftsczText.setText(list.get(position).get_$59206000a5b2b1610460435d()==null?
-                    "99.55":formateRate(list.get(position).get_$59206000a5b2b1610460435d())+"");
-            holder.sjclfwzlText.setText(list.get(position).get_$595c77d14f75180274e11dfc()==null?
-                    "99.55":formateRate(list.get(position).get_$595c77d14f75180274e11dfc())+"");
-            holder.sjclfwtdText.setText(list.get(position).get_$595c77894f75180274e11dfa()==null?
-                    "99.55":formateRate(list.get(position).get_$595c77894f75180274e11dfa())+"");
-            holder.sjclfwsxText.setText(list.get(position).get_$595c77bc4f75180274e11dfb()==null?
-                    "99.55": formateRate(list.get(position).get_$595c77bc4f75180274e11dfb())+"");
-            holder.sjsfyfczText.setText(list.get(position).get_$595c77664f75180274e11df9()==null?
-                    "99.55":formateRate(list.get(position).get_$595c77664f75180274e11df9())+"");
+            holder.zfText.setText(list.get(position).get("ZF") == null ? "99.55":formateRate(list.get(position).get("ZF"))+"");
+            holder.pjfText.setText(list.get(position).get("FS")== null ?"99.55":formateRate(list.get(position).get("FS"))+"");
+            holder.sjsfjsczText.setText(list.get(position).get("59205ff2a5b2b1610460435c")==null?
+                    "99.55":formateRate(list.get(position).get("59205ff2a5b2b1610460435c"))+"");
+            holder.sjsftsczText.setText(list.get(position).get("59206000a5b2b1610460435d")==null?
+                    "99.55":formateRate(list.get(position).get("59206000a5b2b1610460435d"))+"");
+            holder.sjclfwzlText.setText(list.get(position).get("595c77d14f75180274e11dfc")==null?
+                    "99.55":formateRate(list.get(position).get("595c77d14f75180274e11dfc"))+"");
+            holder.sjclfwtdText.setText(list.get(position).get("595c77894f75180274e11dfa")==null?
+                    "99.55":formateRate(list.get(position).get("595c77894f75180274e11dfa"))+"");
+            holder.sjclfwsxText.setText(list.get(position).get("595c77bc4f75180274e11dfb")==null?
+                    "99.55": formateRate(list.get(position).get("595c77bc4f75180274e11dfb"))+"");
+            holder.sjsfyfczText.setText(list.get(position).get("595c77664f75180274e11df9")==null?
+                    "99.55":formateRate(list.get(position).get("595c77664f75180274e11df9"))+"");
 
         } else {
             holder = (ViewHolder) convertView.getTag();// 取出ViewHolder对象
@@ -123,7 +109,7 @@ public class DbpjListAdapter extends BaseAdapter {
      * 存放控件
      */
 
-    public void notifyDataSetChanged(List<BmpjEntity> list) {
+    public void notifyDataSetChanged(List<Map<String,String>> list) {
         this.list = list;
         super.notifyDataSetChanged();
     }
@@ -131,12 +117,12 @@ public class DbpjListAdapter extends BaseAdapter {
     /**
      * @param addList
      */
-    public void addDataSetChanged(List<BmpjEntity> addList) {
+    public void addDataSetChanged(List<Map<String,String>> addList) {
         this.list.addAll(addList);
         this.notifyDataSetChanged(list);
     }
 
-    public List<BmpjEntity> getList() {
+    public List<Map<String,String>> getList() {
         return list;
     }
 

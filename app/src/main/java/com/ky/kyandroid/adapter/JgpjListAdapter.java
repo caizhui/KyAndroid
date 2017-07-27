@@ -7,26 +7,26 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.ky.kyandroid.R;
-import com.ky.kyandroid.entity.JgpjEntity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class JgpjListAdapter extends BaseAdapter {
-    public List<JgpjEntity> list;
+    public List<Map<String,String>> list;
     public Context context;
 
 
     public JgpjListAdapter(Context context) {
         super();
-        list = new ArrayList<JgpjEntity>();
+        list = new ArrayList<Map<String,String>>();
         this.context = context;
     }
 
-    public JgpjListAdapter(List<JgpjEntity> list, Context context) {
+    public JgpjListAdapter(List<Map<String,String>> list, Context context) {
         super();
         this.list = list;
         this.context = context;
@@ -54,17 +54,17 @@ public class JgpjListAdapter extends BaseAdapter {
             convertView = View.inflate(context, R.layout.activity_jgpj_item, null);
             holder = new ViewHolder(convertView);
             convertView.setTag(holder);// 绑定ViewHolder对象
-            holder.bmName.setText(list.get(position).getBPJR());
-            holder.pjdjText.setText(list.get(position).getDJ());
-            holder.dzsText.setText(list.get(position).getDZS()==null? "0":list.get(position).getDZS()+"");
-            holder.sjzsText.setText(list.get(position).getSJS() == null ?"0":list.get(position).getSJS()+"");
+            holder.bmName.setText(list.get(position).get("BPJR"));
+            holder.pjdjText.setText(list.get(position).get("DJ"));
+            holder.dzsText.setText(list.get(position).get("DZS")==null? "0":list.get(position).get("DZS")+"");
+            holder.sjzsText.setText(list.get(position).get("SJS") == null ?"0":list.get(position).get("SJS")+"");
 
-            holder.zfText.setText(list.get(position).getZF() == null ? "99.55":formateRate(list.get(position).getZF())+"");
-            holder.pjfText.setText(list.get(position).getFS()== null ?"99.55":formateRate(list.get(position).getFS())+"");
-            holder.sjcljsText.setText(list.get(position).get_$59205fe0a5b2b1610460435b()==null?
-                    "99.55":formateRate(list.get(position).get_$59205fe0a5b2b1610460435b())+"");
-            holder.sjclddText.setText(list.get(position).get_$59205fd4a5b2b1610460435a()==null?
-                    "99.55":formateRate(list.get(position).get_$59205fd4a5b2b1610460435a())+"");
+            holder.zfText.setText(list.get(position).get("ZF") == null ? "0.00":formateRate(list.get(position).get("ZF"))+"");
+            holder.pjfText.setText(list.get(position).get("FS")== null ?"0.00":formateRate(list.get(position).get("FS"))+"");
+            holder.sjcljsText.setText(list.get(position).get("59205fe0a5b2b1610460435b")==null?
+                    "0.00":formateRate(list.get(position).get("59205fe0a5b2b1610460435b"))+"");
+            holder.sjclddText.setText(list.get(position).get("59205fd4a5b2b1610460435a")==null?
+                    "0.00":formateRate(list.get(position).get("59205fd4a5b2b1610460435a"))+"");
         } else {
             holder = (ViewHolder) convertView.getTag();// 取出ViewHolder对象
         }
@@ -100,7 +100,7 @@ public class JgpjListAdapter extends BaseAdapter {
      * 存放控件
      */
 
-    public void notifyDataSetChanged(List<JgpjEntity> list) {
+    public void notifyDataSetChanged(List<Map<String,String>> list) {
         this.list = list;
         super.notifyDataSetChanged();
     }
@@ -108,12 +108,12 @@ public class JgpjListAdapter extends BaseAdapter {
     /**
      * @param addList
      */
-    public void addDataSetChanged(List<JgpjEntity> addList) {
+    public void addDataSetChanged(List<Map<String,String>> addList) {
         this.list.addAll(addList);
         this.notifyDataSetChanged(list);
     }
 
-    public List<JgpjEntity> getList() {
+    public List<Map<String,String>> getList() {
         return list;
     }
 

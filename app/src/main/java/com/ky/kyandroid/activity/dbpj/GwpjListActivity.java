@@ -27,7 +27,6 @@ import com.ky.kyandroid.adapter.GwpjListAdapter;
 import com.ky.kyandroid.bean.AckMessage;
 import com.ky.kyandroid.bean.NetWorkConnection;
 import com.ky.kyandroid.bean.PageBean;
-import com.ky.kyandroid.entity.GwpjEntity;
 import com.ky.kyandroid.entity.SjHandleParams;
 import com.ky.kyandroid.util.JsonUtil;
 import com.ky.kyandroid.util.SpUtil;
@@ -89,16 +88,16 @@ public class GwpjListActivity extends AppCompatActivity {
     /**
      * 事件列表
      */
-    private List<GwpjEntity> gwpjEntityList;
+    private List<Map<String,String>> gwpjEntityList;
 
 
     private GwpjListAdapter adapter;
 
 
     /**
-     * 部门评价实体
+     *
      */
-    GwpjEntity gwpjEntity;
+    Map<String,String> map;
 
 
     /**
@@ -165,7 +164,7 @@ public class GwpjListActivity extends AppCompatActivity {
      */
     private Map<String, String> paramsMap = null;
 
-    List<GwpjEntity> entityList;
+    List<Map<String,String>> entityList;
 
     /**
      * 临时位置
@@ -297,7 +296,7 @@ public class GwpjListActivity extends AppCompatActivity {
         sp = SpUtil.getSharePerference(this);
         netWorkConnection = new NetWorkConnection(this);
         sweetAlertDialogUtil = new SweetAlertDialogUtil(GwpjListActivity.this);
-        gwpjEntityList = new ArrayList<GwpjEntity>();
+        gwpjEntityList = new ArrayList<Map<String,String>>();
         userId = sp.getString(USER_ID, "");
         centerText.setText("岗位评价");
         rightBtn.setVisibility(View.VISIBLE);
@@ -413,7 +412,7 @@ public class GwpjListActivity extends AppCompatActivity {
                         if (dataL != null && dataL.size() > 0) {
                             // 响应字符串
                             String resultList = JsonUtil.toJson(dataL);
-                            dataList = (List<GwpjEntity>) JsonUtil.fromJson(resultList, new TypeToken<List<GwpjEntity>>() {
+                            dataList = (List<Map<String,String>>) JsonUtil.fromJson(resultList, new TypeToken<List<Map<String,String>>>() {
                             });
                             flag = true;
                         } else {
@@ -431,7 +430,7 @@ public class GwpjListActivity extends AppCompatActivity {
      * 加载数据
      */
     private void notifyListViewData(boolean isAdd) {
-        entityList = (List<GwpjEntity>) dataList;
+        entityList = (List<Map<String,String>>) dataList;
         if (isAdd) {
             // 追加列表
             adapter.addDataSetChanged(entityList);
@@ -482,10 +481,10 @@ public class GwpjListActivity extends AppCompatActivity {
      * @param sjHandleParams
      */
     private void updateListDataStatie(SjHandleParams sjHandleParams) {
-        List<GwpjEntity> tFtDbEntityList = adapter.getList();
+        List<Map<String,String>> tFtDbEntityList = adapter.getList();
         if (tFtDbEntityList != null) {
             for (int i = 0; i < tFtDbEntityList.size(); i++) {
-                GwpjEntity entity = tFtDbEntityList.get(i);
+                Map<String,String> entity = tFtDbEntityList.get(i);
             }
             adapter.notifyDataSetChanged();
         }
@@ -499,10 +498,10 @@ public class GwpjListActivity extends AppCompatActivity {
      */
     @OnItemClick(R.id.search_bmpj_list)
     public void OnItemClick(int position) {
-       /* GwpjEntity = (GwpjEntity) adapter.getItem(position);
+       /* Map<String,String> = (Map<String,String>) adapter.getItem(position);
         Intent intent = new Intent(this, BmpjDetailActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("GwpjEntity", GwpjEntity);
+        bundle.putSerializable("Map<String,String>", Map<String,String>);
         intent.putExtras(bundle);
         startActivity(intent);*/
     }
@@ -515,7 +514,7 @@ public class GwpjListActivity extends AppCompatActivity {
      */
     @OnItemLongClick(R.id.search_bmpj_list)
     public boolean OnItemLongClick(final int position) {
-        gwpjEntity = (GwpjEntity) adapter.getItem(position);
+       map = (Map<String,String>) adapter.getItem(position);
         tempPosition = position;
 
         return true;
