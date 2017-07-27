@@ -9,7 +9,6 @@ import android.widget.TextView;
 import com.ky.kyandroid.R;
 import com.ky.kyandroid.entity.BmpjEntity;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,35 +58,35 @@ public class DbpjListAdapter extends BaseAdapter {
             holder.pjdjText.setText(list.get(position).getDJ());
             holder.dzsText.setText(list.get(position).getDZS()==null? "0":list.get(position).getDZS()+"");
             holder.sjzsText.setText(list.get(position).getSJS() == null ?"0":list.get(position).getSJS()+"");
-           /* holder.zfText.setText(list.get(position).getZF() == null ? "99.55":isNumber(list.get(position).getZF())+"");
-            holder.pjfText.setText(list.get(position).getFS()== null ?"99.55":isNumber(list.get(position).getFS())+"");
+           /* holder.zfText.setText(list.get(position).getZF() == null ? "99.55":formateRate(list.get(position).getZF())+"");
+            holder.pjfText.setText(list.get(position).getFS()== null ?"99.55":formateRate(list.get(position).getFS())+"");
             holder.sjsfjsczText.setText(list.get(position).get_$59205ff2a5b2b1610460435c()==null?
-                    "99.55":isNumber(list.get(position).get_$59205ff2a5b2b1610460435c())+"");
+                    "99.55":formateRate(list.get(position).get_$59205ff2a5b2b1610460435c())+"");
             holder.sjsftsczText.setText(list.get(position).get_$59206000a5b2b1610460435d()==null?
-                    "99.55":isNumber(list.get(position).get_$59206000a5b2b1610460435d())+"");
+                    "99.55":formateRate(list.get(position).get_$59206000a5b2b1610460435d())+"");
             holder.sjclfwzlText.setText(list.get(position).get_$595c77d14f75180274e11dfc()==null?
-                    "99.55":isNumber(list.get(position).get_$595c77d14f75180274e11dfc())+"");
+                    "99.55":formateRate(list.get(position).get_$595c77d14f75180274e11dfc())+"");
             holder.sjclfwtdText.setText(list.get(position).get_$595c77894f75180274e11dfa()==null?
-                    "99.55":isNumber(list.get(position).get_$595c77894f75180274e11dfa())+"");
+                    "99.55":formateRate(list.get(position).get_$595c77894f75180274e11dfa())+"");
             holder.sjclfwsxText.setText(list.get(position).get_$595c77bc4f75180274e11dfb()==null?
-                    "99.55": isNumber(list.get(position).get_$595c77bc4f75180274e11dfb())+"");
+                    "99.55": formateRate(list.get(position).get_$595c77bc4f75180274e11dfb())+"");
             holder.sjsfyfczText.setText(list.get(position).get_$595c77664f75180274e11df9()==null?
-                    "99.55":isNumber(list.get(position).get_$595c77664f75180274e11df9())+"");*/
+                    "99.55":formateRate(list.get(position).get_$595c77664f75180274e11df9())+"");*/
 
-            holder.zfText.setText(list.get(position).getZF() == null ? "99.55":isNumber(list.get(position).getZF())+"");
-            holder.pjfText.setText(list.get(position).getFS()== null ?"99.55":isNumber(list.get(position).getFS())+"");
+            holder.zfText.setText(list.get(position).getZF() == null ? "99.55":formateRate(list.get(position).getZF())+"");
+            holder.pjfText.setText(list.get(position).getFS()== null ?"99.55":formateRate(list.get(position).getFS())+"");
             holder.sjsfjsczText.setText(list.get(position).get_$59205ff2a5b2b1610460435c()==null?
-                    "99.55":isNumber(list.get(position).get_$59205ff2a5b2b1610460435c())+"");
+                    "99.55":formateRate(list.get(position).get_$59205ff2a5b2b1610460435c())+"");
             holder.sjsftsczText.setText(list.get(position).get_$59206000a5b2b1610460435d()==null?
-                    "99.55":isNumber(list.get(position).get_$59206000a5b2b1610460435d())+"");
+                    "99.55":formateRate(list.get(position).get_$59206000a5b2b1610460435d())+"");
             holder.sjclfwzlText.setText(list.get(position).get_$595c77d14f75180274e11dfc()==null?
-                    "99.55":isNumber(list.get(position).get_$595c77d14f75180274e11dfc())+"");
+                    "99.55":formateRate(list.get(position).get_$595c77d14f75180274e11dfc())+"");
             holder.sjclfwtdText.setText(list.get(position).get_$595c77894f75180274e11dfa()==null?
-                    "99.55":isNumber(list.get(position).get_$595c77894f75180274e11dfa())+"");
+                    "99.55":formateRate(list.get(position).get_$595c77894f75180274e11dfa())+"");
             holder.sjclfwsxText.setText(list.get(position).get_$595c77bc4f75180274e11dfb()==null?
-                    "99.55": isNumber(list.get(position).get_$595c77bc4f75180274e11dfb())+"");
+                    "99.55": formateRate(list.get(position).get_$595c77bc4f75180274e11dfb())+"");
             holder.sjsfyfczText.setText(list.get(position).get_$595c77664f75180274e11df9()==null?
-                    "99.55":isNumber(list.get(position).get_$595c77664f75180274e11df9())+"");
+                    "99.55":formateRate(list.get(position).get_$595c77664f75180274e11df9())+"");
 
         } else {
             holder = (ViewHolder) convertView.getTag();// 取出ViewHolder对象
@@ -95,69 +94,30 @@ public class DbpjListAdapter extends BaseAdapter {
         return convertView;
     }
 
-    /**
-     * 判断字符串是否是数字
-     */
-    public static String  isNumber(String value) {
-        String str = "";
-        if(isInteger(value) || isDouble(value)){
-            double vals = roundForNumber(Double.valueOf((String) value),2);
-            str = String.valueOf(vals);
+    //格式化 电子化移交完成率 保留两位
+    public String formateRate(String rateStr){
+        if(rateStr.indexOf(".") != -1){
+            //获取小数点的位置
+            int num = 0;
+            num = rateStr.indexOf(".");
+
+            //获取小数点后面的数字 是否有两位 不足两位补足两位
+            String dianAfter = rateStr.substring(0,num+1);
+            String afterData = rateStr.replace(dianAfter, "");
+            if(afterData.length() < 2){
+                afterData = afterData + "0" ;
+            }else{
+                afterData = afterData;
+            }
+            return rateStr.substring(0,num) + "." + afterData.substring(0,2);
         }else{
-            str = (String) value;
-        }
-        return str;
-    }
-
-    /**
-     * 判断字符串是否是整数
-     */
-    public static boolean isInteger(String value) {
-        try {
-            Integer.parseInt(value);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
+            if(rateStr == "1"){
+                return "100";
+            }else{
+                return rateStr;
+            }
         }
     }
-    /**
-     * 判断字符串是否是浮点数
-     */
-    public static boolean isDouble(String value) {
-        try {
-            Double.parseDouble(value);
-            if (value.contains("."))
-                return true;
-            return false;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-
-
-    /**
-     *
-     * 提供精确的小数位四舍五入处理。
-     *
-     * @param v
-     *            需要四舍五入的数字
-     *
-     * @param scale
-     *            小数点后保留几位
-     *
-     * @return 四舍五入后的结果
-     *
-     */
-
-    public static double roundForNumber(double v,int scale){
-        if(scale<0){
-            throw new IllegalArgumentException("The scale must be a positive integer or zero");
-        }
-        BigDecimal b = new BigDecimal(Double.toString(v));
-        BigDecimal one = new BigDecimal("1");
-        return b.divide(one,scale,BigDecimal.ROUND_HALF_UP).doubleValue();
-    }
-
 
     /**
      * 存放控件
