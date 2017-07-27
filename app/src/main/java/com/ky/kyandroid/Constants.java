@@ -98,4 +98,12 @@ public class Constants {
 
 	/**督查督办end**/
 
+
+	/**监督评价start**/
+	//监督评价查询接口
+	public final static String SERVICE_DBPJLIST = "ft/kyAndroid/handleTftDbPjQuery.action";
+
+
+	/**监督评价end**/
+
 }

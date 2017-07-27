@@ -23,6 +23,10 @@
         <item name="android:textColor">@color/black</item>
     </style>
 
+    <style name="dbpjTextSizeStyle">
+        <item name="android:textSize">12sp</item>
+    </style>
+
     <!-- pop 菜单2 -->
     <style name="pop_menu2">
         <item name="android:windowEnterAnimation">@anim/fade_in</item>

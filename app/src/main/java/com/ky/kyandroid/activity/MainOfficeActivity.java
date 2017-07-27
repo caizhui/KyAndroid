@@ -23,8 +23,8 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import com.ky.kyandroid.Constants;
 import com.ky.kyandroid.R;
+import com.ky.kyandroid.activity.dbpj.DbpjlActivity;
 import com.ky.kyandroid.activity.evententry.EventEntryListActivity;
 import com.ky.kyandroid.activity.msg.MsgNoticeActivity;
 import com.ky.kyandroid.activity.supervision.SuperVisionAddActivity;
@@ -33,24 +33,16 @@ import com.ky.kyandroid.bean.NetWorkConnection;
 import com.ky.kyandroid.bean.PageBean;
 import com.ky.kyandroid.util.JsonUtil;
 import com.ky.kyandroid.util.MsgThreadUtil;
-import com.ky.kyandroid.util.OkHttpUtil;
 import com.ky.kyandroid.util.SpUtil;
 import com.ky.kyandroid.util.StringUtils;
 import com.ky.kyandroid.util.SweetAlertDialogUtil;
 import com.ky.kyandroid.util.ViewUtil;
 import com.ky.kyandroid.view.BadgeView;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.pedant.SweetAlert.SweetAlertDialog;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
 
 /**
  * Created by Caizhui on 2017-6-8.
@@ -97,6 +89,12 @@ public class MainOfficeActivity extends AppCompatActivity {
      */
     @BindView(R.id.main_layout)
     LinearLayout main_layout;
+
+    /**
+     * 监督评价
+     */
+    @BindView(R.id.jdpj_img)
+    ImageView jdpjImg;
 
     /**
      * 消息条目控制
@@ -288,7 +286,7 @@ public class MainOfficeActivity extends AppCompatActivity {
     }
 
 
-    @OnClick({R.id.left_btn, R.id.event_img, R.id.supervision_img,R.id.message_img})
+    @OnClick({R.id.left_btn, R.id.event_img, R.id.supervision_img,R.id.message_img,R.id.jdpj_img})
     public void onClick(View v) {
         Intent intent = new Intent();
         switch (v.getId()) {
@@ -309,6 +307,11 @@ public class MainOfficeActivity extends AppCompatActivity {
             /**督查督办*/
             case R.id.supervision_img:
                 intent.setClass(this, SuperVisionAddActivity.class);
+                startActivity(intent);
+                break;
+            /**监督评价**/
+            case R.id.jdpj_img:
+                intent.setClass(this, DbpjlActivity.class);
                 startActivity(intent);
                 break;
         }
