@@ -15,18 +15,18 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class JgpjListAdapter extends BaseAdapter {
+public class JgpjDetailListAdapter extends BaseAdapter {
     public List<Map<String,String>> list;
     public Context context;
 
 
-    public JgpjListAdapter(Context context) {
+    public JgpjDetailListAdapter(Context context) {
         super();
         list = new ArrayList<Map<String,String>>();
         this.context = context;
     }
 
-    public JgpjListAdapter(List<Map<String,String>> list, Context context) {
+    public JgpjDetailListAdapter(List<Map<String,String>> list, Context context) {
         super();
         this.list = list;
         this.context = context;
@@ -51,13 +51,13 @@ public class JgpjListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         if (convertView == null) {
-            convertView = View.inflate(context, R.layout.activity_jgpj_item, null);
+            convertView = View.inflate(context, R.layout.activity_jgpjdetail_item, null);
             holder = new ViewHolder(convertView);
             convertView.setTag(holder);// 绑定ViewHolder对象
-            holder.bmName.setText(list.get(position).get("BPJR"));
+            holder.bmName.setText(list.get(position).get("SJMC"));
             holder.pjdjText.setText(list.get(position).get("DJ"));
             holder.dzsText.setText(list.get(position).get("DZS")==null? "0":list.get(position).get("DZS")+"");
-            holder.sjzsText.setText(list.get(position).get("SJS") == null ?"0":list.get(position).get("SJS")+"");
+            holder.sjzsText.setText(list.get(position).get("PJS") == null ?"0":list.get(position).get("PJS")+"");
 
             holder.zfText.setText(list.get(position).get("ZF") == null ? "0.00":formateRate(list.get(position).get("ZF"))+"");
             holder.pjfText.setText(list.get(position).get("FS")== null ?"0.00":formateRate(list.get(position).get("FS"))+"");

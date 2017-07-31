@@ -23,7 +23,7 @@ import android.widget.Toast;
 import com.ky.kyandroid.Constants;
 import com.ky.kyandroid.R;
 import com.ky.kyandroid.activity.LoginActivity;
-import com.ky.kyandroid.adapter.DbpjListAdapter;
+import com.ky.kyandroid.adapter.JgpjDetailListAdapter;
 import com.ky.kyandroid.bean.AckMessage;
 import com.ky.kyandroid.bean.NetWorkConnection;
 import com.ky.kyandroid.bean.PageBean;
@@ -46,15 +46,14 @@ import butterknife.OnClick;
 import butterknife.OnItemClick;
 import butterknife.OnItemLongClick;
 
-
 /**
  * Created by Caizhui on 2017-6-9.
- * 部门评价列表页面
+ * 机构评价列表页面
  */
 
-public class BmpjListActivity extends AppCompatActivity {
+public class JgpjDetailListActivity extends AppCompatActivity {
 
-    private final String TAG = "BmpjListActivity";
+    private final String TAG = "JgpjListActivity";
 
     /**
      * 标题左边按钮
@@ -89,14 +88,14 @@ public class BmpjListActivity extends AppCompatActivity {
     /**
      * 事件列表
      */
-    private List<Map<String,String>> bmpjEntityList;
+    private List<Map<String,String>> jgpjEntityList;
 
 
-    private DbpjListAdapter adapter;
+    private JgpjDetailListAdapter adapter;
 
 
     /**
-     *
+     * 部门评价实体
      */
     Map<String,String> map;
 
@@ -172,6 +171,18 @@ public class BmpjListActivity extends AppCompatActivity {
      */
     private int tempPosition;
 
+    private Intent intent ;
+
+    /**
+     * 部门Id
+     */
+    private String bmId="";
+
+    /**
+     * 部门名称
+     */
+    private  String bmMc;
+
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
 
@@ -184,16 +195,16 @@ public class BmpjListActivity extends AppCompatActivity {
             switch (msg.what) {
                 // 默认处理
                 case 0:
-                    Toast.makeText(BmpjListActivity.this, message, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(JgpjDetailListActivity.this, message, Toast.LENGTH_SHORT).show();
                     break;
                 // 加载失败
                 case 1:
                     Log.i(TAG, "刷新操作...");
                     if (handleResponseData(message)) {
                         notifyListViewData(false);
-                        Toast.makeText(BmpjListActivity.this, "刷新成功", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(JgpjDetailListActivity.this, "刷新成功", Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(BmpjListActivity.this, "刷新失败", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(JgpjDetailListActivity.this, "刷新失败", Toast.LENGTH_SHORT).show();
                     }
                     swipeRefreshUtil.dismissRefreshing();
                     break;
@@ -208,7 +219,7 @@ public class BmpjListActivity extends AppCompatActivity {
                 case 4:
                     Log.i(TAG, "加载失败...");
                     swipeRefreshUtil.dismissRefreshing();
-                    Toast.makeText(BmpjListActivity.this, message, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(JgpjDetailListActivity.this, message, Toast.LENGTH_SHORT).show();
                     break;
                 // 初始化跳转
                 case 7:
@@ -217,16 +228,16 @@ public class BmpjListActivity extends AppCompatActivity {
                     if (handleResponseData(message)) {
                         notifyListViewData(false);
                     } else {
-                        Toast.makeText(BmpjListActivity.this, "查询不到符合条件记录", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(JgpjDetailListActivity.this, "查询不到符合条件记录", Toast.LENGTH_SHORT).show();
                     }
                     break;
                 case 8:
                     // 状态修改
                     Log.i(TAG, "加载操作...");
                     if (handleResponseDataState(message)) {
-                        Toast.makeText(BmpjListActivity.this, "操作成功", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(JgpjDetailListActivity.this, "操作成功", Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(BmpjListActivity.this, "操作失败", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(JgpjDetailListActivity.this, "操作失败", Toast.LENGTH_SHORT).show();
                     }
                     break;
 
@@ -294,12 +305,15 @@ public class BmpjListActivity extends AppCompatActivity {
      * 初始化视图与事件
      */
     void initViewAndEvent() {
+        intent  = getIntent();
+        bmId = intent.getStringExtra("BMID");
+        bmMc = intent.getStringExtra("BPJR");
         sp = SpUtil.getSharePerference(this);
         netWorkConnection = new NetWorkConnection(this);
-        sweetAlertDialogUtil = new SweetAlertDialogUtil(BmpjListActivity.this);
-        bmpjEntityList = new ArrayList<Map<String,String>>();
+        sweetAlertDialogUtil = new SweetAlertDialogUtil(JgpjDetailListActivity.this);
+        jgpjEntityList = new ArrayList<Map<String,String>>();
         userId = sp.getString(USER_ID, "");
-        centerText.setText("部门评价");
+        centerText.setText("评价详情");
         rightBtn.setVisibility(View.INVISIBLE);
     }
 
@@ -311,11 +325,14 @@ public class BmpjListActivity extends AppCompatActivity {
         paramsMap = new HashMap<String, String>();
         // 查询自己的消息
         paramsMap.put("userId", sp.getString(LoginActivity.USER_ID, ""));
-        paramsMap.put("pjlx", "3");
+        paramsMap.put("pjlx", "2");
+        if(bmId!=null && !"".equals(bmId)){
+            paramsMap.put("orgId", bmId);
+        }
         // 设置标题及颜色
-        centerText.setText("部门评价(" + total + ")");
+        centerText.setText("评价详情(" + total + ")");
         //toolbar_layout.setBackgroundColor(Color.parseColor("#A4C639"));
-        swipeRefreshUtil = new SwipeRefreshUtil(swipeContainer, Constants.SERVICE_DBPJLIST, mHandler);
+        swipeRefreshUtil = new SwipeRefreshUtil(swipeContainer, Constants.SERVICE_DBPJDETAILLIST, mHandler);
         // 上拉刷新初始化
         swipeRefreshUtil.setRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -366,7 +383,7 @@ public class BmpjListActivity extends AppCompatActivity {
             }
         });
 
-        adapter = new DbpjListAdapter(bmpjEntityList, BmpjListActivity.this);
+        adapter = new JgpjDetailListAdapter(jgpjEntityList, JgpjDetailListActivity.this);
         searchBmpjList.setAdapter(adapter);
     }
 
@@ -439,7 +456,7 @@ public class BmpjListActivity extends AppCompatActivity {
             // 刷新列表
             adapter.notifyDataSetChanged(entityList);
         }
-        centerText.setText("部门评价(" + adapter.getCount() + ")");
+        centerText.setText("评价详情(" + adapter.getCount() + ")");
     }
 
     /**
@@ -499,11 +516,12 @@ public class BmpjListActivity extends AppCompatActivity {
      */
     @OnItemClick(R.id.search_bmpj_list)
     public void OnItemClick(int position) {
-        map = (Map<String,String>) adapter.getItem(position);
-        Intent intent = new Intent(this, BmpjDetailListActivity.class);
-        intent.putExtra("BMID",map.get("BMID") );
-        intent.putExtra("BPJR",map.get("BPJR") );
-        startActivity(intent);
+       /* bmpjEntity = (BmpjEntity) adapter.getItem(position);
+        Intent intent = new Intent(this, BmpjDetailActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("bmpjEntity", bmpjEntity);
+        intent.putExtras(bundle);
+        startActivity(intent);*/
     }
 
     /**

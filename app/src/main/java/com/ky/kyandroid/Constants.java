@@ -100,10 +100,11 @@ public class Constants {
 
 
 	/**监督评价start**/
-	//监督评价查询接口
+	//监督评价查询接口handleTftDbPjDetailQuery
 	public final static String SERVICE_DBPJLIST = "ft/kyAndroid/handleTftDbPjQuery.action";
 
-
+	//监督评价详情查询接口
+	public final static String SERVICE_DBPJDETAILLIST = "ft/kyAndroid/handleTftDbPjDetailQuery.action";
 	/**监督评价end**/
 
 }

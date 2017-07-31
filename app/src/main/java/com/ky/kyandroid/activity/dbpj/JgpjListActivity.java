@@ -299,7 +299,7 @@ public class JgpjListActivity extends AppCompatActivity {
         jgpjEntityList = new ArrayList<Map<String,String>>();
         userId = sp.getString(USER_ID, "");
         centerText.setText("机构评价");
-        rightBtn.setVisibility(View.VISIBLE);
+        rightBtn.setVisibility(View.INVISIBLE);
     }
 
 
@@ -498,12 +498,11 @@ public class JgpjListActivity extends AppCompatActivity {
      */
     @OnItemClick(R.id.search_bmpj_list)
     public void OnItemClick(int position) {
-       /* bmpjEntity = (BmpjEntity) adapter.getItem(position);
-        Intent intent = new Intent(this, BmpjDetailActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("bmpjEntity", bmpjEntity);
-        intent.putExtras(bundle);
-        startActivity(intent);*/
+        map = (Map<String,String>) adapter.getItem(position);
+        Intent intent = new Intent(this, JgpjDetailListActivity.class);
+        intent.putExtra("BMID",map.get("BMID") );
+        intent.putExtra("BPJR",map.get("BPJR") );
+        startActivity(intent);
     }
 
     /**

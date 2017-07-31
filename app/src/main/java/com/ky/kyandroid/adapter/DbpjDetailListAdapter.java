@@ -15,18 +15,18 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class JgpjListAdapter extends BaseAdapter {
+public class DbpjDetailListAdapter extends BaseAdapter {
     public List<Map<String,String>> list;
     public Context context;
 
 
-    public JgpjListAdapter(Context context) {
+    public DbpjDetailListAdapter(Context context) {
         super();
         list = new ArrayList<Map<String,String>>();
         this.context = context;
     }
 
-    public JgpjListAdapter(List<Map<String,String>> list, Context context) {
+    public DbpjDetailListAdapter(List<Map<String,String>> list, Context context) {
         super();
         this.list = list;
         this.context = context;
@@ -51,20 +51,29 @@ public class JgpjListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         if (convertView == null) {
-            convertView = View.inflate(context, R.layout.activity_jgpj_item, null);
+            convertView = View.inflate(context, R.layout.activity_bmpjdetail_item, null);
             holder = new ViewHolder(convertView);
             convertView.setTag(holder);// 绑定ViewHolder对象
-            holder.bmName.setText(list.get(position).get("BPJR"));
+            holder.bmName.setText(list.get(position).get("SJMC"));
             holder.pjdjText.setText(list.get(position).get("DJ"));
             holder.dzsText.setText(list.get(position).get("DZS")==null? "0":list.get(position).get("DZS")+"");
-            holder.sjzsText.setText(list.get(position).get("SJS") == null ?"0":list.get(position).get("SJS")+"");
+            holder.sjzsText.setText(list.get(position).get("PJS") == null ?"0":list.get(position).get("PJS")+"");
 
-            holder.zfText.setText(list.get(position).get("ZF") == null ? "0.00":formateRate(list.get(position).get("ZF"))+"");
-            holder.pjfText.setText(list.get(position).get("FS")== null ?"0.00":formateRate(list.get(position).get("FS"))+"");
-            holder.sjcljsText.setText(list.get(position).get("59205fbba5b2b16104604358")==null?
-                    "0.00":formateRate(list.get(position).get("59205fbba5b2b16104604358"))+"");
-            holder.sjclddText.setText(list.get(position).get("59205fc6a5b2b16104604359")==null?
-                    "0.00":formateRate(list.get(position).get("59205fc6a5b2b16104604359"))+"");
+            holder.zfText.setText(list.get(position).get("ZF") == null ? "99.55":formateRate(list.get(position).get("ZF"))+"");
+            holder.pjfText.setText(list.get(position).get("FS")== null ?"99.55":formateRate(list.get(position).get("FS"))+"");
+            holder.sjsfjsczText.setText(list.get(position).get("59205ff2a5b2b1610460435c")==null?
+                    "99.55":formateRate(list.get(position).get("59205ff2a5b2b1610460435c"))+"");
+            holder.sjsftsczText.setText(list.get(position).get("59206000a5b2b1610460435d")==null?
+                    "99.55":formateRate(list.get(position).get("59206000a5b2b1610460435d"))+"");
+            holder.sjclfwzlText.setText(list.get(position).get("595c77d14f75180274e11dfc")==null?
+                    "99.55":formateRate(list.get(position).get("595c77d14f75180274e11dfc"))+"");
+            holder.sjclfwtdText.setText(list.get(position).get("595c77894f75180274e11dfa")==null?
+                    "99.55":formateRate(list.get(position).get("595c77894f75180274e11dfa"))+"");
+            holder.sjclfwsxText.setText(list.get(position).get("595c77bc4f75180274e11dfb")==null?
+                    "99.55": formateRate(list.get(position).get("595c77bc4f75180274e11dfb"))+"");
+            holder.sjsfyfczText.setText(list.get(position).get("595c77664f75180274e11df9")==null?
+                    "99.55":formateRate(list.get(position).get("595c77664f75180274e11df9"))+"");
+
         } else {
             holder = (ViewHolder) convertView.getTag();// 取出ViewHolder对象
         }
@@ -131,11 +140,18 @@ public class JgpjListAdapter extends BaseAdapter {
         TextView zfText;
         @BindView(R.id.pjf_text)
         TextView pjfText;
-        @BindView(R.id.sjcljs_text)
-        TextView sjcljsText;
-        @BindView(R.id.sjcldd_text)
-        TextView sjclddText;
-
+        @BindView(R.id.sjsfjscz_text)
+        TextView sjsfjsczText;
+        @BindView(R.id.sjsftscz_text)
+        TextView sjsftsczText;
+        @BindView(R.id.sjclfwzl_text)
+        TextView sjclfwzlText;
+        @BindView(R.id.sjclfwtd_text)
+        TextView sjclfwtdText;
+        @BindView(R.id.sjclfwsx_text)
+        TextView sjclfwsxText;
+        @BindView(R.id.sjsfyfcz_text)
+        TextView sjsfyfczText;
         @BindView(R.id.item_view)
         View itemView;
 

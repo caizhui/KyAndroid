@@ -299,7 +299,7 @@ public class GwpjListActivity extends AppCompatActivity {
         gwpjEntityList = new ArrayList<Map<String,String>>();
         userId = sp.getString(USER_ID, "");
         centerText.setText("岗位评价");
-        rightBtn.setVisibility(View.VISIBLE);
+        rightBtn.setVisibility(View.INVISIBLE);
     }
 
 
@@ -498,13 +498,14 @@ public class GwpjListActivity extends AppCompatActivity {
      */
     @OnItemClick(R.id.search_bmpj_list)
     public void OnItemClick(int position) {
-       /* Map<String,String> = (Map<String,String>) adapter.getItem(position);
-        Intent intent = new Intent(this, BmpjDetailActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("Map<String,String>", Map<String,String>);
-        intent.putExtras(bundle);
-        startActivity(intent);*/
+        map = (Map<String,String>) adapter.getItem(position);
+        Intent intent = new Intent(this, GwpjDetailListActivity.class);
+        intent.putExtra("BMID",map.get("BMID") );
+        intent.putExtra("BPJR",map.get("BPJR") );
+        startActivity(intent);
     }
+
+
 
     /**
      * 长按list列表
