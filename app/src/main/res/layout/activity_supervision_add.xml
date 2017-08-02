@@ -39,6 +39,7 @@
                         android:layout_width="0dp"
                         android:layout_height="30dp"
                         android:layout_weight="1"
+                        android:padding="5dp"
                         android:background="@drawable/border_edittext_bg"
                         android:textSize="16sp" />
 
@@ -161,6 +162,7 @@
                         android:id="@+id/feedback_time_edt"
                         android:layout_width="match_parent"
                         android:layout_height="30dp"
+                        android:padding="5dp"
                         android:background="@drawable/border_edittext_bg"
                         android:textSize="16sp" />
                 </LinearLayout>
@@ -192,6 +194,7 @@
                             android:layout_height="100dp"
                             android:layout_weight="1"
                             android:background="@null"
+                            android:padding="5dp"
                             android:gravity="start"
                             android:textSize="16sp" />
                     </LinearLayout>

@@ -29,9 +29,9 @@ import com.ky.kyandroid.adapter.SupervisionListAdapter;
 import com.ky.kyandroid.bean.AckMessage;
 import com.ky.kyandroid.bean.NetWorkConnection;
 import com.ky.kyandroid.bean.PageBean;
+import com.ky.kyandroid.entity.DbAnEntity;
 import com.ky.kyandroid.entity.SjHandleParams;
 import com.ky.kyandroid.entity.TFtDbEntity;
-import com.ky.kyandroid.entity.TFtZtlzEntity;
 import com.ky.kyandroid.util.JsonUtil;
 import com.ky.kyandroid.util.OkHttpUtil;
 import com.ky.kyandroid.util.SpUtil;
@@ -104,17 +104,6 @@ public class SuperVisionListActivity extends AppCompatActivity {
     private SupervisionListAdapter adapter;
 
     /**
-     * 操作人员权限名称
-     */
-    private String[] listViewContent;
-
-    /**
-     * 操作人员权限实体
-     */
-    private TFtZtlzEntity[] tFtZtlzEntities;
-
-
-    /**
      * 事件实体
      */
     TFtDbEntity tFtDbEntity;
@@ -185,6 +174,16 @@ public class SuperVisionListActivity extends AppCompatActivity {
     private Map<String, String> paramsMap = null;
 
     List<TFtDbEntity> entityList;
+
+    /**
+     * 操作人员权限名称
+     */
+    private String[] listViewContent;
+
+    /**
+     * 操作人员权限实体
+     */
+    private DbAnEntity[] dbAnEntities;
 
     /**
      * 临时位置
@@ -540,31 +539,49 @@ public class SuperVisionListActivity extends AppCompatActivity {
     public boolean OnItemLongClick(final int position) {
         tFtDbEntity = (TFtDbEntity) adapter.getItem(position);
         tempPosition = position;
-        listViewContent = new String[]{"编辑", "删除", "作废", "转排", "受理", "退回"};
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setItems(listViewContent, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int pos) {
-                if(pos ==0){
-                    Intent intent =new Intent(SuperVisionListActivity.this,SuperVisionEditActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("tFtDbEntity", tFtDbEntity);
-                    intent.putExtras(bundle);
-                    startActivity(intent);
-                }else if(pos ==1){
-                    OperatingProcess(tFtDbEntity,"del");
-                }else if(pos ==2){
-
-                }else if(pos ==3){
-
-                }else if(pos ==4){
-
-                }else if(pos ==5){
-
-                }
+        List<DbAnEntity> dbAnEntityList=tFtDbEntity.getAnlist();
+        if (dbAnEntityList != null && dbAnEntityList.size() > 0) {
+            listViewContent = new String[dbAnEntityList.size()];
+            dbAnEntities = new DbAnEntity[dbAnEntityList.size()];
+            for (int i = 0; i < dbAnEntityList.size(); i++) {
+                listViewContent[i] = dbAnEntityList.get(i).getShowname();
+                dbAnEntities[i] = dbAnEntityList.get(i);
             }
-        });
-        builder.create().show();
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setItems(listViewContent, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int pos) {
+                    //根据点击的item项获取该item对应的实体，
+                    DbAnEntity dbAnEntity = dbAnEntities[pos];
+                    if("0".equals(dbAnEntity.getNextstatus())){
+                        //编辑
+                        Intent intent =new Intent(SuperVisionListActivity.this,SuperVisionEditActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("tFtDbEntity", tFtDbEntity);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+                    }else if("1".equals(dbAnEntity.getNextstatus())){
+                        //转派
+
+                    }else if("2".equals(dbAnEntity.getNextstatus())){
+                        //受理
+
+                    }else if("3".equals(dbAnEntity.getNextstatus())){
+                        //退回
+
+                    }else if("4".equals(dbAnEntity.getNextstatus())){
+                        //作废
+
+                    }else{
+                        //删除
+                        OperatingProcess(tFtDbEntity,"del");
+                    }
+                }
+            });
+            builder.create().show();
+        } else {
+            Toast.makeText(this, "权限不足,不支持该操作", Toast.LENGTH_SHORT).show();
+        }
         return true;
     }
 
