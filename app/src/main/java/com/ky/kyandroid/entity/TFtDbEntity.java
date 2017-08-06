@@ -49,11 +49,16 @@ public class TFtDbEntity implements Serializable{
 	 * 督办反馈结果
 	 */
 	private String dbfkjg;
+
+	/**
+	 * 被转派部门
+	 */
+	private String org_name;
 	
 	/**
 	 * 关联事件
 	 */
-	private String sjId;
+	private String sj_id;
 	
 	/**
 	 * 督办单位
@@ -105,8 +110,19 @@ public class TFtDbEntity implements Serializable{
 	 */
 	private String zt;
 
+	/**
+	 * 被督办单位名称
+	 */
+	private String bdbdwname;
+
+	/**
+	 * 状态名称
+	 */
+	private String statusname;
 
 	private String sjmc;
+
+	private List<DescEntity> zpbmlist;
 
 	private List<DbAnEntity>  anlist;
 
@@ -251,25 +267,14 @@ public class TFtDbEntity implements Serializable{
 	public void setDbfkjg(String dbfkjg){
 		this.dbfkjg	= dbfkjg;
 	}
-	
-	/**
-	 * 获取 关联事件 的属性值
-	 * @return sjId :  关联事件 
-	 * @author otom3@163.com
-	 */
-	public String getSjId(){
-		return this.sjId;
+
+	public String getSj_id() {
+		return sj_id;
 	}
 
-	/**
-	 * 设置 关联事件 的属性值
-	 * @param sjId :  关联事件 
-	 * @author otom3@163.com
-	 */
-	public void setSjId(String sjId){
-		this.sjId	= sjId;
+	public void setSj_id(String sj_id) {
+		this.sj_id = sj_id;
 	}
-	
 	/**
 	 * 获取 督办单位 的属性值
 	 * @return dbdw :  督办单位 
@@ -447,5 +452,37 @@ public class TFtDbEntity implements Serializable{
 
 	public void setAnlist(List<DbAnEntity> anlist) {
 		this.anlist = anlist;
+	}
+
+	public List<DescEntity> getZpbmList() {
+		return zpbmlist;
+	}
+
+	public void setZpbmList(List<DescEntity> zpbmlist) {
+		this.zpbmlist = zpbmlist;
+	}
+
+	public String getBdbdwname() {
+		return bdbdwname;
+	}
+
+	public void setBdbdwname(String bdbdwname) {
+		this.bdbdwname = bdbdwname;
+	}
+
+	public String getStatusname() {
+		return statusname;
+	}
+
+	public void setStatusname(String statusname) {
+		this.statusname = statusname;
+	}
+
+	public String getOrg_name() {
+		return org_name;
+	}
+
+	public void setOrg_name(String org_name) {
+		this.org_name = org_name;
 	}
 }

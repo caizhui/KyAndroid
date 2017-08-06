@@ -67,7 +67,7 @@
     <string name="feedback_time">督办时限:</string>
     <string name="fk_time">反馈时间:</string>
     <string name="zt_text">状态:</string>
-    <string name="supervisor_zpjsr">转派接收人:</string>
+    <string name="supervisor_zpjsr">被转派部门:</string>
     <string name="supervisor_zpyy">转派原因:</string>
     <string name="supervisor_thyy">退回原因:</string>
     <string name="supervisor_require">督办要求:</string>
