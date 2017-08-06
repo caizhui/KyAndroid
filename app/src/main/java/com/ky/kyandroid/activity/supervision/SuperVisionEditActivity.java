@@ -228,7 +228,7 @@ public class SuperVisionEditActivity extends AppCompatActivity {
             }else if("2".equals(tFtDbEntity.getDblx())){
                 radioButton02.setChecked(true);
             }else if("3".equals(tFtDbEntity.getDblx())){
-                radioButton02.setChecked(true);
+                radioButton03.setChecked(true);
             }
             feedbackTimeEdt.setText(tFtDbEntity.getFksx());
             supervisorRequireEdt.setText(tFtDbEntity.getDbyq());
