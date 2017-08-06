@@ -58,7 +58,7 @@ public class TFtDbEntity implements Serializable{
 	/**
 	 * 关联事件
 	 */
-	private String sj_id;
+	private String sjid;
 	
 	/**
 	 * 督办单位
@@ -268,13 +268,14 @@ public class TFtDbEntity implements Serializable{
 		this.dbfkjg	= dbfkjg;
 	}
 
-	public String getSj_id() {
-		return sj_id;
+	public String getSjid() {
+		return sjid;
 	}
 
-	public void setSj_id(String sj_id) {
-		this.sj_id = sj_id;
+	public void setSjid(String sjid) {
+		this.sjid = sjid;
 	}
+
 	/**
 	 * 获取 督办单位 的属性值
 	 * @return dbdw :  督办单位 

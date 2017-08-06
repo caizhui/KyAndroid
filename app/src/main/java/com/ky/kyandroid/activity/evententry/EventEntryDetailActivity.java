@@ -160,6 +160,11 @@ public class EventEntryDetailActivity extends FragmentActivity {
     List<TFtSjRyEntity> sjryList;
 
     /**
+     * 事件Id；
+     */
+    private String sjId;
+
+    /**
      * 弹出框工具类
      */
     private SweetAlertDialogUtil sweetAlertDialogUtil;
@@ -174,11 +179,17 @@ public class EventEntryDetailActivity extends FragmentActivity {
         userId = sp.getString(USER_ID, "");
         intent = getIntent();
         tFtSjEntity = (TFtSjEntity) intent.getSerializableExtra("tFtSjEntity");
+        //当从督查督办那边点击事件名称跳转到事件详情里面时，只传了一个事件Id
+        if(tFtSjEntity ==  null){
+            tFtSjEntity = new TFtSjEntity();
+            sjId  =intent.getStringExtra("sjId");
+            tFtSjEntity.setId(sjId);
+        }
         fileEntityDao= new FileEntityDao();
         tFtSjEntityDao = new TFtSjEntityDao();
         tFtSjRyEntityDao = new TFtSjRyEntityDao();
         //查看已经上报的事件信息，则获取传过来的uuid
-         uuid = tFtSjEntity.getId();
+        uuid = tFtSjEntity.getId();
         initToolbar();
         initPageView();
         initViewData();
@@ -330,8 +341,10 @@ public class EventEntryDetailActivity extends FragmentActivity {
                     //先将获取的json象转成实体
                     TFtSjDetailEntity tFtSjDetailEntity = JsonUtil.fromJson(entityStr, TFtSjDetailEntity.class);
                     if (tFtSjDetailEntity != null) {
+                        tFtSjEntity = tFtSjDetailEntity.getFtSj();
                         sjryList = tFtSjDetailEntity.getSjryList();
                         sjfjList = tFtSjDetailEntity.getSjfjList();
+                        eventEntryDetail_basic.settTftSjEntityEntity(tFtSjEntity);
                         //将当事人信息放在当事人页面
                         eventEntryDetail_person.setTFtSjRyEntityList(sjryList);
                         //将附件信息放在附件页面

@@ -221,6 +221,8 @@ public class SuperVisionAddActivity extends AppCompatActivity {
         /** 将右边按钮隐藏*/
         rightBtn.setVisibility(View.INVISIBLE);
 
+        supervisionCancelBtn.setVisibility(View.GONE);
+
         if(radioGroup!=null){
             radioButton01.setChecked(true);
             dblx="1";
@@ -290,10 +292,19 @@ public class SuperVisionAddActivity extends AppCompatActivity {
                     break;
                 // 成功跳转
                 case 2:
-                    Intent intent =new Intent(SuperVisionAddActivity.this,SuperVisionListActivity.class);
-                    intent.putExtra("businessType", "initList");
-                    startActivity(intent);
-                    Toast.makeText(SuperVisionAddActivity.this,"保存成功",Toast.LENGTH_SHORT).show();
+                    AckMessage ackMessage = JsonUtil.fromJson(message, AckMessage.class);
+                    if(ackMessage!=null){
+                        if(AckMessage.SUCCESS.equals(ackMessage.getAckCode())){
+                            Intent intent =new Intent(SuperVisionAddActivity.this,SuperVisionListActivity.class);
+                            intent.putExtra("businessType", "initList");
+                            startActivity(intent);
+                            Toast.makeText(SuperVisionAddActivity.this,"保存成功",Toast.LENGTH_SHORT).show();
+                        }else{
+                            Toast.makeText(SuperVisionAddActivity.this,"保存失败",Toast.LENGTH_SHORT).show();
+                        }
+                    }else{
+                        Toast.makeText(SuperVisionAddActivity.this,"保存失败",Toast.LENGTH_SHORT).show();
+                    }
                     sweetAlertDialogUtil.dismissAlertDialog();
                     break;
             }
@@ -426,7 +437,7 @@ public class SuperVisionAddActivity extends AppCompatActivity {
                 if("".equals(supervisorGlsj.getTextAlignment())){
                     message+="关联事件不能为空\n";
                 }else{
-                    tFtDbEntity.setSj_id(glsjCodeValue.getCode());
+                    tFtDbEntity.setSjid(glsjCodeValue.getCode());
                 }
                 if("".equals(dblx)){
                     message+="督办类型不能为空\n";
@@ -467,6 +478,7 @@ public class SuperVisionAddActivity extends AppCompatActivity {
             // 转成json格式
             String mapJson = JsonUtil.toJson(tFtDbEntity);
             paramsMap.put("userId", userId);
+            paramsMap.put("sjId", tFtDbEntity.getSjid());
             paramsMap.put("TFtDb",mapJson);
             paramsMap.put("requestType","save");
             // 发送请求

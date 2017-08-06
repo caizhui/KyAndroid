@@ -228,7 +228,7 @@ public class SuperVisionEditActivity extends AppCompatActivity {
             }else if("2".equals(tFtDbEntity.getDblx())){
                 radioButton02.setChecked(true);
             }else if("3".equals(tFtDbEntity.getDblx())){
-                radioButton02.setChecked(true);
+                radioButton03.setChecked(true);
             }
             feedbackTimeEdt.setText(tFtDbEntity.getFksx());
             supervisorRequireEdt.setText(tFtDbEntity.getDbyq());
@@ -243,6 +243,7 @@ public class SuperVisionEditActivity extends AppCompatActivity {
         /** 设置toolbar标题 **/
         centerText.setText("督察信息修改");
         supervisionAddBtn.setText("修改");
+        supervisionCancelBtn.setVisibility(View.GONE);
         /** 将右边按钮隐藏*/
         rightBtn.setVisibility(View.INVISIBLE);
 
@@ -315,10 +316,19 @@ public class SuperVisionEditActivity extends AppCompatActivity {
                     break;
                 // 成功跳转
                 case 2:
-                    Intent intent =new Intent(SuperVisionEditActivity.this,SuperVisionListActivity.class);
-                    intent.putExtra("businessType", "initList");
-                    startActivity(intent);
-                    Toast.makeText(SuperVisionEditActivity.this,"修改成功",Toast.LENGTH_SHORT).show();
+                    AckMessage ackMessage = JsonUtil.fromJson(message, AckMessage.class);
+                    if(ackMessage!=null){
+                        if(AckMessage.SUCCESS.equals(ackMessage.getAckCode())){
+                            Intent intent =new Intent(SuperVisionEditActivity.this,SuperVisionListActivity.class);
+                            intent.putExtra("businessType", "initList");
+                            startActivity(intent);
+                            Toast.makeText(SuperVisionEditActivity.this,"修改成功",Toast.LENGTH_SHORT).show();
+                        }else{
+                            Toast.makeText(SuperVisionEditActivity.this,"修改失败",Toast.LENGTH_SHORT).show();
+                        }
+                    }else{
+                        Toast.makeText(SuperVisionEditActivity.this,"修改失败",Toast.LENGTH_SHORT).show();
+                    }
                     sweetAlertDialogUtil.dismissAlertDialog();
                     break;
             }
@@ -364,7 +374,7 @@ public class SuperVisionEditActivity extends AppCompatActivity {
                 if(count>0){
                     for(int i = 0 ;i<count;i++){
                         CodeValue codeValue = (CodeValue) glsjAdapter.getItem(i);
-                        if(tFtDbEntity.getSj_id().equals(codeValue.getCode())){
+                        if(tFtDbEntity.getSjid().equals(codeValue.getCode())){
                             supervisorGlsj.setSelection(i);
                         }
                     }
@@ -470,7 +480,7 @@ public class SuperVisionEditActivity extends AppCompatActivity {
                 if("".equals(supervisorGlsj.getTextAlignment())){
                     message+="关联事件不能为空\n";
                 }else{
-                    tFtDbEntity.setSj_id(glsjCodeValue.getCode());
+                    tFtDbEntity.setSjid(glsjCodeValue.getCode());
                 }
                 if("".equals(dblx)){
                     message+="督办类型不能为空\n";
@@ -512,6 +522,7 @@ public class SuperVisionEditActivity extends AppCompatActivity {
             // 转成json格式
             String mapJson = JsonUtil.toJson(tFtDbEntity);
             paramsMap.put("userId", userId);
+            paramsMap.put("sjId", tFtDbEntity.getSjid());
             paramsMap.put("TFtDb",mapJson);
             paramsMap.put("requestType","save");
             // 发送请求
@@ -528,6 +539,7 @@ public class SuperVisionEditActivity extends AppCompatActivity {
                         msg.what = 2;
                         msg.obj = response.body().string();
                     } else {
+                        msg.what = 0;
                         msg.obj = "网络异常,请确认网络情况";
                     }
                     mHandler.sendMessage(msg);

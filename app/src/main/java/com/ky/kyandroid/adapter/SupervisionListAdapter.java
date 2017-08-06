@@ -61,11 +61,11 @@ public class SupervisionListAdapter extends BaseAdapter {
          holder.dbGlsj.setText(list.get(position).getSjmc());
          holder.dbTime.setText(list.get(position).getDbsj());
         if ("1".equals(list.get(position).getDblx())) {
-            holder.dbStatus.setText("超时");
+            holder.dbStatus.setText("超时 "+"| 已"+list.get(position).getStatusname());
         } else if ("2".equals(list.get(position).getDblx())) {
-            holder.dbStatus.setText("不落实");
+            holder.dbStatus.setText("不落实 "+"| 已"+list.get(position).getStatusname());
         } else {
-                holder.dbStatus.setText("落实不彻底");
+                holder.dbStatus.setText("落实不彻底 "+"| 已"+list.get(position).getStatusname());
         }
         return convertView;
     }

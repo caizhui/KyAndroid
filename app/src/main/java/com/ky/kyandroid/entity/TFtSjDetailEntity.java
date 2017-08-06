@@ -33,6 +33,12 @@ public class TFtSjDetailEntity {
      */
     Map<String,TFtSjEntity> glsjListMap;
 
+
+    /**
+     * 事件实体
+     */
+    TFtSjEntity ftSj;
+
     public List<TFtSjFjEntity> getSjfjList() {
         return sjfjList;
     }
@@ -71,5 +77,13 @@ public class TFtSjDetailEntity {
 
     public void setGlsjListMap(Map<String, TFtSjEntity> glsjListMap) {
         this.glsjListMap = glsjListMap;
+    }
+
+    public TFtSjEntity getFtSj() {
+        return ftSj;
+    }
+
+    public void setFtSj(TFtSjEntity ftSj) {
+        this.ftSj = ftSj;
     }
 }
