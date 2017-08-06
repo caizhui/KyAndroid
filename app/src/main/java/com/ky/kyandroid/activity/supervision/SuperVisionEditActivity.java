@@ -243,6 +243,7 @@ public class SuperVisionEditActivity extends AppCompatActivity {
         /** 设置toolbar标题 **/
         centerText.setText("督察信息修改");
         supervisionAddBtn.setText("修改");
+        supervisionCancelBtn.setVisibility(View.GONE);
         /** 将右边按钮隐藏*/
         rightBtn.setVisibility(View.INVISIBLE);
 
@@ -315,10 +316,19 @@ public class SuperVisionEditActivity extends AppCompatActivity {
                     break;
                 // 成功跳转
                 case 2:
-                    Intent intent =new Intent(SuperVisionEditActivity.this,SuperVisionListActivity.class);
-                    intent.putExtra("businessType", "initList");
-                    startActivity(intent);
-                    Toast.makeText(SuperVisionEditActivity.this,"修改成功",Toast.LENGTH_SHORT).show();
+                    AckMessage ackMessage = JsonUtil.fromJson(message, AckMessage.class);
+                    if(ackMessage!=null){
+                        if(AckMessage.SUCCESS.equals(ackMessage.getAckCode())){
+                            Intent intent =new Intent(SuperVisionEditActivity.this,SuperVisionListActivity.class);
+                            intent.putExtra("businessType", "initList");
+                            startActivity(intent);
+                            Toast.makeText(SuperVisionEditActivity.this,"修改成功",Toast.LENGTH_SHORT).show();
+                        }else{
+                            Toast.makeText(SuperVisionEditActivity.this,"修改失败",Toast.LENGTH_SHORT).show();
+                        }
+                    }else{
+                        Toast.makeText(SuperVisionEditActivity.this,"修改失败",Toast.LENGTH_SHORT).show();
+                    }
                     sweetAlertDialogUtil.dismissAlertDialog();
                     break;
             }
@@ -528,6 +538,7 @@ public class SuperVisionEditActivity extends AppCompatActivity {
                         msg.what = 2;
                         msg.obj = response.body().string();
                     } else {
+                        msg.what = 0;
                         msg.obj = "网络异常,请确认网络情况";
                     }
                     mHandler.sendMessage(msg);

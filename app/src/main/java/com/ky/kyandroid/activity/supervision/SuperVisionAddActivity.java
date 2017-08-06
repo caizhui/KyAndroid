@@ -221,6 +221,8 @@ public class SuperVisionAddActivity extends AppCompatActivity {
         /** 将右边按钮隐藏*/
         rightBtn.setVisibility(View.INVISIBLE);
 
+        supervisionCancelBtn.setVisibility(View.GONE);
+
         if(radioGroup!=null){
             radioButton01.setChecked(true);
             dblx="1";
@@ -290,10 +292,19 @@ public class SuperVisionAddActivity extends AppCompatActivity {
                     break;
                 // 成功跳转
                 case 2:
-                    Intent intent =new Intent(SuperVisionAddActivity.this,SuperVisionListActivity.class);
-                    intent.putExtra("businessType", "initList");
-                    startActivity(intent);
-                    Toast.makeText(SuperVisionAddActivity.this,"保存成功",Toast.LENGTH_SHORT).show();
+                    AckMessage ackMessage = JsonUtil.fromJson(message, AckMessage.class);
+                    if(ackMessage!=null){
+                        if(AckMessage.SUCCESS.equals(ackMessage.getAckCode())){
+                            Intent intent =new Intent(SuperVisionAddActivity.this,SuperVisionListActivity.class);
+                            intent.putExtra("businessType", "initList");
+                            startActivity(intent);
+                            Toast.makeText(SuperVisionAddActivity.this,"保存成功",Toast.LENGTH_SHORT).show();
+                        }else{
+                            Toast.makeText(SuperVisionAddActivity.this,"保存失败",Toast.LENGTH_SHORT).show();
+                        }
+                    }else{
+                        Toast.makeText(SuperVisionAddActivity.this,"保存失败",Toast.LENGTH_SHORT).show();
+                    }
                     sweetAlertDialogUtil.dismissAlertDialog();
                     break;
             }
