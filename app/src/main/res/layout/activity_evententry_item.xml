@@ -23,16 +23,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textColor="@color/material_blue_grey_80"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="事件测试" />
+                android:text="事件测试"
+                android:textColor="@color/material_blue_grey_80" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:gravity="right">
+                android:layout_weight="1"
+                android:gravity="end">
 
                 <TextView
                     android:id="@+id/thing_status"
@@ -45,7 +45,7 @@
                     android:paddingBottom="2dp"
                     android:text="事件测试"
                     android:textColor="@color/white"
-                    android:textSize="12dp" />
+                    android:textSize="12sp" />
             </LinearLayout>
 
         </LinearLayout>

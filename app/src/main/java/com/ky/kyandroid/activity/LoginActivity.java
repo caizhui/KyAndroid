@@ -32,13 +32,16 @@ import com.ky.kyandroid.entity.UserEntity;
 import com.ky.kyandroid.service.SaveBDdescService;
 import com.ky.kyandroid.util.JsonUtil;
 import com.ky.kyandroid.util.OkHttpUtil;
+import com.ky.kyandroid.util.PermissionUtil;
 import com.ky.kyandroid.util.SpUtil;
 import com.ky.kyandroid.util.StringUtils;
 import com.ky.kyandroid.util.SweetAlertDialogUtil;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -81,7 +84,7 @@ public class LoginActivity extends AppCompatActivity {
     /**
      * 所属orgName
      */
-    public static final String ORG_ID= "orgId";
+    public static final String ORG_ID = "orgId";
 
     /**
      * 街道代码
@@ -183,12 +186,11 @@ public class LoginActivity extends AppCompatActivity {
         sweetAlertDialogUtil = new SweetAlertDialogUtil(LoginActivity.this);
         initEvent();
         initLoginAnim();
-        // 询问定位权限
-        int location_permission = ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION);
-        if (location_permission != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_CODE_ASK_PERMISSIONS);
-        }
+        String[] initPermission = {Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.ACCESS_COARSE_LOCATION};
+        // 询问权限
+        PermissionUtil.requestPermissions(this,initPermission,REQUEST_CODE_ASK_PERMISSIONS);
     }
+
 
     @Override
     protected void onRestart() {
@@ -285,15 +287,14 @@ public class LoginActivity extends AppCompatActivity {
     /**
      * 跳转界面
      */
-    private void initDispatchMain(){
-        boolean logined = sp.getBoolean(IS_LOGIN,false);
-        if(logined){
+    private void initDispatchMain() {
+        if (sp.getBoolean(IS_LOGIN, false)) {
             String name = sp.getString("name", "");
             Intent intent = new Intent();
-            if ("街道办工作人员".equals(name)  || "香蜜湖录入人员".equals(name)) {
+            if ("街道办工作人员".equals(name) || "香蜜湖录入人员".equals(name)) {
                 intent.setClass(this, MainAddEventActivity.class);
             } else if ("街道职能部门".equals(name) || "街道办工作人员2".equals(name) || "区职能部门".equals(name)
-                    || "区职能部门处理人员".equals(name) ||"香蜜湖职能处理人员".equals(name)) {
+                    || "区职能部门处理人员".equals(name) || "香蜜湖职能处理人员".equals(name)) {
                 intent.setClass(this, MainHandleEventActivity.class);
             } else if ("区维稳办".equals(name)) {
                 intent.setClass(this, MainOfficeActivity.class);
@@ -396,13 +397,13 @@ public class LoginActivity extends AppCompatActivity {
                     SpUtil.setStringSharedPerference(sp, "port", port);
                 }
                 if (!"".equals(message)) {
-                    closeDialog(dialogInterface,false);
+                    closeDialog(dialogInterface, false);
                     Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
                     builder.setCancelable(false);
                     //canCloseDialog(dialogInterface, false);//不关闭对话框
                     return;
                 } else {
-                    closeDialog(dialogInterface,true);
+                    closeDialog(dialogInterface, true);
                     Toast.makeText(LoginActivity.this, "设置IP成功", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -410,7 +411,7 @@ public class LoginActivity extends AppCompatActivity {
         builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                closeDialog(dialogInterface,true);
+                closeDialog(dialogInterface, true);
             }
         });
         builder.create().show();
@@ -418,11 +419,12 @@ public class LoginActivity extends AppCompatActivity {
 
     /**
      * 关闭弹出框  isClose =false 关闭，否则 不关闭
+     *
      * @param isClose
      */
-    public void  closeDialog(DialogInterface dialogInterface,boolean isClose){
+    public void closeDialog(DialogInterface dialogInterface, boolean isClose) {
         //不关闭
-        try{
+        try {
             Field field = dialogInterface.getClass().getSuperclass().getDeclaredField("mShowing");
             field.setAccessible(true);
             field.set(dialogInterface, isClose);

@@ -59,6 +59,11 @@ public class MainAllActivity extends AppCompatActivity {
     @BindView(R.id.left_btn)
     ImageView leftBtn;
     /**
+     * 右下角文本
+     */
+    @BindView(R.id.bottom_text)
+    TextView bottom_text;
+    /**
      * 导航栏中间文字
      */
     @BindView(R.id.center_text)
@@ -189,6 +194,8 @@ public class MainAllActivity extends AppCompatActivity {
         // 启动任务消息访问runable
         String userId = SpUtil.getSharePerference(this).getString(LoginActivity.USER_ID,"userId");
         MsgThreadUtil.initInfoRunable(userId,mHandler,netWorkConnection);
+        String bottomText = "欢迎您！" + sp.getString(LoginActivity.NAME,"");
+        bottom_text.setText(bottomText);
     }
 
 
