@@ -425,7 +425,7 @@ public class SuperVisionAddActivity extends AppCompatActivity {
                 if("".equals(supervisorGlsj.getTextAlignment())){
                     message+="关联事件不能为空\n";
                 }else{
-                    tFtDbEntity.setSjId(glsjCodeValue.getCode());
+                    tFtDbEntity.setSj_id(glsjCodeValue.getCode());
                 }
                 if("".equals(dblx)){
                     message+="督办类型不能为空\n";

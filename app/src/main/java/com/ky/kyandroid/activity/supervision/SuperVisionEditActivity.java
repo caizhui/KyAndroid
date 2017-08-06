@@ -359,6 +359,16 @@ public class SuperVisionEditActivity extends AppCompatActivity {
                 //设置下拉列表的风格
                 glsjAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 supervisorGlsj.setAdapter(glsjAdapter);//将adapter 添加到表现形式spinner中
+                //设置默认关联事件
+                int count =glsjAdapter.getCount();
+                if(count>0){
+                    for(int i = 0 ;i<count;i++){
+                        CodeValue codeValue = (CodeValue) glsjAdapter.getItem(i);
+                        if(tFtDbEntity.getSj_id().equals(codeValue.getCode())){
+                            supervisorGlsj.setSelection(i);
+                        }
+                    }
+                }
             }
             if(bdcbmList!=null && bdcbmList.size()>0){
                 //将可选内容与ArrayAdapter连接起来
@@ -367,6 +377,16 @@ public class SuperVisionEditActivity extends AppCompatActivity {
                 bdcbmAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 beSupervisorUnitSpinner.setAdapter(bdcbmAdapter);//将adapter 添加到表现形式spinner中
                 sweetAlertDialogUtil.dismissAlertDialog();
+                //设置默认被督办单位
+                int count =bdcbmAdapter.getCount();
+                if(count>0){
+                    for(int i = 0 ;i<count;i++){
+                        CodeValue codeValue = (CodeValue) bdcbmAdapter.getItem(i);
+                        if(tFtDbEntity.getDbdw().equals(codeValue.getCode())){
+                            beSupervisorUnitSpinner.setSelection(i);
+                        }
+                    }
+                }
             }
             }else if(Constants.FAILURE.equals(ackMessage.getAckCode())){
             //失败后操作
@@ -450,7 +470,7 @@ public class SuperVisionEditActivity extends AppCompatActivity {
                 if("".equals(supervisorGlsj.getTextAlignment())){
                     message+="关联事件不能为空\n";
                 }else{
-                    tFtDbEntity.setSjId(glsjCodeValue.getCode());
+                    tFtDbEntity.setSj_id(glsjCodeValue.getCode());
                 }
                 if("".equals(dblx)){
                     message+="督办类型不能为空\n";

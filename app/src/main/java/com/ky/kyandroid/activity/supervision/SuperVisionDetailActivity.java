@@ -175,15 +175,15 @@ public class SuperVisionDetailActivity extends AppCompatActivity {
             } else if ("3".equals(tFtDbEntity.getDblx())) {
                 supervisorDblxEdt.setText("落实不彻底");
             }
-            beSupervisorUnitSpinner.setText(tFtDbEntity.getBdbdw());
+            beSupervisorUnitSpinner.setText(tFtDbEntity.getBdbdwname());
             feedbackTimEdt.setText(tFtDbEntity.getDbsj());
             fksjEdt.setText(tFtDbEntity.getFksx());
-            feedbackZpjsrEdt.setText(tFtDbEntity.getZpjsr());
+            feedbackZpjsrEdt.setText(tFtDbEntity.getOrg_name());
             feedbackZpyyEdt.setText(tFtDbEntity.getZpyy());
             feedbackThyyEdt.setText(tFtDbEntity.getThyy());
-           // supervisorFkjgEdt.setText(tFtDbEntity.get);
+             supervisorFkjgEdt.setText(tFtDbEntity.getDbfkjg());
             supervisorRequireEdt.setText(tFtDbEntity.getDbyq());
-            ztEdt.setText(tFtDbEntity.getZt());
+            ztEdt.setText("已"+tFtDbEntity.getStatusname());
             remarkTextEdt.setText(tFtDbEntity.getComments());
         }
     }

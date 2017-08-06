@@ -27,7 +27,7 @@ import com.ky.kyandroid.R;
 import com.ky.kyandroid.activity.dbpj.DbpjlActivity;
 import com.ky.kyandroid.activity.evententry.EventEntryListActivity;
 import com.ky.kyandroid.activity.msg.MsgNoticeActivity;
-import com.ky.kyandroid.activity.supervision.SuperVisionAddActivity;
+import com.ky.kyandroid.activity.supervision.SuperVisionListActivity;
 import com.ky.kyandroid.bean.AckMessage;
 import com.ky.kyandroid.bean.NetWorkConnection;
 import com.ky.kyandroid.bean.PageBean;
@@ -306,7 +306,7 @@ public class MainOfficeActivity extends AppCompatActivity {
                 break;
             /**督查督办*/
             case R.id.supervision_img:
-                intent.setClass(this, SuperVisionAddActivity.class);
+                intent.setClass(this, SuperVisionListActivity.class);
                 startActivity(intent);
                 break;
             /**监督评价**/

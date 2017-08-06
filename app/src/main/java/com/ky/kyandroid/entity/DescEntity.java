@@ -3,12 +3,14 @@ package com.ky.kyandroid.entity;
 import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
 
+import java.io.Serializable;
+
 /**
  * Created by Caizhui on 2017/6/10.
  * 获取控件键值对
  */
 @Table(name = "t_desc")
-public class DescEntity {
+public class DescEntity  implements Serializable{
 
     @Column(name = "uuid",isId = true,autoGen = true)
     private  int uuid;

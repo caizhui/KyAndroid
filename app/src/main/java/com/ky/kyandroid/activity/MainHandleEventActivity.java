@@ -26,7 +26,7 @@ import android.widget.TextView;
 import com.ky.kyandroid.R;
 import com.ky.kyandroid.activity.dbpj.DbpjlActivity;
 import com.ky.kyandroid.activity.msg.MsgNoticeActivity;
-import com.ky.kyandroid.activity.supervision.SuperVisionAddActivity;
+import com.ky.kyandroid.activity.supervision.SuperVisionListActivity;
 import com.ky.kyandroid.activity.task.TaskListActivity;
 import com.ky.kyandroid.bean.AckMessage;
 import com.ky.kyandroid.bean.NetWorkConnection;
@@ -302,10 +302,9 @@ public class MainHandleEventActivity extends AppCompatActivity {
                 intent.setClass(this, MsgNoticeActivity.class);
                 startActivity(intent);
                 break;
-
             /**督查督办*/
             case R.id.supervision_img:
-                intent.setClass(this, SuperVisionAddActivity.class);
+                intent.setClass(this, SuperVisionListActivity.class);
                 startActivity(intent);
                 break;
             /**监督评价**/
