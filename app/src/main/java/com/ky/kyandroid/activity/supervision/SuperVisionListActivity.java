@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -214,6 +215,16 @@ public class SuperVisionListActivity extends AppCompatActivity {
      * 操作内容
      */
     private EditText  operationContent;
+
+    /**
+     * 转派部门
+     */
+    private CodeValue zpbmCodeValue;
+
+    /**
+     * 转派部门Id
+     */
+    private String zpbmId;
 
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
@@ -503,6 +514,7 @@ public class SuperVisionListActivity extends AppCompatActivity {
                     List<TFtDbEntity> tFtDbEntityList = adapter.getList();
                     //任务退回时，该条记录去掉
                     if(tFtDbEntityList.get(tempPosition)!=null){
+                        flag = true;
                         tFtDbEntityList.remove(tempPosition);
                         adapter.notifyDataSetChanged();
                     }
@@ -581,7 +593,7 @@ public class SuperVisionListActivity extends AppCompatActivity {
                         startActivity(intent);
                     }else if("1".equals(dbAnEntity.getNextstatus())){
                         //转派
-                        sendOperation(dbAnEntity,"");
+                        sendOperation(dbAnEntity,"distribute");
                     }else if("2".equals(dbAnEntity.getNextstatus())){
                         //受理
                         sendOperation(dbAnEntity,"accept");
@@ -664,9 +676,21 @@ public class SuperVisionListActivity extends AppCompatActivity {
     public void sendOperation(final DbAnEntity dbAnEntity,  final String requestType) {
         final View mView = LayoutInflater.from(SuperVisionListActivity.this).inflate(R.layout.dialog_db_operation, null);
         linearlayoutSpinner = ButterKnife.findById(mView, R.id.linearlayout_spinner);
-        spinnerText = ButterKnife.findById(mView, R.id.spinner_text);
+        spinnerText= ButterKnife.findById(mView, R.id.spinner_text);
         operationText = ButterKnife.findById(mView, R.id.operation_text);
         operationContent = ButterKnife.findById(mView, R.id.operation_content);
+        spinnerText.setSelection(0, false);
+        spinnerText.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                zpbmCodeValue = (CodeValue) adapterView.getItemAtPosition(position);
+                zpbmId = zpbmCodeValue.getCode();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
         String title="请填写转派原因!";
         //转派的时候，需要获取转派的部门
         if("1".equals(dbAnEntity.getNextstatus())){
@@ -688,27 +712,44 @@ public class SuperVisionListActivity extends AppCompatActivity {
         if("2".equals(dbAnEntity.getNextstatus())){
             linearlayoutSpinner.setVisibility(View.GONE);
             operationText.setText("督办反馈结果:");
-            title="请填写反馈情况!";
         }
         //3退回的时候，linearlayout_spinner不显示
         if("3".equals(dbAnEntity.getNextstatus())){
             linearlayoutSpinner.setVisibility(View.GONE);
             operationText.setText("退回原因:");
-            title ="请填写退回原因!";
         }
         final Message msg = new Message();
         AlertDialog.Builder builder = new AlertDialog.Builder(SuperVisionListActivity.this);
         builder.setTitle(dbAnEntity.getShowname());
         builder.setView(mView);
-        final String finalTitle = title;
         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (netWorkConnection.isWIFIConnection()) {
                     String message = "";
                     Map<String, String> paramsMap = new HashMap<String, String>();
-                    if("".equals(operationContent.getText().toString().trim())){
-                        message= finalTitle;
+                    //转派的时候，需要获取转派的部门
+                    if("1".equals(dbAnEntity.getNextstatus())){
+                        //设置下拉列表的风格
+                        if("".equals(spinnerText.getTextAlignment())){
+                            message="转派给部门不能为空!";
+                        }
+                        if("".equals(operationContent.getText().toString())){
+                            message="请填写转派原因!";
+                        }
+                    }
+                    //2受理的时候
+                    if("2".equals(dbAnEntity.getNextstatus())){
+                        if("".equals(operationContent.getText().toString())){
+                            message="请填写反馈情况!";
+                        }
+
+                    }
+                    //3退回的时候
+                    if("3".equals(dbAnEntity.getNextstatus())){
+                        if("".equals(operationContent.getText().toString())){
+                            message ="请填写退回原因!";
+                        }
                     }
                     if (!"".equals(message)) {
                         closeDialog(dialogInterface,false);
@@ -717,6 +758,11 @@ public class SuperVisionListActivity extends AppCompatActivity {
                         paramsMap.put("userId", userId);
                         paramsMap.put("dbIds", tFtDbEntity.getId());
                         paramsMap.put("requestType",requestType);
+                        paramsMap.put("czyy",operationContent.getText().toString());
+                        //转派的时候，需要获取转派的部门
+                        if("1".equals(dbAnEntity.getNextstatus())){
+                            paramsMap.put("zpbm",zpbmId);
+                        }
                         closeDialog(dialogInterface,true);
                         sweetAlertDialogUtil.loadAlertDialog();
                         // 发送请求
