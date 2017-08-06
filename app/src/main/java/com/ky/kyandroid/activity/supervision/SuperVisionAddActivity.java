@@ -388,6 +388,7 @@ public class SuperVisionAddActivity extends AppCompatActivity {
                         msg.what = 1;
                         msg.obj = response.body().string();
                     } else {
+                        msg.what = 0;
                         msg.obj = "网络异常,请确认网络情况";
                     }
                     mHandler.sendMessage(msg);
@@ -462,7 +463,6 @@ public class SuperVisionAddActivity extends AppCompatActivity {
         if (netWorkConnection.isWIFIConnection()) {
             sweetAlertDialogUtil.loadAlertDialog("Loading...");
             msg.what = 0;
-            // 参数列表 - 账号、密码（加密）
             Map<String, String> paramsMap = new HashMap<String, String>();
             // 转成json格式
             String mapJson = JsonUtil.toJson(tFtDbEntity);
@@ -483,6 +483,7 @@ public class SuperVisionAddActivity extends AppCompatActivity {
                         msg.what = 2;
                         msg.obj = response.body().string();
                     } else {
+                        msg.what = 0;
                         msg.obj = "网络异常,请确认网络情况";
                     }
                     mHandler.sendMessage(msg);
