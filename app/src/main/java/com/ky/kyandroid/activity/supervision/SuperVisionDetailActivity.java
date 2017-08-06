@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ky.kyandroid.R;
+import com.ky.kyandroid.activity.evententry.EventEntryDetailActivity;
 import com.ky.kyandroid.entity.TFtDbEntity;
 
 import butterknife.BindView;
@@ -129,6 +130,12 @@ public class SuperVisionDetailActivity extends AppCompatActivity {
     @BindView(R.id.zt_edt)
     TextView ztEdt;
 
+    /**
+     * 关联事件LinearLayout
+     */
+    @BindView(R.id.glsj_linearLayout)
+    LinearLayout glsjLinearLayout;
+
 
     /**
      *
@@ -189,12 +196,18 @@ public class SuperVisionDetailActivity extends AppCompatActivity {
     }
 
 
-    @OnClick({R.id.left_btn})
+    @OnClick({R.id.left_btn,R.id.glsj_linearLayout})
     public void onClick(View v) {
         switch (v.getId()) {
             /** 返回键 **/
             case R.id.left_btn:
                 onBackPressed();
+                break;
+            /**跳到关联事件详情里面去**/
+            case R.id.glsj_linearLayout:
+                Intent intent =new Intent(this, EventEntryDetailActivity.class);
+                intent.putExtra("sjId",tFtDbEntity.getSj_id());
+                startActivity(intent);
                 break;
         }
     }

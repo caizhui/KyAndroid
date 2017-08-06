@@ -48,6 +48,7 @@
                 <include layout="@layout/linearlayout_one" />
 
                 <LinearLayout
+                    android:id="@+id/glsj_linearLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"

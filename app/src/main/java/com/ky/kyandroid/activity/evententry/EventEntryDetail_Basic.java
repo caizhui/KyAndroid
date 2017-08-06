@@ -184,7 +184,7 @@ public class EventEntryDetail_Basic extends Fragment {
         sp = SpUtil.getSharePerference(getActivity());
         descEntityDao= new DescEntityDao();
         tFtQhEntityDao = new TFtQhEntityDao();
-        tFtSjEntity = (TFtSjEntity) intent.getSerializableExtra("tFtSjEntity");
+       // tFtSjEntity = (TFtSjEntity) intent.getSerializableExtra("tFtSjEntity");
         initData();
         return view;
     }
@@ -205,7 +205,7 @@ public class EventEntryDetail_Basic extends Fragment {
                 String dcbm = "";
                 if(dcbms.length>0){
                     for(int i = 0 ;i<dcbms.length;i++){
-                        dcbm += descEntityDao.queryName("dcbm", dcbms[i])+",";
+                        dcbm += descEntityDao.queryName("dcbm", dcbms[i].trim())+",";
                     }
                     dcbm=dcbm.substring(0,dcbm.length()-1);
                 }
@@ -216,7 +216,7 @@ public class EventEntryDetail_Basic extends Fragment {
                 String sjly = "";
                 if(sjlys.length>0){
                     for(int i = 0 ;i<sjlys.length;i++){
-                        sjly += descEntityDao.queryName("sjly", sjlys[i])+",";
+                        sjly += descEntityDao.queryName("sjly", sjlys[i].trim())+",";
                     }
                     sjly=sjly.substring(0,sjly.length()-1);
                 }
@@ -265,6 +265,12 @@ public class EventEntryDetail_Basic extends Fragment {
 
 
         }
+    }
+
+
+    public void settTftSjEntityEntity(TFtSjEntity tFtSjEntity){
+        this.tFtSjEntity = tFtSjEntity;
+        initData();
     }
 
 }
