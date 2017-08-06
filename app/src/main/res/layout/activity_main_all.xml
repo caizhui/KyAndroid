@@ -50,8 +50,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="我的事件"
                             android:padding="3dp"
+                            android:text="我的事件"
                             android:textSize="14sp" />
                     </LinearLayout>
 
@@ -75,8 +75,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="我的任务"
                             android:padding="3dp"
+                            android:text="我的任务"
                             android:textSize="14sp" />
                     </LinearLayout>
 
@@ -100,8 +100,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="督查督办"
                             android:padding="3dp"
+                            android:text="督查督办"
                             android:textSize="14sp" />
                     </LinearLayout>
 
@@ -114,8 +114,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.3"
-                    android:paddingTop="10dp"
-                    android:gravity="center_horizontal">
+                    android:gravity="center_horizontal"
+                    android:paddingTop="10dp">
 
                     <LinearLayout
                         style="@style/menu_item_padding"
@@ -197,8 +197,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.3"
-                    android:paddingTop="10dp"
-                    android:gravity="center_horizontal">
+                    android:gravity="center_horizontal"
+                    android:paddingTop="10dp">
 
                     <LinearLayout
                         style="@style/menu_item_padding"
@@ -219,8 +219,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="预案"
                             android:padding="3dp"
+                            android:text="预案"
                             android:textSize="14sp" />
                     </LinearLayout>
 
@@ -243,8 +243,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="工作简报"
                             android:padding="3dp"
+                            android:text="工作简报"
                             android:textSize="14sp" />
                     </LinearLayout>
 
@@ -267,8 +267,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="事件统计"
                             android:padding="3dp"
+                            android:text="事件统计"
                             android:textSize="14sp" />
                     </LinearLayout>
 
@@ -301,8 +301,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="事件跟踪"
                             android:padding="3dp"
+                            android:text="事件跟踪"
                             android:textSize="14sp" />
                     </LinearLayout>
 
@@ -325,8 +325,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="消息"
                             android:padding="3dp"
+                            android:text="消息"
                             android:textSize="14sp" />
                     </LinearLayout>
 
@@ -356,10 +356,20 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="65dp"
-                android:layout_marginTop="30dp"></LinearLayout>
         </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/bottom_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:gravity="end"
+                android:padding="3dp"
+                android:textColor="@color/red_btn_bg_color" />
+        </RelativeLayout>
     </LinearLayout>
 </LinearLayout>

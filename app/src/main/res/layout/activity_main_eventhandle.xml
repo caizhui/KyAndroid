@@ -49,8 +49,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="我的任务"
                             android:padding="3dp"
+                            android:text="我的任务"
                             android:textSize="14sp" />
                     </LinearLayout>
 
@@ -74,8 +74,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="督查督办"
                             android:padding="3dp"
+                            android:text="督查督办"
                             android:textSize="14sp" />
                     </LinearLayout>
 
@@ -98,8 +98,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="消息"
                             android:padding="3dp"
+                            android:text="消息"
                             android:textSize="14sp" />
                     </LinearLayout>
 
@@ -133,8 +133,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="监督评价"
                             android:padding="3dp"
+                            android:text="监督评价"
                             android:textSize="14sp" />
                     </LinearLayout>
 
@@ -157,8 +157,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="知识库"
                             android:padding="3dp"
+                            android:text="知识库"
                             android:textSize="14sp" />
                     </LinearLayout>
 
@@ -181,8 +181,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="法律法规"
                             android:padding="3dp"
+                            android:text="法律法规"
                             android:textSize="14sp" />
                     </LinearLayout>
 
@@ -215,8 +215,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="预案"
                             android:padding="3dp"
+                            android:text="预案"
                             android:textSize="14sp" />
                     </LinearLayout>
 
@@ -239,8 +239,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="工作简报"
                             android:padding="3dp"
+                            android:text="工作简报"
                             android:textSize="14sp" />
                     </LinearLayout>
 
@@ -263,8 +263,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="事件统计"
                             android:padding="3dp"
+                            android:text="事件统计"
                             android:textSize="14sp" />
                     </LinearLayout>
 
@@ -297,8 +297,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="事件跟踪"
                             android:padding="3dp"
+                            android:text="事件跟踪"
                             android:textSize="14sp" />
                     </LinearLayout>
 
@@ -344,11 +344,20 @@
                 <!-- end group -->
 
             </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="65dp"
-                android:layout_marginTop="30dp"></LinearLayout>
         </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/bottom_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:gravity="end"
+                android:padding="3dp"
+                android:textColor="@color/red_btn_bg_color" />
+        </RelativeLayout>
     </LinearLayout>
 </LinearLayout>

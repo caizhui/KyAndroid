@@ -40,6 +40,7 @@ import com.ky.kyandroid.entity.TFtSjFjEntity;
 import com.ky.kyandroid.entity.TFtSjGlsjEntity;
 import com.ky.kyandroid.entity.TFtSjLogEntity;
 import com.ky.kyandroid.util.FileManager;
+import com.ky.kyandroid.util.PermissionUtil;
 import com.ky.kyandroid.view.SelectPicPopupWindow;
 
 import java.io.BufferedOutputStream;
@@ -372,7 +373,7 @@ public class EventEntryAdd_Attachment extends Fragment {
                 int storagePermission = ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA);
                 if (storagePermission != PackageManager.PERMISSION_GRANTED) {
                     // 添加拍照与读写权限
-                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_ASK_PERMISSIONS);
+                    PermissionUtil.requestPermissions(getActivity(),new String[]{Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_CODE_ASK_PERMISSIONS);
                 }else{
                     menuWindow = new SelectPicPopupWindow(EventEntryAdd_Attachment.this.getActivity(), itemsOnClick);
                     // 显示窗口 设置layout在PopupWindow中显示的位置
