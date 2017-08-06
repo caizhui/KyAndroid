@@ -1,8 +1,6 @@
-package com.ky.kyandroid.activity.supervision;
+package com.ky.kyandroid.activity.dbpj;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -25,23 +23,18 @@ import android.widget.Toast;
 import com.ky.kyandroid.Constants;
 import com.ky.kyandroid.R;
 import com.ky.kyandroid.activity.LoginActivity;
-import com.ky.kyandroid.adapter.SupervisionListAdapter;
+import com.ky.kyandroid.adapter.GwpjDetailListAdapter;
 import com.ky.kyandroid.bean.AckMessage;
 import com.ky.kyandroid.bean.NetWorkConnection;
 import com.ky.kyandroid.bean.PageBean;
-import com.ky.kyandroid.entity.DbAnEntity;
 import com.ky.kyandroid.entity.SjHandleParams;
-import com.ky.kyandroid.entity.TFtDbEntity;
 import com.ky.kyandroid.util.JsonUtil;
-import com.ky.kyandroid.util.OkHttpUtil;
 import com.ky.kyandroid.util.SpUtil;
 import com.ky.kyandroid.util.StringUtils;
 import com.ky.kyandroid.util.SweetAlertDialogUtil;
 import com.ky.kyandroid.util.SwipeRefreshUtil;
 import com.solidfire.gson.reflect.TypeToken;
 
-import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -50,20 +43,15 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.OnItemClick;
-import butterknife.OnItemLongClick;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
 
 /**
  * Created by Caizhui on 2017-6-9.
- * 督查督办列表页面
+ * 岗位u评价列表页面
  */
 
-public class SuperVisionListActivity extends AppCompatActivity {
+public class GwpjDetailListActivity extends AppCompatActivity {
 
-    private final String TAG = "SuperVisionListActivity";
+    private final String TAG = "GwpjListActivity";
 
     /**
      * 标题左边按钮
@@ -86,8 +74,8 @@ public class SuperVisionListActivity extends AppCompatActivity {
     /**
      * List列表
      */
-    @BindView(R.id.search_supervision_list)
-    ListView searchSupervisionList;
+    @BindView(R.id.search_bmpj_list)
+    ListView searchBmpjList;
 
     /**
      * 刷新控件
@@ -98,15 +86,16 @@ public class SuperVisionListActivity extends AppCompatActivity {
     /**
      * 事件列表
      */
-    private List<TFtDbEntity> tFtDbEntityList;
+    private List<Map<String,String>> gwpjEntityList;
 
 
-    private SupervisionListAdapter adapter;
+    private GwpjDetailListAdapter adapter;
+
 
     /**
-     * 事件实体
+     *
      */
-    TFtDbEntity tFtDbEntity;
+    Map<String,String> map;
 
 
     /**
@@ -173,22 +162,24 @@ public class SuperVisionListActivity extends AppCompatActivity {
      */
     private Map<String, String> paramsMap = null;
 
-    List<TFtDbEntity> entityList;
-
-    /**
-     * 操作人员权限名称
-     */
-    private String[] listViewContent;
-
-    /**
-     * 操作人员权限实体
-     */
-    private DbAnEntity[] dbAnEntities;
+    List<Map<String,String>> entityList;
 
     /**
      * 临时位置
      */
     private int tempPosition;
+
+    private Intent intent ;
+
+    /**
+     * 部门Id
+     */
+    private String bmId="";
+
+    /**
+     * 部门名称
+     */
+    private  String bmMc;
 
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
@@ -202,16 +193,16 @@ public class SuperVisionListActivity extends AppCompatActivity {
             switch (msg.what) {
                 // 默认处理
                 case 0:
-                    Toast.makeText(SuperVisionListActivity.this, message, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GwpjDetailListActivity.this, message, Toast.LENGTH_SHORT).show();
                     break;
                 // 加载失败
                 case 1:
                     Log.i(TAG, "刷新操作...");
                     if (handleResponseData(message)) {
                         notifyListViewData(false);
-                        Toast.makeText(SuperVisionListActivity.this, "刷新成功", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GwpjDetailListActivity.this, "刷新成功", Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(SuperVisionListActivity.this, "刷新失败", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GwpjDetailListActivity.this, "刷新失败", Toast.LENGTH_SHORT).show();
                     }
                     swipeRefreshUtil.dismissRefreshing();
                     break;
@@ -226,7 +217,7 @@ public class SuperVisionListActivity extends AppCompatActivity {
                 case 4:
                     Log.i(TAG, "加载失败...");
                     swipeRefreshUtil.dismissRefreshing();
-                    Toast.makeText(SuperVisionListActivity.this, message, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GwpjDetailListActivity.this, message, Toast.LENGTH_SHORT).show();
                     break;
                 // 初始化跳转
                 case 7:
@@ -235,16 +226,16 @@ public class SuperVisionListActivity extends AppCompatActivity {
                     if (handleResponseData(message)) {
                         notifyListViewData(false);
                     } else {
-                        Toast.makeText(SuperVisionListActivity.this, "查询不到符合条件记录", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GwpjDetailListActivity.this, "查询不到符合条件记录", Toast.LENGTH_SHORT).show();
                     }
                     break;
                 case 8:
                     // 状态修改
                     Log.i(TAG, "加载操作...");
                     if (handleResponseDataState(message)) {
-                        Toast.makeText(SuperVisionListActivity.this, "操作成功", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GwpjDetailListActivity.this, "操作成功", Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(SuperVisionListActivity.this, "操作失败", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GwpjDetailListActivity.this, "操作失败", Toast.LENGTH_SHORT).show();
                     }
                     break;
 
@@ -255,7 +246,7 @@ public class SuperVisionListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_supervision_list);
+        setContentView(R.layout.activity_bmpj_list);
         ButterKnife.bind(this);
         // 初始化视图
         initViewAndEvent();
@@ -269,7 +260,7 @@ public class SuperVisionListActivity extends AppCompatActivity {
 
 
 
-    @OnClick({R.id.left_btn,R.id.right_btn})
+    @OnClick({R.id.left_btn})
     public void onClick(View v) {
         switch (v.getId()) {
             /** 返回键 **/
@@ -277,9 +268,6 @@ public class SuperVisionListActivity extends AppCompatActivity {
                 onBackPressed();
                 //finish();
                 break;
-            case R.id.right_btn:
-                Intent intent = new Intent(this, SuperVisionAddActivity.class);
-                startActivity(intent);
         }
     }
 
@@ -315,13 +303,16 @@ public class SuperVisionListActivity extends AppCompatActivity {
      * 初始化视图与事件
      */
     void initViewAndEvent() {
+        intent  = getIntent();
+        bmId = intent.getStringExtra("BMID");
+        bmMc = intent.getStringExtra("BPJR");
         sp = SpUtil.getSharePerference(this);
         netWorkConnection = new NetWorkConnection(this);
-        sweetAlertDialogUtil = new SweetAlertDialogUtil(SuperVisionListActivity.this);
-        tFtDbEntityList = new ArrayList<TFtDbEntity>();
+        sweetAlertDialogUtil = new SweetAlertDialogUtil(GwpjDetailListActivity.this);
+        gwpjEntityList = new ArrayList<Map<String,String>>();
         userId = sp.getString(USER_ID, "");
-        centerText.setText("督查督办");
-        rightBtn.setVisibility(View.VISIBLE);
+        centerText.setText("评价详情");
+        rightBtn.setVisibility(View.INVISIBLE);
     }
 
 
@@ -332,10 +323,14 @@ public class SuperVisionListActivity extends AppCompatActivity {
         paramsMap = new HashMap<String, String>();
         // 查询自己的消息
         paramsMap.put("userId", sp.getString(LoginActivity.USER_ID, ""));
+        paramsMap.put("pjlx", "1");
+        if(bmId!=null && !"".equals(bmId)){
+            paramsMap.put("orgId", bmId);
+        }
         // 设置标题及颜色
-        centerText.setText("督查督办(" + total + ")");
+        centerText.setText("评价详情(" + total + ")");
         //toolbar_layout.setBackgroundColor(Color.parseColor("#A4C639"));
-        swipeRefreshUtil = new SwipeRefreshUtil(swipeContainer, Constants.SERVICE_DBLIST, mHandler);
+        swipeRefreshUtil = new SwipeRefreshUtil(swipeContainer, Constants.SERVICE_DBPJDETAILLIST, mHandler);
         // 上拉刷新初始化
         swipeRefreshUtil.setRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -356,10 +351,10 @@ public class SuperVisionListActivity extends AppCompatActivity {
     private void initListView() {
         // 加载“正在加载”布局文件
         list_jiazai = (LinearLayout) getLayoutInflater().inflate(R.layout.lv_item_jiazai, null);
-        searchSupervisionList.addFooterView(list_jiazai, null, false);
-        searchSupervisionList.setSelector(getResources().getDrawable(R.drawable.item_selector_grey));
+        searchBmpjList.addFooterView(list_jiazai, null, false);
+        searchBmpjList.setSelector(getResources().getDrawable(R.drawable.item_selector_grey));
         //滚动监听
-        searchSupervisionList.setOnScrollListener(new AbsListView.OnScrollListener() {
+        searchBmpjList.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 switch (scrollState) {
@@ -386,8 +381,8 @@ public class SuperVisionListActivity extends AppCompatActivity {
             }
         });
 
-        adapter = new SupervisionListAdapter(tFtDbEntityList, SuperVisionListActivity.this);
-        searchSupervisionList.setAdapter(adapter);
+        adapter = new GwpjDetailListAdapter(gwpjEntityList, GwpjDetailListActivity.this);
+        searchBmpjList.setAdapter(adapter);
     }
 
     /**
@@ -433,7 +428,7 @@ public class SuperVisionListActivity extends AppCompatActivity {
                         if (dataL != null && dataL.size() > 0) {
                             // 响应字符串
                             String resultList = JsonUtil.toJson(dataL);
-                            dataList = (List<TFtDbEntity>) JsonUtil.fromJson(resultList.toLowerCase(), new TypeToken<List<TFtDbEntity>>() {
+                            dataList = (List<Map<String,String>>) JsonUtil.fromJson(resultList, new TypeToken<List<Map<String,String>>>() {
                             });
                             flag = true;
                         } else {
@@ -451,7 +446,7 @@ public class SuperVisionListActivity extends AppCompatActivity {
      * 加载数据
      */
     private void notifyListViewData(boolean isAdd) {
-        entityList = (List<TFtDbEntity>) dataList;
+        entityList = (List<Map<String,String>>) dataList;
         if (isAdd) {
             // 追加列表
             adapter.addDataSetChanged(entityList);
@@ -459,7 +454,7 @@ public class SuperVisionListActivity extends AppCompatActivity {
             // 刷新列表
             adapter.notifyDataSetChanged(entityList);
         }
-        centerText.setText("督查督办(" + adapter.getCount() + ")");
+        centerText.setText("评价详情(" + adapter.getCount() + ")");
     }
 
     /**
@@ -502,156 +497,14 @@ public class SuperVisionListActivity extends AppCompatActivity {
      * @param sjHandleParams
      */
     private void updateListDataStatie(SjHandleParams sjHandleParams) {
-        List<TFtDbEntity> tFtDbEntityList = adapter.getList();
+        List<Map<String,String>> tFtDbEntityList = adapter.getList();
         if (tFtDbEntityList != null) {
             for (int i = 0; i < tFtDbEntityList.size(); i++) {
-                TFtDbEntity entity = tFtDbEntityList.get(i);
+                Map<String,String> entity = tFtDbEntityList.get(i);
             }
             adapter.notifyDataSetChanged();
         }
     }
 
 
-    /**
-     * 点击List列表Item
-     *
-     * @param position
-     */
-    @OnItemClick(R.id.search_supervision_list)
-    public void OnItemClick(int position) {
-        tFtDbEntity = (TFtDbEntity) adapter.getItem(position);
-        Intent intent = new Intent(this, SuperVisionDetailActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("tFtDbEntity", tFtDbEntity);
-        /**type 0：新增 1：修改**/
-        intent.putExtra("type", "1");
-        intent.putExtras(bundle);
-        startActivity(intent);
-    }
-
-    /**
-     * 长按list列表
-     *
-     * @param position
-     * @return
-     */
-    @OnItemLongClick(R.id.search_supervision_list)
-    public boolean OnItemLongClick(final int position) {
-        tFtDbEntity = (TFtDbEntity) adapter.getItem(position);
-        tempPosition = position;
-        List<DbAnEntity> dbAnEntityList=tFtDbEntity.getAnlist();
-        if (dbAnEntityList != null && dbAnEntityList.size() > 0) {
-            listViewContent = new String[dbAnEntityList.size()];
-            dbAnEntities = new DbAnEntity[dbAnEntityList.size()];
-            for (int i = 0; i < dbAnEntityList.size(); i++) {
-                listViewContent[i] = dbAnEntityList.get(i).getShowname();
-                dbAnEntities[i] = dbAnEntityList.get(i);
-            }
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setItems(listViewContent, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int pos) {
-                    //根据点击的item项获取该item对应的实体，
-                    DbAnEntity dbAnEntity = dbAnEntities[pos];
-                    if("0".equals(dbAnEntity.getNextstatus())){
-                        //编辑
-                        Intent intent =new Intent(SuperVisionListActivity.this,SuperVisionEditActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("tFtDbEntity", tFtDbEntity);
-                        intent.putExtras(bundle);
-                        startActivity(intent);
-                    }else if("1".equals(dbAnEntity.getNextstatus())){
-                        //转派
-
-                    }else if("2".equals(dbAnEntity.getNextstatus())){
-                        //受理
-
-                    }else if("3".equals(dbAnEntity.getNextstatus())){
-                        //退回
-
-                    }else if("4".equals(dbAnEntity.getNextstatus())){
-                        //作废
-
-                    }else{
-                        //删除
-                        OperatingProcess(tFtDbEntity,"del");
-                    }
-                }
-            });
-            builder.create().show();
-        } else {
-            Toast.makeText(this, "权限不足,不支持该操作", Toast.LENGTH_SHORT).show();
-        }
-        return true;
-    }
-
-    /**
-     * 操作流程
-     *
-     * @param
-     */
-    public void OperatingProcess(final TFtDbEntity tFtDbEntity, final String requestType) {
-        final Message msg = new Message();
-        AlertDialog.Builder builder = new AlertDialog.Builder(SuperVisionListActivity.this);
-        builder.setTitle("信息");
-        builder.setMessage("确定要执行次操作吗？");
-        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                if (netWorkConnection.isWIFIConnection()) {
-                    sweetAlertDialogUtil.loadAlertDialog();
-                    Map<String, String> paramsMap = new HashMap<String, String>();
-                    paramsMap.put("userId", userId);
-                    paramsMap.put("dbIds", tFtDbEntity.getId());
-                    paramsMap.put("requestType",requestType);
-
-                    // 发送请求
-                    OkHttpUtil.sendRequest(Constants.SERVICE_DBDBEXCEUTE, paramsMap, new Callback() {
-
-                        @Override
-                        public void onFailure(Call call, IOException e) {
-                            mHandler.sendEmptyMessage(0);
-                        }
-
-                        @Override
-                        public void onResponse(Call call, Response response) throws IOException {
-                            if (response.isSuccessful()) {
-                                msg.what = 8;
-                                msg.obj = response.body().string();
-                            } else {
-                                msg.what = 0;
-                                msg.obj = "网络异常,请确认网络情况";
-                            }
-                            mHandler.sendMessage(msg);
-                        }
-                    });
-                } else {
-                    msg.obj = "WIFI网络不可用,请检查网络连接情况";
-                    mHandler.sendMessage(msg);
-                }
-            }
-        });
-        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-            }
-        });
-        builder.create().show();
-    }
-
-    /**
-     * 关闭弹出框  isClose =false 关闭，否则 不关闭
-     *
-     * @param
-     */
-    public void closeDialog(DialogInterface dialogInterface, boolean isClose) {
-        //不关闭
-        try {
-            Field field = dialogInterface.getClass().getSuperclass().getDeclaredField("mShowing");
-            field.setAccessible(true);
-            field.set(dialogInterface, isClose);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }

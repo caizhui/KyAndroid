@@ -192,6 +192,55 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
 
+        <!--监督评价主页面-->
+        <activity
+            android:name=".activity.dbpj.DbpjlActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
+
+        <!--部门评价查询-->
+        <activity
+            android:name=".activity.dbpj.BmpjListActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
+
+        <!--部门评价详情查询-->
+        <activity
+            android:name=".activity.dbpj.BmpjDetailListActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
+
+        <!--机构评价查询-->
+        <activity
+            android:name=".activity.dbpj.JgpjListActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
+
+        <!--机构评价详情查询-->
+        <activity
+            android:name=".activity.dbpj.JgpjDetailListActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
+
+        <!--岗位评价查询-->
+        <activity
+            android:name=".activity.dbpj.GwpjListActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
+
+        <!--岗位评价详情查询-->
+        <activity
+            android:name=".activity.dbpj.GwpjDetailListActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
+
         <!--消息提醒Activity-->
         <activity
             android:name=".activity.msg.MsgNoticeActivity"

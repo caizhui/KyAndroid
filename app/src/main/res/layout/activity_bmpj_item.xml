@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:paddingTop="5dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/bm_name"
+                style="@style/TextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/material_blue_grey_80"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="事件测试" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginLeft="5dp"
+                android:padding="1dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="评价等级:" />
+
+                <TextView
+                    android:id="@+id/pjdj_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:ellipsize="end"
+                    android:maxLines="1" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:gravity="right">
+
+                <TextView
+                    android:id="@+id/dzs_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_selector_shape_red"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
+                    android:text="点赞数"
+                    android:textColor="@color/white"
+                    android:textSize="12dp" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="1dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="事件总数:" />
+
+                <TextView
+                    android:id="@+id/sjzs_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginLeft="10dp"
+                android:padding="1dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="总分:" />
+
+                <TextView
+                    android:id="@+id/zf_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginLeft="10dp"
+                android:padding="1dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="平均分:" />
+
+                <TextView
+                    android:id="@+id/pjf_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:ellipsize="end"
+                    android:maxLines="1" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_weight="1"
+                android:padding="1dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/dbpjTextSizeStyle"
+                    android:text="事件是否及时处置(10%):" />
+
+                <TextView
+                    android:id="@+id/sjsfjscz_text"
+                    style="@style/dbpjTextSizeStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:layout_marginLeft="10dp"
+                android:padding="1dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/dbpjTextSizeStyle"
+                    android:text="事件是否妥善处置(20%):" />
+
+                <TextView
+                    android:id="@+id/sjsftscz_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/dbpjTextSizeStyle"
+                    android:ellipsize="end"
+                    android:maxLines="1" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:padding="1dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/dbpjTextSizeStyle"
+                    android:text="事件处理服务质量(20%):" />
+
+                <TextView
+                    android:id="@+id/sjclfwzl_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/dbpjTextSizeStyle"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_weight="1"
+                android:layout_marginLeft="10dp"
+                android:padding="1dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/dbpjTextSizeStyle"
+                    android:text="事件处理服务态度(20%):" />
+
+                <TextView
+                    android:id="@+id/sjclfwtd_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/dbpjTextSizeStyle"
+                    android:ellipsize="end"
+                    android:maxLines="1" />
+            </LinearLayout>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:padding="1dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/dbpjTextSizeStyle"
+                    android:text="事件处理服务时效(10%):" />
+
+                <TextView
+                    android:id="@+id/sjclfwsx_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/dbpjTextSizeStyle"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:layout_marginLeft="10dp"
+                android:padding="1dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/dbpjTextSizeStyle"
+                    android:text="事件是否依法处置(20%):" />
+
+                <TextView
+                    android:id="@+id/sjsfyfcz_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/dbpjTextSizeStyle"
+                    android:ellipsize="end"
+                    android:maxLines="1" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/item_view"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginTop="5dp"
+        android:background="#DDDDDD"
+        android:focusable="false" />
+</LinearLayout>

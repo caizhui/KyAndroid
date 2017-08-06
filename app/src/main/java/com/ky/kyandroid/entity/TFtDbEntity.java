@@ -1,6 +1,7 @@
 package com.ky.kyandroid.entity;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 
@@ -106,6 +107,8 @@ public class TFtDbEntity implements Serializable{
 
 
 	private String sjmc;
+
+	private List<DbAnEntity>  anlist;
 
 	public String getId() {
 		return id;
@@ -438,5 +441,11 @@ public class TFtDbEntity implements Serializable{
 		this.zt = zt;
 	}
 
+	public List<DbAnEntity> getAnlist() {
+		return anlist;
+	}
 
+	public void setAnlist(List<DbAnEntity> anlist) {
+		this.anlist = anlist;
+	}
 }
