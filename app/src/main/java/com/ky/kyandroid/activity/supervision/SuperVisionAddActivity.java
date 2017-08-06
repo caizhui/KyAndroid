@@ -437,7 +437,7 @@ public class SuperVisionAddActivity extends AppCompatActivity {
                 if("".equals(supervisorGlsj.getTextAlignment())){
                     message+="关联事件不能为空\n";
                 }else{
-                    tFtDbEntity.setSj_id(glsjCodeValue.getCode());
+                    tFtDbEntity.setSjid(glsjCodeValue.getCode());
                 }
                 if("".equals(dblx)){
                     message+="督办类型不能为空\n";
@@ -478,6 +478,7 @@ public class SuperVisionAddActivity extends AppCompatActivity {
             // 转成json格式
             String mapJson = JsonUtil.toJson(tFtDbEntity);
             paramsMap.put("userId", userId);
+            paramsMap.put("sjId", tFtDbEntity.getSjid());
             paramsMap.put("TFtDb",mapJson);
             paramsMap.put("requestType","save");
             // 发送请求

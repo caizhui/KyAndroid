@@ -206,7 +206,7 @@ public class SuperVisionDetailActivity extends AppCompatActivity {
             /**跳到关联事件详情里面去**/
             case R.id.glsj_linearLayout:
                 Intent intent =new Intent(this, EventEntryDetailActivity.class);
-                intent.putExtra("sjId",tFtDbEntity.getSj_id());
+                intent.putExtra("sjId",tFtDbEntity.getSjid());
                 startActivity(intent);
                 break;
         }
