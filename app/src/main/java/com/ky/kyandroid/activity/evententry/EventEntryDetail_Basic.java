@@ -7,12 +7,15 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
 
 import com.ky.kyandroid.R;
 import com.ky.kyandroid.bean.CodeValue;
@@ -26,6 +29,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnTouch;
 
 /**
  * Created by Caizhui on 2017-6-9.
@@ -34,7 +38,6 @@ import butterknife.ButterKnife;
 
 @SuppressLint("ValidFragment")
 public class EventEntryDetail_Basic extends Fragment {
-
 
     /**
      * 事件名称
@@ -97,7 +100,7 @@ public class EventEntryDetail_Basic extends Fragment {
      * 涉及领域
      */
     @BindView(R.id.fields_involved_edt)
-    EditText fieldsInvolvedEdt;
+    TextView fieldsInvolvedEdt;
     /**
      * 涉及领域img
      */
@@ -137,17 +140,32 @@ public class EventEntryDetail_Basic extends Fragment {
      * 主要诉求
      */
     @BindView(R.id.main_appeals_edt)
-    EditText mainAppealsEdt;
+    TextView mainAppealsEdt;
     /**
      * 事件概要
      */
     @BindView(R.id.event_summary_edt)
-    EditText eventSummaryEdt;
+    TextView eventSummaryEdt;
     /**
      * >领导批示
      */
     @BindView(R.id.leadership_instructions_edt)
-    EditText leadershipInstructionsEdt;
+    TextView leadershipInstructionsEdt;
+
+    @BindView(R.id.parent_scroll)
+    ScrollView parent_scroll;
+
+    @BindView(R.id.one_scroll)
+    ScrollView one_scroll;
+
+    @BindView(R.id.twe_scroll)
+    ScrollView twe_scroll;
+
+    @BindView(R.id.three_scroll)
+    ScrollView three_scroll;
+
+    @BindView(R.id.four_scroll)
+    ScrollView four_scroll;
 
     /**
      * 数组 配置器 下拉菜单赋值用
@@ -182,9 +200,9 @@ public class EventEntryDetail_Basic extends Fragment {
         View view = inflater.inflate(R.layout.evententerdetail_basic_fragment, container, false);
         ButterKnife.bind(this, view);
         sp = SpUtil.getSharePerference(getActivity());
-        descEntityDao= new DescEntityDao();
+        descEntityDao = new DescEntityDao();
         tFtQhEntityDao = new TFtQhEntityDao();
-       // tFtSjEntity = (TFtSjEntity) intent.getSerializableExtra("tFtSjEntity");
+        // tFtSjEntity = (TFtSjEntity) intent.getSerializableExtra("tFtSjEntity");
         initData();
         return view;
     }
@@ -201,24 +219,24 @@ public class EventEntryDetail_Basic extends Fragment {
             petitionGroupsEdt.setText(tFtSjEntity.getSfsqqt());
 
             if (tFtSjEntity.getDcbm() != null && !"".equals(tFtSjEntity.getDcbm())) {
-                String []dcbms = tFtSjEntity.getDcbm().split(",");
+                String[] dcbms = tFtSjEntity.getDcbm().split(",");
                 String dcbm = "";
-                if(dcbms.length>0){
-                    for(int i = 0 ;i<dcbms.length;i++){
-                        dcbm += descEntityDao.queryName("dcbm", dcbms[i].trim())+",";
+                if (dcbms.length > 0) {
+                    for (int i = 0; i < dcbms.length; i++) {
+                        dcbm += descEntityDao.queryName("dcbm", dcbms[i].trim()) + ",";
                     }
-                    dcbm=dcbm.substring(0,dcbm.length()-1);
+                    dcbm = dcbm.substring(0, dcbm.length() - 1);
                 }
                 fieldDepartmenEdt.setText(dcbm);
             }
             if (tFtSjEntity.getSjly() != null && !"".equals(tFtSjEntity.getSjly())) {
-                String []sjlys = tFtSjEntity.getSjly().split(",");
+                String[] sjlys = tFtSjEntity.getSjly().split(",");
                 String sjly = "";
-                if(sjlys.length>0){
-                    for(int i = 0 ;i<sjlys.length;i++){
-                        sjly += descEntityDao.queryName("sjly", sjlys[i].trim())+",";
+                if (sjlys.length > 0) {
+                    for (int i = 0; i < sjlys.length; i++) {
+                        sjly += descEntityDao.queryName("sjly", sjlys[i].trim()) + ",";
                     }
-                    sjly=sjly.substring(0,sjly.length()-1);
+                    sjly = sjly.substring(0, sjly.length() - 1);
                 }
                 //String sjlyName = descEntityDao.queryName("sjly", tFtSjEntity.getSjly().split(",")[0]);
                 fieldsInvolvedEdt.setText(sjly);
@@ -229,13 +247,13 @@ public class EventEntryDetail_Basic extends Fragment {
             leadershipInstructionsEdt.setText(tFtSjEntity.getLdps());
             //以下为下拉控件设置默认值
             if (tFtSjEntity.getBxxs() != null && !"".equals(tFtSjEntity.getBxxs())) {
-                String []bxxss = tFtSjEntity.getBxxs().split(",");
+                String[] bxxss = tFtSjEntity.getBxxs().split(",");
                 String bxxs = "";
-                if(bxxss.length>0){
-                    for(int i = 0 ;i<bxxss.length;i++){
-                        bxxs += descEntityDao.queryName("BXXS", bxxss[i])+",";
+                if (bxxss.length > 0) {
+                    for (int i = 0; i < bxxss.length; i++) {
+                        bxxs += descEntityDao.queryName("BXXS", bxxss[i]) + ",";
                     }
-                    bxxs=bxxs.substring(0,bxxs.length()-1);
+                    bxxs = bxxs.substring(0, bxxs.length() - 1);
                 }
                 patternManifestationSpinner.setText(bxxs);
             }
@@ -258,17 +276,31 @@ public class EventEntryDetail_Basic extends Fragment {
                 publicSecurityDisposalSpinner.setText(descEntityDao.queryName("sfsw", tFtSjEntity.getSfgacz()));
             }
             List<TFtQhEntity> qhList = tFtQhEntityDao.queryListById(tFtSjEntity.getSssq());
-            if(qhList!=null && qhList.size()>0){
+            if (qhList != null && qhList.size() > 0) {
                 belongStreetEdt.setText(qhList.get(0).getJdmc());
                 belongCommunitySpinner.setText(qhList.get(0).getSqgzz());
             }
 
 
         }
+
+        // 初始化scroller事件
+        parent_scroll.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                one_scroll.getParent().requestDisallowInterceptTouchEvent(false);
+                return false;
+            }
+        });
+    }
+
+    @OnTouch({R.id.one_scroll,R.id.twe_scroll,R.id.three_scroll,R.id.four_scroll})
+    public boolean OnTouchListener(View v, MotionEvent event) {
+        v.getParent().requestDisallowInterceptTouchEvent(true);
+        return false;
     }
 
 
-    public void settTftSjEntityEntity(TFtSjEntity tFtSjEntity){
+    public void settTftSjEntityEntity(TFtSjEntity tFtSjEntity) {
         this.tFtSjEntity = tFtSjEntity;
         initData();
     }

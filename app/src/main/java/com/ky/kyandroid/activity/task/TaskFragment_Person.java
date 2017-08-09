@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.ky.kyandroid.R;
 import com.ky.kyandroid.adapter.EventPersonListAdapter;
@@ -57,16 +58,16 @@ public class TaskFragment_Person extends Fragment {
     /**
      * 性别
      */
-    Spinner personSexSpinner;
+    TextView personSexSpinner;
     /**
      * 民族
      */
-    Spinner personNationSpinner;
+    TextView personNationSpinner;
 
     /**
      * 证件类型
      */
-    Spinner personIdcardTypeSpinner;
+    TextView personIdcardTypeSpinner;
     /**
      * 证件号码
      */
@@ -78,7 +79,7 @@ public class TaskFragment_Person extends Fragment {
     /**
      * 党员
      */
-    Spinner personPartySpinner;
+    TextView personPartySpinner;
     /**
      * 电子邮件
      */
@@ -205,67 +206,19 @@ public class TaskFragment_Person extends Fragment {
         personDomilcileEdt = ButterKnife.findById(dialogView, R.id.person_domilcile_edt);
         personRemarkEdt = ButterKnife.findById(dialogView, R.id.person_remark_edt);
 
-        spinnerList = descEntityDao.queryListForCV("sex");
-        if (spinnerList == null) {
-            //设置Spinner控件的初始值
-            spinnerList = new ArrayList<CodeValue>();
-        }
-        //将可选内容与ArrayAdapter连接起来
-        arrayAdapter = new ArrayAdapter<CodeValue>(TaskFragment_Person.this.getActivity(), android.R.layout.simple_spinner_item, spinnerList);
-        //设置下拉列表的风格
-        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        personSexSpinner.setAdapter(arrayAdapter);//将adapter 添加到男女spinner中
-
-        spinnerList = descEntityDao.queryListForCV("crd");
-        if (spinnerList == null) {
-            //设置Spinner控件的初始值
-            spinnerList = new ArrayList<CodeValue>();
-        }
-        //将可选内容与ArrayAdapter连接起来
-        arrayAdapter = new ArrayAdapter<CodeValue>(TaskFragment_Person.this.getActivity(), android.R.layout.simple_spinner_item, spinnerList);
-        //设置下拉列表的风格
-        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        personIdcardTypeSpinner.setAdapter(arrayAdapter);//将adapter 添加到证件类型spinner中
-
-
-        spinnerList = descEntityDao.queryListForCV("dy");
-        if (spinnerList == null) {
-            //设置Spinner控件的初始值
-            spinnerList = new ArrayList<CodeValue>();
-        }
-        //将可选内容与ArrayAdapter连接起来
-        arrayAdapter = new ArrayAdapter<CodeValue>(TaskFragment_Person.this.getActivity(), android.R.layout.simple_spinner_item, spinnerList);
-        //设置下拉列表的风格
-        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        personPartySpinner.setAdapter(arrayAdapter);//将adapter 添加到党员spinner中
-
-        spinnerList = descEntityDao.queryListForCV("nation");
-        if (spinnerList == null) {
-            //设置Spinner控件的初始值
-            spinnerList = new ArrayList<CodeValue>();
-        }
-        //将可选内容与ArrayAdapter连接起来
-        arrayAdapter = new ArrayAdapter<CodeValue>(TaskFragment_Person.this.getActivity(), android.R.layout.simple_spinner_item, spinnerList);
-        //设置下拉列表的风格
-        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        personNationSpinner.setAdapter(arrayAdapter);//将adapter 添加到spinner中
         if(isDetail){
             personNameEdt.setText(tFtSjRyEntity.getXm());
-            personSexSpinner.setSelection(Integer.parseInt(tFtSjRyEntity.getXb())-1);
-            if("56".equals(tFtSjRyEntity.getMz())){
-                personNationSpinner.setSelection(0);
+            personSexSpinner.setText(descEntityDao.queryName("sex", tFtSjRyEntity.getXb()));
+            personNationSpinner.setText(descEntityDao.queryName("nation", tFtSjRyEntity.getMz()));
+            if("".equals(descEntityDao.queryName("crd", tFtSjRyEntity.getZjlx()))){
+                personIdcardTypeSpinner.setText("无");
             }else{
-                personNationSpinner.setSelection(Integer.parseInt(tFtSjRyEntity.getMz()));
+                personIdcardTypeSpinner.setText(descEntityDao.queryName("crd", tFtSjRyEntity.getZjlx()));
             }
-            if("".equals(tFtSjRyEntity.getZjlx()) || tFtSjRyEntity.getZjlx()==null){
-                personIdcardTypeSpinner.setSelection(0);
-            }else{
-                personIdcardTypeSpinner.setSelection(Integer.parseInt(tFtSjRyEntity.getZjlx()));
-            }
+            personPartySpinner.setText(descEntityDao.queryName("dy", tFtSjRyEntity.getSfdy()));
             personIdcardEdt.setText(tFtSjRyEntity.getZjhm());
             personAddressEdt.setText(tFtSjRyEntity.getHjd());
             personJobaddressEdt.setText(tFtSjRyEntity.getGzdw());
-            personPartySpinner.setSelection(Integer.parseInt(tFtSjRyEntity.getSfdy()));
             personEmailEdt.setText(tFtSjRyEntity.getEmail());
             personTelephoneEdt.setText(tFtSjRyEntity.getGddh());
             personMobileEdt.setText(tFtSjRyEntity.getYddh());
