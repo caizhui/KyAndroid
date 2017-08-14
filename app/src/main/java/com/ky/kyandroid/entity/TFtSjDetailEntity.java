@@ -33,7 +33,10 @@ public class TFtSjDetailEntity {
      */
     Map<String,TFtSjEntity> glsjListMap;
 
-
+    /**
+     * 事件跟踪
+     */
+    List<String>  progressList;
     /**
      * 事件实体
      */
@@ -85,5 +88,13 @@ public class TFtSjDetailEntity {
 
     public void setFtSj(TFtSjEntity ftSj) {
         this.ftSj = ftSj;
+    }
+
+    public List<String> getProgressList() {
+        return progressList;
+    }
+
+    public void setProgressList(List<String> progressList) {
+        this.progressList = progressList;
     }
 }

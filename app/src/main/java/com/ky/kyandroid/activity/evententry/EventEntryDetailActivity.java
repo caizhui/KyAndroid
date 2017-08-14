@@ -159,6 +159,9 @@ public class EventEntryDetailActivity extends FragmentActivity {
     // 人员具体信息
     List<TFtSjRyEntity> sjryList;
 
+    //事件跟踪
+    List<String> progressList;
+
     /**
      * 事件Id；
      */
@@ -344,7 +347,8 @@ public class EventEntryDetailActivity extends FragmentActivity {
                         tFtSjEntity = tFtSjDetailEntity.getFtSj();
                         sjryList = tFtSjDetailEntity.getSjryList();
                         sjfjList = tFtSjDetailEntity.getSjfjList();
-                        eventEntryDetail_basic.settTftSjEntityEntity(tFtSjEntity);
+                        progressList = tFtSjDetailEntity.getProgressList();
+                        eventEntryDetail_basic.settTftSjEntityEntity(tFtSjEntity,progressList);
                         //将当事人信息放在当事人页面
                         eventEntryDetail_person.setTFtSjRyEntityList(sjryList);
                         //将附件信息放在附件页面

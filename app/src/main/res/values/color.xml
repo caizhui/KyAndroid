@@ -335,4 +335,7 @@
     <color name="list_item_text_pressed_bg">#FF822E</color>
     <color name="tab_text_color">#787878</color>
     <color name="tab_text_pressed_color">#CD0000</color>
+
+    <!--事件跟踪颜色-->
+    <color name="sjgz_color">#1296db</color>
 </resources>

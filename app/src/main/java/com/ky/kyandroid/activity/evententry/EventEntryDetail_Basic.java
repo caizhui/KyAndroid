@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -149,14 +150,42 @@ public class EventEntryDetail_Basic extends Fragment {
     @BindView(R.id.leadership_instructions_edt)
     EditText leadershipInstructionsEdt;
 
+
     /**
      * 数组 配置器 下拉菜单赋值用
      */
     ArrayAdapter<CodeValue> adapter;
+    @BindView(R.id.dj_btb)
+    Button djBtb;
+    @BindView(R.id.dj_img)
+    ImageView djImg;
+    @BindView(R.id.sl_btn)
+    Button slBtn;
+    @BindView(R.id.sl_img)
+    ImageView slImg;
+    @BindView(R.id.fl_btn)
+    Button flBtn;
+    @BindView(R.id.fl_img)
+    ImageView flImg;
+    @BindView(R.id.cl_img)
+    ImageView clImd;
+    @BindView(R.id.gd_btn)
+    Button gdBtn;
+    @BindView(R.id.hfhc_btn)
+    Button hfhcBtn;
+    @BindView(R.id.hfhc_img)
+    ImageView hchfImg;
+    @BindView(R.id.cl_btn)
+    Button clBtn;
 
     private Intent intent;
 
     public TFtSjEntity tFtSjEntity;
+
+    /**
+     * 事件跟踪
+     */
+    public List<String> progressList;
 
     @SuppressLint("ValidFragment")
     public EventEntryDetail_Basic(Intent intent) {
@@ -179,12 +208,12 @@ public class EventEntryDetail_Basic extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.evententerdetail_basic_fragment, container, false);
+        View view = inflater.inflate(R.layout.eventdetail_basic_fragment, container, false);
         ButterKnife.bind(this, view);
         sp = SpUtil.getSharePerference(getActivity());
-        descEntityDao= new DescEntityDao();
+        descEntityDao = new DescEntityDao();
         tFtQhEntityDao = new TFtQhEntityDao();
-       // tFtSjEntity = (TFtSjEntity) intent.getSerializableExtra("tFtSjEntity");
+        // tFtSjEntity = (TFtSjEntity) intent.getSerializableExtra("tFtSjEntity");
         initData();
         return view;
     }
@@ -201,24 +230,24 @@ public class EventEntryDetail_Basic extends Fragment {
             petitionGroupsEdt.setText(tFtSjEntity.getSfsqqt());
 
             if (tFtSjEntity.getDcbm() != null && !"".equals(tFtSjEntity.getDcbm())) {
-                String []dcbms = tFtSjEntity.getDcbm().split(",");
+                String[] dcbms = tFtSjEntity.getDcbm().split(",");
                 String dcbm = "";
-                if(dcbms.length>0){
-                    for(int i = 0 ;i<dcbms.length;i++){
-                        dcbm += descEntityDao.queryName("dcbm", dcbms[i].trim())+",";
+                if (dcbms.length > 0) {
+                    for (int i = 0; i < dcbms.length; i++) {
+                        dcbm += descEntityDao.queryName("dcbm", dcbms[i].trim()) + ",";
                     }
-                    dcbm=dcbm.substring(0,dcbm.length()-1);
+                    dcbm = dcbm.substring(0, dcbm.length() - 1);
                 }
                 fieldDepartmenEdt.setText(dcbm);
             }
             if (tFtSjEntity.getSjly() != null && !"".equals(tFtSjEntity.getSjly())) {
-                String []sjlys = tFtSjEntity.getSjly().split(",");
+                String[] sjlys = tFtSjEntity.getSjly().split(",");
                 String sjly = "";
-                if(sjlys.length>0){
-                    for(int i = 0 ;i<sjlys.length;i++){
-                        sjly += descEntityDao.queryName("sjly", sjlys[i].trim())+",";
+                if (sjlys.length > 0) {
+                    for (int i = 0; i < sjlys.length; i++) {
+                        sjly += descEntityDao.queryName("sjly", sjlys[i].trim()) + ",";
                     }
-                    sjly=sjly.substring(0,sjly.length()-1);
+                    sjly = sjly.substring(0, sjly.length() - 1);
                 }
                 //String sjlyName = descEntityDao.queryName("sjly", tFtSjEntity.getSjly().split(",")[0]);
                 fieldsInvolvedEdt.setText(sjly);
@@ -229,13 +258,13 @@ public class EventEntryDetail_Basic extends Fragment {
             leadershipInstructionsEdt.setText(tFtSjEntity.getLdps());
             //以下为下拉控件设置默认值
             if (tFtSjEntity.getBxxs() != null && !"".equals(tFtSjEntity.getBxxs())) {
-                String []bxxss = tFtSjEntity.getBxxs().split(",");
+                String[] bxxss = tFtSjEntity.getBxxs().split(",");
                 String bxxs = "";
-                if(bxxss.length>0){
-                    for(int i = 0 ;i<bxxss.length;i++){
-                        bxxs += descEntityDao.queryName("BXXS", bxxss[i])+",";
+                if (bxxss.length > 0) {
+                    for (int i = 0; i < bxxss.length; i++) {
+                        bxxs += descEntityDao.queryName("BXXS", bxxss[i]) + ",";
                     }
-                    bxxs=bxxs.substring(0,bxxs.length()-1);
+                    bxxs = bxxs.substring(0, bxxs.length() - 1);
                 }
                 patternManifestationSpinner.setText(bxxs);
             }
@@ -258,19 +287,65 @@ public class EventEntryDetail_Basic extends Fragment {
                 publicSecurityDisposalSpinner.setText(descEntityDao.queryName("sfsw", tFtSjEntity.getSfgacz()));
             }
             List<TFtQhEntity> qhList = tFtQhEntityDao.queryListById(tFtSjEntity.getSssq());
-            if(qhList!=null && qhList.size()>0){
+            if (qhList != null && qhList.size() > 0) {
                 belongStreetEdt.setText(qhList.get(0).getJdmc());
                 belongCommunitySpinner.setText(qhList.get(0).getSqgzz());
             }
 
 
         }
+
+        if(progressList!=null && progressList.size()>0){
+            if(progressList.size()==1){
+                djBtb.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+            }else if (progressList.size()==2){
+                djBtb.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+                djImg.setImageResource(R.mipmap.jtthree);
+                slBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+            }else if (progressList.size()==3){
+                djBtb.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+                djImg.setImageResource(R.mipmap.jtthree);
+                slBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+                slImg.setImageResource(R.mipmap.jtthree);
+                flBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+            }else if (progressList.size()==4){
+                djBtb.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+                djImg.setImageResource(R.mipmap.jtthree);
+                slBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+                slImg.setImageResource(R.mipmap.jtthree);
+                flBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+                flImg.setImageResource(R.mipmap.jtone);
+                clBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+            }else if (progressList.size()==5){
+                djBtb.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+                djImg.setImageResource(R.mipmap.jtthree);
+                slBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+                slImg.setImageResource(R.mipmap.jtthree);
+                flBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+                flImg.setImageResource(R.mipmap.jtone);
+                clBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+                clImd.setImageResource(R.mipmap.jtfive);
+                hfhcBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+            }else if (progressList.size()==6){
+                djBtb.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+                djImg.setImageResource(R.mipmap.jtone);
+                slBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+                slImg.setImageResource(R.mipmap.jtone);
+                flBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+                flImg.setImageResource(R.mipmap.jtone);
+                clBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+                clImd.setImageResource(R.mipmap.jtone);
+                hfhcBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+                hchfImg.setImageResource(R.mipmap.jtone);
+                gdBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+            }
+        }
     }
 
 
-    public void settTftSjEntityEntity(TFtSjEntity tFtSjEntity){
+    public void settTftSjEntityEntity(TFtSjEntity tFtSjEntity, List<String> progressList) {
         this.tFtSjEntity = tFtSjEntity;
+        this.progressList = progressList;
         initData();
     }
-
 }
