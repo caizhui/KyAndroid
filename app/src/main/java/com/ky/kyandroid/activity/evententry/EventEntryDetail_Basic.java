@@ -310,6 +310,51 @@ public class EventEntryDetail_Basic extends Fragment {
                 belongCommunitySpinner.setText(qhList.get(0).getSqgzz());
             }
 
+            if(progressList!=null && progressList.size()>0){
+                if(progressList.size()==1){
+                    djBtb.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+                }else if (progressList.size()==2){
+                    djBtb.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+                    djImg.setImageResource(R.mipmap.jtthree);
+                    slBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+                }else if (progressList.size()==3){
+                    djBtb.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+                    djImg.setImageResource(R.mipmap.jtthree);
+                    slBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+                    slImg.setImageResource(R.mipmap.jtthree);
+                    flBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+                }else if (progressList.size()==4){
+                    djBtb.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+                    djImg.setImageResource(R.mipmap.jtthree);
+                    slBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+                    slImg.setImageResource(R.mipmap.jtthree);
+                    flBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+                    flImg.setImageResource(R.mipmap.jtone);
+                    clBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+                }else if (progressList.size()==5){
+                    djBtb.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+                    djImg.setImageResource(R.mipmap.jtthree);
+                    slBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+                    slImg.setImageResource(R.mipmap.jtthree);
+                    flBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+                    flImg.setImageResource(R.mipmap.jtone);
+                    clBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+                    clImd.setImageResource(R.mipmap.jtfive);
+                    hfhcBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+                }else if (progressList.size()==6){
+                    djBtb.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+                    djImg.setImageResource(R.mipmap.jtone);
+                    slBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+                    slImg.setImageResource(R.mipmap.jtone);
+                    flBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+                    flImg.setImageResource(R.mipmap.jtone);
+                    clBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+                    clImd.setImageResource(R.mipmap.jtone);
+                    hfhcBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+                    hchfImg.setImageResource(R.mipmap.jtone);
+                    gdBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+                }
+            }
 
         }
 
@@ -329,53 +374,11 @@ public class EventEntryDetail_Basic extends Fragment {
     }
 
 
-    public void settTftSjEntityEntity(TFtSjEntity tFtSjEntity) {
+    public void settTftSjEntityEntity(TFtSjEntity tFtSjEntity,List<String> progressList) {
+        this.tFtSjEntity = tFtSjEntity;
+        this.progressList = progressList;
+        initData();
 
-        if(progressList!=null && progressList.size()>0){
-            if(progressList.size()==1){
-                djBtb.setBackgroundResource(R.drawable.border_bccgbutton_bg);
-            }else if (progressList.size()==2){
-                djBtb.setBackgroundResource(R.drawable.border_bccgbutton_bg);
-                djImg.setImageResource(R.mipmap.jtthree);
-                slBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
-            }else if (progressList.size()==3){
-                djBtb.setBackgroundResource(R.drawable.border_bccgbutton_bg);
-                djImg.setImageResource(R.mipmap.jtthree);
-                slBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
-                slImg.setImageResource(R.mipmap.jtthree);
-                flBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
-            }else if (progressList.size()==4){
-                djBtb.setBackgroundResource(R.drawable.border_bccgbutton_bg);
-                djImg.setImageResource(R.mipmap.jtthree);
-                slBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
-                slImg.setImageResource(R.mipmap.jtthree);
-                flBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
-                flImg.setImageResource(R.mipmap.jtone);
-                clBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
-            }else if (progressList.size()==5){
-                djBtb.setBackgroundResource(R.drawable.border_bccgbutton_bg);
-                djImg.setImageResource(R.mipmap.jtthree);
-                slBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
-                slImg.setImageResource(R.mipmap.jtthree);
-                flBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
-                flImg.setImageResource(R.mipmap.jtone);
-                clBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
-                clImd.setImageResource(R.mipmap.jtfive);
-                hfhcBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
-            }else if (progressList.size()==6){
-                djBtb.setBackgroundResource(R.drawable.border_bccgbutton_bg);
-                djImg.setImageResource(R.mipmap.jtone);
-                slBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
-                slImg.setImageResource(R.mipmap.jtone);
-                flBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
-                flImg.setImageResource(R.mipmap.jtone);
-                clBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
-                clImd.setImageResource(R.mipmap.jtone);
-                hfhcBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
-                hchfImg.setImageResource(R.mipmap.jtone);
-                gdBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
-            }
-        }
     }
 
 }
