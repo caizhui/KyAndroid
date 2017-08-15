@@ -11,6 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -167,14 +168,42 @@ public class EventEntryDetail_Basic extends Fragment {
     @BindView(R.id.four_scroll)
     ScrollView four_scroll;
 
+
     /**
      * 数组 配置器 下拉菜单赋值用
      */
     ArrayAdapter<CodeValue> adapter;
+    @BindView(R.id.dj_btb)
+    Button djBtb;
+    @BindView(R.id.dj_img)
+    ImageView djImg;
+    @BindView(R.id.sl_btn)
+    Button slBtn;
+    @BindView(R.id.sl_img)
+    ImageView slImg;
+    @BindView(R.id.fl_btn)
+    Button flBtn;
+    @BindView(R.id.fl_img)
+    ImageView flImg;
+    @BindView(R.id.cl_img)
+    ImageView clImd;
+    @BindView(R.id.gd_btn)
+    Button gdBtn;
+    @BindView(R.id.hfhc_btn)
+    Button hfhcBtn;
+    @BindView(R.id.hfhc_img)
+    ImageView hchfImg;
+    @BindView(R.id.cl_btn)
+    Button clBtn;
 
     private Intent intent;
 
     public TFtSjEntity tFtSjEntity;
+
+    /**
+     * 事件跟踪
+     */
+    public List<String> progressList;
 
     @SuppressLint("ValidFragment")
     public EventEntryDetail_Basic(Intent intent) {
@@ -197,7 +226,7 @@ public class EventEntryDetail_Basic extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.evententerdetail_basic_fragment, container, false);
+        View view = inflater.inflate(R.layout.eventdetail_basic_fragment, container, false);
         ButterKnife.bind(this, view);
         sp = SpUtil.getSharePerference(getActivity());
         descEntityDao = new DescEntityDao();
@@ -301,8 +330,52 @@ public class EventEntryDetail_Basic extends Fragment {
 
 
     public void settTftSjEntityEntity(TFtSjEntity tFtSjEntity) {
-        this.tFtSjEntity = tFtSjEntity;
-        initData();
+
+        if(progressList!=null && progressList.size()>0){
+            if(progressList.size()==1){
+                djBtb.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+            }else if (progressList.size()==2){
+                djBtb.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+                djImg.setImageResource(R.mipmap.jtthree);
+                slBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+            }else if (progressList.size()==3){
+                djBtb.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+                djImg.setImageResource(R.mipmap.jtthree);
+                slBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+                slImg.setImageResource(R.mipmap.jtthree);
+                flBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+            }else if (progressList.size()==4){
+                djBtb.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+                djImg.setImageResource(R.mipmap.jtthree);
+                slBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+                slImg.setImageResource(R.mipmap.jtthree);
+                flBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+                flImg.setImageResource(R.mipmap.jtone);
+                clBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+            }else if (progressList.size()==5){
+                djBtb.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+                djImg.setImageResource(R.mipmap.jtthree);
+                slBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+                slImg.setImageResource(R.mipmap.jtthree);
+                flBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+                flImg.setImageResource(R.mipmap.jtone);
+                clBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+                clImd.setImageResource(R.mipmap.jtfive);
+                hfhcBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+            }else if (progressList.size()==6){
+                djBtb.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+                djImg.setImageResource(R.mipmap.jtone);
+                slBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+                slImg.setImageResource(R.mipmap.jtone);
+                flBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+                flImg.setImageResource(R.mipmap.jtone);
+                clBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+                clImd.setImageResource(R.mipmap.jtone);
+                hfhcBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+                hchfImg.setImageResource(R.mipmap.jtone);
+                gdBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
+            }
+        }
     }
 
 }
