@@ -441,7 +441,7 @@ public class EventEntryAdd_Basic extends Fragment {
                     }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();*/
                     DateTimePickDialogUtil dateTimePicKDialog = new DateTimePickDialogUtil(
                             EventEntryAdd_Basic.this.getActivity(), "");
-                    dateTimePicKDialog.dateTimePicKDialog(happenTimeEdt);
+                    dateTimePicKDialog.dateTimePicKDialog(happenTimeEdt,true);
                     return false;
                 }
                 break;

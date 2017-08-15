@@ -296,7 +296,7 @@ public class LoginActivity extends AppCompatActivity {
             } else if ("街道职能部门".equals(name) || "街道办工作人员2".equals(name) || "区职能部门".equals(name)
                     || "区职能部门处理人员".equals(name) || "香蜜湖职能处理人员".equals(name)) {
                 intent.setClass(this, MainHandleEventActivity.class);
-            } else if ("区维稳办".equals(name)) {
+            } else if ("区维稳办".equals(name )) {
                 intent.setClass(this, MainOfficeActivity.class);
             } else {
                 intent.setClass(this, MainAllActivity.class);
