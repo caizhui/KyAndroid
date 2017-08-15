@@ -17,6 +17,141 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
+                android:layout_height="90dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/dj_btb"
+                        android:layout_width="90dp"
+                        android:layout_height="30dp"
+                        android:background="@drawable/border_sjgzbtn_bg"
+                        android:paddingRight="8dp"
+                        android:text="登记"
+                        android:textColor="@color/white"
+                        android:textSize="14sp" />
+
+                    <ImageView
+                        android:id="@+id/dj_img"
+                        android:layout_width="30dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:background="@mipmap/jtfour" />
+
+                    <Button
+                        android:id="@+id/sl_btn"
+                        android:layout_width="90dp"
+                        android:layout_height="30dp"
+                        android:background="@drawable/border_sjgzbtn_bg"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:text="受理"
+                        android:textColor="@color/white"
+                        android:textSize="14sp" />
+
+                    <ImageView
+                        android:id="@+id/sl_img"
+                        android:layout_width="30dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:background="@mipmap/jtfour" />
+
+
+                    <Button
+                        android:id="@+id/fl_btn"
+                        android:layout_width="90dp"
+                        android:layout_height="30dp"
+                        android:background="@drawable/border_sjgzbtn_bg"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:text="分流"
+                        android:textColor="@color/white"
+                        android:textSize="14sp" />
+
+
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/fl_img"
+                    android:layout_width="30dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="right"
+                    android:layout_marginRight="45dp"
+                    android:background="@mipmap/jttwo" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/gd_btn"
+                        android:layout_width="90dp"
+                        android:layout_height="30dp"
+                        android:background="@drawable/border_sjgzbtn_bg"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:text="归档"
+                        android:textColor="@color/white"
+                        android:textSize="14sp" />
+
+                    <ImageView
+                        android:id="@+id/hfhc_img"
+                        android:layout_width="30dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:background="@mipmap/jtsix" />
+
+                    <Button
+                        android:id="@+id/hfhc_btn"
+                        android:layout_width="90dp"
+                        android:layout_height="30dp"
+                        android:background="@drawable/border_sjgzbtn_bg"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:text="回访核查"
+                        android:textColor="@color/white"
+                        android:textSize="14sp" />
+
+                    <ImageView
+                        android:id="@+id/cl_img"
+                        android:layout_width="30dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:background="@mipmap/jtsix" />
+
+                    <Button
+                        android:id="@+id/cl_btn"
+                        android:layout_width="90dp"
+                        android:layout_height="30dp"
+                        android:background="@drawable/border_sjgzbtn_bg"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:text="处理"
+                        android:textColor="@color/white"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <include layout="@layout/linearlayout_one" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="horizontal"
