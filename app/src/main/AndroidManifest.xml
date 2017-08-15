@@ -248,6 +248,12 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
 
+        <!--工作简报新增-->
+        <activity
+            android:name=".activity.job.JobBulletinAddActivity"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
+
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"

@@ -26,6 +26,7 @@ import android.widget.TextView;
 import com.ky.kyandroid.R;
 import com.ky.kyandroid.activity.dbpj.DbpjlActivity;
 import com.ky.kyandroid.activity.evententry.EventEntryListActivity;
+import com.ky.kyandroid.activity.job.JobBulletinAddActivity;
 import com.ky.kyandroid.activity.msg.MsgNoticeActivity;
 import com.ky.kyandroid.activity.supervision.SuperVisionListActivity;
 import com.ky.kyandroid.bean.AckMessage;
@@ -88,6 +89,12 @@ public class MainOfficeActivity extends AppCompatActivity {
      */
     @BindView(R.id.supervision_img)
     ImageView supervisionImageView;
+
+    /**
+     * 工作简报
+     */
+    @BindView(R.id.gzjb_img)
+    ImageView gzjbImg;
 
     /**
      * 主布局id
@@ -293,7 +300,7 @@ public class MainOfficeActivity extends AppCompatActivity {
     }
 
 
-    @OnClick({R.id.left_btn, R.id.event_img, R.id.supervision_img,R.id.message_img,R.id.jdpj_img})
+    @OnClick({R.id.left_btn, R.id.event_img, R.id.supervision_img,R.id.message_img,R.id.jdpj_img,R.id.gzjb_img})
     public void onClick(View v) {
         Intent intent = new Intent();
         switch (v.getId()) {
@@ -319,6 +326,10 @@ public class MainOfficeActivity extends AppCompatActivity {
             /**监督评价**/
             case R.id.jdpj_img:
                 intent.setClass(this, DbpjlActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.gzjb_img:
+                intent.setClass(this, JobBulletinAddActivity.class);
                 startActivity(intent);
                 break;
         }

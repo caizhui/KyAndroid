@@ -2,16 +2,14 @@ package com.ky.kyandroid.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -39,9 +37,7 @@ import com.ky.kyandroid.util.SweetAlertDialogUtil;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -291,7 +287,7 @@ public class LoginActivity extends AppCompatActivity {
         if (sp.getBoolean(IS_LOGIN, false)) {
             String name = sp.getString("name", "");
             Intent intent = new Intent();
-            if ("街道办工作人员".equals(name) || "香蜜湖录入人员".equals(name)) {
+            if ("街道办工作人员".equals(name) || "香蜜湖录入人员".equals(name)||"综治办录入人员".equals(name)) {
                 intent.setClass(this, MainAddEventActivity.class);
             } else if ("街道职能部门".equals(name) || "街道办工作人员2".equals(name) || "区职能部门".equals(name)
                     || "区职能部门处理人员".equals(name) || "香蜜湖职能处理人员".equals(name)) {

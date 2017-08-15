@@ -360,7 +360,7 @@ public class EventEntryListActivity extends AppCompatActivity {
         tFtSjEntityList = new ArrayList<TFtSjEntity>();
         userId = sp.getString(USER_ID, "");
         name = sp.getString("name", "");
-        if ("街道办工作人员".equals(name)  || "香蜜湖录入人员".equals(name)) {
+        if ("街道办工作人员".equals(name)  || "香蜜湖录入人员".equals(name)||"综治办录入人员".equals(name)) {
             rightBtn.setVisibility(View.VISIBLE);
         }
 
