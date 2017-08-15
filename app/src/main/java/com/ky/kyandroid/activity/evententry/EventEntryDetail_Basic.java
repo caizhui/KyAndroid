@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -14,6 +15,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
 
 import com.ky.kyandroid.R;
 import com.ky.kyandroid.bean.CodeValue;
@@ -27,6 +30,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnTouch;
 
 /**
  * Created by Caizhui on 2017-6-9.
@@ -35,7 +39,6 @@ import butterknife.ButterKnife;
 
 @SuppressLint("ValidFragment")
 public class EventEntryDetail_Basic extends Fragment {
-
 
     /**
      * 事件名称
@@ -98,7 +101,7 @@ public class EventEntryDetail_Basic extends Fragment {
      * 涉及领域
      */
     @BindView(R.id.fields_involved_edt)
-    EditText fieldsInvolvedEdt;
+    TextView fieldsInvolvedEdt;
     /**
      * 涉及领域img
      */
@@ -138,17 +141,32 @@ public class EventEntryDetail_Basic extends Fragment {
      * 主要诉求
      */
     @BindView(R.id.main_appeals_edt)
-    EditText mainAppealsEdt;
+    TextView mainAppealsEdt;
     /**
      * 事件概要
      */
     @BindView(R.id.event_summary_edt)
-    EditText eventSummaryEdt;
+    TextView eventSummaryEdt;
     /**
      * >领导批示
      */
     @BindView(R.id.leadership_instructions_edt)
-    EditText leadershipInstructionsEdt;
+    TextView leadershipInstructionsEdt;
+
+    @BindView(R.id.parent_scroll)
+    ScrollView parent_scroll;
+
+    @BindView(R.id.one_scroll)
+    ScrollView one_scroll;
+
+    @BindView(R.id.twe_scroll)
+    ScrollView twe_scroll;
+
+    @BindView(R.id.three_scroll)
+    ScrollView three_scroll;
+
+    @BindView(R.id.four_scroll)
+    ScrollView four_scroll;
 
 
     /**
@@ -295,6 +313,24 @@ public class EventEntryDetail_Basic extends Fragment {
 
         }
 
+        // 初始化scroller事件
+        parent_scroll.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                one_scroll.getParent().requestDisallowInterceptTouchEvent(false);
+                return false;
+            }
+        });
+    }
+
+    @OnTouch({R.id.one_scroll,R.id.twe_scroll,R.id.three_scroll,R.id.four_scroll})
+    public boolean OnTouchListener(View v, MotionEvent event) {
+        v.getParent().requestDisallowInterceptTouchEvent(true);
+        return false;
+    }
+
+
+    public void settTftSjEntityEntity(TFtSjEntity tFtSjEntity) {
+
         if(progressList!=null && progressList.size()>0){
             if(progressList.size()==1){
                 djBtb.setBackgroundResource(R.drawable.border_bccgbutton_bg);
@@ -342,10 +378,4 @@ public class EventEntryDetail_Basic extends Fragment {
         }
     }
 
-
-    public void settTftSjEntityEntity(TFtSjEntity tFtSjEntity, List<String> progressList) {
-        this.tFtSjEntity = tFtSjEntity;
-        this.progressList = progressList;
-        initData();
-    }
 }

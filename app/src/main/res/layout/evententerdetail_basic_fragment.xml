@@ -4,21 +4,23 @@
     android:layout_height="match_parent">
 
     <ScrollView
+        android:id="@+id/parent_scroll"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:focusableInTouchMode="false">
 
         <LinearLayout
             android:id="@+id/linear_evententry"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:padding="10dp">
+                android:padding="5dp">
 
                 <TextView
                     style="@style/TextStyle"
@@ -28,15 +30,15 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="80dp">
+                    android:layout_height="wrap_content">
 
                     <EditText
                         android:id="@+id/thing_name_edt"
+                        style="@style/TextColorStyle"
                         android:layout_width="0dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:background="@null"
-                        style="@style/TextColorStyle"
                         android:enabled="false"
                         android:padding="5dp"
                         android:textSize="16sp" />
@@ -50,10 +52,10 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:padding="10dp">
+                android:padding="5dp">
 
                 <TextView
                     style="@style/TextStyle"
@@ -63,16 +65,16 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="80dp">
+                    android:layout_height="wrap_content">
 
                     <EditText
                         android:id="@+id/happen_time_edt"
+                        style="@style/TextColorStyle"
                         android:layout_width="0dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:background="@null"
                         android:enabled="false"
-                        style="@style/TextColorStyle"
                         android:padding="5dp"
                         android:textSize="16sp" />
 
@@ -83,10 +85,10 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:padding="10dp">
+                android:padding="5dp">
 
                 <TextView
                     android:id="@+id/textView2"
@@ -97,17 +99,17 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="80dp">
+                    android:layout_height="wrap_content">
 
                     <EditText
                         android:id="@+id/happen_address_edt"
+                        style="@style/TextColorStyle"
                         android:layout_width="0dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:background="@null"
                         android:enabled="false"
                         android:padding="5dp"
-                        style="@style/TextColorStyle"
                         android:textSize="16sp" />
 
                 </LinearLayout>
@@ -117,10 +119,10 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:padding="10dp">
+                android:padding="5dp">
 
                 <TextView
                     android:id="@+id/textView"
@@ -131,17 +133,17 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="80dp">
+                    android:layout_height="match_parent">
 
                     <EditText
                         android:id="@+id/petition_groups_edt"
+                        style="@style/TextColorStyle"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:background="@null"
                         android:enabled="false"
                         android:padding="5dp"
-                        style="@style/TextColorStyle"
                         android:textSize="16sp" />
                 </LinearLayout>
             </LinearLayout>
@@ -151,10 +153,10 @@
             <LinearLayout
                 android:id="@+id/field_departmen_layout"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:padding="10dp">
+                android:padding="5dp">
 
                 <TextView
                     style="@style/TextStyle"
@@ -164,18 +166,18 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="80dp">
+                    android:layout_height="wrap_content">
 
                     <EditText
                         android:id="@+id/field_departmen_edt"
+                        style="@style/TextColorStyle"
                         android:layout_width="0dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:background="@null"
                         android:enabled="false"
                         android:gravity="center_vertical"
                         android:padding="5dp"
-                        style="@style/TextColorStyle"
                         android:textSize="16sp" />
 
                     <ImageView
@@ -196,10 +198,10 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:padding="10dp">`
+                android:padding="5dp">`
 
                 <TextView
                     style="@style/TextStyle"
@@ -209,16 +211,16 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="80dp">
+                    android:layout_height="wrap_content">
 
                     <EditText
                         android:id="@+id/pattern_manifestation_spinner"
+                        style="@style/TextColorStyle"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:background="@null"
                         android:enabled="false"
-                        style="@style/TextColorStyle"
                         android:textSize="16sp" />
                 </LinearLayout>
             </LinearLayout>
@@ -228,10 +230,10 @@
             <LinearLayout
                 android:id="@+id/xcts_linear"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:padding="10dp">`
+                android:padding="5dp">`
 
                 <TextView
                     style="@style/TextStyle"
@@ -241,16 +243,16 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="80dp">
+                    android:layout_height="wrap_content">
 
                     <EditText
                         android:id="@+id/field_morphology_spinner"
+                        style="@style/TextColorStyle"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:background="@null"
                         android:enabled="false"
-                        style="@style/TextColorStyle"
                         android:textSize="16sp" />
 
                 </LinearLayout>
@@ -260,10 +262,10 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:padding="10dp">
+                android:padding="5dp">
 
                 <TextView
                     style="@style/TextStyle"
@@ -274,16 +276,16 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="80dp">
+                    android:layout_height="wrap_content">
 
                     <EditText
                         android:id="@+id/scope_text_spinner"
+                        style="@style/TextColorStyle"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:background="@null"
                         android:enabled="false"
-                        style="@style/TextColorStyle"
                         android:textSize="16sp" />
                 </LinearLayout>
             </LinearLayout>
@@ -291,57 +293,11 @@
             <include layout="@layout/linearlayout_one" />
 
             <LinearLayout
-                android:id="@+id/fields_involved_linearlayout"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:padding="10dp">
-
-                <TextView
-                    style="@style/TextStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/fields_involved" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="80dp">
-
-                    <EditText
-                        android:id="@+id/fields_involved_edt"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@null"
-                        android:enabled="false"
-                        android:gravity="center_vertical"
-                        android:padding="5dp"
-                        style="@style/TextColorStyle"
-                        android:textSize="16sp" />
-
-
-                    <ImageView
-                        android:id="@+id/fields_involved_img"
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:layout_gravity="center"
-                        android:layout_marginRight="5dp"
-                        android:background="@mipmap/down"
-                        android:visibility="invisible" />
-                </LinearLayout>
-
-
-            </LinearLayout>
-
-            <include layout="@layout/linearlayout_one" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:padding="10dp">
+                android:padding="5dp">
 
                 <TextView
                     style="@style/TextStyle"
@@ -351,12 +307,12 @@
 
                 <EditText
                     android:id="@+id/foreign_related_spinner"
+                    style="@style/TextColorStyle"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@null"
                     android:enabled="false"
-                    style="@style/TextColorStyle"
                     android:textSize="16sp" />
             </LinearLayout>
 
@@ -364,10 +320,10 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:padding="10dp">
+                android:padding="5dp">
 
                 <TextView
                     style="@style/TextStyle"
@@ -377,12 +333,12 @@
 
                 <EditText
                     android:id="@+id/involved_xinjiang_spinner"
+                    style="@style/TextColorStyle"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@null"
                     android:enabled="false"
-                    style="@style/TextColorStyle"
                     android:textSize="16sp" />
             </LinearLayout>
 
@@ -390,10 +346,10 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:padding="10dp">
+                android:padding="5dp">
 
                 <TextView
                     style="@style/TextStyle"
@@ -403,12 +359,12 @@
 
                 <EditText
                     android:id="@+id/involve_public_opinion_spinner"
+                    style="@style/TextColorStyle"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@null"
                     android:enabled="false"
-                    style="@style/TextColorStyle"
                     android:textSize="16sp" />
             </LinearLayout>
 
@@ -416,10 +372,10 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:padding="10dp">
+                android:padding="5dp">
 
                 <TextView
                     style="@style/TextStyle"
@@ -429,11 +385,11 @@
 
                 <EditText
                     android:id="@+id/public_security_disposal_spinner"
+                    style="@style/TextColorStyle"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@null"
-                    style="@style/TextColorStyle"
                     android:enabled="false"
                     android:textSize="16sp" />
             </LinearLayout>
@@ -442,10 +398,10 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:padding="10dp">
+                android:padding="5dp">
 
                 <TextView
                     style="@style/TextStyle"
@@ -455,14 +411,12 @@
 
                 <EditText
                     android:id="@+id/belong_street_edt"
+                    style="@style/TextColorStyle"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@null"
                     android:enabled="false"
-                    android:padding="5dp"
-                    style="@style/TextColorStyle"
-                    android:text="华强北街道"
                     android:textSize="16sp" />
             </LinearLayout>
 
@@ -470,10 +424,10 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:padding="10dp">
+                android:padding="5dp">
 
                 <TextView
                     style="@style/TextStyle"
@@ -483,23 +437,72 @@
 
                 <EditText
                     android:id="@+id/belong_community_spinner"
+                    style="@style/TextColorStyle"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@null"
                     android:enabled="false"
-                    style="@style/TextColorStyle"
                     android:textSize="16sp" />
             </LinearLayout>
 
             <include layout="@layout/linearlayout_one" />
 
             <LinearLayout
+                android:id="@+id/fields_involved_linearlayout"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:gravity="center"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="10dp">
+                android:padding="5dp">
+
+                <TextView
+                    style="@style/TextStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/fields_involved" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ScrollView
+                        android:id="@+id/one_scroll"
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        android:background="@drawable/pop_bg_1">
+
+                        <TextView
+                            android:id="@+id/fields_involved_edt"
+                            style="@style/TextColorStyle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@null"
+                            android:padding="5dp"
+                            android:scrollbars="vertical"
+                            android:textSize="16sp" />
+                    </ScrollView>
+
+                    <ImageView
+                        android:id="@+id/fields_involved_img"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:background="@mipmap/down"
+                        android:visibility="invisible" />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <include layout="@layout/linearlayout_one" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="5dp">
 
                 <TextView
                     style="@style/TextStyle"
@@ -509,19 +512,24 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="wrap_content">
 
-                    <EditText
-                        android:id="@+id/main_appeals_edt"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
-                        android:background="@null"
-                        android:enabled="false"
-                        style="@style/TextColorStyle"
-                        android:padding="5dp"
-                        android:textSize="16sp" />
+                    <ScrollView
+                        android:id="@+id/twe_scroll"
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        android:background="@drawable/pop_bg_1">
+
+                        <TextView
+                            android:id="@+id/main_appeals_edt"
+                            style="@style/TextColorStyle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@null"
+                            android:padding="5dp"
+                            android:scrollbars="vertical"
+                            android:textSize="16sp" />
+                    </ScrollView>
 
                 </LinearLayout>
             </LinearLayout>
@@ -530,10 +538,9 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:gravity="center"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="10dp">
+                android:padding="5dp">
 
                 <TextView
                     style="@style/TextStyle"
@@ -543,19 +550,26 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="wrap_content">
 
-                    <EditText
-                        android:id="@+id/event_summary_edt"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@null"
-                        android:enabled="false"
-                        style="@style/TextColorStyle"
-                        android:layout_gravity="center"
-                        android:padding="5dp"
-                        android:textSize="16sp" />
+                    <ScrollView
+                        android:id="@+id/three_scroll"
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        android:background="@drawable/pop_bg_1">
+
+                        <TextView
+                            android:id="@+id/event_summary_edt"
+                            style="@style/TextColorStyle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@null"
+                            android:enabled="false"
+                            android:padding="5dp"
+                            android:scrollbars="vertical"
+                            android:textSize="16sp" />
+                    </ScrollView>
+
                 </LinearLayout>
             </LinearLayout>
 
@@ -563,10 +577,9 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:gravity="center"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="10dp">
+                android:padding="5dp">
 
                 <TextView
                     style="@style/TextStyle"
@@ -576,18 +589,25 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="wrap_content">
 
-                    <EditText
-                        android:id="@+id/leadership_instructions_edt"
+                    <ScrollView
+                        android:id="@+id/four_scroll"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@null"
-                        android:layout_gravity="center"
-                        android:enabled="false"
-                        android:padding="5dp"
-                        style="@style/TextColorStyle"
-                        android:textSize="16sp" />
+                        android:layout_height="80dp"
+                        android:background="@drawable/pop_bg_1">
+
+                        <TextView
+                            android:id="@+id/leadership_instructions_edt"
+                            style="@style/TextColorStyle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@null"
+                            android:enabled="false"
+                            android:padding="5dp"
+                            android:scrollbars="vertical"
+                            android:textSize="16sp" />
+                    </ScrollView>
                 </LinearLayout>
             </LinearLayout>
 
