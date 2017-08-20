@@ -92,6 +92,7 @@ public class EventEntryAdd_Basic extends Fragment {
     @BindView(R.id.field_departmen_edt)
     TextView fieldDepartmenEdt;
 
+
     /**
      * 到场部门图标
      */
@@ -101,7 +102,13 @@ public class EventEntryAdd_Basic extends Fragment {
      * 表现形式
      */
     @BindView(R.id.pattern_manifestation_spinner)
-    Spinner patternManifestationSpinner;
+    TextView patternManifestationSpinner;
+
+    /**
+     * 表现形式
+     */
+    @BindView(R.id.pattern_manifestation_layout)
+    LinearLayout patternManifestationLayout;
 
     /**
      * 现场态势
@@ -305,7 +312,7 @@ public class EventEntryAdd_Basic extends Fragment {
         involvePublicOpinionSpinner.setAdapter(adapter);//将adapter 添加到spinner中
         publicSecurityDisposalSpinner.setAdapter(adapter);//将adapter 添加到spinner中
 
-        spinnerList = descEntityDao.queryListForCV("BXXS");
+      /*  spinnerList = descEntityDao.queryListForCV("BXXS");
         if (spinnerList == null) {
             //设置Spinner控件的初始值
             spinnerList = new ArrayList<CodeValue>();
@@ -314,7 +321,7 @@ public class EventEntryAdd_Basic extends Fragment {
         adapter = new ArrayAdapter<CodeValue>(EventEntryAdd_Basic.this.getActivity(), android.R.layout.simple_spinner_item, spinnerList);
         //设置下拉列表的风格
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        patternManifestationSpinner.setAdapter(adapter);//将adapter 添加到表现形式spinner中
+        patternManifestationSpinner.setAdapter(adapter);//将adapter 添加到表现形式spinner中*/
 
         spinnerList = descEntityDao.queryListForCV("XCTS");
         if (spinnerList == null) {
@@ -390,14 +397,24 @@ public class EventEntryAdd_Basic extends Fragment {
             }
 
 
+            if (tFtSjEntity.getBxxs() != null && !"".equals(tFtSjEntity.getBxxs())) {
+                String[] bxxss = tFtSjEntity.getSjly().split(",");
+                String bxxs = "";
+                if (bxxss.length > 0) {
+                    for (int i = 0; i < bxxss.length; i++) {
+                        bxxs += descEntityDao.queryName("BXXS", bxxss[i].trim()) + ",";
+                    }
+                    bxxs = bxxs.substring(0, bxxs.length() - 1);
+                }
+                patternManifestationSpinner.setText(bxxs);
+            }
+
+
             belongStreetEdt.setText(tFtSjEntity.getSsjd());
             mainAppealsEdt.setText(tFtSjEntity.getZysq());
             eventSummaryEdt.setText(tFtSjEntity.getSjgyqk());
             leadershipInstructionsEdt.setText(tFtSjEntity.getLdps());
             //以下为下拉控件设置默认值
-            if (tFtSjEntity.getBxxs() != null) {
-                patternManifestationSpinner.setSelection(Integer.valueOf(tFtSjEntity.getBxxs().split(",")[0]) - 1);
-            }
 
             if (tFtSjEntity.getXcts() != null) {
                 fieldMorpholoySpinner.setSelection(Integer.valueOf(tFtSjEntity.getXcts()) - 1);
@@ -472,9 +489,19 @@ public class EventEntryAdd_Basic extends Fragment {
             fieldDepartmenString = fieldDepartmenString.substring(0,fieldDepartmenString.length()-1);
 
         }
+
+        String patternManifestationString="";
+        if(!"".equals(patternManifestationSpinner.getText().toString())){
+            String[] bxxss = patternManifestationSpinner.getText().toString().split(",");
+            for(int i=0;i<bxxss.length;i++){
+                patternManifestationString += descEntityDao.queryCodeByName("BXXS", bxxss[i])+",";
+            }
+            patternManifestationString = patternManifestationString.substring(0,patternManifestationString.length()-1);
+
+        }
         //String fieldDepartmenString = descEntityDao.queryCodeByName("dcbm", fieldDepartmenEdt.getText().toString());
         //String fieldDepartmenString = fieldDepartmenEdt.getText().toString();
-        String patternManifestationString = descEntityDao.queryCodeByName("BXXS", patternManifestationSpinner.getSelectedItem().toString());
+       // String patternManifestationString = descEntityDao.queryCodeByName("BXXS", patternManifestationSpinner.getSelectedItem().toString());
         String fieldMorpholoySpinnerString = descEntityDao.queryCodeByName("XCTS", fieldMorpholoySpinner.getSelectedItem().toString());
         String scopeTextString = descEntityDao.queryCodeByName("sjgm", scopeTextSpinner.getSelectedItem().toString());
         String fieldsInvolved="";
@@ -584,7 +611,7 @@ public class EventEntryAdd_Basic extends Fragment {
         }
     }
 
-    @OnClick({R.id.field_departmen_layout, R.id.fields_involved_linearlayout})
+    @OnClick({R.id.field_departmen_layout, R.id.fields_involved_linearlayout,R.id.pattern_manifestation_layout})
     public void onClick(View v) {
         int[] location = new int[2];
         // 获取控件在屏幕中的位置,方便展示Popupwindow
@@ -597,12 +624,21 @@ public class EventEntryAdd_Basic extends Fragment {
             case R.id.fields_involved_linearlayout:
                 spinnerType = "sjly";
                 break;
+            case R.id.pattern_manifestation_layout:
+                spinnerType = "BXXS";
+                break;
+
         }
         animation = null;
         // location[1] 改成 0
         animation = new TranslateAnimation(0, 0, -700, 0);
         animation.setDuration(500);
-        List<CodeValue> codeValueList = descEntityDao.queryPidList(spinnerType);
+        List<CodeValue> codeValueList ;
+        if("BXXS".equals(spinnerType)){
+            codeValueList = descEntityDao.queryListForCV("BXXS");
+        }else{
+            codeValueList = descEntityDao.queryPidList(spinnerType);
+        }
         /** 一级菜单名称数组 **/
         GroupNameArray = new String[codeValueList.size()][];
         if (codeValueList != null && codeValueList.size() > 0) {
@@ -693,7 +729,11 @@ public class EventEntryAdd_Basic extends Fragment {
         groupAdapter = new GroupAdapter(EventEntryAdd_Basic.this.getActivity(), GroupNameArray);
         groupListView.setAdapter(groupAdapter);
         groupAdapter.notifyDataSetChanged();
-        groupListView.setOnItemClickListener(new MyItemClick());
+        //表现形式只有一级
+        if(!"BXXS".equals(spinnerType)){
+            groupListView.setOnItemClickListener(new MyItemClick());
+
+        }
 
         // 设置视图 二级菜单
         childAdapter = new GroupAdapter(EventEntryAdd_Basic.this.getActivity(), childNameArray);
@@ -707,6 +747,9 @@ public class EventEntryAdd_Basic extends Fragment {
             childListView2.setVisibility(View.VISIBLE);
         } else if ("sjly".equals(spinnerType)) {
             btntext.setText("涉及领域列表");
+            childListView2.setVisibility(View.GONE);
+        }else if("BXXS".equals(spinnerType)){
+            btntext.setText("表现形式列表");
             childListView2.setVisibility(View.GONE);
         }
 
@@ -742,6 +785,8 @@ public class EventEntryAdd_Basic extends Fragment {
                 fieldsInvolvedEdt.setText(sb.deleteCharAt(sb.length() - 1).toString());
             } else if ("dcbm".equals(spinnerType)) {
                 fieldDepartmenEdt.setText(sb.deleteCharAt(sb.length() - 1).toString());
+            }else if ("BXXS".equals(spinnerType)) {
+                patternManifestationSpinner.setText(sb.deleteCharAt(sb.length() - 1).toString());
             }
             mPopupWindow.dismiss();
         }

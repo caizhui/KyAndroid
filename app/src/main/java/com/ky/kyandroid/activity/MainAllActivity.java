@@ -26,6 +26,7 @@ import android.widget.TextView;
 import com.ky.kyandroid.R;
 import com.ky.kyandroid.activity.dbpj.DbpjlActivity;
 import com.ky.kyandroid.activity.evententry.EventEntryListActivity;
+import com.ky.kyandroid.activity.job.JobBullentinListActivity;
 import com.ky.kyandroid.activity.msg.MsgNoticeActivity;
 import com.ky.kyandroid.activity.supervision.SuperVisionListActivity;
 import com.ky.kyandroid.activity.task.TaskListActivity;
@@ -99,6 +100,12 @@ public class MainAllActivity extends AppCompatActivity {
      */
     @BindView(R.id.jdpj_img)
     ImageView jdpjImg;
+
+    /**
+     * 工作简报
+     */
+    @BindView(R.id.gzjb_img)
+    ImageView gzjbImg;
 
     /**
      * 主布局id
@@ -297,7 +304,7 @@ public class MainAllActivity extends AppCompatActivity {
     }
 
 
-    @OnClick({R.id.left_btn, R.id.event_img, R.id.task_img, R.id.supervision_img,R.id.message_img,R.id.jdpj_img})
+    @OnClick({R.id.left_btn, R.id.event_img, R.id.task_img, R.id.supervision_img,R.id.message_img,R.id.jdpj_img,R.id.gzjb_img})
     public void onClick(View v) {
         Intent intent = new Intent();
         switch (v.getId()) {
@@ -328,6 +335,10 @@ public class MainAllActivity extends AppCompatActivity {
             /**监督评价**/
             case R.id.jdpj_img:
                 intent.setClass(this, DbpjlActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.gzjb_img:
+                intent.setClass(this, JobBullentinListActivity.class);
                 startActivity(intent);
                 break;
         }

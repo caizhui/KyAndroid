@@ -50,6 +50,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="15dp"
         android:background="@drawable/mypop_bg"
         android:orientation="horizontal">
 

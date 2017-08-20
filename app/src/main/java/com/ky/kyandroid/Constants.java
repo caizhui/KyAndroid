@@ -107,4 +107,18 @@ public class Constants {
 	public final static String SERVICE_DBPJDETAILLIST = "ft/kyAndroid/handleTftDbPjDetailQuery.action";
 	/**监督评价end**/
 
+
+	/**工作简报**/
+	//部门和用户查询接口
+	public final static String SERVICE_QUERYORGANDUSER = "ft/kyAndroid/queryOrgAndUser.action";
+
+	//工作简报保存接口
+	public final static String SERVICE_SAVEREPORT = "ft/kyAndroid/saveReport.action";
+
+	//工作简报查询接口
+	public final static String SERVICE_QUERYREPORTLIST= "ft/kyAndroid/queryReportList.action";
+
+
+
+
 }

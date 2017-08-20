@@ -1,6 +1,7 @@
 package com.ky.kyandroid.activity.evententry;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,7 +10,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +17,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -214,6 +215,12 @@ public class EventEntryListActivity extends AppCompatActivity {
     RadioButton radioButton02;
     RadioButton radioButton03;
 
+    private CheckBox checkBox01;
+
+    private CheckBox checkBox02;
+
+    private CheckBox checkBox03;
+
     /**
      * 处理时间
      */
@@ -360,7 +367,7 @@ public class EventEntryListActivity extends AppCompatActivity {
         tFtSjEntityList = new ArrayList<TFtSjEntity>();
         userId = sp.getString(USER_ID, "");
         name = sp.getString("name", "");
-        if ("街道办工作人员".equals(name)  || "香蜜湖录入人员".equals(name)) {
+        if ("街道办工作人员".equals(name)  || "香蜜湖录入人员".equals(name)||"综治办录入人员".equals(name)) {
             rightBtn.setVisibility(View.VISIBLE);
         }
 
@@ -785,10 +792,17 @@ public class EventEntryListActivity extends AppCompatActivity {
         handlePersonEdt = ButterKnife.findById(mView, R.id.handle_person_edt);
         happendTImeEdt = ButterKnife.findById(mView, R.id.happen_time_edt);
         returnEdt = ButterKnife.findById(mView, R.id.return_edt);
-        radioGroup = ButterKnife.findById(mView, R.id.radioGroup);
-        radioButton01 = ButterKnife.findById(mView, R.id.radioButton01);
-        radioButton02 = ButterKnife.findById(mView, R.id.radioButton02);
-        radioButton03 = ButterKnife.findById(mView, R.id.radioButton03);
+        if("7.2".equals(tFtZtlzEntity.getNextZt())){
+            checkBox01 = ButterKnife.findById(mView, R.id.checkbox01);
+            checkBox02 = ButterKnife.findById(mView, R.id.checkbox02);
+            checkBox03 = ButterKnife.findById(mView, R.id.checkbox03);
+        }else{
+            radioGroup = ButterKnife.findById(mView, R.id.radioGroup);
+            radioButton01 = ButterKnife.findById(mView, R.id.radioButton01);
+            radioButton02 = ButterKnife.findById(mView, R.id.radioButton02);
+            radioButton03 = ButterKnife.findById(mView, R.id.radioButton03);
+        }
+
         //不予立案退回备选原因
         if ("4".equals(tFtZtlzEntity.getNextZt())) {
             radioButton01.setText("未达到立案标准");
@@ -815,19 +829,56 @@ public class EventEntryListActivity extends AppCompatActivity {
             radioButton03.setVisibility(View.GONE);
             radioButton01.setText("事件已经完结");
         }
-        if (radioGroup != null) {
-            radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        final String[] czyy = {""};
+        if("7.2".equals(tFtZtlzEntity.getNextZt())){
+            checkBox01.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onCheckedChanged(RadioGroup group, int checkedId) {
-                    if (radioButton01.getId() == checkedId) {
-                        returnEdt.setText(radioButton01.getText().toString());
-                    } else if (radioButton02.getId() == checkedId) {
-                        returnEdt.setText(radioButton02.getText().toString());
-                    } else if (radioButton03.getId() == checkedId) {
-                        returnEdt.setText(radioButton03.getText().toString());
+                public void onClick(View view) {
+                    if (checkBox01.isChecked()) {
+                        czyy[0] +=checkBox01.getText().toString()+",";
+                    }else{
+                        czyy[0]=czyy[0].replace(checkBox01.getText().toString()+",","");
                     }
+                    returnEdt.setText(czyy[0]);
                 }
             });
+            checkBox02.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (checkBox02.isChecked()) {
+                        czyy[0] +=checkBox02.getText().toString()+",";
+                    }else{
+                        czyy[0]=czyy[0].replace(checkBox02.getText().toString()+",","");
+                    }
+                    returnEdt.setText(czyy[0]);
+                }
+            });
+            checkBox03.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (checkBox03.isChecked()) {
+                        czyy[0] +=checkBox03.getText().toString()+",";
+                    }else{
+                        czyy[0]= czyy[0].replace(checkBox03.getText().toString()+",","");
+                    }
+                    returnEdt.setText(czyy[0]);
+                }
+            });
+        }else{
+            if (radioGroup != null) {
+                radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(RadioGroup group, int checkedId) {
+                        if (radioButton01.getId() == checkedId) {
+                            returnEdt.setText(radioButton01.getText().toString());
+                        } else if (radioButton02.getId() == checkedId) {
+                            returnEdt.setText(radioButton02.getText().toString());
+                        } else if (radioButton03.getId() == checkedId) {
+                            returnEdt.setText(radioButton03.getText().toString());
+                        }
+                    }
+                });
+            }
         }
         //自行处理时间输入框
         if (happendTImeEdt != null) {
