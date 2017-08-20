@@ -206,7 +206,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="80dp"
                 android:orientation="horizontal"
                 android:padding="10dp">`
 
@@ -218,11 +218,35 @@
                     android:text="@string/pattern_manifestation" />
 
                 <LinearLayout
+                    android:id="@+id/pattern_manifestation_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="60dp"
                     android:background="@drawable/border_edittext_bg">
 
-                    <Spinner
+                    <TextView
+                        android:id="@+id/pattern_manifestation_spinner"
+                        android:layout_width="0dp"
+                        android:layout_height="60dp"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:enabled="false"
+                        android:focusable="false"
+                        android:maxLength="85"
+                        android:gravity="center_vertical"
+                        style="@style/TextColorStyle"
+                        android:padding="5dp"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        android:id="@+id/pattern_manifestation_img"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_gravity="center"
+                        android:enabled="false"
+                        android:layout_marginRight="5dp"
+                        android:background="@mipmap/down" />
+
+                   <!-- <Spinner
                         android:id="@+id/pattern_manifestation_spinner"
                         android:layout_width="0dp"
                         android:layout_height="40dp"
@@ -236,7 +260,7 @@
                         android:padding="5dp"
                         android:text="*"
                         android:textColor="@color/red"
-                        android:visibility="gone" />
+                        android:visibility="gone" />-->
                 </LinearLayout>
             </LinearLayout>
 

@@ -6,12 +6,12 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.TranslateAnimation;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -114,6 +114,7 @@ public class JobBulletinAddActivity extends AppCompatActivity {
 
     ListView groupListView = null;
     ListView childListView = null;
+    ListView  threeListView = null ;
 
     TranslateAnimation animation;// 出现的动画效果
     // 屏幕的宽高
@@ -148,6 +149,10 @@ public class JobBulletinAddActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         descEntityDao = new DescEntityDao();
         initToolbar();
+        DisplayMetrics dm = new DisplayMetrics();
+        this.getWindowManager().getDefaultDisplay().getMetrics(dm); // 获取手机屏幕的大小
+        screen_width = dm.widthPixels;
+        screen_height = dm.heightPixels;
     }
 
     /**
@@ -188,8 +193,8 @@ public class JobBulletinAddActivity extends AppCompatActivity {
                 onBackPressed();
                 break;
             // 到场部门
-            case R.id.field_departmen_layout:
-                spinnerType = "dcbm";
+            case R.id.job_departmen_layout:
+                spinnerType = "sjly";
                 break;
         }
         animation = null;
@@ -206,19 +211,6 @@ public class JobBulletinAddActivity extends AppCompatActivity {
                 cg[0] = "0";
                 cg[1] = codeValueList.get(i).getValue();
                 GroupNameArray[i] = cg;
-            }
-            CodeValue cv = codeValueList.get(0);
-            /** 二级菜单名称数组 **/
-            List<CodeValue> childCodeValueList = descEntityDao.queryValueListByPid(spinnerType, cv.getCode());
-            childNameArray = new String[childCodeValueList.size()][];
-            if (childCodeValueList != null && childCodeValueList.size() > 0) {
-                for (int i = 0; i < childCodeValueList.size(); i++) {
-                    String[] cg = new String[2];
-                    // 0 是未选中,1 是选中
-                    cg[0] = "0";
-                    cg[1] = childCodeValueList.get(i).getValue();
-                    childNameArray[i] = cg;
-                }
             }
         }
         showPupupWindow();
@@ -259,6 +251,8 @@ public class JobBulletinAddActivity extends AppCompatActivity {
         // 初始化三个ListView
         groupListView = showPupWindow.findViewById(R.id.listView1);
         childListView = showPupWindow.findViewById(R.id.listView2);
+        threeListView = showPupWindow.findViewById(R.id.listView3);
+        threeListView.setVisibility(View.GONE);
 
         // 初始化点击事件 - 取消
         btnCancel = showPupWindow.findViewById(R.id.btn_cancel);
@@ -286,7 +280,6 @@ public class JobBulletinAddActivity extends AppCompatActivity {
         groupAdapter = new GroupAdapter(JobBulletinAddActivity.this, GroupNameArray);
         groupListView.setAdapter(groupAdapter);
         groupAdapter.notifyDataSetChanged();
-        groupListView.setOnItemClickListener(new MyItemClick());
 
         btntext.setText("上报部门列表");
 
@@ -301,7 +294,6 @@ public class JobBulletinAddActivity extends AppCompatActivity {
         // 菜单列表项
         List<GroupAdapter> adapterList = new ArrayList<GroupAdapter>();
         adapterList.add((GroupAdapter) groupListView.getAdapter());
-        adapterList.add((GroupAdapter) childListView.getAdapter());
 
         // 判断是否有选中
         if (checkGroupAdapter(sb, adapterList)) {
@@ -330,52 +322,12 @@ public class JobBulletinAddActivity extends AppCompatActivity {
         return flag;
     }
 
-    class MyItemClick implements AdapterView.OnItemClickListener {
-
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            groupAdapter.setSelectedPosition(position);
-            String[] adCg = (String[]) groupAdapter.getItem(position);
-            String pidCode = descEntityDao.queryCodeByName(spinnerType, adCg[1]);
-            // 获取列表集合
-            List<CodeValue> childCodeValueList = descEntityDao.queryValueListByPid(spinnerType, pidCode);
-            childNameArray = new String[childCodeValueList.size()][];
-            String[][] groupItems = childAdapter.getmGroupItems();
-            boolean flag = true;
-            if (childCodeValueList.size() > 0) {
-                for (int i = 0; i < childCodeValueList.size(); i++) {
-                    String[] cg = new String[2];
-                    // 0 是未选中,1 是选中
-                    cg[0] = "0";
-                    cg[1] = childCodeValueList.get(i).getValue();
-                    // 如果名称有一个一样就换值不刷新
-                    if (groupItems != null && i < groupItems.length) {
-                        if (cg[1].equals(groupItems[i][1])) {
-                            flag = false;
-                            break;
-                        }
-
-                    }
-                    childNameArray[i] = cg;
-                }
-            } else {
-                flag = true;
-            }
-            if (flag) {
-                childAdapter.setChildData(childNameArray);
-            }
-            handler.sendEmptyMessage(20);
-        }
-
-    }
-
     @SuppressLint("HandlerLeak")
     Handler handler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 20:
-                    // 刷新二级菜单列表
-                    childAdapter.notifyDataSetChanged();
+                    // 刷新菜单列表
                     groupAdapter.notifyDataSetChanged();
                     break;
                 default:
