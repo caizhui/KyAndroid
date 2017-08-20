@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
@@ -613,18 +614,18 @@ public class EventEntryAdd_Attachment extends Fragment {
         BitmapInfo mapInfo = new BitmapInfo();
         Bitmap bitmap = null;
         try {
-            // 文件路径
-            String uriPath = uri.getPath();
+            // 文件路径uri.getPath()
+            String uriPath = getPath(uri);
             // 文件后缀
             String suffix = uriPath.substring(uriPath.lastIndexOf(".")+1);
             switch (suffix){
-                case "jpg":case "npg":
+                case "jpg":case "png":
                     medioType = "1";
                     bitmap = MediaStore.Images.Media.getBitmap(mContext.getContentResolver(), uri);
                     break;
                 case "mp4":case "3gp":
                     medioType = "2";
-                    bitmap = ThumbnailUtils.createVideoThumbnail(uri.getPath(), MediaStore.Images.Thumbnails.MINI_KIND);
+                    bitmap = ThumbnailUtils.createVideoThumbnail(uriPath, MediaStore.Images.Thumbnails.MINI_KIND);
                     // 视频文件处理
                     Map<String,String> vedio_fileMap = new HashMap<>();
                     vedio_fileMap.put("uri_path",uri.getPath());
@@ -633,10 +634,10 @@ public class EventEntryAdd_Attachment extends Fragment {
                     break;
                 case "mp3":
                     medioType = "3";
-                    bitmap = createAlbumArt(uri.getPath());
+                    bitmap = createAlbumArt(uriPath);
                     // 音乐文件处理
                     Map<String,String> audio_fileMap = new HashMap<>();
-                    audio_fileMap.put("uri_path",uri.getPath());
+                    audio_fileMap.put("uri_path",uriPath);
                     audio_fileMap.put("suffix",suffix);
                     mapInfo.setFileInfoMap(audio_fileMap);
                     break;
@@ -652,6 +653,70 @@ public class EventEntryAdd_Attachment extends Fragment {
             return null;
         }
     }
+
+    /**
+     * Get file path
+     */
+    public String getPath(Uri uri) {
+        String[] projection = { MediaStore.Images.Media.DATA };
+        Cursor cursor = getActivity().managedQuery(uri, projection, null, null, null);
+        if (cursor != null){
+            int column_index = cursor
+                    .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        }else{
+            return uri.getPath();
+        }
+
+    }
+
+    /*
+    public File getFileByUri(Uri uri) {
+        String path = null;
+        if ("file".equals(uri.getScheme())) {
+            path = uri.getEncodedPath();
+            if (path != null) {
+                path = Uri.decode(path);
+                ContentResolver cr = activity.getContentResolver();
+                StringBuffer buff = new StringBuffer();
+                buff.append("(").append(Images.ImageColumns.DATA).append("=").append("'" + path + "'").append(")");
+                Cursor cur = cr.query(Images.Media.EXTERNAL_CONTENT_URI, new String[] { Images.ImageColumns._ID, Images.ImageColumns.DATA }, buff.toString(), null, null);
+                int index = 0;
+                int dataIdx = 0;
+                for (cur.moveToFirst(); !cur.isAfterLast(); cur.moveToNext()) {
+                    index = cur.getColumnIndex(Images.ImageColumns._ID);
+                    index = cur.getInt(index);
+                    dataIdx = cur.getColumnIndex(Images.ImageColumns.DATA);
+                    path = cur.getString(dataIdx);
+                }
+                cur.close();
+                if (index == 0) {
+                } else {
+                    Uri u = Uri.parse("content://media/external/images/media/" + index);
+                    System.out.println("temp uri is :" + u);
+                }
+            }
+            if (path != null) {
+                return new File(path);
+            }
+        } else if ("content".equals(uri.getScheme())) {
+            // 4.2.2以后
+            String[] proj = { MediaStore.Images.Media.DATA };
+            Cursor cursor = activity.getContentResolver().query(uri, proj, null, null, null);
+            if (cursor.moveToFirst()) {
+                int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                path = cursor.getString(columnIndex);
+            }
+            cursor.close();
+
+            return new File(path);
+        } else {
+            Log.i(TAG, "Uri Scheme:" + uri.getScheme());
+        }
+        return null;
+    }
+    */
 
     /**
      * @Description 获取专辑封面
