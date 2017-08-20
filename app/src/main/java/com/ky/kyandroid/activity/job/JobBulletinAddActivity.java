@@ -1,6 +1,8 @@
 package com.ky.kyandroid.activity.job;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -12,28 +14,47 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.TranslateAnimation;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ky.kyandroid.Constants;
 import com.ky.kyandroid.R;
 import com.ky.kyandroid.adapter.GroupAdapter;
-import com.ky.kyandroid.bean.CodeValue;
+import com.ky.kyandroid.adapter.JobGroupAdapter;
+import com.ky.kyandroid.bean.AckMessage;
+import com.ky.kyandroid.bean.NetWorkConnection;
 import com.ky.kyandroid.db.dao.DescEntityDao;
+import com.ky.kyandroid.entity.AclOrgEntity;
+import com.ky.kyandroid.entity.OrgAndUserEntity;
+import com.ky.kyandroid.entity.TFtAppReportEntity;
+import com.ky.kyandroid.entity.UserEntity;
 import com.ky.kyandroid.util.DateTimePickDialogUtil;
+import com.ky.kyandroid.util.JsonUtil;
+import com.ky.kyandroid.util.OkHttpUtil;
+import com.ky.kyandroid.util.SpUtil;
+import com.ky.kyandroid.util.SweetAlertDialogUtil;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTouch;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 /**
  * Created by Caizhui on 2017/8/15.
@@ -75,8 +96,6 @@ public class JobBulletinAddActivity extends AppCompatActivity {
      */
     @BindView(R.id.job_departmen_edt)
     TextView jobDepartmenEdt;
-    @BindView(R.id.field_departmen_img)
-    ImageView fieldDepartmenImg;
     @BindView(R.id.job_departmen_layout)
     LinearLayout jobDepartmenLayout;
 
@@ -95,6 +114,9 @@ public class JobBulletinAddActivity extends AppCompatActivity {
      */
     @BindView(R.id.reporting_leadership_btn)
     Button reportingLeadershipBtn;
+
+    @BindView(R.id.one_scroll)
+    ScrollView one_scroll;
 
 
     View showPupWindow = null; // 选择区域的view
@@ -136,9 +158,84 @@ public class JobBulletinAddActivity extends AppCompatActivity {
 
     TextView btntext;
 
-    GroupAdapter groupAdapter = null;
+    JobGroupAdapter groupAdapter = null;
 
     GroupAdapter childAdapter = null;
+
+    /**
+     * 网路工具类
+     */
+    private NetWorkConnection netWorkConnection;
+
+    /**
+     * 弹出框工具类
+     */
+    private SweetAlertDialogUtil sweetAlertDialogUtil;
+
+    private String userId;
+
+    /**
+     * SharedPreferences
+     */
+    private SharedPreferences sp;
+
+    /**
+     * 所有的部门
+     */
+    List<AclOrgEntity> orgList;
+
+
+    /**
+     * 所有的用户
+     */
+    List<UserEntity> userList;
+
+    /**
+     * 部门下的用户
+     */
+    List<UserEntity> userEntityList;
+
+
+    private TFtAppReportEntity tFtAppReportEntity;
+
+
+    @SuppressLint("HandlerLeak")
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            // 提示信息
+            String message = String.valueOf(msg.obj == null ? "系统繁忙,请稍后再试"
+                    : msg.obj);
+            switch (msg.what) {
+                // 失败
+                case 0:
+                    sweetAlertDialogUtil.dismissAlertDialog();
+                    Toast.makeText(JobBulletinAddActivity.this, message, Toast.LENGTH_SHORT).show();
+                    break;
+                // 成功跳转
+                case 1:
+                    HandleDescData(message);
+                    break;
+                // 成功跳转
+                case 2:
+                    AckMessage ackMessage = JsonUtil.fromJson(message, AckMessage.class);
+                    if(ackMessage!=null){
+                        if(AckMessage.SUCCESS.equals(ackMessage.getAckCode())){
+                            Intent intent =new Intent(JobBulletinAddActivity.this,JobBullentinListActivity.class);
+                            intent.putExtra("businessType", "initList");
+                            startActivity(intent);
+                            Toast.makeText(JobBulletinAddActivity.this,"保存成功",Toast.LENGTH_SHORT).show();
+                        }else{
+                            Toast.makeText(JobBulletinAddActivity.this,"保存失败",Toast.LENGTH_SHORT).show();
+                        }
+                    }else{
+                        Toast.makeText(JobBulletinAddActivity.this,"保存失败",Toast.LENGTH_SHORT).show();
+                    }
+                    sweetAlertDialogUtil.dismissAlertDialog();
+                    break;
+            }
+        }
+    };
 
 
 
@@ -153,6 +250,7 @@ public class JobBulletinAddActivity extends AppCompatActivity {
         this.getWindowManager().getDefaultDisplay().getMetrics(dm); // 获取手机屏幕的大小
         screen_width = dm.widthPixels;
         screen_height = dm.heightPixels;
+        dbAddData();
     }
 
     /**
@@ -162,6 +260,64 @@ public class JobBulletinAddActivity extends AppCompatActivity {
 
         /** 设置toolbar标题 **/
         centerText.setText("工作简报录入");
+
+        sp = SpUtil.getSharePerference(this);
+        // 初始化网络工具
+        netWorkConnection = new NetWorkConnection(this);
+        userId = sp.getString("userId", "");
+        sweetAlertDialogUtil = new SweetAlertDialogUtil(JobBulletinAddActivity.this);
+
+    }
+
+    public void dbAddData(){
+        final Message msg = new Message();
+        if (netWorkConnection.isWIFIConnection()) {
+            msg.what = 0;
+            // 参数列表 - 账号、密码（加密）
+            Map<String, String> paramsMap = new HashMap<String, String>();
+            paramsMap.put("userId", userId);
+            // 发送请求
+            OkHttpUtil.sendRequest(Constants.SERVICE_QUERYORGANDUSER, paramsMap, new Callback() {
+
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    mHandler.sendEmptyMessage(0);
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    if (response.isSuccessful()) {
+                        msg.what = 1;
+                        msg.obj = response.body().string();
+                    } else {
+                        msg.what = 0;
+                        msg.obj = "网络异常,请确认网络情况";
+                    }
+                    mHandler.sendMessage(msg);
+                }
+            });
+        } else {
+            msg.obj = "WIFI网络不可用,请检查网络连接情况";
+            mHandler.sendMessage(msg);
+        }
+    }
+
+    /**
+     * 字典处理返回的数据
+     * @param response
+     */
+    public void HandleDescData(String response){
+        AckMessage ackMessage = JsonUtil.fromJson(response, AckMessage.class);
+        if(AckMessage.SUCCESS.equals(ackMessage.getAckCode())) {
+            String  objectJson = JsonUtil.toJson(ackMessage.getEntity());
+            OrgAndUserEntity object = JsonUtil.fromJson(objectJson, OrgAndUserEntity.class);
+            //成功后操作 - 解释数据
+            orgList  = object.getOrgList();
+            userList = object.getUserList();
+            sweetAlertDialogUtil.dismissAlertDialog();
+        }else if(Constants.FAILURE.equals(ackMessage.getAckCode())){
+            //失败后操作
+        }
 
     }
 
@@ -195,25 +351,126 @@ public class JobBulletinAddActivity extends AppCompatActivity {
             // 到场部门
             case R.id.job_departmen_layout:
                 spinnerType = "sjly";
+                animation = null;
+                // location[1] 改成 0
+                animation = new TranslateAnimation(0, 0, -700, 0);
+                animation.setDuration(500);
+                //List<CodeValue> codeValueList = descEntityDao.queryPidList(spinnerType);
+                /** 一级菜单名称数组 **/
+                if (orgList != null && orgList.size() > 0) {
+                    GroupNameArray = new String[orgList.size()][];
+                    for (int i = 0; i < orgList.size(); i++) {
+                        String[] cg = new String[2];
+                        // 0 是未选中,1 是选中
+                        cg[0] = "0";
+                        cg[1] = orgList.get(i).getOrgName();
+                        GroupNameArray[i] = cg;
+                    }
+                }
+                String  orgCode = orgList.get(0).getId();
+                /** 二级菜单名称数组 **/
+                if(userList!=null &&  userList.size()>0){
+                    userEntityList= new ArrayList<UserEntity>();
+                    for(int i=0;i<userList.size();i++){
+                        if(orgCode.equals(userList.get(i).getOrgId())){
+                            userEntityList.add(userList.get(i));
+                        }
+                    }
+                }
+                if (userEntityList != null && userEntityList.size() > 0) {
+                    childNameArray = new String[userEntityList.size()][];
+                    for (int i = 0; i < userEntityList.size(); i++) {
+                        String[] cg = new String[2];
+                        // 0 是未选中,1 是选中
+                        cg[0] = "0";
+                        cg[1] = userEntityList.get(i).getName();
+                        childNameArray[i] = cg;
+                    }
+                }
+                showPupupWindow();
                 break;
         }
-        animation = null;
-        // location[1] 改成 0
-        animation = new TranslateAnimation(0, 0, -700, 0);
-        animation.setDuration(500);
-        List<CodeValue> codeValueList = descEntityDao.queryPidList(spinnerType);
-        /** 一级菜单名称数组 **/
-        GroupNameArray = new String[codeValueList.size()][];
-        if (codeValueList != null && codeValueList.size() > 0) {
-            for (int i = 0; i < codeValueList.size(); i++) {
-                String[] cg = new String[2];
-                // 0 是未选中,1 是选中
-                cg[0] = "0";
-                cg[1] = codeValueList.get(i).getValue();
-                GroupNameArray[i] = cg;
-            }
+    }
+
+    public void saveData(View v){
+        String message="";
+        if(tFtAppReportEntity==null){
+            tFtAppReportEntity = new TFtAppReportEntity();
         }
-        showPupupWindow();
+        if("".equals(jobNameEdt.getText())){
+            message+="标题不能为空\n";
+        }else{
+            tFtAppReportEntity.setTitle(jobNameEdt.getText().toString());
+        }
+        if("".equals(jobTimeEdt.getTextAlignment())){
+            message+="时间不能为空\n";
+        }else{
+            tFtAppReportEntity.setRepTime(jobTimeEdt.getText().toString());
+        }
+        String jobDepartmen="";
+        if(!"".equals(jobDepartmenEdt.getText().toString())){
+            String[] sbyhs = jobDepartmenEdt.getText().toString().split(",");
+            for(int i=0;i<sbyhs.length;i++){
+                for(int j = 0;j<userList.size();j++){
+                    if(sbyhs[i].equals(userList.get(j).getName())){
+                        jobDepartmen+= userList.get(j).getId()+",";
+                    }
+                }
+            }
+            jobDepartmen = jobDepartmen.substring(0,jobDepartmen.length()-1);
+
+        }
+        if("".equals(jobDepartmen)){
+            message+="上报用户不能为空\n";
+        }else{
+            tFtAppReportEntity.setRepToUser(jobDepartmen);
+        }
+        if("".equals(jobContentEdt.getText())){
+            message+="内容不能为空\n";
+        }else{
+            tFtAppReportEntity.setContent(jobContentEdt.getText().toString());
+        }
+        if("".equals(message)){
+            sendData();
+        }else{
+            Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public  void sendData(){
+        final Message msg = new Message();
+        if (netWorkConnection.isWIFIConnection()) {
+            sweetAlertDialogUtil.loadAlertDialog("Loading...");
+            msg.what = 0;
+            Map<String, String> paramsMap = new HashMap<String, String>();
+            // 转成json格式
+            String mapJson = JsonUtil.toJson(tFtAppReportEntity);
+            paramsMap.put("userId", userId);
+            paramsMap.put("TFtAppReport",mapJson);
+            // 发送请求
+            OkHttpUtil.sendRequest(Constants.SERVICE_SAVEREPORT, paramsMap, new Callback() {
+
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    mHandler.sendEmptyMessage(0);
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    if (response.isSuccessful()) {
+                        msg.what = 2;
+                        msg.obj = response.body().string();
+                    } else {
+                        msg.what = 0;
+                        msg.obj = "网络异常,请确认网络情况";
+                    }
+                    mHandler.sendMessage(msg);
+                }
+            });
+        } else {
+            msg.obj = "WIFI网络不可用,请检查网络连接情况";
+            mHandler.sendMessage(msg);
+        }
     }
 
     /**
@@ -277,9 +534,15 @@ public class JobBulletinAddActivity extends AppCompatActivity {
         btntext = showPupWindow.findViewById(R.id.btn_text);
 
         // 设置视图 一级菜单
-        groupAdapter = new GroupAdapter(JobBulletinAddActivity.this, GroupNameArray);
+        groupAdapter = new JobGroupAdapter(JobBulletinAddActivity.this, GroupNameArray);
         groupListView.setAdapter(groupAdapter);
         groupAdapter.notifyDataSetChanged();
+        groupListView.setOnItemClickListener(new MyItemClick());
+
+        // 设置视图 二级菜单
+        childAdapter = new GroupAdapter(JobBulletinAddActivity.this, childNameArray);
+        childListView.setAdapter(childAdapter);
+        childAdapter.notifyDataSetChanged();
 
         btntext.setText("上报部门列表");
 
@@ -293,7 +556,8 @@ public class JobBulletinAddActivity extends AppCompatActivity {
         StringBuffer sb = new StringBuffer();
         // 菜单列表项
         List<GroupAdapter> adapterList = new ArrayList<GroupAdapter>();
-        adapterList.add((GroupAdapter) groupListView.getAdapter());
+        //adapterList.add((GroupAdapter) groupListView.getAdapter());
+        adapterList.add((GroupAdapter) childListView.getAdapter());
 
         // 判断是否有选中
         if (checkGroupAdapter(sb, adapterList)) {
@@ -303,6 +567,58 @@ public class JobBulletinAddActivity extends AppCompatActivity {
             jobDepartmenEdt.setText(sb.deleteCharAt(sb.length() - 1).toString());
             mPopupWindow.dismiss();
         }
+    }
+
+    class MyItemClick implements AdapterView.OnItemClickListener {
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            groupAdapter.setSelectedPosition(position);
+            String[] adCg = (String[]) groupAdapter.getItem(position);
+            String orgName = adCg[1];
+            String orgCode="";
+            for(int i=0;i<orgList.size();i++){
+                if(orgName.equals(orgList.get(i).getOrgName())){
+                    orgCode = orgList.get(i).getId();
+                }
+            }
+            if(userList!=null &&  userList.size()>0){
+                userEntityList= new ArrayList<UserEntity>();
+                for(int i=0;i<userList.size();i++){
+                    if(orgCode.equals(userList.get(i).getOrgId())){
+                        userEntityList.add(userList.get(i));
+                    }
+                }
+            }
+            // 获取列表集合
+            childNameArray = new String[userEntityList.size()][];
+            String[][] groupItems = childAdapter.getmGroupItems();
+            boolean flag = true;
+            if (userEntityList.size() > 0) {
+                for (int i = 0; i < userEntityList.size(); i++) {
+                    String[] cg = new String[2];
+                    // 0 是未选中,1 是选中
+                    cg[0] = "0";
+                    cg[1] = userEntityList.get(i).getName();
+                    // 如果名称有一个一样就换值不刷新
+                    if (groupItems != null && i < groupItems.length) {
+                        if (cg[1].equals(groupItems[i][1])) {
+                            flag = false;
+                            break;
+                        }
+
+                    }
+                    childNameArray[i] = cg;
+                }
+            } else {
+                flag = true;
+            }
+            if (flag) {
+                childAdapter.setChildData(childNameArray);
+            }
+            handler.sendEmptyMessage(20);
+        }
+
     }
 
 
@@ -338,4 +654,11 @@ public class JobBulletinAddActivity extends AppCompatActivity {
 
         ;
     };
+
+
+    @OnTouch({R.id.one_scroll})
+    public boolean OnTouchListener(View v, MotionEvent event) {
+        v.getParent().requestDisallowInterceptTouchEvent(true);
+        return false;
+    }
 }

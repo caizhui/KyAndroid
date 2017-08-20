@@ -79,8 +79,9 @@
     <!--工作简报start-->
     <string name="job_name">标题:</string>
     <string name="job_time">时间:</string>
-    <string name="job_departmen">上报部门:</string>
+    <string name="job_departmen">上报用户:</string>
     <string name="job_content">内容:</string>
+    <string name="job_hbr">汇报人:</string>
 
     <!--工作简报end-->
 </resources>

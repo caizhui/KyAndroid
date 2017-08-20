@@ -1,5 +1,8 @@
 package com.ky.kyandroid.bean;
 
+import com.ky.kyandroid.entity.AclOrgEntity;
+import com.ky.kyandroid.entity.UserEntity;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -39,6 +42,26 @@ public class AckMessage implements Serializable{
 		private List<?> data;
 		/** 分页对象 */
 		private PageBean pageBean;
+
+		private List<AclOrgEntity> orgList;
+
+		private List<UserEntity> userList;
+
+		public List<AclOrgEntity> getOrgList() {
+			return orgList;
+		}
+
+		public void setOrgList(List<AclOrgEntity> orgList) {
+			this.orgList = orgList;
+		}
+
+		public List<UserEntity> getUserList() {
+			return userList;
+		}
+
+		public void setUserList(List<UserEntity> userList) {
+			this.userList = userList;
+		}
 
 		public void setErrorMessage(AckEnum ack){
 			this.ackCode = AckMessage.FAILURE;

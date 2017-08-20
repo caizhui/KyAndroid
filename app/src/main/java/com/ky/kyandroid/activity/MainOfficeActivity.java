@@ -26,7 +26,7 @@ import android.widget.TextView;
 import com.ky.kyandroid.R;
 import com.ky.kyandroid.activity.dbpj.DbpjlActivity;
 import com.ky.kyandroid.activity.evententry.EventEntryListActivity;
-import com.ky.kyandroid.activity.job.JobBulletinAddActivity;
+import com.ky.kyandroid.activity.job.JobBullentinListActivity;
 import com.ky.kyandroid.activity.msg.MsgNoticeActivity;
 import com.ky.kyandroid.activity.supervision.SuperVisionListActivity;
 import com.ky.kyandroid.bean.AckMessage;
@@ -329,7 +329,7 @@ public class MainOfficeActivity extends AppCompatActivity {
                 startActivity(intent);
                 break;
             case R.id.gzjb_img:
-                intent.setClass(this, JobBulletinAddActivity.class);
+                intent.setClass(this, JobBullentinListActivity.class);
                 startActivity(intent);
                 break;
         }

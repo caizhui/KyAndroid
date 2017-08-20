@@ -254,6 +254,18 @@
             android:launchMode="singleTask"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
 
+        <!--工作简报列表-->
+        <activity
+            android:name=".activity.job.JobBullentinListActivity"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
+
+        <!--工作简报详情-->
+        <activity
+            android:name=".activity.job.JobBulletinDetailActivity"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
+
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"

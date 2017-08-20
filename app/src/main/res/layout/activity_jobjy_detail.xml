@@ -34,12 +34,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:background="@drawable/border_edittext_bg">
-                        <EditText
+                        <TextView
                             android:id="@+id/job_name_edt"
                             android:layout_width="0dp"
                             android:layout_height="40dp"
                             android:layout_weight="1"
                             android:background="@null"
+                            android:gravity="center_vertical"
                             android:maxLength="85"
                             android:padding="5dp"
                             android:textSize="16sp" />
@@ -67,17 +68,65 @@
                     android:layout_height="40dp"
                     android:background="@drawable/border_edittext_bg">
 
-                    <EditText
+                    <TextView
                         android:id="@+id/job_time_edt"
                         android:layout_width="0dp"
                         android:layout_height="40dp"
                         android:layout_weight="1"
                         android:background="@null"
                         android:padding="5dp"
+                        android:gravity="center_vertical"
                         android:textSize="16sp" />
 
                 </LinearLayout>
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+                <TextView
+                    style="@style/TextStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="15dp"
+                    android:text="@string/job_hbr" />
+
+                <LinearLayout
+                    android:id="@+id/job_departmen_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:background="@drawable/border_edittext_bg">
+
+                    <TextView
+                        android:id="@+id/job_hbr_edt"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:padding="5dp"
+                        android:gravity="center_vertical"
+                        android:textSize="16sp" />
+
+
+                    <ImageView
+                        android:id="@+id/field_departmen_img"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_gravity="center"
+                        android:enabled="false"
+                        android:layout_marginRight="5dp"
+                        android:background="@mipmap/down"
+                        android:visibility="gone"/>
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -103,30 +152,22 @@
                         android:layout_height="40dp"
                         android:background="@drawable/pop_bg_1">
 
-                        <LinearLayout
-                            android:id="@+id/job_departmen_layout"
+                        <TextView
+                            android:id="@+id/job_departmen_edt"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-
-                            <TextView
-                                android:id="@+id/job_departmen_edt"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:background="@null"
-                                android:padding="5dp"
-                                android:gravity="center_vertical"
-                                android:textSize="16sp" />
-                        </LinearLayout>
-
-
+                            android:layout_height="wrap_content"
+                            android:background="@null"
+                            android:padding="5dp"
+                            android:gravity="center_vertical"
+                            android:text="sdfsfsfsf sfsdfsdf "
+                            android:textSize="16sp" />
                     </ScrollView>
                 </LinearLayout>
 
             </LinearLayout>
 
 
-
-                <LinearLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="180dp"
                 android:orientation="horizontal"
@@ -143,49 +184,23 @@
                     android:layout_width="match_parent"
                     android:layout_height="160dp"
                     android:background="@drawable/border_edittext_bg">
-
-                    <EditText
-                        android:id="@+id/job_content_edt"
-                        android:layout_width="0dp"
+                    <ScrollView
+                        android:id="@+id/two_scroll"
+                        android:layout_width="match_parent"
                         android:layout_height="160dp"
-                        android:layout_weight="1"
-                        android:background="@null"
-                        android:maxLength="1333"
-                        android:gravity="start"
-                        android:padding="5dp"
-                        android:textSize="16sp" />
+                        android:background="@drawable/pop_bg_1">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="5dp"
-                        android:text="*"
-                        android:visibility="gone"
-                        android:textColor="@color/red" />
+                        <TextView
+                            android:id="@+id/job_content_edt"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@null"
+                            android:maxLength="1333"
+                            android:gravity="start"
+                            android:padding="5dp"
+                            android:textSize="16sp" />
+                    </ScrollView>
                 </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/btn_linearlayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_horizontal">
-
-                <Button
-                    android:id="@+id/reporting_leadership_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:background="@drawable/border_sbldbutton_bg"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
-                    android:layout_marginTop="100dp"
-                    android:text="上报领导"
-                    android:textColor="@color/white"
-                    android:textSize="14sp"
-                    android:onClick="saveData"/>
-
-
             </LinearLayout>
 
         </LinearLayout>
