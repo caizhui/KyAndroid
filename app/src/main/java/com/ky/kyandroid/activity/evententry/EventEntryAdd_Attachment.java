@@ -6,10 +6,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.media.MediaMetadataRetriever;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
@@ -447,7 +445,7 @@ public class EventEntryAdd_Attachment extends Fragment {
                     break;
                 case R.id.btn_pick_photo:
                     Intent video_intent = new Intent(Intent.ACTION_PICK, null);
-                    video_intent.setType("video/*,image/*");
+                    video_intent.setType("video/*;image/*");
                     /*video/*;audio/*;image/*/
                     startActivityForResult(video_intent, PHOTO_REQUEST_VIDEO);
                     break;
