@@ -148,10 +148,13 @@ public class EventImageListAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 FileEntity selectEntity = list.get(position);
-                // 在线处理
-                String ip = selectEntity.getFileType().equals("online") ? Constants.SERVICE_BASE_URL : "";
                 // 文件路径
-                String uriPath = ip + selectEntity.getFilePath();
+                String uriPath;
+                if ("online".equals(selectEntity.getFileType())){
+                    uriPath = Constants.SERVICE_BASE_URL + selectEntity.getFilePath();
+                }else{
+                    uriPath = selectEntity.getFilePath();
+                }
                 // 文件后缀
                 String suffix = uriPath.substring(uriPath.lastIndexOf(".") + 1);
                 AlertDialog dialog = new AlertDialog.Builder(context).create();
