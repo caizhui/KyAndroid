@@ -288,12 +288,22 @@ public class EventEntryAdd_Attachment extends Fragment {
 
 
 
+    public String getSDPath(){
+        File sdDir = null;
+        boolean sdCardExist = Environment.getExternalStorageState()
+                .equals(android.os.Environment.MEDIA_MOUNTED); //判断sd卡是否存在
+        if (sdCardExist)
+        {
+            sdDir = Environment.getExternalStorageDirectory();//获取跟目录
+        }
+        return sdDir.toString();
+    }
+
     /**
      * 显示图片或者创建文件路径
      */
     public void appendImage() {
-         /* 得到SD卡得路径 */
-        sdcard = Environment.getExternalStorageDirectory().getAbsolutePath().toString();
+        sdcard = getSDPath();
         fileRoute = new File(sdcard + "/img/" + imageId + "/");
         //FileManager.delFile(sdcard + "/img/");
         //如果文件夹不存在，
