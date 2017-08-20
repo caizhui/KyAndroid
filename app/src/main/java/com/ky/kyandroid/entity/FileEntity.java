@@ -6,19 +6,20 @@ import org.xutils.db.annotation.Column;
 import org.xutils.db.annotation.Table;
 
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  * Created by Caizhui on 2017/6/27.
  */
 @Table(name = "t_file")
-public class FileEntity implements Serializable{
+public class FileEntity implements Serializable {
 
-    @Column(name = "uuid",isId = true,autoGen = true)
+    @Column(name = "uuid", isId = true, autoGen = true)
     private int uuid;
 
 
     @Column(name = "sjId")
-    private String  sjId;
+    private String sjId;
 
     /**
      * 图片
@@ -42,12 +43,20 @@ public class FileEntity implements Serializable{
      * 文件描述
      */
     @Column(name = "fileMs")
-    public  String fileMs;
+    public String fileMs;
 
     /**
      * 是否显示描述
      */
     public boolean isHaveMs = true;
+
+    /**
+     * 文件路径
+     */
+    @Column(name = "filePath")
+    private String filePath;
+
+    private String fileType;
 
     /**
      * 是否显示
@@ -60,7 +69,8 @@ public class FileEntity implements Serializable{
      */
     private String fjlx;
 
-    public FileEntity(){}
+    public FileEntity() {
+    }
 
     public Bitmap getBitmap() {
         return bitmap;
@@ -132,5 +142,21 @@ public class FileEntity implements Serializable{
 
     public void setIsShow(String isShow) {
         this.isShow = isShow;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+
+    public String getFileType() {
+        return fileType;
+    }
+
+    public void setFileType(String fileType) {
+        this.fileType = fileType;
     }
 }

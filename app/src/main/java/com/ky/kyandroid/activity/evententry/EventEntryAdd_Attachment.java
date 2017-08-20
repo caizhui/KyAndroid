@@ -6,8 +6,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.Image;
+import android.media.MediaMetadataRetriever;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,6 +23,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -32,6 +37,7 @@ import android.widget.Toast;
 
 import com.ky.kyandroid.R;
 import com.ky.kyandroid.adapter.EventImageListAdapter;
+import com.ky.kyandroid.bean.BitmapInfo;
 import com.ky.kyandroid.db.dao.FileEntityDao;
 import com.ky.kyandroid.entity.FileEntity;
 import com.ky.kyandroid.entity.TFtSjDetailEntity;
@@ -53,6 +59,7 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -114,7 +121,8 @@ public class EventEntryAdd_Attachment extends Fragment {
     ListView imageList;
 
     private static final int PHOTO_REQUEST_TAKEPHOTO = 1;// 拍照
-    private static final int PHOTO_REQUEST_GALLERY = 2;// 从相册中选择
+    private static final int PHOTO_REQUEST_VIDEO = 2;// 选择照片或视频
+    private static final int PHOTO_REQUEST_AUDIO= 4;// 选择音乐或录音
     private static final int PHOTO_REQUEST_CUT = 3;// 结果
 
     String sdcard;
@@ -149,9 +157,9 @@ public class EventEntryAdd_Attachment extends Fragment {
     public Intent  intent;
 
     /**
-     * 1，表示拍照，2表示相册
+     * 1，表示拍照, 2 本地照片或视频  3本地音乐或录音
      */
-    private String isPhoto;
+    private String medioType;
 
     @SuppressLint("ValidFragment")
     public EventEntryAdd_Attachment(Intent intent,String uuid) {
@@ -206,12 +214,16 @@ public class EventEntryAdd_Attachment extends Fragment {
     private List<FileEntity> returnFileList;
 
     FileEntityDao fileEntityDao;
+
+    private DisplayMetrics metrics;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.evententeradd_attachment_fragment, container, false);
         ButterKnife.bind(this, view);
         fileEntityDao = new FileEntityDao();
+        metrics = getResources().getDisplayMetrics();
         tFtSjEntity = (TFtSjEntity) intent.getSerializableExtra("tFtSjEntity");
         fileEntityList = new ArrayList<FileEntity>();
         removeFileEntityList = new ArrayList<FileEntity>();
@@ -423,7 +435,7 @@ public class EventEntryAdd_Attachment extends Fragment {
                     intent.putExtra("fullScreen", false);// 全屏
                     intent.putExtra("showActionIcons", false);
                     // 指定调用相机拍照后照片的储存路径
-                    File out = new File(fileRoute, getPhotoFileName());
+                    File out = new File(fileRoute, getPhotoFileName(""));
                     if (Build.VERSION.SDK_INT >= 24){
                         uri = FileProvider.getUriForFile(EventEntryAdd_Attachment.this.getActivity(),"com.yang.cameratest.fileprovider",out);
                     }else {
@@ -434,9 +446,15 @@ public class EventEntryAdd_Attachment extends Fragment {
                     startActivityForResult(intent, PHOTO_REQUEST_TAKEPHOTO);
                     break;
                 case R.id.btn_pick_photo:
-                    Intent intents = new Intent(Intent.ACTION_PICK, null);
-                    intents.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-                    startActivityForResult(intents, PHOTO_REQUEST_GALLERY);
+                    Intent video_intent = new Intent(Intent.ACTION_PICK, null);
+                    video_intent.setType("video/*,image/*");
+                    /*video/*;audio/*;image/*/
+                    startActivityForResult(video_intent, PHOTO_REQUEST_VIDEO);
+                    break;
+                case R.id.btn_pick_audio:
+                    Intent audio_intent = new Intent(Intent.ACTION_GET_CONTENT, null);
+                    audio_intent.setType("audio/*");
+                    startActivityForResult(audio_intent, PHOTO_REQUEST_AUDIO);
                     break;
                 default:
                     break;
@@ -451,42 +469,34 @@ public class EventEntryAdd_Attachment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case PHOTO_REQUEST_TAKEPHOTO:
-                isPhoto = "1";
-                //startPhotoZoom(uri, 600);
+                medioType = "1";
                 showPhoto(uri);
                 break;
-            case PHOTO_REQUEST_GALLERY:
+            case PHOTO_REQUEST_VIDEO:
                 if (data != null) {
-                    isPhoto = "2";
+                    medioType = "2";
                     uri = data.getData();
                     showPhoto(uri);
-                    //startPhotoZoom(uri, 600);
+                }
+                break;
+            case PHOTO_REQUEST_AUDIO:
+                if (data != null) {
+                    medioType = "3";
+                    uri = data.getData();
+                    showPhoto(uri);
                 }
                 break;
             case PHOTO_REQUEST_CUT:
                 if (resultCode == -1) {
                     if (uri != null) {
                         try {
-                            Bitmap bitmapFromUri = getBitmapFromUri(uri, EventEntryAdd_Attachment.this.getActivity());
-                            if (bitmapFromUri != null) {
+                            BitmapInfo mapInfo = getBitmapFromUri(uri, EventEntryAdd_Attachment.this.getActivity());
+                            if (mapInfo != null) {
                                 //先把拍照之后保存在本地的原图删掉。
-                                if ("1".equals(isPhoto)) {
+                                if ("1".equals(medioType)) {
                                     delFile(fileRoute + "/" + photoName);
                                 }
-                                File file = SavePicInLocal(bitmapFromUri);
-                                FileInputStream fis = new FileInputStream(file);
-                                Bitmap tempBp = BitmapFactory.decodeStream(fis);
-                                FileEntity entity = new FileEntity();
-                                if(tempBp!=null){
-                                    entity.setFileName(photoName);
-                                    entity.setSjId(imageId);
-                                    entity.setBitmap(tempBp);
-                                    fileEntityDao.saveFileEntity(entity);
-                                }
-                                fileEntityList.add(entity);
-                                if (fileEntityList != null ) {
-                                    adapter.notifyDataSetChanged(fileEntityList);
-                                }
+                                InitSavePicInLocal(mapInfo);
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -503,27 +513,13 @@ public class EventEntryAdd_Attachment extends Fragment {
     public void showPhoto(Uri uri){
         if(uri!=null) {
             try {
-                Bitmap bitmapFromUri = getBitmapFromUri(uri, EventEntryAdd_Attachment.this.getActivity());
-                Bitmap endBit = Bitmap.createScaledBitmap(bitmapFromUri, 600, 600, true); //创建新的图像大小
-                if (endBit != null) {
+                BitmapInfo mapInfo = getBitmapFromUri(uri, EventEntryAdd_Attachment.this.getActivity());
+                if (mapInfo != null) {
                     //先把拍照之后保存在本地的原图删掉。
-                    if ("1".equals(isPhoto)) {
+                    if ("1".equals(medioType)) {
                         delFile(fileRoute + "/" + photoName);
                     }
-                    File file = SavePicInLocal(endBit);
-                    FileInputStream fis = new FileInputStream(file);
-                    Bitmap tempBp = BitmapFactory.decodeStream(fis);
-                    FileEntity entity = new FileEntity();
-                    if(tempBp!=null){
-                        entity.setFileName(photoName);
-                        entity.setSjId(imageId);
-                        entity.setBitmap(tempBp);
-                        fileEntityDao.saveFileEntity(entity);
-                    }
-                    fileEntityList.add(entity);
-                    if (fileEntityList != null ) {
-                        adapter.notifyDataSetChanged(fileEntityList);
-                    }
+                    InitSavePicInLocal(mapInfo);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -552,19 +548,40 @@ public class EventEntryAdd_Attachment extends Fragment {
     }
 
     // 生成裁剪之后的图片
-    private File SavePicInLocal(Bitmap bitmap) {
+    private void InitSavePicInLocal(BitmapInfo mapInfo) {
         FileOutputStream fos = null;
         BufferedOutputStream bos = null;
         ByteArrayOutputStream baos = null; // 字节数组输出流
+        FileEntity entity = new FileEntity();
         try {
             baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-            byte[] byteArray = baos.toByteArray();// 字节数组输出流转换成字节数组
-            cutfile = new File(fileRoute, getPhotoFileName());
-            // 将字节数组写入到刚创建的图片文件中
-            fos = new FileOutputStream(cutfile);
-            bos = new BufferedOutputStream(fos);
-            bos.write(byteArray);
+            if (medioType.equals("1")){
+                mapInfo.getBitmap().compress(Bitmap.CompressFormat.PNG, 100, baos);
+                cutfile = new File(fileRoute, getPhotoFileName(""));
+                byte[] byteArray = baos.toByteArray();// 字节数组输出流转换成字节数组
+                // 将字节数组写入到刚创建的图片文件中
+                fos = new FileOutputStream(cutfile);
+                bos = new BufferedOutputStream(fos);
+                bos.write(byteArray);
+            }else if(medioType.equals("2") || medioType.equals("3")){
+                // 视频文件
+                String suffix = mapInfo.getFileInfoMap().get("suffix");
+                cutfile = new File(fileRoute, getPhotoFileName(suffix));
+                FileManager.copyFile(mapInfo.getFileInfoMap().get("uri_path"),cutfile.getPath());
+            }
+
+            if(mapInfo.getBitmap() !=null){
+                entity.setFileName(cutfile.getName());
+                entity.setSjId(imageId);
+                entity.setBitmap(mapInfo.getBitmap());
+                entity.setFilePath(cutfile.getPath());
+                fileEntityDao.saveFileEntity(entity);
+            }
+            fileEntityList.add(entity);
+            if (fileEntityList != null ) {
+                adapter.notifyDataSetChanged(fileEntityList);
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -591,26 +608,87 @@ public class EventEntryAdd_Attachment extends Fragment {
             }
 
         }
-        return cutfile;
     }
 
     // 读取uri所在的图片
-    public static Bitmap getBitmapFromUri(Uri uri, Context mContext) {
+    public BitmapInfo getBitmapFromUri(Uri uri, Context mContext) {
+        BitmapInfo mapInfo = new BitmapInfo();
+        Bitmap bitmap = null;
         try {
-            Bitmap bitmap = MediaStore.Images.Media.getBitmap(mContext.getContentResolver(), uri);
-            return bitmap;
+            // 文件路径
+            String uriPath = uri.getPath();
+            // 文件后缀
+            String suffix = uriPath.substring(uriPath.lastIndexOf(".")+1);
+            switch (suffix){
+                case "jpg":case "npg":
+                    medioType = "1";
+                    bitmap = MediaStore.Images.Media.getBitmap(mContext.getContentResolver(), uri);
+                    break;
+                case "mp4":case "3gp":
+                    medioType = "2";
+                    bitmap = ThumbnailUtils.createVideoThumbnail(uri.getPath(), MediaStore.Images.Thumbnails.MINI_KIND);
+                    // 视频文件处理
+                    Map<String,String> vedio_fileMap = new HashMap<>();
+                    vedio_fileMap.put("uri_path",uri.getPath());
+                    vedio_fileMap.put("suffix",suffix);
+                    mapInfo.setFileInfoMap(vedio_fileMap);
+                    break;
+                case "mp3":
+                    medioType = "3";
+                    bitmap = createAlbumArt(uri.getPath());
+                    // 音乐文件处理
+                    Map<String,String> audio_fileMap = new HashMap<>();
+                    audio_fileMap.put("uri_path",uri.getPath());
+                    audio_fileMap.put("suffix",suffix);
+                    mapInfo.setFileInfoMap(audio_fileMap);
+                    break;
+            }
+            if(bitmap != null){
+                //创建新的图像大小
+                bitmap = Bitmap.createScaledBitmap(bitmap, 600, 600, true);
+            }
+            mapInfo.setBitmap(bitmap);
+            return mapInfo;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
 
+    /**
+     * @Description 获取专辑封面
+     * @param filePath 文件路径，like XXX/XXX/XX.mp3
+     * @return 专辑封面bitmap
+     */
+    public Bitmap createAlbumArt(final String filePath) {
+        Bitmap bitmap = null;
+        //能够获取多媒体文件元数据的类
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        try {
+            retriever.setDataSource(filePath); //设置数据源
+            bitmap = retriever.getFrameAtTime();//得到字节型数据
+            if (bitmap == null){
+                bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.music_icon); //默认图片
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                retriever.release();
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
+        }
+        return bitmap;
+    }
+
     // 使用系统当前日期加以调整作为照片的名称
     @SuppressLint("SimpleDateFormat")
-    private String getPhotoFileName() {
+    private String getPhotoFileName(String suffix) {
         Date date = new Date(System.currentTimeMillis());
         SimpleDateFormat dateFormat = new SimpleDateFormat("'IMG'_yyyyMMdd_HHmmss");
-        photoName = dateFormat.format(date) + ".jpg";
+        photoName = dateFormat.format(date) + ("".equals(suffix) ? ".jpg" : "."+suffix);
         return photoName;
     }
 

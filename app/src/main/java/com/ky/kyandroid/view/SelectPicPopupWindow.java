@@ -17,7 +17,7 @@ import com.ky.kyandroid.R;
 
 
 public class SelectPicPopupWindow extends PopupWindow {
-	 private Button btn_take_photo, btn_pick_photo, btn_cancel;
+	 private Button btn_take_photo, btn_pick_photo, btn_cancel,btn_pick_audio;
 	    private View mMenuView;
 	 
 	    @SuppressWarnings("deprecation")
@@ -28,7 +28,8 @@ public class SelectPicPopupWindow extends PopupWindow {
 	        mMenuView = inflater.inflate(R.layout.photo_alert_dialog, null);
 	        btn_take_photo = (Button) mMenuView.findViewById(R.id.btn_take_photo);
 	        btn_pick_photo = (Button) mMenuView.findViewById(R.id.btn_pick_photo);
-	        btn_cancel = (Button) mMenuView.findViewById(R.id.btn_cancel); 
+			btn_pick_audio = (Button) mMenuView.findViewById(R.id.btn_pick_audio);
+	        btn_cancel = (Button) mMenuView.findViewById(R.id.btn_cancel);
 	        //取消按钮
 	        btn_cancel.setOnClickListener(new OnClickListener() {
 	 
@@ -41,6 +42,7 @@ public class SelectPicPopupWindow extends PopupWindow {
 	        //设置按钮监听
 	        btn_pick_photo.setOnClickListener(itemsOnClick);
 	        btn_take_photo.setOnClickListener(itemsOnClick);
+			btn_pick_audio.setOnClickListener(itemsOnClick);
 	        //设置SelectPicPopupWindow的View
 	        this.setContentView(mMenuView);
 	        //设置SelectPicPopupWindow弹出窗体的宽
