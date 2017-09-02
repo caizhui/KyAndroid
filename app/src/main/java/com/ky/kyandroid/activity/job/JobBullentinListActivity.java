@@ -53,7 +53,7 @@ import butterknife.OnItemClick;
 
 public class JobBullentinListActivity extends AppCompatActivity {
 
-    private final String TAG = "JobBullentinListActivity";
+    private final String TAG = "JobListActivity";
 
     /**
      * 标题左边按钮
@@ -187,7 +187,7 @@ public class JobBullentinListActivity extends AppCompatActivity {
                         notifyListViewData(false);
                         Toast.makeText(JobBullentinListActivity.this, "刷新成功", Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(JobBullentinListActivity.this, "刷新失败", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(JobBullentinListActivity.this, "无数据记录", Toast.LENGTH_SHORT).show();
                     }
                     swipeRefreshUtil.dismissRefreshing();
                     break;

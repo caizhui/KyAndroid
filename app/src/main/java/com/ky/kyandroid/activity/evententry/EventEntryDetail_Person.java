@@ -23,6 +23,7 @@ import com.ky.kyandroid.db.dao.TFtSjRyEntityDao;
 import com.ky.kyandroid.entity.TFtSjEntity;
 import com.ky.kyandroid.entity.TFtSjRyEntity;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -143,21 +144,40 @@ public class EventEntryDetail_Person extends Fragment {
         this.uuid = uuid;
     }
 
+    /**
+     * 在Fragment onCreateView方法中缓存View
+     * 解决:
+     * 做页面切换的时候，只要一来回切换fragment，
+     * fragment页面就会重新初始化，
+     * 也就是执行onCreateView()方法，导致每次Fragment的布局都重绘，无
+     * 法保持Fragment原有状态
+     */
+    protected WeakReference<View> mRootView;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.evententerdetail_person_fragment, container, false);
-        ButterKnife.bind(this, view);
-        tFtSjRyEntityDao = new TFtSjRyEntityDao();
-        descEntityDao = new DescEntityDao();
-        tFtSjEntity = (TFtSjEntity) intent.getSerializableExtra("tFtSjEntity");
-        if(tFtSjEntity!=null){
-            uuid = tFtSjEntity.getId();
+
+        if (mRootView == null || mRootView.get() == null) {
+            View view = inflater.inflate(R.layout.evententerdetail_person_fragment, container, false);
+            ButterKnife.bind(this, view);
+            tFtSjRyEntityDao = new TFtSjRyEntityDao();
+            descEntityDao = new DescEntityDao();
+            tFtSjEntity = (TFtSjEntity) intent.getSerializableExtra("tFtSjEntity");
+            if(tFtSjEntity!=null){
+                uuid = tFtSjEntity.getId();
+            }
+            if(sjryList==null){
+                sjryList  = new ArrayList<TFtSjRyEntity>();
+            }
+            mRootView = new WeakReference<View>(view);
+        } else {
+            ViewGroup parent = (ViewGroup) mRootView.get().getParent();
+            if (parent != null) {
+                parent.removeView(mRootView.get());
+            }
         }
-        if(sjryList==null){
-            sjryList  = new ArrayList<TFtSjRyEntity>();
-        }
-        return view;
+        return mRootView.get();
     }
 
     /**

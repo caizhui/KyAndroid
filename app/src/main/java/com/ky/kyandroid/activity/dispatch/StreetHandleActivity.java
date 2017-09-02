@@ -489,7 +489,7 @@ public class StreetHandleActivity extends AppCompatActivity {
                     // 指定调用相机拍照后照片的储存路径
                     File out = new File(fileRoute, getPhotoFileName());
                     if (Build.VERSION.SDK_INT >= 24){
-                        uri = FileProvider.getUriForFile(StreetHandleActivity.this,"com.yang.cameratest.fileprovider",out);
+                        uri = FileProvider.getUriForFile(StreetHandleActivity.this,"com.ky.kyandroid.fileprovider",out);
                     }else {
                         uri = Uri.fromFile(out);
                     }

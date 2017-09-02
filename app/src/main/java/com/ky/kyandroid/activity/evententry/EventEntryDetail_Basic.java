@@ -26,6 +26,7 @@ import com.ky.kyandroid.entity.TFtQhEntity;
 import com.ky.kyandroid.entity.TFtSjEntity;
 import com.ky.kyandroid.util.SpUtil;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 import butterknife.BindView;
@@ -223,17 +224,36 @@ public class EventEntryDetail_Basic extends Fragment {
      */
     public TFtQhEntityDao tFtQhEntityDao;
 
+    /**
+     * 在Fragment onCreateView方法中缓存View
+     * 解决:
+     * 做页面切换的时候，只要一来回切换fragment，
+     * fragment页面就会重新初始化，
+     * 也就是执行onCreateView()方法，导致每次Fragment的布局都重绘，无
+     * 法保持Fragment原有状态
+     */
+    protected WeakReference<View> mRootView;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.evententerdetail_basic_fragment, container, false);
-        ButterKnife.bind(this, view);
-        sp = SpUtil.getSharePerference(getActivity());
-        descEntityDao = new DescEntityDao();
-        tFtQhEntityDao = new TFtQhEntityDao();
-        // tFtSjEntity = (TFtSjEntity) intent.getSerializableExtra("tFtSjEntity");
-        initData();
-        return view;
+        if (mRootView == null || mRootView.get() == null) {
+            View view = inflater.inflate(R.layout.evententerdetail_basic_fragment, container, false);
+            ButterKnife.bind(this, view);
+            sp = SpUtil.getSharePerference(getActivity());
+            descEntityDao = new DescEntityDao();
+            tFtQhEntityDao = new TFtQhEntityDao();
+            // tFtSjEntity = (TFtSjEntity) intent.getSerializableExtra("tFtSjEntity");
+            initData();
+            mRootView = new WeakReference<View>(view);
+        } else {
+            ViewGroup parent = (ViewGroup) mRootView.get().getParent();
+            if (parent != null) {
+                parent.removeView(mRootView.get());
+            }
+        }
+        return mRootView.get();
+
     }
 
     /**

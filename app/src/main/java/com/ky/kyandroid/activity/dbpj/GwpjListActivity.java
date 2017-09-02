@@ -192,7 +192,7 @@ public class GwpjListActivity extends AppCompatActivity {
                         notifyListViewData(false);
                         Toast.makeText(GwpjListActivity.this, "刷新成功", Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(GwpjListActivity.this, "刷新失败", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GwpjListActivity.this, "无数据记录", Toast.LENGTH_SHORT).show();
                     }
                     swipeRefreshUtil.dismissRefreshing();
                     break;

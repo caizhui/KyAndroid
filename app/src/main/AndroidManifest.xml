@@ -11,6 +11,7 @@
     <uses-feature android:name="android.hardware.camera" />
     <!-- 自动聚焦权限 -->
     <uses-feature android:name="android.hardware.camera.autofocus" />
+
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <!-- 这个权限用于进行网络定位-->
@@ -41,7 +42,7 @@
 
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.harry.shopping.fileprovider"
+            android:authorities="com.ky.kyandroid.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

@@ -39,6 +39,7 @@ import com.ky.kyandroid.util.DateTimePickDialogUtil;
 import com.ky.kyandroid.util.SpUtil;
 import com.ky.kyandroid.util.StringUtils;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -274,23 +275,42 @@ public class EventEntryAdd_Basic extends Fragment {
      */
     private String spinnerType;
 
+    /**
+     * 在Fragment onCreateView方法中缓存View
+     * 解决:
+     * 做页面切换的时候，只要一来回切换fragment，
+     * fragment页面就会重新初始化，
+     * 也就是执行onCreateView()方法，导致每次Fragment的布局都重绘，无
+     * 法保持Fragment原有状态
+     */
+    WeakReference<View> mRootView;
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.evententeradd_basic_fragment, container, false);
-        ButterKnife.bind(this, view);
-        descEntityDao = new DescEntityDao();
-        tFtQhEntityDao = new TFtQhEntityDao();
-        sp = SpUtil.getSharePerference(getActivity());
-        type = intent.getStringExtra("type");
-        tFtSjEntity = (TFtSjEntity) intent.getSerializableExtra("tFtSjEntity");
-        DisplayMetrics dm = new DisplayMetrics();
-        EventEntryAdd_Basic.this.getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm); // 获取手机屏幕的大小
-        screen_width = dm.widthPixels;
-        screen_height = dm.heightPixels;
-        initData();
-        return view;
+
+        if (mRootView == null || mRootView.get() == null) {
+            View view = inflater.inflate(R.layout.evententeradd_basic_fragment, container, false);
+            ButterKnife.bind(this, view);
+            descEntityDao = new DescEntityDao();
+            tFtQhEntityDao = new TFtQhEntityDao();
+            sp = SpUtil.getSharePerference(getActivity());
+            type = intent.getStringExtra("type");
+            tFtSjEntity = (TFtSjEntity) intent.getSerializableExtra("tFtSjEntity");
+            DisplayMetrics dm = new DisplayMetrics();
+            EventEntryAdd_Basic.this.getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm); // 获取手机屏幕的大小
+            screen_width = dm.widthPixels;
+            screen_height = dm.heightPixels;
+            initData();
+            mRootView = new WeakReference<View>(view);
+        } else {
+            ViewGroup parent = (ViewGroup) mRootView.get().getParent();
+            if (parent != null) {
+                parent.removeView(mRootView.get());
+            }
+        }
+        return mRootView.get();
     }
 
     /**

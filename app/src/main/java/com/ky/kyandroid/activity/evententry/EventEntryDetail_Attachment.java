@@ -2,7 +2,13 @@ package com.ky.kyandroid.activity.evententry;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.MediaMetadataRetriever;
+import android.media.ThumbnailUtils;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -12,6 +18,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import com.ky.kyandroid.AppContext;
+import com.ky.kyandroid.Constants;
 import com.ky.kyandroid.R;
 import com.ky.kyandroid.adapter.EventImageListAdapter;
 import com.ky.kyandroid.db.dao.FileEntityDao;
@@ -21,9 +29,12 @@ import com.ky.kyandroid.entity.TFtSjEntity;
 import com.ky.kyandroid.entity.TFtSjFjEntity;
 import com.ky.kyandroid.entity.TFtSjGlsjEntity;
 import com.ky.kyandroid.entity.TFtSjLogEntity;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.io.Serializable;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -113,28 +124,42 @@ public class EventEntryDetail_Attachment extends Fragment {
     private List<FileEntity>   returnFileList;
 
     FileEntityDao fileEntityDao;
+
+    /**
+     * 在Fragment onCreateView方法中缓存View
+     * 解决:
+     * 做页面切换的时候，只要一来回切换fragment，
+     * fragment页面就会重新初始化，
+     * 也就是执行onCreateView()方法，导致每次Fragment的布局都重绘，无
+     * 法保持Fragment原有状态
+     */
+    protected WeakReference<View> mRootView;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.evententerdetail_attachment_fragment, container, false);
-        ButterKnife.bind(this, view);
-        tFtSjEntity = (TFtSjEntity) intent.getSerializableExtra("tFtSjEntity");
-        fileEntityList =new ArrayList<FileEntity>();
-        fileEntityDao = new FileEntityDao();
-        adapter = new EventImageListAdapter(fileEntityList,fileEntityDao,EventEntryDetail_Attachment.this.getActivity(),true);
-        imageList.setAdapter(adapter);
-        if(tFtSjEntity!=null){
-            uuid = tFtSjEntity.getId();
+        if (mRootView == null || mRootView.get() == null) {
+            View view=inflater.inflate(R.layout.evententerdetail_attachment_fragment, null);
+            ButterKnife.bind(this, view);
+            tFtSjEntity = (TFtSjEntity) intent.getSerializableExtra("tFtSjEntity");
+            fileEntityList =new ArrayList<FileEntity>();
+            fileEntityDao = new FileEntityDao();
+            adapter = new EventImageListAdapter(fileEntityList,fileEntityDao,EventEntryDetail_Attachment.this.getActivity(),true);
+            imageList.setAdapter(adapter);
+            if(tFtSjEntity!=null){
+                uuid = tFtSjEntity.getId();
+            }
+            //显示图片
+            appendImage();
+            mRootView = new WeakReference<View>(view);
+        } else {
+            ViewGroup parent = (ViewGroup) mRootView.get().getParent();
+            if (parent != null) {
+                parent.removeView(mRootView.get());
+            }
         }
-        //显示图片
-        appendImage();
-        return view;
+        return mRootView.get();
     }
-
-
-
-
-
 
     /**
      * 显示图片或者创建文件路径
@@ -151,6 +176,24 @@ public class EventEntryDetail_Attachment extends Fragment {
                         fileEntity.setFileUrl(sjfjList.get(i).getUrl());
                         fileEntity.setFileMs(sjfjList.get(i).getWjms());
                         fileEntity.setFjlx(sjfjList.get(i).getFjlx());
+                        fileEntity.setFilePath(sjfjList.get(i).getUrl());
+                        fileEntity.setFileType("online");
+                        // 文件路径
+                        String urlPath = fileEntity.getFileUrl();
+                        // 文件后缀
+                        String suffix = urlPath.substring(urlPath.lastIndexOf(".") + 1);
+                        switch (suffix){
+                            case "mp4":
+                                if (fileEntity.getBitmap() == null){
+                                    fileEntity.setBitmap(createVideoThumbnail(Constants.SERVICE_BASE_URL + urlPath,600,600));
+                                }
+                                break;
+                            case "mp3":
+                                //默认图片
+                                fileEntity.setBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.music_icon));
+                                break;
+                        }
+
                     }
                     fileEntityList.add(fileEntity);
                     //加载完一次就把文件实体清空一次
@@ -161,6 +204,40 @@ public class EventEntryDetail_Attachment extends Fragment {
 
             }
         }
+    }
+
+
+    /**
+     * 获取网络视频第一帖做为图片
+     *
+     * @param url
+     * @param width
+     * @param height
+     * @return
+     */
+    private Bitmap createVideoThumbnail(String url, int width, int height) {
+        Bitmap bitmap = null;
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        try {
+            if (Build.VERSION.SDK_INT >= 14) {
+                retriever.setDataSource(url, new HashMap<String, String>());
+            } else {
+                retriever.setDataSource(url);
+            }
+            bitmap = retriever.getFrameAtTime();
+        } catch (IllegalArgumentException ex) {
+        } catch (RuntimeException ex) {
+        } finally {
+            try {
+                retriever.release();
+            } catch (RuntimeException ex) {
+            }
+        }
+        if (bitmap != null) {
+            bitmap = ThumbnailUtils.extractThumbnail(bitmap, width, height,
+                    ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
+        }
+        return bitmap;
     }
 
     @OnClick({R.id.event_log,R.id.event_relevance})
