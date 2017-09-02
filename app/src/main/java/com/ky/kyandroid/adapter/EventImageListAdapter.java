@@ -1,10 +1,14 @@
 package com.ky.kyandroid.adapter;
 
 import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
+import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -20,10 +24,12 @@ import android.widget.VideoView;
 import com.ky.kyandroid.AppContext;
 import com.ky.kyandroid.Constants;
 import com.ky.kyandroid.R;
+import com.ky.kyandroid.activity.evententry.EventEntryAdd_Attachment;
 import com.ky.kyandroid.db.dao.FileEntityDao;
 import com.ky.kyandroid.entity.FileEntity;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -156,15 +162,22 @@ public class EventImageListAdapter extends BaseAdapter {
                     case "mp4":
                     case "mp3":
                         VideoView vv = new VideoView(context);
+                        /*
+                        if (Build.VERSION.SDK_INT >= 24){
+                            Uri uri = FileProvider.getUriForFile(context, "com.ky.kyandroid.fileprovider", new File(uriPath));
+                            vv.setVideoURI(uri);
+                        }else {
+                            vv.setVideoURI(Uri.parse(uriPath));
+                        }*/
                         vv.setVideoURI(Uri.parse(uriPath));
                         vv.setMediaController(new MediaController(context));
                         vv.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-                        if ("mp3".equals(suffix)) {
-                            vv.requestFocus();
-                            dialogH = 450;
-                        }
-
+                        vv.requestFocus();
                         vv.start();
+                        dialogH = 750;
+                        if ("mp3".equals(suffix)) {
+                            vv.setBackground(holder.attachmentImg.getDrawable());
+                        }
                         dialogV = vv;
                         dialog.setView(dialogV);
                         break;

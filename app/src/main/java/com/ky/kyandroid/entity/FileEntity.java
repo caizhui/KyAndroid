@@ -54,7 +54,7 @@ public class FileEntity implements Serializable {
      * 文件路径
      */
     @Column(name = "filePath")
-    private String filePath;
+    public String filePath;
 
     private String fileType;
 

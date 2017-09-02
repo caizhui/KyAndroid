@@ -138,7 +138,6 @@ public class EventEntryDetail_Attachment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         if (mRootView == null || mRootView.get() == null) {
             View view=inflater.inflate(R.layout.evententerdetail_attachment_fragment, null);
             ButterKnife.bind(this, view);
@@ -160,28 +159,7 @@ public class EventEntryDetail_Attachment extends Fragment {
             }
         }
         return mRootView.get();
-
-        /*
-        View view = inflater.inflate(R.layout.evententerdetail_attachment_fragment, container, false);
-        ButterKnife.bind(this, view);
-        tFtSjEntity = (TFtSjEntity) intent.getSerializableExtra("tFtSjEntity");
-        fileEntityList =new ArrayList<FileEntity>();
-        fileEntityDao = new FileEntityDao();
-        adapter = new EventImageListAdapter(fileEntityList,fileEntityDao,EventEntryDetail_Attachment.this.getActivity(),true);
-        imageList.setAdapter(adapter);
-        if(tFtSjEntity!=null){
-            uuid = tFtSjEntity.getId();
-        }
-        //显示图片
-        appendImage();
-        return view;
-        */
     }
-
-
-
-
-
 
     /**
      * 显示图片或者创建文件路径

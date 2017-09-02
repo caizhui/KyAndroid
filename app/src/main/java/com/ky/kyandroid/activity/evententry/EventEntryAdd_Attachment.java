@@ -2,6 +2,7 @@ package com.ky.kyandroid.activity.evententry;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -55,6 +56,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.Serializable;
+import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -216,27 +218,45 @@ public class EventEntryAdd_Attachment extends Fragment {
 
     private DisplayMetrics metrics;
 
+    /**
+     * 在Fragment onCreateView方法中缓存View
+     * 解决:
+     * 做页面切换的时候，只要一来回切换fragment，
+     * fragment页面就会重新初始化，
+     * 也就是执行onCreateView()方法，导致每次Fragment的布局都重绘，无
+     * 法保持Fragment原有状态
+     */
+    WeakReference<View> mRootView;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.evententeradd_attachment_fragment, container, false);
-        ButterKnife.bind(this, view);
-        fileEntityDao = new FileEntityDao();
-        metrics = getResources().getDisplayMetrics();
-        tFtSjEntity = (TFtSjEntity) intent.getSerializableExtra("tFtSjEntity");
-        fileEntityList = new ArrayList<FileEntity>();
-        removeFileEntityList = new ArrayList<FileEntity>();
-        adapter = new EventImageListAdapter(fileEntityList,fileEntityDao,EventEntryAdd_Attachment.this.getActivity(),false);
-        imageList.setAdapter(adapter);
+        if (mRootView == null || mRootView.get() == null) {
+            View view = inflater.inflate(R.layout.evententeradd_attachment_fragment, container, false);
+            ButterKnife.bind(this, view);
+            fileEntityDao = new FileEntityDao();
+            metrics = getResources().getDisplayMetrics();
+            tFtSjEntity = (TFtSjEntity) intent.getSerializableExtra("tFtSjEntity");
+            fileEntityList = new ArrayList<FileEntity>();
+            removeFileEntityList = new ArrayList<FileEntity>();
+            adapter = new EventImageListAdapter(fileEntityList,fileEntityDao,EventEntryAdd_Attachment.this.getActivity(),false);
+            imageList.setAdapter(adapter);
 
-        // 判断是否有内存卡
-        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            //显示图片&者创建文件路径
-            appendImage();
+            // 判断是否有内存卡
+            if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+                //显示图片&者创建文件路径
+                appendImage();
+            } else {
+                Toast.makeText(EventEntryAdd_Attachment.this.getActivity(), "没有SD卡", Toast.LENGTH_LONG).show();
+            }
+            mRootView = new WeakReference<View>(view);
         } else {
-            Toast.makeText(EventEntryAdd_Attachment.this.getActivity(), "没有SD卡", Toast.LENGTH_LONG).show();
+            ViewGroup parent = (ViewGroup) mRootView.get().getParent();
+            if (parent != null) {
+                parent.removeView(mRootView.get());
+            }
         }
-        return view;
+        return mRootView.get();
     }
 
     @OnItemLongClick(R.id.image_list)
@@ -289,13 +309,14 @@ public class EventEntryAdd_Attachment extends Fragment {
 
 
     public String getSDPath(){
-        File sdDir = null;
-        boolean sdCardExist = Environment.getExternalStorageState()
-                .equals(android.os.Environment.MEDIA_MOUNTED); //判断sd卡是否存在
+        File sdDir = Environment.getExternalStorageDirectory();
+        /*
+        boolean sdCardExist = Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED); //判断sd卡是否存在
         if (sdCardExist)
         {
             sdDir = Environment.getExternalStorageDirectory();//获取跟目录
         }
+        */
         return sdDir.toString();
     }
 
@@ -428,6 +449,9 @@ public class EventEntryAdd_Attachment extends Fragment {
 
     // popupwindow点击事件
     private View.OnClickListener itemsOnClick = new View.OnClickListener() {
+        /**
+         * @param v
+         */
         public void onClick(View v) {
             menuWindow.dismiss();
             switch (v.getId()) {
@@ -446,11 +470,12 @@ public class EventEntryAdd_Attachment extends Fragment {
                     // 指定调用相机拍照后照片的储存路径
                     File out = new File(fileRoute, getPhotoFileName(""));
                     if (Build.VERSION.SDK_INT >= 24){
-                        uri = FileProvider.getUriForFile(EventEntryAdd_Attachment.this.getActivity(),"com.yang.cameratest.fileprovider",out);
+                        // Android升级到7.0后对权限又做了一个更新即不允许出现以file://的形式调用隐式APP,需要使用FileProvider
+                        uri = FileProvider.getUriForFile(EventEntryAdd_Attachment.this.getActivity(), "com.ky.kyandroid.fileprovider", out);
+                        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                     }else {
                         uri = Uri.fromFile(out);
                     }
-                    //uri = Uri.fromFile(out);
                     intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
                     startActivityForResult(intent, PHOTO_REQUEST_TAKEPHOTO);
                     break;
@@ -576,7 +601,10 @@ public class EventEntryAdd_Attachment extends Fragment {
                 // 视频文件
                 String suffix = mapInfo.getFileInfoMap().get("suffix");
                 cutfile = new File(fileRoute, getPhotoFileName(suffix));
-                FileManager.copyFile(mapInfo.getFileInfoMap().get("uri_path"),cutfile.getPath());
+                File srcFile = new File(mapInfo.getFileInfoMap().get("uri_path"));
+                if (srcFile.exists()){
+                    FileManager.copyFile(srcFile.getAbsolutePath(),cutfile.getPath());
+                }
             }
 
             if(mapInfo.getBitmap() !=null){
@@ -586,6 +614,7 @@ public class EventEntryAdd_Attachment extends Fragment {
                 entity.setFilePath(cutfile.getPath());
                 fileEntityDao.saveFileEntity(entity);
             }
+
             fileEntityList.add(entity);
             if (fileEntityList != null ) {
                 adapter.notifyDataSetChanged(fileEntityList);
@@ -619,6 +648,21 @@ public class EventEntryAdd_Attachment extends Fragment {
         }
     }
 
+    public static String getFilePathFromContentUri(Uri selectedVideoUri,
+                                                   ContentResolver contentResolver) {
+        String filePath;
+        String[] filePathColumn = {MediaStore.MediaColumns.DATA};
+
+        Cursor cursor = contentResolver.query(selectedVideoUri, filePathColumn, null, null, null);
+
+        cursor.moveToFirst();
+
+        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+        filePath = cursor.getString(columnIndex);
+        cursor.close();
+        return filePath;
+    }
+
     // 读取uri所在的图片
     public BitmapInfo getBitmapFromUri(Uri uri, Context mContext) {
         BitmapInfo mapInfo = new BitmapInfo();
@@ -638,7 +682,7 @@ public class EventEntryAdd_Attachment extends Fragment {
                     bitmap = ThumbnailUtils.createVideoThumbnail(uriPath, MediaStore.Images.Thumbnails.MINI_KIND);
                     // 视频文件处理
                     Map<String,String> vedio_fileMap = new HashMap<>();
-                    vedio_fileMap.put("uri_path",uri.getPath());
+                    vedio_fileMap.put("uri_path",uriPath);
                     vedio_fileMap.put("suffix",suffix);
                     mapInfo.setFileInfoMap(vedio_fileMap);
                     break;
@@ -671,8 +715,10 @@ public class EventEntryAdd_Attachment extends Fragment {
         String[] projection = { MediaStore.Images.Media.DATA };
         Cursor cursor = getActivity().managedQuery(uri, projection, null, null, null);
         if (cursor != null){
-            int column_index = cursor
-                    .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            int column_index = cursor.getColumnIndex(MediaStore.Images.Media.DATA);
+            if(column_index < 0){
+                return uri.getPath();
+            }
             cursor.moveToFirst();
             return cursor.getString(column_index);
         }else{

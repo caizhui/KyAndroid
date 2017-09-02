@@ -9,47 +9,71 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-        <LinearLayout
+
+        <RelativeLayout
+            android:id="@+id/fj_relativieLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp">
 
-            <Button
-                android:id="@+id/event_log"
+            <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:background="@drawable/border_bccgbutton_bg"
-                android:textColor="@color/white"
-                android:textSize="14sp"
-                android:text="办理日志"/>
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:drawableLeft="@mipmap/library_icon"
+                android:gravity="center_vertical"
+                android:text="附件信息列表 >>"
+                android:textSize="15dp" />
 
             <Button
                 android:id="@+id/event_relevance"
                 android:layout_width="wrap_content"
-                android:layout_height="30dp"
+                android:layout_height="28dp"
+                android:layout_marginEnd="5dp"
+                android:layout_toStartOf="@id/event_log"
                 android:background="@drawable/border_bccgbutton_bg"
-                android:textColor="@color/white"
-                android:layout_marginLeft="25dp"
-                android:text="关联事件"
-                android:textSize="14sp"
+                android:drawableStart="@mipmap/events"
                 android:paddingLeft="5dp"
-                android:paddingRight="5dp"/>
+                android:paddingRight="5dp"
+                android:text="关联事件"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/event_log"
+                android:layout_width="wrap_content"
+                android:layout_height="28dp"
+                android:layout_alignParentEnd="true"
+                android:background="@drawable/border_bccgbutton_bg"
+                android:drawableStart="@mipmap/log"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="办理日志"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
 
 
+        </RelativeLayout>
 
-        </LinearLayout>
+        <View
+            android:id="@+id/item_view"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="1dp"
+            android:background="#DDDDDD"
+            android:focusable="false" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="10dp">
+            android:padding="5dp">
 
-           <ListView
-               android:id="@+id/image_list"
-               android:layout_width="match_parent"
-               android:layout_height="match_parent"/>
+            <ListView
+                android:id="@+id/image_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
         </LinearLayout>
     </LinearLayout>
 
