@@ -397,12 +397,12 @@ public class JobBulletinAddActivity extends AppCompatActivity {
         if(tFtAppReportEntity==null){
             tFtAppReportEntity = new TFtAppReportEntity();
         }
-        if("".equals(jobNameEdt.getText())){
+        if("".equals(jobNameEdt.getText().toString())){
             message+="标题不能为空\n";
         }else{
             tFtAppReportEntity.setTitle(jobNameEdt.getText().toString());
         }
-        if("".equals(jobTimeEdt.getTextAlignment())){
+        if("".equals(jobTimeEdt.getText().toString())){
             message+="时间不能为空\n";
         }else{
             tFtAppReportEntity.setRepTime(jobTimeEdt.getText().toString());
@@ -425,7 +425,7 @@ public class JobBulletinAddActivity extends AppCompatActivity {
         }else{
             tFtAppReportEntity.setRepToUser(jobDepartmen);
         }
-        if("".equals(jobContentEdt.getText())){
+        if("".equals(jobContentEdt.getText().toString())){
             message+="内容不能为空\n";
         }else{
             tFtAppReportEntity.setContent(jobContentEdt.getText().toString());

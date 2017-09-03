@@ -634,8 +634,8 @@ public class TaskListActivity extends AppCompatActivity {
                                 yanQiOrReturnOperation(tFtZtlzEntity, R.layout.dialog_return_operation, tFtZtlzEntity.getName(), Constants.SERVICE_TASK_BACK);
                             }
                         } else if ("8.1".equals(tFtZtlzEntity.getNextZt())) {
-                            //当8.1申请延期的时候，并且上一个状态为8,13，表示接收，否则表示申请延期，弹出自定义对话框
-                            if ("8,13".equals(tFtZtlzEntity.getPrevZt())) {
+                            //当8.1申请延期的时候，并且上一个状态为8，表示接收，否则表示申请延期，弹出自定义对话框
+                            if ("8".equals(tFtZtlzEntity.getPrevZt())) {
                                 OperatingProcess(tFtZtlzEntity, Constants.SERVICE_QUERY_TASKRECV);
                             } else if ("8,8.1".equals(tFtZtlzEntity.getPrevZt())) {
                                 yanQiOrReturnOperation(tFtZtlzEntity, R.layout.dialog_return_operation, tFtZtlzEntity.getName(), Constants.SERVICE_EDIT_YANQI);

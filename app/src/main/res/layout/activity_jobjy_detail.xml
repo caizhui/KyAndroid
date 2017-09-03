@@ -34,16 +34,23 @@
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:background="@drawable/border_edittext_bg">
+
+                    <ScrollView
+                        android:id="@+id/name_scroll"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:background="@drawable/pop_bg_1">
                         <TextView
                             android:id="@+id/job_name_edt"
-                            android:layout_width="0dp"
-                            android:layout_height="40dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:background="@null"
                             android:gravity="center_vertical"
                             android:maxLength="85"
                             android:padding="5dp"
                             android:textSize="16sp" />
+                    </ScrollView>
                         </LinearLayout>
 
             </LinearLayout>
@@ -159,7 +166,6 @@
                             android:background="@null"
                             android:padding="5dp"
                             android:gravity="center_vertical"
-                            android:text="sdfsfsfsf sfsdfsdf "
                             android:textSize="16sp" />
                     </ScrollView>
                 </LinearLayout>

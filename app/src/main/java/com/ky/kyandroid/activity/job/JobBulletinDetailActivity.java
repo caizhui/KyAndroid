@@ -89,6 +89,9 @@ public class JobBulletinDetailActivity extends AppCompatActivity {
     @BindView(R.id.two_scroll)
     ScrollView two_scroll;
 
+    @BindView(R.id.name_scroll)
+    ScrollView name_scroll;
+
     /**
      * SharedPreferences
      */
@@ -141,7 +144,7 @@ public class JobBulletinDetailActivity extends AppCompatActivity {
         }
     }
 
-    @OnTouch({R.id.one_scroll,R.id.two_scroll})
+    @OnTouch({R.id.one_scroll,R.id.two_scroll,R.id.name_scroll})
     public boolean OnTouchListener(View v, MotionEvent event) {
         v.getParent().requestDisallowInterceptTouchEvent(true);
         return false;

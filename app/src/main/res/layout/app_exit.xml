@@ -38,7 +38,8 @@
             android:gravity="center"
             android:text="退出"
             android:textColor="@color/red"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:visibility="gone"/>
     </LinearLayout>
 
     <TextView

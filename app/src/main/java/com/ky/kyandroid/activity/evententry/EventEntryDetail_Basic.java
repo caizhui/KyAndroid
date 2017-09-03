@@ -363,15 +363,15 @@ public class EventEntryDetail_Basic extends Fragment {
                     hfhcBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
                 }else if (progressList.size()==6){
                     djBtb.setBackgroundResource(R.drawable.border_bccgbutton_bg);
-                    djImg.setImageResource(R.mipmap.jtone);
+                    djImg.setImageResource(R.mipmap.jtthree);
                     slBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
-                    slImg.setImageResource(R.mipmap.jtone);
+                    slImg.setImageResource(R.mipmap.jtthree);
                     flBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
                     flImg.setImageResource(R.mipmap.jtone);
                     clBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
-                    clImd.setImageResource(R.mipmap.jtone);
+                    clImd.setImageResource(R.mipmap.jtfive);
                     hfhcBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
-                    hchfImg.setImageResource(R.mipmap.jtone);
+                    hchfImg.setImageResource(R.mipmap.jtfive);
                     gdBtn.setBackgroundResource(R.drawable.border_bccgbutton_bg);
                 }
             }

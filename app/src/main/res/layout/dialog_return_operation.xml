@@ -37,5 +37,6 @@
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:gravity="start"
-        android:background="#ECECEC"/>
+        android:layout_margin="5dp"
+        android:background="@drawable/border_edittext_bg"/>
 </LinearLayout>
