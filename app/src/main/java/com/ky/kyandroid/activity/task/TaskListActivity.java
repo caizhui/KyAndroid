@@ -335,7 +335,7 @@ public class TaskListActivity extends AppCompatActivity {
                     // 状态修改
                     Log.i(TAG, "加载操作...");
                     if (handleResponseDataState(message)) {
-                        Toast.makeText(TaskListActivity.this, "操作成功", Toast.LENGTH_SHORT).show();
+                       // Toast.makeText(TaskListActivity.this, "操作成功", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(TaskListActivity.this, "操作失败", Toast.LENGTH_SHORT).show();
                     }
