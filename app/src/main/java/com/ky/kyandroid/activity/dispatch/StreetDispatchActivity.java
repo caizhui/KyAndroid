@@ -314,7 +314,7 @@ public class StreetDispatchActivity extends AppCompatActivity {
     public boolean OnItemLongClick(int position){
         tempPosition = position;
         ypqbmEntity = (YpqbmEntity) adapter.getItem(position);
-        if("8".equals(ypqbmEntity.getClzt())|| "1".equals(ypqbmEntity.getIsDelete())){
+        if("8".equals(ypqbmEntity.getClzt())){
             AlertDialog.Builder builder = new AlertDialog.Builder(StreetDispatchActivity.this);
             builder.setTitle("信息");
             builder.setMessage("确定要删除该条记录吗？");
@@ -511,15 +511,24 @@ public class StreetDispatchActivity extends AppCompatActivity {
 
         if(isDetail){
             departmentTypeSpinner.setSelection(Integer.parseInt(ypqbmEntity.getBmlx())-1);
+            if(spinnerList!=null && spinnerList.size()>0){
+                for(int i=0;i<spinnerList.size();i++){
+                    if((spinnerList.get(i).getValue()).equals(ypqbmEntity.getBmmc())){
+                        departmenTextSpinner.setSelection(i);
+                    }
+                }
+            }
             handlerTimeEdt.setText(ypqbmEntity.getClsx());
             handlerTextEdt.setText(ypqbmEntity.getRwnr());
+
+            if(!"8".equals(ypqbmEntity.getClzt())){
+                departmentTypeSpinner.setEnabled(false);
+                departmenTextSpinner.setEnabled(false);
+                handlerTimeEdt.setEnabled(false);
+                handlerTextEdt.setEnabled(false);
+            }
         }
-        if("8.2".equals(ypqbmEntity.getClzt())){
-            departmentTypeSpinner.setEnabled(false);
-            departmenTextSpinner.setEnabled(false);
-            handlerTimeEdt.setEnabled(false);
-            handlerTextEdt.setEnabled(false);
-        }
+
         AlertDialog.Builder builder = new AlertDialog.Builder(StreetDispatchActivity.this);
         builder.setCancelable(false);
         builder.setTitle("派遣部门信息");
