@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -181,6 +182,22 @@ public class EventEntryAdd_Basic extends Fragment {
      */
     @BindView(R.id.leadership_instructions_edt)
     EditText leadershipInstructionsEdt;
+
+
+   @BindView(R.id.parent_scroll)
+    ScrollView parent_scroll;
+
+   /* @BindView(R.id.one_scroll)
+    ScrollView one_scroll;*/
+
+   /* @BindView(R.id.twe_scroll)
+    ScrollView twe_scroll;
+
+    @BindView(R.id.three_scroll)
+    ScrollView three_scroll;
+
+    @BindView(R.id.four_scroll)
+    ScrollView four_scroll;*/
 
 
     /**
@@ -938,5 +955,11 @@ public class EventEntryAdd_Basic extends Fragment {
 
         ;
     };
+
+    /*@OnTouch({R.id.twe_scroll,R.id.three_scroll,R.id.four_scroll})
+    public boolean OnTouchListener(View v, MotionEvent event) {
+        v.getParent().requestDisallowInterceptTouchEvent(true);
+        return false;
+    }*/
 
 }

@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.ky.kyandroid.R;
@@ -78,6 +79,8 @@ public class EventEntryDetail_Person extends Fragment {
      * 电子邮件
      */
     EditText personEmailEdt;
+
+    ScrollView parent_scroll;
     /**
      * 固定电话
      */
@@ -196,6 +199,7 @@ public class EventEntryDetail_Person extends Fragment {
     @Optional
     public void addPersonInfo() {
         View dialogView = LayoutInflater.from(EventEntryDetail_Person.this.getActivity()).inflate(R.layout.dialog_person_detail, null);
+        parent_scroll = ButterKnife.findById(dialogView, R.id.parent_scroll);
         personNameEdt = ButterKnife.findById(dialogView, R.id.person_name_edt);
         personSexSpinner = ButterKnife.findById(dialogView, R.id.person_sex_edt);
         personNationSpinner = ButterKnife.findById(dialogView, R.id.person_nation_edt);

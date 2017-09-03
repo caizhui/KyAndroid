@@ -1,191 +1,200 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/linear_evententry"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <ScrollView
+        android:id="@+id/parent_scroll"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:focusableInTouchMode="false">
 
         <LinearLayout
+            android:id="@+id/linear_evententry"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
+
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
                 android:orientation="horizontal"
-                android:padding="10dp">
+                android:padding="5dp">
 
                 <TextView
                     style="@style/TextStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
                     android:text="@string/thing_name" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:background="@drawable/border_edittext_bg">
-                        <EditText
-                            android:id="@+id/thing_name_edt"
-                            android:layout_width="0dp"
-                            android:layout_height="40dp"
-                            android:layout_weight="1"
-                            android:background="@null"
-                            android:maxLength="85"
-                            android:padding="5dp"
-                            android:textSize="16sp" />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:padding="5dp"
-                                android:text="*"
-                                android:textColor="@color/red" />
-                        </LinearLayout>
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/thing_name_edt"
+                        style="@style/TextColorStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:padding="5dp"
+                        android:textSize="16sp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:text="*"
+                        android:textColor="@color/red" />
+
+                </LinearLayout>
 
             </LinearLayout>
+
+            <include layout="@layout/linearlayout_one" />
 
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
                 android:orientation="horizontal"
-                android:padding="10dp">
+                android:padding="5dp">
 
                 <TextView
                     style="@style/TextStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
                     android:text="@string/happen_time" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:background="@drawable/border_edittext_bg">
+                    android:layout_height="wrap_content">
 
                     <EditText
                         android:id="@+id/happen_time_edt"
+                        style="@style/TextColorStyle"
                         android:layout_width="0dp"
-                        android:layout_height="40dp"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:background="@null"
                         android:padding="5dp"
                         android:textSize="16sp" />
-
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="5dp"
                         android:text="*"
                         android:textColor="@color/red" />
+
                 </LinearLayout>
             </LinearLayout>
 
+            <include layout="@layout/linearlayout_one" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
                 android:orientation="horizontal"
-                android:padding="10dp">
+                android:padding="5dp">
 
                 <TextView
+                    android:id="@+id/textView2"
                     style="@style/TextStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
                     android:text="@string/happen_address" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:background="@drawable/border_edittext_bg">
+                    android:layout_height="wrap_content">
 
                     <EditText
                         android:id="@+id/happen_address_edt"
+                        style="@style/TextColorStyle"
                         android:layout_width="0dp"
-                        android:layout_height="40dp"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:background="@null"
-                        android:maxLength="85"
                         android:padding="5dp"
                         android:textSize="16sp" />
-
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="5dp"
                         android:text="*"
                         android:textColor="@color/red" />
+
                 </LinearLayout>
             </LinearLayout>
+
+            <include layout="@layout/linearlayout_one" />
+
 
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
                 android:orientation="horizontal"
-                android:padding="10dp">
+                android:padding="5dp">
 
                 <TextView
                     style="@style/TextStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
                     android:text="@string/petition_groups" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:background="@drawable/border_edittext_bg">
+                    android:layout_height="wrap_content">
 
                     <EditText
                         android:id="@+id/petition_groups_edt"
+                        style="@style/TextColorStyle"
                         android:layout_width="0dp"
-                        android:layout_height="40dp"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:background="@null"
-                        android:maxLength="166"
                         android:padding="5dp"
                         android:textSize="16sp" />
+
                 </LinearLayout>
+
             </LinearLayout>
 
 
+            <include layout="@layout/linearlayout_one" />
+
             <LinearLayout
+                android:id="@+id/field_departmen_layout"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
                 android:orientation="horizontal"
-                android:padding="10dp">
+                android:padding="5dp">
 
                 <TextView
                     style="@style/TextStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
                     android:text="@string/field_departmen" />
 
                 <LinearLayout
-                    android:id="@+id/field_departmen_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:background="@drawable/border_edittext_bg">
+                    android:layout_height="wrap_content">
 
                     <TextView
                         android:id="@+id/field_departmen_edt"
+                        style="@style/TextColorStyle"
                         android:layout_width="0dp"
-                        android:layout_height="60dp"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:background="@null"
-                        android:enabled="false"
-                        android:focusable="false"
-                        android:maxLength="85"
                         android:gravity="center_vertical"
-                        style="@style/TextColorStyle"
                         android:padding="5dp"
                         android:textSize="16sp" />
 
@@ -194,386 +203,348 @@
                         android:layout_width="16dp"
                         android:layout_height="16dp"
                         android:layout_gravity="center"
-                        android:enabled="false"
                         android:layout_marginRight="5dp"
-                        android:background="@mipmap/down" />
+                        android:background="@mipmap/down"
+                        android:visibility="gone" />
 
 
                 </LinearLayout>
 
             </LinearLayout>
 
+            <include layout="@layout/linearlayout_one" />
+
 
             <LinearLayout
+                android:id="@+id/fields_involved_linearlayout"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
                 android:orientation="horizontal"
-                android:padding="10dp">`
+                android:padding="5dp">
 
                 <TextView
                     style="@style/TextStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="@string/pattern_manifestation" />
-
-                <LinearLayout
-                    android:id="@+id/pattern_manifestation_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:background="@drawable/border_edittext_bg">
-
-                    <TextView
-                        android:id="@+id/pattern_manifestation_spinner"
-                        android:layout_width="0dp"
-                        android:layout_height="60dp"
-                        android:layout_weight="1"
-                        android:background="@null"
-                        android:enabled="false"
-                        android:focusable="false"
-                        android:maxLength="85"
-                        android:gravity="center_vertical"
-                        style="@style/TextColorStyle"
-                        android:padding="5dp"
-                        android:textSize="16sp" />
-
-                    <ImageView
-                        android:id="@+id/pattern_manifestation_img"
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:layout_gravity="center"
-                        android:enabled="false"
-                        android:layout_marginRight="5dp"
-                        android:background="@mipmap/down" />
-
-                   <!-- <Spinner
-                        android:id="@+id/pattern_manifestation_spinner"
-                        android:layout_width="0dp"
-                        android:layout_height="40dp"
-                        android:layout_weight="1"
-                        android:background="@null"
-                        android:textSize="16sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="5dp"
-                        android:text="*"
-                        android:textColor="@color/red"
-                        android:visibility="gone" />-->
-                </LinearLayout>
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:id="@+id/xcts_linear"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:orientation="horizontal"
-                android:padding="10dp">`
-
-                <TextView
-                    style="@style/TextStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="@string/field_morphology" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:background="@drawable/border_edittext_bg">
-
-                    <Spinner
-                        android:id="@+id/field_morphology_spinner"
-                        android:layout_width="0dp"
-                        android:layout_height="40dp"
-                        android:layout_weight="1"
-                        android:background="@null"
-                        android:textSize="16sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="5dp"
-                        android:visibility="gone"
-                        android:text="*"
-                        android:textColor="@color/red" />
-                </LinearLayout>
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:orientation="horizontal"
-                android:padding="10dp">
-
-                <TextView
-                    style="@style/TextStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="30dp"
-                    android:text="@string/scope_text" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:background="@drawable/border_edittext_bg">
-
-                    <Spinner
-                        android:id="@+id/scope_text_spinner"
-                        android:layout_width="0dp"
-                        android:layout_height="40dp"
-                        android:layout_weight="1"
-                        android:background="@null"
-                        android:textSize="16sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="5dp"
-                        android:text="*"
-                        android:visibility="gone"
-                        android:textColor="@color/red" />
-                </LinearLayout>
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:orientation="horizontal"
-                android:padding="10dp">
-
-                <TextView
-                    style="@style/TextStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
                     android:text="@string/fields_involved" />
 
                 <LinearLayout
-                    android:id="@+id/fields_involved_linearlayout"
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:focusable="true"
-                    android:background="@drawable/border_edittext_bg">
+                    android:layout_height="wrap_content">
 
                     <TextView
                         android:id="@+id/fields_involved_edt"
+                        style="@style/TextColorStyle"
                         android:layout_width="0dp"
-                        android:layout_height="60dp"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:background="@null"
-                        android:enabled="false"
-                        android:focusable="false"
-                        style="@style/TextColorStyle"
                         android:gravity="center_vertical"
                         android:padding="5dp"
                         android:textSize="16sp" />
-
 
                     <ImageView
                         android:id="@+id/fields_involved_img"
                         android:layout_width="16dp"
                         android:layout_height="16dp"
                         android:layout_gravity="center"
-                        android:enabled="false"
                         android:layout_marginRight="5dp"
-                        android:background="@mipmap/down" />
-                </LinearLayout>
+                        android:background="@mipmap/down"
+                        android:visibility="gone" />
 
+
+                </LinearLayout>
 
             </LinearLayout>
 
+            <include layout="@layout/linearlayout_one" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
                 android:orientation="horizontal"
-                android:padding="10dp">
+                android:padding="5dp">`
 
                 <TextView
                     style="@style/TextStyle"
                     android:layout_width="wrap_content"
-                    android:layout_height="40dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/pattern_manifestation" />
+
+                <LinearLayout
+                    android:id="@+id/pattern_manifestation_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/pattern_manifestation_spinner"
+                        style="@style/TextColorStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:textSize="16sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <include layout="@layout/linearlayout_one" />
+
+            <LinearLayout
+                android:id="@+id/xcts_linear"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="5dp">`
+
+                <TextView
+                    style="@style/TextStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/field_morphology" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <Spinner
+                        android:id="@+id/field_morphology_spinner"
+                        style="@style/TextColorStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <include layout="@layout/linearlayout_one" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="5dp">
+
+                <TextView
+                    style="@style/TextStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:text="@string/scope_text" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <Spinner
+                        android:id="@+id/scope_text_spinner"
+                        style="@style/TextColorStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:textSize="16sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <include layout="@layout/linearlayout_one" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="5dp">
+
+                <TextView
+                    style="@style/TextStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:text="@string/foreign_related" />
 
                 <Spinner
                     android:id="@+id/foreign_related_spinner"
+                    style="@style/TextColorStyle"
                     android:layout_width="0dp"
-                    android:layout_height="40dp"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@drawable/border_edittext_bg"
+                    android:background="@null"
                     android:textSize="16sp" />
             </LinearLayout>
 
+            <include layout="@layout/linearlayout_one" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
                 android:orientation="horizontal"
-                android:padding="10dp">
+                android:padding="5dp">
 
                 <TextView
                     style="@style/TextStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
                     android:text="@string/involved_xinjiang" />
 
                 <Spinner
                     android:id="@+id/involved_xinjiang_spinner"
+                    style="@style/TextColorStyle"
                     android:layout_width="0dp"
-                    android:layout_height="40dp"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@drawable/border_edittext_bg"
+                    android:background="@null"
                     android:textSize="16sp" />
             </LinearLayout>
 
+            <include layout="@layout/linearlayout_one" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
                 android:orientation="horizontal"
-                android:padding="10dp">
+                android:padding="5dp">
 
                 <TextView
                     style="@style/TextStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
                     android:text="@string/involve_public_opinion" />
 
                 <Spinner
                     android:id="@+id/involve_public_opinion_spinner"
+                    style="@style/TextColorStyle"
                     android:layout_width="0dp"
-                    android:layout_height="40dp"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@drawable/border_edittext_bg"
+                    android:background="@null"
                     android:textSize="16sp" />
             </LinearLayout>
 
+            <include layout="@layout/linearlayout_one" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
                 android:orientation="horizontal"
-                android:padding="10dp">
+                android:padding="5dp">
 
                 <TextView
                     style="@style/TextStyle"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_vertical"
+                    android:layout_height="wrap_content"
                     android:text="@string/public_security_disposal" />
 
                 <Spinner
                     android:id="@+id/public_security_disposal_spinner"
+                    style="@style/TextColorStyle"
                     android:layout_width="0dp"
-                    android:layout_height="40dp"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@drawable/border_edittext_bg"
+                    android:background="@null"
                     android:textSize="16sp" />
             </LinearLayout>
 
+            <include layout="@layout/linearlayout_one" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
                 android:orientation="horizontal"
-                android:padding="10dp">
+                android:padding="5dp">
 
                 <TextView
                     style="@style/TextStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
                     android:text="@string/belong_street" />
 
                 <EditText
                     android:id="@+id/belong_street_edt"
-                    android:layout_width="0dp"
-                    android:layout_height="40dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/border_edittext_bg"
-                    android:padding="5dp"
                     style="@style/TextColorStyle"
-                    android:enabled="false"
-                    android:text="华强北街道"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@null"
                     android:textSize="16sp" />
             </LinearLayout>
 
+            <include layout="@layout/linearlayout_one" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
                 android:orientation="horizontal"
-                android:padding="10dp">
+                android:padding="5dp">
 
                 <TextView
                     style="@style/TextStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
                     android:text="@string/belong_community" />
 
                 <Spinner
                     android:id="@+id/belong_community_spinner"
+                    style="@style/TextColorStyle"
                     android:layout_width="0dp"
-                    android:layout_height="40dp"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@drawable/border_edittext_bg"
+                    android:background="@null"
                     android:textSize="16sp" />
             </LinearLayout>
+
+            <include layout="@layout/linearlayout_one" />
 
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
                 android:orientation="horizontal"
-                android:padding="10dp">
+                android:padding="5dp">
 
                 <TextView
                     style="@style/TextStyle"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:text="@string/main_appeals" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="130dp"
-                    android:background="@drawable/border_edittext_bg">
+                    android:layout_height="wrap_content">
 
                     <EditText
                         android:id="@+id/main_appeals_edt"
+                        style="@style/TextColorStyle"
                         android:layout_width="0dp"
-                        android:layout_height="130dp"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:background="@null"
-                        android:maxLength="1333"
-                        android:gravity="start"
                         android:padding="5dp"
                         android:textSize="16sp" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="5dp"
-                        android:text="*"
-                        android:visibility="gone"
-                        android:textColor="@color/red" />
                 </LinearLayout>
+
             </LinearLayout>
+
+            <include layout="@layout/linearlayout_one" />
 
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
                 android:orientation="horizontal"
-                android:padding="10dp">
+                android:padding="5dp">
 
                 <TextView
                     style="@style/TextStyle"
@@ -583,36 +554,31 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="130dp"
-                    android:background="@drawable/border_edittext_bg">
+                    android:layout_height="wrap_content">
 
                     <EditText
                         android:id="@+id/event_summary_edt"
+                        style="@style/TextColorStyle"
                         android:layout_width="0dp"
-                        android:layout_height="130dp"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:background="@null"
-                        android:gravity="start"
-                        android:maxLength="1333"
                         android:padding="5dp"
                         android:textSize="16sp" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="5dp"
-                        android:text="*"
-                        android:visibility="gone"
-                        android:textColor="@color/red" />
                 </LinearLayout>
+
             </LinearLayout>
+
+            <include layout="@layout/linearlayout_one" />
 
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
                 android:orientation="horizontal"
-                android:padding="10dp">
+                android:padding="5dp">
 
                 <TextView
                     style="@style/TextStyle"
@@ -622,20 +588,24 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="130dp"
-                    android:background="@drawable/border_edittext_bg">
+                    android:layout_height="wrap_content">
 
                     <EditText
                         android:id="@+id/leadership_instructions_edt"
-                        android:layout_width="match_parent"
-                        android:layout_height="130dp"
+                        style="@style/TextColorStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:background="@null"
-                        android:maxLength="83"
-                        android:gravity="start"
                         android:padding="5dp"
                         android:textSize="16sp" />
+
                 </LinearLayout>
+
             </LinearLayout>
+
+            <include layout="@layout/linearlayout_one" />
         </LinearLayout>
+
     </ScrollView>
 </LinearLayout>

@@ -1,12 +1,12 @@
 package com.ky.kyandroid.activity.evententry;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -120,6 +121,8 @@ public class EventEntryAdd_Person extends Fragment {
      * 备注
      */
     EditText personRemarkEdt;
+
+    ScrollView parent_scroll;
 
     TFtSjRyEntity tFtSjRyEntity;
 
@@ -245,6 +248,7 @@ public class EventEntryAdd_Person extends Fragment {
     @Optional
     public void addPersonInfo() {
         View dialogView = LayoutInflater.from(EventEntryAdd_Person.this.getActivity()).inflate(R.layout.dialog_person_add, null);
+        parent_scroll = ButterKnife.findById(dialogView, R.id.parent_scroll);
         personNameEdt = ButterKnife.findById(dialogView, R.id.person_name_edt);
         personSexSpinner = ButterKnife.findById(dialogView, R.id.person_sex_edt);
         personNationSpinner = ButterKnife.findById(dialogView, R.id.person_nation_edt);
